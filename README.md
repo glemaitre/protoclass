@@ -1,20 +1,15 @@
-EMBC 2015
+Protoclass
 =========
 
-This is a study of MRI data alignment in Prostate imaging.
-Targeting EMBC 2015 conference
-
-Thesis
-------
-
-The MRI data between patients is not aligned. Therefore normalizing, speriphing, etc. the data has makes no sense when the features are not aligned.
+We will use this toolbox to aggregate different method of classification in order to have some fast prototyping
 
 Goal
 ----
 
-* Illustrate the problem
-* Propose an alignment method
-* try to calculate xxxxxx
+* We assume that we already have a matrix with samples by features
+* Propose some feature extractions method
+* Classify using different classifiers
+* Report results in terms of different statistics
 
 File Structure
 --------------
@@ -23,13 +18,11 @@ File Structure
     |- doc/             # documentation for the study
     |  +- paper/        # manuscript(s), whether generated or not
     |
-    |- data             # raw and primary data, are not changed once created 
-    |  |- raw/          # raw data, will not be altered
-    |  +- clean/        # cleaned data, will not be altered once created
+    |- data             # the data used for classification
+	|  |- README        # in order to add some description
     |
     |- src/             # any programmatic code
-    |  |- experiment-t2w.ipynb # main notebook for the T2 experiment
-    |  |- README               # software structure description
+	|  |- README        # software structure description
     |
     |- results          # all output from workflows and analyses
     |  |- figures/      # graphs, likely designated for manuscript figures
@@ -41,16 +34,7 @@ File Structure
 Execution
 ---------
 
-```
-cd ./src/
-ipython notebook
-```
-
 Todo
 ----
 
-- [ ] Add project information goals, etc... @guillaume
-- [ ] change src/README.md
-- [ ] Change data/README description @guillaume
 - [ ] 
-
