@@ -20,6 +20,8 @@ from sklearn.metrics import roc_auc_score
 # Confusion matrix
 from sklearn.metrics import confusion_matrix
 
+import classification.classification as cl
+
 # Load the data file from the numpy npz file
 data_norm_rician = np.load('../data/clean/data_norm_rician.npy')
 data_norm_gaussian = np.load('../data/clean/data_norm_gaussian.npy')
@@ -120,41 +122,46 @@ for pt in xrange(len(patient_sizes)):
 
     print '---> Classification'
 
-    ##### RANDOM FOREST CLASSIFICATION #####
-    print '---> Random Forest Classification'
-    # Declare our random forest with the following parameters:
-    ### Define the number of trees - n_estimators=nb_trees
-    ### Use all cores of the computers because we can - n_jobs=1
-    ### See what we optimise - verbose=1
-    ### The rest of the parameters are setting up by default
-    nb_trees = 10
-    rf = RandomForestClassifier(n_estimators=nb_trees, n_jobs=-1, verbose=1)
+    # ##### RANDOM FOREST CLASSIFICATION #####
+    # print '---> Random Forest Classification'
+    # # Declare our random forest with the following parameters:
+    # ### Define the number of trees - n_estimators=nb_trees
+    # ### Use all cores of the computers because we can - n_jobs=1
+    # ### See what we optimise - verbose=1
+    # ### The rest of the parameters are setting up by default
+    # nb_trees = 10
+    # rf = RandomForestClassifier(n_estimators=nb_trees, n_jobs=-1, verbose=1)
 
-    # Train our random forest
-    ### training_data need to be a matrix of nb_samples x nb_features
+    # # Train our random forest
+    # ### training_data need to be a matrix of nb_samples x nb_features
     
+    # # ### Use the weight distribution because of the unbalanced data
+    # # rf.fit(np.asmatrix(training_data).T, training_label, dist_weight)
     # ### Use the weight distribution because of the unbalanced data
-    # rf.fit(np.asmatrix(training_data).T, training_label, dist_weight)
-    ### Use the weight distribution because of the unbalanced data
-    rf.fit(np.asmatrix(training_data).T, training_label)
+    # rf.fit(np.asmatrix(training_data).T, training_label)
     
-    # Test our random forest
-    pred = rf.predict_proba(np.asmatrix(testing_data).T)
+    # # Test our random forest
+    # pred = rf.predict_proba(np.asmatrix(testing_data).T)
 
-    ##### RANDOM FOREST CLASSIFICATION #####
+    # ##### RANDOM FOREST CLASSIFICATION #####
 
-    print '---> ROC curve evaluation'
-    fpr, tpr, thresh = roc_curve(testing_label, pred[:, 1])
+    # print '---> ROC curve evaluation'
+    # fpr, tpr, thresh = roc_curve(testing_label, pred[:, 1])
 
-    print '---> AUC computation'
-    auc = roc_auc_score(testing_label, pred[:, 1])
-    print 'AUC = {}'.format(auc)
+    # print '---> AUC computation'
+    # auc = roc_auc_score(testing_label, pred[:, 1])
+    # print 'AUC = {}'.format(auc)
 
-    #print '---> Confision matrix computation'
-    #conf_mat = confusion_matrix(testing_label, pred[:, 1])
-    #print conf_mat
+    # #print '---> Confision matrix computation'
+    # #conf_mat = confusion_matrix(testing_label, pred[:, 1])
+    # #print conf_mat
 
-    plt.plot(fpr, tpr, label='AUC='+str(auc))
+    roc = cl.Classify(np.asmatrix(training_data).T, 
+                      training_label,
+                      np.asmatrix(testing_data).T,
+                      testing_label, classifier_str='random-forest')
+
+    plt.plot(roc.fpr, roc.tpr, label='AUC='+str(roc.auc))
 
 # Put some x and y labels
 plt.xlabel('False positive rate')
