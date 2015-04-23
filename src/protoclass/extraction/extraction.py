@@ -9,10 +9,12 @@
 
 # Import the needed libraries
 import numpy as np
-
 import SimpleITK as sitk
-
 from sklearn.feature_extraction import image
+from mahotas.features import haralick
+from joblib import Parallel, delayed
+import multiprocessing
+import operator
 
 def OpenOneSerieDCM(path_to_serie):
     """Function to read a single serie DCM to return a 3D volume
@@ -91,10 +93,7 @@ def HaralickMapExtraction(im, **kwargs):
     # Call the 2D patch extractors
     if nd_im == 2:
         patches = Extract2DPatches(im, win_size)
-    elif nd_im == 3:
-        # Implement a 3D extraction method
-
-    # Compute Haralick
+        
     
     return patches
 
@@ -121,6 +120,76 @@ def Extract2DPatches(im, win_size):
 
     return image.extract_patches_2d(im, win_size)
 
-def BuildMap(patches):
+def Init2DMap(im, patches):
+    """Function to initialise the Haralick maps
+
+    Parameters
+    ----------
+
+    Returns
+    -------
     
+    """
+
+    # Declare an empty list
+    maps = []
+
+    # Allocate a list for each orientation
+    nb_orientations = 4
+    nb_stats = 14
+    for o in range(nb_orientations):
+        maps.append([])
+        # Allocate 14 maps of the size of the original image
+        for s in range(nb_stats):
+            #print 'Orientation #{}, Feature #{}'.format(o, s)
+            maps[o].append(np.zeros((im.shape), dtype=float))
     
+    return maps
+
+def HaralickProcessing(patch_in, idx_patch, maps_out):
+
+    # Compute Haralick feature
+    all_har = haralick(patch_in, compute_14th_feature=True)
+
+    p_h, p_w = patch_in.shape[:2]
+    i_h, i_w = maps_out[0][0].shape[:2]
+    m_h = i_h - p_h + 1
+    m_w = i_w - p_w + 1
+    o_h = np.floor(p_h/2.)
+    o_w = np.floor(p_w/2.)
+    
+    nb_orientations = 4
+    nb_stats = 14
+
+    # Find the index to assign each matrix
+    im_idx = tuple(map(operator.add, np.unravel_index(idx_patch, (m_h, m_w)), (o_h, o_w)))
+    
+    for o, s in zip(range(nb_orientations), range(nb_stats)):
+            #print 'Orientation #{}, Feature #{}'.format(o, s)
+            maps_out[o][s][im_idx[0], im_idx[1]] = all_har[o, s]
+
+
+    return maps_out
+    
+
+def Build2DMap(patches_or_im, maps):
+    """Function to compute Haralick features for each patch
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+
+    # num_cores = multiprocessing.cpu_count()
+    # results = Parallel(n_jobs=num_cores)(delayed(HaralickProcessing)(p, idx, maps) for idx, p in enumerate(patches_or_im))  
+    # return results
+
+    
+    # For each patch
+    for idx, p in enumerate(patches_or_im):
+        maps = HaralickProcessing(p, idx, maps)
+
+   return maps

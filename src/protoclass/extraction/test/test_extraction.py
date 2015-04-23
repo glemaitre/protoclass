@@ -14,10 +14,16 @@ import numpy as np
 from protoclass.classification.classification import Classify
 from protoclass.extraction.extraction import OpenOneSerieDCM
 from protoclass.extraction.extraction import HaralickMapExtraction
+from protoclass.extraction.extraction import Init2DMap
+from protoclass.extraction.extraction import Build2DMap
 
-path_to_t2 = '/home/lemaitre/Documents/Data/experiments/Patient 383/T2W'
+
+path_to_t2 = '/work/le2i/gu5306le/experiments/Patient 383/T2W'
 volume = OpenOneSerieDCM(path_to_t2)
 
 im_2d = volume[:, :, 35]
 tp_win_size = (5, 5)
 patch = HaralickMapExtraction(im_2d)
+
+maps = Init2DMap(im_2d, patch)
+maps = Build2DMap(patch, maps)
