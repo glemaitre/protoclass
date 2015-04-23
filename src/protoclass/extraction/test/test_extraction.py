@@ -13,12 +13,19 @@ import numpy as np
 
 from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.extraction.texture_analysis import HaralickMapExtraction
-from protoclass.extraction.texture_analysis import Build2DPatch
-from protoclass.extraction.texture_analysis import ReshapePatchsToMaps
 
+# Give the path to a patient
 path_to_t2 = '/work/le2i/gu5306le/experiments/Patient 383/T2W'
+# Read a volume
 volume = OpenOneSerieDCM(path_to_t2)
-
+# Select a slice
 im_2d = volume[:, :, 35]
+# Define the parameters for glcm
+### Window size
 tp_win_size = (9,9)
-maps = HaralickMapExtraction(im_2d)
+### Number of gray levels
+tp_n_gray_levels = 8
+### Compute the Haralick maps
+maps = HaralickMapExtraction(im_2d, win_size=tp_win_size, n_gray_levels=tp_n_gray_levels)
+# Save the maps
+np.save('../data/maps.npy', maps)

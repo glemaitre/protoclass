@@ -8,7 +8,9 @@
 #==============================================================================
 
 # Import the needed libraries
+# Numpy library
 import numpy as np
+# SimpleITK library
 import SimpleITK as sitk
 
 def OpenOneSerieDCM(path_to_serie):
