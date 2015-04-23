@@ -61,7 +61,7 @@ def HaralickMapExtraction(im, **kwargs):
         raise ValueError('mahotas.texture.haralick: Can only handle 2D and 3D images.')
 
     n_gray_levels = kwargs.pop('n_gray_levels', np.max(im))
-    gray_limits = kwargs.pop('gray_limits', (np.min(im), np.max(im)))
+    gray_limits = kwargs.pop('gray_limits', (float(np.min(im)), float(np.max(im))))
 
     # Check that win_size is a tuple
     if not isinstance(gray_limits, tuple):
@@ -81,15 +81,16 @@ def HaralickMapExtraction(im, **kwargs):
 
     # Rescale the image
     ### Define a lambda function for that
-    ImageRescaling = lambda im : np.around((im - gray_limits[0]) * (n_gray_levels / (gray_limits[1] - gray_limits[0])))
+    ImageRescaling = lambda im : np.around((im.astype(float) - gray_limits[0]) * (float(n_gray_levels) / (gray_limits[1] - gray_limits[0])))
     im_rescale = ImageRescaling(im).astype(int)
+    np.save('../data/image.npy', im_rescale)
     
     # Call the 2D patch extractors
     if nd_im == 2:
         # Extract the patches to analyse
-        patches = ExtractPatches2D(im, win_size)
+        patches = ExtractPatches2D(im_rescale, win_size)
         # Compute the Haralick maps
-        i_h, i_w = im.shape[:2]
+        i_h, i_w = im_rescale.shape[:2]
         p_h, p_w = win_size[:2]
         n_h = i_h - p_h + 1
         n_w = i_w - p_w + 1
@@ -117,7 +118,7 @@ def HaralickProcessing(patch_in):
     """
     
     # Compute Haralick feature
-    return haralick(patch_in, compute_14th_feature=True)
+    return haralick(patch_in)
 
 ########################################################################################
 ### 2D implementation
