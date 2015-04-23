@@ -146,34 +146,22 @@ def Init2DMap(im, patches):
     
     return maps
 
-def HaralickProcessing(patch_in, idx_patch, maps_out):
+def HaralickProcessing(patch_in):
+    """Function to compute Haralick for a patch
 
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
+    
     # Compute Haralick feature
-    all_har = haralick(patch_in, compute_14th_feature=True)
+    return = haralick(patch_in, compute_14th_feature=True)
 
-    p_h, p_w = patch_in.shape[:2]
-    i_h, i_w = maps_out[0][0].shape[:2]
-    m_h = i_h - p_h + 1
-    m_w = i_w - p_w + 1
-    o_h = np.floor(p_h/2.)
-    o_w = np.floor(p_w/2.)
-    
-    nb_orientations = 4
-    nb_stats = 14
-
-    # Find the index to assign each matrix
-    im_idx = tuple(map(operator.add, np.unravel_index(idx_patch, (m_h, m_w)), (o_h, o_w)))
-    
-    for o, s in zip(range(nb_orientations), range(nb_stats)):
-            #print 'Orientation #{}, Feature #{}'.format(o, s)
-            maps_out[o][s][im_idx[0], im_idx[1]] = all_har[o, s]
-
-
-    return maps_out
-    
-
-def Build2DMap(patches_or_im, maps):
-    """Function to compute Haralick features for each patch
+def Build2DPatch(patches_or_im):
+    """Function to compute Haralick features for all patch
 
     Parameters
     ----------
@@ -183,13 +171,20 @@ def Build2DMap(patches_or_im, maps):
     
     """
 
-    # num_cores = multiprocessing.cpu_count()
-    # results = Parallel(n_jobs=num_cores)(delayed(HaralickProcessing)(p, idx, maps) for idx, p in enumerate(patches_or_im))  
-    # return results
+    num_cores = multiprocessing.cpu_count()
+    patch_arr = Parallel(n_jobs=num_cores)(delayed(HaralickProcessing)(p) for p in patches_or_im)
+
+    return patch_arr
+
+def ReshapePatchsToMaps(patches):
+    """Function to reshape the array of patches into proper maps
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    
+    """
 
     
-    # For each patch
-    for idx, p in enumerate(patches_or_im):
-        maps = HaralickProcessing(p, idx, maps)
-
-   return maps
