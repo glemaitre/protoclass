@@ -11,19 +11,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from protoclass.classification.classification import Classify
-from protoclass.extraction.extraction import OpenOneSerieDCM
-from protoclass.extraction.extraction import HaralickMapExtraction
-from protoclass.extraction.extraction import Init2DMap
-from protoclass.extraction.extraction import Build2DPatch
-
+from protoclass.tool.dicom_manip import OpenOneSerieDCM
+from protoclass.extraction.texture_analysis import HaralickMapExtraction
+from protoclass.extraction.texture_analysis import Build2DPatch
+from protoclass.extraction.texture_analysis import ReshapePatchsToMaps
 
 path_to_t2 = '/work/le2i/gu5306le/experiments/Patient 383/T2W'
 volume = OpenOneSerieDCM(path_to_t2)
 
 im_2d = volume[:, :, 35]
-tp_win_size = (5, 5)
-patch = HaralickMapExtraction(im_2d)
-
-maps = Init2DMap(im_2d, patch)
-p_arr = Build2DPatch(patch)
+tp_win_size = (9,9)
+maps = HaralickMapExtraction(im_2d)

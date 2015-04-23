@@ -1,4 +1,4 @@
-#title           :extraction.py
+#title           :texture_analysis.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/04/20
@@ -9,50 +9,12 @@
 
 # Import the needed libraries
 import numpy as np
-import SimpleITK as sitk
 from sklearn.feature_extraction import image
 from mahotas.features import haralick
 from joblib import Parallel, delayed
 import multiprocessing
 import operator
 
-def OpenOneSerieDCM(path_to_serie):
-    """Function to read a single serie DCM to return a 3D volume
-
-    Parameters
-    ----------
-    path_to_serie: str
-        The path to the folder containing all the dicom images.
-    
-    Returns
-    -------
-    im_numpy: ndarray
-        A 3D array containing the volume extracted from the DCM serie 
-    """
-    
-    # Define the object in order to read the DCM serie
-    reader = sitk.ImageSeriesReader()
-
-    # Get the DCM filenames of the serie
-    dicom_names = reader.GetGDCMSeriesFileNames(path_to_serie)
-
-    # Set the filenames to read
-    reader.SetFileNames(dicom_names)
-
-    # Build the volume from the set of 2D images
-    im = reader.Execute()
-
-    # Convert the image into a numpy matrix
-    im_numpy = sitk.GetArrayFromImage(im)
-
-    # The Matlab convention is (Y, X, Z)
-    # The Numpy convention is (Z, Y, X)
-    # We have to swap these axis
-    ### Swap Z and X
-    im_numpy = np.swapaxes(im_numpy, 0, 2)
-    im_numpy = np.swapaxes(im_numpy, 0, 1)
-    
-    return im_numpy
 
 def HaralickMapExtraction(im, **kwargs):
     """Function to extract the Haralick map from a 2D or 3D image
@@ -92,10 +54,16 @@ def HaralickMapExtraction(im, **kwargs):
 
     # Call the 2D patch extractors
     if nd_im == 2:
+        # Extract the patches to analyse
         patches = Extract2DPatches(im, win_size)
-        
+        # Compute the Haralick maps
+        i_h, i_w = im.shape[:2]
+        p_h, p_w = win_size[:2]
+        n_h = i_h - p_h + 1
+        n_w = i_w - p_w + 1
+        maps = Build2DMaps(patches, n_h, n_w)
     
-    return patches
+    return maps
 
 def Extract2DPatches(im, win_size):
     """Function to extract the 2D patches which which will feed haralick
@@ -120,8 +88,8 @@ def Extract2DPatches(im, win_size):
 
     return image.extract_patches_2d(im, win_size)
 
-def Init2DMap(im, patches):
-    """Function to initialise the Haralick maps
+def Build2DMaps(patches_or_im, i_h, i_w):
+    """Function to compute Haralick features for all patch
 
     Parameters
     ----------
@@ -131,20 +99,13 @@ def Init2DMap(im, patches):
     
     """
 
-    # Declare an empty list
-    maps = []
+    # Compute the Haralick statistic in parallel
+    num_cores = multiprocessing.cpu_count()
+    patch_arr = Parallel(n_jobs=num_cores)(delayed(HaralickProcessing)(p) for p in patches_or_im)
 
-    # Allocate a list for each orientation
-    nb_orientations = 4
-    nb_stats = 14
-    for o in range(nb_orientations):
-        maps.append([])
-        # Allocate 14 maps of the size of the original image
-        for s in range(nb_stats):
-            #print 'Orientation #{}, Feature #{}'.format(o, s)
-            maps[o].append(np.zeros((im.shape), dtype=float))
-    
-    return maps
+    # Convert the patches into maps
+    return ReshapePatchsToMaps(patch_arr, i_h, i_w)
+
 
 def HaralickProcessing(patch_in):
     """Function to compute Haralick for a patch
@@ -158,25 +119,9 @@ def HaralickProcessing(patch_in):
     """
     
     # Compute Haralick feature
-    return = haralick(patch_in, compute_14th_feature=True)
+    return haralick(patch_in, compute_14th_feature=True)
 
-def Build2DPatch(patches_or_im):
-    """Function to compute Haralick features for all patch
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-    
-    """
-
-    num_cores = multiprocessing.cpu_count()
-    patch_arr = Parallel(n_jobs=num_cores)(delayed(HaralickProcessing)(p) for p in patches_or_im)
-
-    return patch_arr
-
-def ReshapePatchsToMaps(patches):
+def ReshapePatchsToMaps(patches, i_h, i_w):
     """Function to reshape the array of patches into proper maps
 
     Parameters
@@ -187,4 +132,18 @@ def ReshapePatchsToMaps(patches):
     
     """
 
-    
+    # Conver the list into a numpy array
+    patches_numpy = np.array(patches)
+
+    # Get the current size
+    n_patch, n_orientations, n_statistics = patches_numpy.shape
+
+    # Reshape the patches into a map first
+    maps = patches_numpy.reshape((i_h, i_w, n_orientations, n_statistics))
+
+    # Swap the good dimension in order to have [Orientation][Statistic][Y, X]
+    maps = maps.swapaxes(0, 2)
+    maps = maps.swapaxes(1, 3)
+
+    # We would like to have a list for the orientations and a list for the statistics 
+    return maps
