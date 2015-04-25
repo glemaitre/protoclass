@@ -22,9 +22,8 @@ from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.extraction.texture_analysis import HaralickMapExtraction
 
 # Give the path to a patient
-#path_to_t2 = '/work/le2i/gu5306le/experiments/Patient 383/T2W'
 path_to_data = '/work/le2i/gu5306le/experiments'
-path_to_data = '/home/lemaitre/Documents/Data/experiments'
+#path_to_data = '/home/lemaitre/Documents/Data/experiments'
 path_t2w = 'T2W'
 path_haralick = 'haralick'
 
@@ -68,7 +67,8 @@ for dirs in os.listdir(path_to_data):
     # Save a volume for each orientation and stats
     n_orientations = 4
     n_statistics = 13
-    for o, s in zip (range(n_orientations), range(n_statistics)):
-        # Save the current volume
-        filename = join(path_haralick_saving, 'volume_' + str(o) + '_' + str(s) + '.npy')
-        np.save(filename, patient_maps[o][s][:, :, :])
+    for o in range(n_orientations):
+        for s in range(n_statistics):
+            # Save the current volume
+            filename = join(path_haralick_saving, 'volume_' + str(o) + '_' + str(s) + '.npy')
+            np.save(filename, patient_maps[o][s][:, :, :])
