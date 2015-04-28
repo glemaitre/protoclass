@@ -24,7 +24,7 @@ def OpenOneSerieDCM(path_to_serie):
     Returns
     -------
     im_numpy: ndarray
-        A 3D array containing the volume extracted from the DCM serie 
+        A 3D array containing the volume extracted from the DCM serie.
     """
     
     # Define the object in order to read the DCM serie
@@ -50,3 +50,32 @@ def OpenOneSerieDCM(path_to_serie):
     im_numpy = np.swapaxes(im_numpy, 0, 1)
     
     return im_numpy
+
+def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
+    """Function to read a DCM volume and apply a GT mask
+
+    Parameters
+    ----------
+    path_to_data: str
+        Path containing the modality data.
+    path_to_gt: str
+        Path containing the gt.
+    
+    Returns
+    -------
+    volume_data: ndarray
+        A 3D array containing the volume extracted from the DCM serie.
+        The data not corresponding to the GT of interest will be tagged NaN.
+    """
+
+    # Open the data volume
+    volume_data = OpenOneSerieDCM(path_to_data)
+
+    # Open the gt volume
+    volume_gt = OpenOneSerieDCM(path_to_gt)
+
+    # Affect all the value which are 0 in the gt to NaN
+    volume_data[(volume_gt == 0).nonzero()] = np.NaN
+
+    # Return the volume read
+    return volume_data
