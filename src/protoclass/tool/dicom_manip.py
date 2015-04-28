@@ -12,6 +12,14 @@
 import numpy as np
 # SimpleITK library
 import SimpleITK as sitk
+# Joblib library
+### Module to performed parallel processing
+from joblib import Parallel, delayed
+### Module to performed parallel processing
+import multiprocessing
+# OS library
+import os
+from os.path import join
 
 def OpenOneSerieDCM(path_to_serie):
     """Function to read a single serie DCM to return a 3D volume
@@ -79,3 +87,58 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
 
     # Return the volume read
     return volume_data
+
+def __VolumeMinMax__(path_patient):
+    """Private function in order to return min max of a 3D volume
+
+    Parameters
+    ----------
+    path_patient: str
+        Path where the data are localised.
+    
+    Returns
+    -------
+    (min_int, max_int): tuple
+        Return a tuple containing the minimum and maximum for the patient.
+    """
+
+    # Read a volume for the current patient
+    volume = OpenOneSerieDCM(path_patient)
+
+    # Return a tuple with the min and max
+    return(np.min(volume), np.max(volume))
+
+def FindExtremumDataSet(path_to_data, **kwargs):
+    """Function to find the minimum and maximum intensities
+       in a 3D volume
+
+    Parameters
+    ----------
+    path_to_data: str
+        Path containing the modality data.
+    modality: str
+        String containing the name of the modality to treat.
+    
+    Returns
+    -------
+    (min_int, max_int): tuple
+        A tuple containing the minimum and the maximum intensities.
+    """
+    
+    # Define the path to the modality
+    path_modality = kwargs.pop('modality', 'T2W')
+
+    # Create a list with the path name
+    path_patients = []
+    for dirs in os.listdir(path_to_data):
+        # Create the path variable
+        path_patient = join(path_to_data, dirs)
+        path_patients.append(join(path_patient, path_modality))
+       
+    # Compute the Haralick statistic in parallel
+    num_cores = multiprocessing.cpu_count()
+    min_max_list = Parallel(n_jobs=num_cores)(delayed(__VolumeMinMax__)(path) for path in path_patients)
+    # Convert the list into numpy array
+    min_max_array = np.array(min_max_list)
+
+    return (np.min(min_max_array), np.max(min_max_array))
