@@ -12,6 +12,8 @@
 import numpy as np
 # Joblib library
 ### Module to performed parallel processing
+from joblib import Parallel, delayed
+### Module to performed parallel processing
 import multiprocessing
 # OS library
 import os
@@ -23,17 +25,4 @@ from protoclass.tool.dicom_manip import OpenSerieUsingGTDCM
 
 # Give the path to a patient
 path_to_data = '/work/le2i/gu5306le/experiments'
-#path_to_data = '/home/lemaitre/Documents/Data/experiments'
-path_t2w = 'T2W'
-path_gt = ''
-path_haralick = 'haralick'
-
-# Go through all the patients directories
-for dirs in os.listdir(path_to_data):
-    path_patient = join(path_to_data, dirs)
-    path_dcm = join(path_patient, path_t2w)
-    print 'Reading data from the directory {}'.format(path_dcm)
-
-    # Read a volume
-    volume = OpenOneSerieDCM(path_dcm)
 
