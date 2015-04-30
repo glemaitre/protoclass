@@ -57,7 +57,7 @@ def OpenOneSerieDCM(path_to_serie):
     im_numpy = np.swapaxes(im_numpy, 0, 2)
     im_numpy = np.swapaxes(im_numpy, 0, 1)
     
-    return im_numpy
+    return im_numpy.astype(float)
 
 def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
     """Function to read a DCM volume and apply a GT mask

@@ -10,6 +10,8 @@
 # Import the needed libraries
 # Numpy library
 import numpy as np
+# Matplotlib library
+import matplotlib.pyplot as plt
 # Joblib library
 ### Module to performed parallel processing
 from joblib import Parallel, delayed
@@ -18,11 +20,19 @@ import multiprocessing
 # OS library
 import os
 from os.path import join
+# SYS library
+import sys
 
-# Our module to read DCM volume from a serie of DCM
+# Our module
 from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.tool.dicom_manip import OpenSerieUsingGTDCM
+from protoclass.preprocessing.normalisation import GaussianNormalisation
+from protoclass.preprocessing.normalisation import RicianNormalisation
 
-# Give the path to a patient
-path_to_data = '/work/le2i/gu5306le/experiments'
+#################################################################################
+## GAUSSIAN NORMALISATION
 
+
+
+#################################################################################
+## RICIAN NORMALISATION
