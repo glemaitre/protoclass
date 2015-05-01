@@ -24,7 +24,6 @@ import multiprocessing
 # Operator library
 import operator
 
-
 def HaralickMapExtraction(im, **kwargs):
     """Function to extract the Haralick map from a 2D or 3D image
 
