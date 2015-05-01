@@ -40,6 +40,6 @@ for patient in $data_path*/; do
     ### Make it executable
     chmod u+x $script_filename
     # Submit the job to the queue
-    qsub -q batch -pe smp 16 $script_filename
+    qsub -q batch -pe smp 8 $script_filename
     ((patient_idx++))
 done

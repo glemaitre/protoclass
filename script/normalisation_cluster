@@ -36,10 +36,10 @@ for patient in $data_path*/; do
     ### Truncate the file if it is existing
     : > $script_filename
     ### Write the command to execute
-    printf "ipython protoclass/preprocessing/test/test_normalisation_cluster.py \"${patient%/}\"" >> $script_filename
+    printf "ipython protoclass/preprocessing/test/test_normalisation_cluster.py \"${data_path%/}\" \"${patient%/}\"" >> $script_filename
     ### Make it executable
     chmod u+x $script_filename
     # Submit the job to the queue
-    qsub -q batch -pe smp 16 $script_filename
+    qsub -q batch -pe smp 8 $script_filename
     ((patient_idx++))
 done
