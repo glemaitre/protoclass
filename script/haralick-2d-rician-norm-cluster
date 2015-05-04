@@ -7,7 +7,7 @@ then
     echo "Usage:"
     echo "./haralick-2d-cluster dataPath"
     echo
-    echo "Example: ./haralick-2d-cluster ~/Home/Data/"
+    echo "Example: ./haralick-2d-rician-norm-cluster ~/Home/Data/"
     echo " "
     echo "Current entry: $0 $*"
     echo "**************************************************************"
@@ -36,7 +36,7 @@ for patient in $data_path*/; do
     ### Truncate the file if it is existing
     : > $script_filename
     ### Write the command to execute
-    printf "ipython protoclass/extraction/test/test_extraction_haralick_unormalised_cluster.py \"${patient%/}\"" >> $script_filename
+    printf "ipython protoclass/extraction/test/test_extraction_haralick_rnormalised.py \"${data_path%/}\" \"${patient%/}\"" >> $script_filename
     ### Make it executable
     chmod u+x $script_filename
     # Submit the job to the queue

@@ -1,4 +1,4 @@
-#title           :test_extraction.py
+#title           :test_extraction_haralick_rnormalised.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/04/20
@@ -19,23 +19,31 @@ from os.path import join
 import sys
 
 # Our module to read DCM volume from a serie of DCM
-from protoclass.tool.dicom_manip import OpenOneSerieDCM
+from protoclass.tool.dicom_manip import OpenVolumeNumpy
+# Our module to find the extremum for across all the patients
+from protoclass.tool.dicom_manip import FindExtremumDataSet
 # Our module to extract Haralick feature maps
 from protoclass.extraction.texture_analysis import HaralickMapExtraction
 
 # Give the path to a patient
 #path_to_data = '/work/le2i/gu5306le/experiments'
 #path_to_data = '/home/lemaitre/Documents/Data/experiments'
-path_t2w = 'T2W'
-path_haralick = 'haralick'
+path_patients = sys.argv[1]
+path_t2w = 'rician_norm/volume_rnorm.npy'
+path_haralick = 'haralick_gnorm'
+
+#################################################################################
+## FIND EXTREMUM FOR THE DIFFERENT PATIENTS
+
+range_dataset_float = FindExtremumDataSet(path_patients, modality=path_t2w)
 
 # Build the path of the current patient
-path_patient = sys.argv[1]
+path_patient = sys.argv[2]
 path_dcm = join(path_patient, path_t2w)
 print 'Reading data from the directory {}'.format(path_dcm)
 
 # Read a volume
-volume = OpenOneSerieDCM(path_dcm)
+volume = OpenVolumeNumpy(path_dcm)
 
 #################################################################################
 ### 2D volume
@@ -52,9 +60,12 @@ patient_maps = []
 # Go through each slice of the volume
 for sl in range(volume.shape[2]):
     ### Compute the Haralick maps
-    patient_maps.append(HaralickMapExtraction(volume[:, :, sl], win_size=tp_win_size, n_gray_levels=tp_n_gray_levels))
-        
-    # Create a directory if not existing
+    patient_maps.append(HaralickMapExtraction(volume[:, :, sl], 
+                                              win_size=tp_win_size, 
+                                              n_gray_levels=tp_n_gray_levels, 
+                                              gray_limits=range_dataset_float))
+
+# Create a directory if not existing
 path_haralick_saving = join(path_patient, path_haralick)
 if not os.path.exists(path_haralick_saving):
     os.makedirs(path_haralick_saving)

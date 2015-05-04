@@ -19,7 +19,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 # OS library
 import os
-from os.path import join
+from os.path import join, isdir, isfile
 
 def OpenOneSerieDCM(path_to_serie):
     """Function to read a single serie DCM to return a 3D volume
@@ -58,6 +58,23 @@ def OpenOneSerieDCM(path_to_serie):
     im_numpy = np.swapaxes(im_numpy, 0, 1)
     
     return im_numpy.astype(float)
+
+def OpenVolumeNumpy(filename):
+    """Function to read a numpy array previously saved
+
+    Parameters
+    ----------
+    filename: str
+        Filename of the numpy array *.npy.
+    
+    Returns
+    -------
+    im_numpy: ndarray
+        A 3D array containing the volume.
+    """
+        
+    return load(filename)
+
 
 def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
     """Function to read a DCM volume and apply a GT mask
@@ -102,8 +119,12 @@ def __VolumeMinMax__(path_patient):
         Return a tuple containing the minimum and maximum for the patient.
     """
 
-    # Read a volume for the current patient
-    volume = OpenOneSerieDCM(path_patient)
+    # Chec if we have either a file or a directory
+    if isdir(path_patient):
+        # Read a volume for the current patient
+        volume = OpenOneSerieDCM(path_patient)
+    elsif isfile(path_patient):
+        volume = OpenVolumeNumpy(path_patient)
 
     # Return a tuple with the min and max
     return(np.min(volume), np.max(volume))
@@ -137,6 +158,7 @@ def FindExtremumDataSet(path_to_data, **kwargs):
        
     # Compute the Haralick statistic in parallel
     num_cores = multiprocessing.cpu_count()
+    # Check if we have original DICOM or Numpy volume
     min_max_list = Parallel(n_jobs=num_cores)(delayed(__VolumeMinMax__)(path) for path in path_patients)
     # Convert the list into numpy array
     min_max_array = np.array(min_max_list)
