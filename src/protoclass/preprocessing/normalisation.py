@@ -108,6 +108,8 @@ class GaussianNormalisation(object):
         self.__mu = popt[1]
         self.__sigma = popt[2]
 
+        print 'The parameters fitted are {}'.format(self.GetParameters())
+
         return pcov
 
     def Normalise(self, x):
@@ -205,6 +207,8 @@ class RicianNormalisation(object):
         self.__v = popt[1]
         self.__loc = popt[2]
         self.__sigma = popt[3]
+
+        print 'The parameters fitted are {}'.format(self.GetParameters())
 
         return pcov
 
