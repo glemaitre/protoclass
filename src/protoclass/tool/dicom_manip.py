@@ -123,7 +123,7 @@ def __VolumeMinMax__(path_patient):
     if isdir(path_patient):
         # Read a volume for the current patient
         volume = OpenOneSerieDCM(path_patient)
-    elsif isfile(path_patient):
+    elif isfile(path_patient):
         volume = OpenVolumeNumpy(path_patient)
 
     # Return a tuple with the min and max
