@@ -83,7 +83,7 @@ path_to_data = '/DATA/prostate/public/Siemens/Patient 383/T2W'
 volume = OpenOneSerieDCM(path_to_data)
 
 # Build edges maps
-maps, kern_params = EdgeMapExtraction(volume[:,:,35], edge_detector='GaborBank')
+maps = EdgeMapExtraction(volume[:,:,35], edge_detector='PhaseCong')
 
 # Convert to np.array
 maps = np.array(maps)
