@@ -82,8 +82,11 @@ path_to_data = '/DATA/prostate/public/Siemens/Patient 383/T2W'
 # Open the volume
 volume = OpenOneSerieDCM(path_to_data)
 
-# Build edges maps
-maps = EdgeMapExtraction(volume[:,:,35], edge_detector='PhaseCong')
+# Create the ouput list
+patient_maps = []
+# Go through each slice of the volume
+for sl in range(volume.shape[2]):
+    # Build edges maps
+    patient_maps.append(EdgeMapExtraction(volume[:,:,sl], edge_detector='PhaseCong'))
 
-# Convert to np.array
-maps = np.array(maps)
+patient_maps = np.array(patient_maps)
