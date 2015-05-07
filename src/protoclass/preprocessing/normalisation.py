@@ -167,8 +167,8 @@ class GaussianNormalisation(object):
         # We need to normalise the absicisse of the histogram between 0 and 1.
         norm_factor = x_range[1]
         x = x.astype(float) / norm_factor
-        x_pdf_bins = x_pdf_bins.astype(float) / norm_factor        
-        
+        x_pdf_bins = x_pdf_bins.astype(float) / norm_factor
+
         # Get the initial parameter for the given data
         self.__InitFromData__(x, norm_factor)
         
@@ -367,7 +367,7 @@ class RicianNormalisation(object):
         # We need to normalise the absicisse of the histogram between 0 and 1.
         norm_factor = x_range[1]
         x = x.astype(float) / norm_factor
-        x_pdf_bins = x_pdf_bins.astype(float) / norm_factor        
+        x_pdf_bins = x_pdf_bins.astype(float) / norm_factor
         
         # Get the initial parameter for the given data
         self.__InitFromData__(x, norm_factor)

@@ -76,7 +76,7 @@ def OpenVolumeNumpy(filename):
     return load(filename)
 
 
-def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
+def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
     """Function to read a DCM volume and apply a GT mask
 
     Parameters
@@ -85,6 +85,9 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
         Path containing the modality data.
     path_to_gt: str
         Path containing the gt.
+    reverse_gt: bool
+        Since that there is a mistake in the data we need to flip in z the gt.
+        Have to be corrected in the future.
     
     Returns
     -------
@@ -97,7 +100,12 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt):
     volume_data = OpenOneSerieDCM(path_to_data)
 
     # Open the gt volume
-    volume_gt = OpenOneSerieDCM(path_to_gt)
+    tmp_volume_gt = OpenOneSerieDCM(path_to_gt)
+    volume_gt = tmp_volume_gt.copy()
+    if reverse_gt == True:
+        print 'Inversing the GT'
+        for sl in range(volume_gt.shape[2]):
+            volume_gt[:,:,-sl] = tmp_volume_gt[:,:,sl]
 
     # Affect all the value which are 0 in the gt to NaN
     volume_data[(volume_gt == 0).nonzero()] = np.NaN
