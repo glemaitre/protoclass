@@ -49,7 +49,7 @@ patient_maps = []
 # Go through each slice of the volume
 for sl in range(volume.shape[2]):
     ### Compute the Haralick maps
-    patient_maps(EdgeMapExtraction(volume[:, :, sl]), edge_detector='Sobel1stDev')
+    patient_maps.append(EdgeMapExtraction(volume[:, :, sl], edge_detector='Sobel1stDev'))
     
 # Convert maps to an Numpy array
 patient_maps = np.array(patient_maps)
@@ -75,7 +75,7 @@ patient_maps = []
 # Go through each slice of the volume
 for sl in range(volume.shape[2]):
     ### Compute the Haralick maps
-    patient_maps(EdgeMapExtraction(volume[:, :, sl]), edge_detector='Sobel2ndDev')
+    patient_maps.append(EdgeMapExtraction(volume[:, :, sl], edge_detector='Sobel2ndDev'))
     
 # Convert maps to an Numpy array
 patient_maps = np.array(patient_maps)
@@ -101,7 +101,7 @@ patient_maps = []
 # Go through each slice of the volume
 for sl in range(volume.shape[2]):
     ### Compute the Haralick maps
-    patient_maps(EdgeMapExtraction(volume[:, :, sl]), edge_detector='Prewitt1stDev')
+    patient_maps.append(EdgeMapExtraction(volume[:, :, sl], edge_detector='Prewitt1stDev'))
     
 # Convert maps to an Numpy array
 patient_maps = np.array(patient_maps)
@@ -127,7 +127,7 @@ patient_maps = []
 # Go through each slice of the volume
 for sl in range(volume.shape[2]):
     ### Compute the Haralick maps
-    patient_maps(EdgeMapExtraction(volume[:, :, sl]), edge_detector='Prewit2ndtDev')
+    patient_maps.append(EdgeMapExtraction(volume[:, :, sl], edge_detector='Prewitt2ndDev'))
     
 # Convert maps to an Numpy array
 patient_maps = np.array(patient_maps)
