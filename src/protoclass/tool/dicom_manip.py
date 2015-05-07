@@ -73,7 +73,7 @@ def OpenVolumeNumpy(filename):
         A 3D array containing the volume.
     """
         
-    return load(filename)
+    return np.load(filename)
 
 
 def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
