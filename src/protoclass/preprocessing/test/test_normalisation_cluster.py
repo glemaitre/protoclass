@@ -1,4 +1,3 @@
-
 #title           :test_normalisation_cluster.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
