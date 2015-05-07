@@ -40,7 +40,6 @@ print 'Reading data from the directory {}'.format(path_dcm)
 # Read a volume
 volume = OpenVolumeNumpy(path_dcm)
 
-
 #################################################################################
 ### SOBEL 1ST ORDER
 
