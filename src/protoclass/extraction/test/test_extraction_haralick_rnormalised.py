@@ -30,7 +30,7 @@ from protoclass.extraction.texture_analysis import HaralickMapExtraction
 #path_to_data = '/home/lemaitre/Documents/Data/experiments'
 path_patients = sys.argv[1]
 path_t2w = 'rician_norm/volume_rnorm.npy'
-path_haralick = 'haralick_gnorm'
+path_haralick = 'haralick_rnorm'
 
 #################################################################################
 ## FIND EXTREMUM FOR THE DIFFERENT PATIENTS
@@ -44,7 +44,7 @@ print 'Reading data from the directory {}'.format(path_dcm)
 
 # Read a volume
 volume = OpenVolumeNumpy(path_dcm)
-
+print volume.shape
 #################################################################################
 ### 2D volume
 

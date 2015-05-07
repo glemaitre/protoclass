@@ -77,12 +77,11 @@ def HaralickMapExtraction(im, **kwargs):
     # Check that nd_im is of the same dimension than win_size
     if nd_im != len(win_size):
         raise ValueError('The dimension of the image do not agree with the window size dimensions: 2D - 3D')
-
+    
     # Rescale the image
     ### Define a lambda function for that
     ImageRescaling = lambda im : np.around((im.astype(float) - gray_limits[0]) * (float(n_gray_levels) / (gray_limits[1] - gray_limits[0])))
     im_rescale = ImageRescaling(im).astype(int)
-    np.save('../data/image.npy', im_rescale)
     
     # Call the 2D patch extractors
     if nd_im == 2:
