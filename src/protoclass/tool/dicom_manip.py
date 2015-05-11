@@ -113,6 +113,35 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
     # Return the volume read
     return volume_data
 
+def GetGTSamples(path_to_gt, reverse_gt=True):
+    """Function to return the samples corresponding to the ground-truth
+
+    Parameters
+    ----------
+    path_to_gt: str
+        Path containing the gt.
+    reverse_gt: bool
+        Since that there is a mistake in the data we need to flip in z the gt.
+        Have to be corrected in the future.
+    
+    Returns
+    -------
+    idx_gt: ndarray
+        A 3D array containing the volume extracted from the DCM serie.
+        The data not corresponding to the GT of interest will be tagged NaN.
+    """
+
+    # Open the gt volume
+    tmp_volume_gt = OpenOneSerieDCM(path_to_gt)
+    volume_gt = tmp_volume_gt.copy()
+    if reverse_gt == True:
+        print 'Inversing the GT'
+        for sl in range(volume_gt.shape[2]):
+            volume_gt[:,:,-sl] = tmp_volume_gt[:,:,sl]
+
+    # Get the samples that we are interested with
+    return np.nonzero(volume_gt == 1)
+
 def __VolumeMinMax__(path_patient):
     """Private function in order to return min max of a 3D volume
 
