@@ -49,4 +49,4 @@ def SamplingHaralickFromGT(path_to_haralick, path_to_gt, vec_angle=np.arange(4),
             volume_filename = 'volume_' + str(a) + '_' + str(f)
             matrix_haralick.append(SamplingVolumeFromGT(join(path_to_haralick, volume_filename), path_to_gt))
 
-    return matrix_haralick
+    return np.array(matrix_haralick)
