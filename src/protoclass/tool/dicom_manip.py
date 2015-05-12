@@ -113,7 +113,7 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
     # Return the volume read
     return volume_data
 
-def GetGTSamples(path_to_gt, reverse_gt=True):
+def GetGTSamples(path_to_gt, reverse_gt=True, pos_value=255.):
     """Function to return the samples corresponding to the ground-truth
 
     Parameters
@@ -123,6 +123,9 @@ def GetGTSamples(path_to_gt, reverse_gt=True):
     reverse_gt: bool
         Since that there is a mistake in the data we need to flip in z the gt.
         Have to be corrected in the future.
+    reverse_gt: numeric or bool
+        Value considered as the positive class. By default it is 255., but it could be
+        1 or True
     
     Returns
     -------
@@ -140,7 +143,7 @@ def GetGTSamples(path_to_gt, reverse_gt=True):
             volume_gt[:,:,-sl] = tmp_volume_gt[:,:,sl]
 
     # Get the samples that we are interested with
-    return np.nonzero(volume_gt == 1)
+    return np.nonzero(volume_gt == pos_value)
 
 def __VolumeMinMax__(path_patient):
     """Private function in order to return min max of a 3D volume

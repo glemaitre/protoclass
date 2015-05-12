@@ -16,7 +16,10 @@ import numpy as np
 import os
 from os.path import join
 
+from protoclass.tool.dicom_manip import GetGTSamples
 from protoclass.extraction.sampling import SamplingVolumeFromGT
 from protoclass.extraction.sampling import SamplingHaralickFromGT
 
-data = SamplingVolumeFromGT('/work/le2i/gu5306le/experiments/Patient 1036/haralick/volume_0_0.npy', '/work/le2i/gu5306le/experiments/Patient 1036/GT/prostate')
+data = SamplingVolumeFromGT('/DATA/prostate/public/Siemens/Patient 1036/volume_0_0.npy', '/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate')
+
+#array = GetGTSamples('/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate')
