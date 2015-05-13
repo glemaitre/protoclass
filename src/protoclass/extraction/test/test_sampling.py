@@ -17,9 +17,12 @@ import os
 from os.path import join
 
 from protoclass.tool.dicom_manip import GetGTSamples
+from protoclass.tool.dicom_manip import BinarizeLabel
 from protoclass.extraction.sampling import SamplingVolumeFromGT
 from protoclass.extraction.sampling import SamplingHaralickFromGT
 
 data = SamplingVolumeFromGT('/DATA/prostate/public/Siemens/Patient 1036/volume_0_0.npy', '/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate')
+
+label = BinarizeLabel(SamplingVolumeFromGT('/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/cap', '/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate', reverse_volume=True))
 
 #array = GetGTSamples('/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate')

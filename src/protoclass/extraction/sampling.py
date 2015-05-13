@@ -19,21 +19,26 @@ import multiprocessing
 import os
 from os.path import join, isdir, isfile
 
+from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.tool.dicom_manip import OpenVolumeNumpy
 from protoclass.tool.dicom_manip import GetGTSamples
 
-def SamplingVolumeFromGT(path_to_volume, path_to_gt):
+def SamplingVolumeFromGT(path_to_volume, path_to_gt, reverse_volume=False, reverse_gt=True):
     # TODO: write the help for this function
     # GOAL: extract the pixels from the data
     ### Return the matrix 
     ### Return the label vector
     ### We work for a single patient - not the time to send the size of the volume
 
-    # Load the volume
-    volume_mod = OpenVolumeNumpy(path_to_volume)
+    # Check if we have either a file or a directory
+    if isdir(path_to_volume):
+        # Read a volume for the current patient
+        volume_mod = OpenOneSerieDCM(path_to_volume, reverse_volume)
+    elif isfile(path_to_volume):
+        volume_mod = OpenVolumeNumpy(path_to_volume, reverse_volume)
 
     # Get the data correspoding to the prostate
-    array_gt = GetGTSamples(path_to_gt)
+    array_gt = GetGTSamples(path_to_gt, reverse_gt)
 
     # Return a vector 
     return volume_mod[array_gt]

@@ -21,13 +21,16 @@ import multiprocessing
 import os
 from os.path import join, isdir, isfile
 
-def OpenOneSerieDCM(path_to_serie):
+def OpenOneSerieDCM(path_to_serie, reverse=False):
     """Function to read a single serie DCM to return a 3D volume
 
     Parameters
     ----------
     path_to_serie: str
         The path to the folder containing all the dicom images.
+    reverse: bool
+        Since that there is a mistake in the data we need to flip in z the gt.
+        Have to be corrected in the future.
     
     Returns
     -------
@@ -57,23 +60,43 @@ def OpenOneSerieDCM(path_to_serie):
     im_numpy = np.swapaxes(im_numpy, 0, 2)
     im_numpy = np.swapaxes(im_numpy, 0, 1)
     
+    im_numpy_cp = im_numpy.copy()
+    if reverse == True:
+        print 'Inversing the GT'
+        for sl in range(im_numpy.shape[2]):
+            im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
+
+    
     return im_numpy.astype(float)
 
-def OpenVolumeNumpy(filename):
+def OpenVolumeNumpy(filename, reverse_volume=False):
     """Function to read a numpy array previously saved
 
     Parameters
     ----------
     filename: str
         Filename of the numpy array *.npy.
+    reverse_volume: bool
+        Since that there is a mistake in the data we need to flip in z the gt.
+        Have to be corrected in the future.
     
     Returns
     -------
     im_numpy: ndarray
         A 3D array containing the volume.
     """
-        
-    return np.load(filename)
+
+    # Open the volume
+    im_numpy = np.load(filename)
+
+    # Copy the volume temporary
+    im_numpy_cp = im_numpy.copy()
+    if reverse_volume == True:
+        print 'Inversing the GT'
+        for sl in range(im_numpy.shape[2]):
+            im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
+
+    return im_numpy
 
 
 def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
@@ -159,7 +182,7 @@ def __VolumeMinMax__(path_patient):
         Return a tuple containing the minimum and maximum for the patient.
     """
 
-    # Chec if we have either a file or a directory
+    # Check if we have either a file or a directory
     if isdir(path_patient):
         # Read a volume for the current patient
         volume = OpenOneSerieDCM(path_patient)
@@ -204,3 +227,23 @@ def FindExtremumDataSet(path_to_data, **kwargs):
     min_max_array = np.array(min_max_list)
 
     return (np.min(min_max_array), np.max(min_max_array))
+
+def BinarizeLabel(label):
+    """Function to find the minimum and maximum intensities
+       in a 3D volume
+
+    Parameters
+    ----------
+    label: array
+        Array with values usually 0. and 255. .
+
+    Returns
+    -------
+    label: array
+        Array with values either -1. or 1. .
+    """
+
+    label[np.nonzero(label>0)] = 1.
+    label = label * 2. - 1.
+
+    return label
