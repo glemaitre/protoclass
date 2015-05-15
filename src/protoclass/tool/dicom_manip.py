@@ -136,6 +136,36 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
     # Return the volume read
     return volume_data
 
+def OpenDataLabel(path_to_data):
+    """Function to read data and label form an *.npz file
+
+    Parameters
+    ----------
+    path_to_serie: str
+        The path to the *.npz file.
+    
+    Returns
+    -------
+    data: ndarray
+        A list of 2D matrix containing the data.
+    label: ndarray
+        A list of 1D vector containing the label associated to the data matrix.
+    """
+    
+    if not (isfile(path_to_data) and 
+            path_to_data.endswith('.npz')):
+
+        # Check that the path is in fact a file and npz format
+        raise ValueError('protoclass.tool.OpenDataLabel: An *.npz file is expected.')
+
+    else:
+
+        # The file can be considered
+        npzfile = np.load(path_to_data)
+
+        # return the desired variable
+        return (npzfile['data'], npzfile['label'])
+
 def GetGTSamples(path_to_gt, reverse_gt=True, pos_value=255.):
     """Function to return the samples corresponding to the ground-truth
 

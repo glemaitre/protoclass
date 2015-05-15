@@ -19,3 +19,7 @@ import multiprocessing
 import os
 from os.path import join, isdir, isfile
 
+# We will perform classification with a LOPO strategy
+
+# Read the data first 
+filename_data = 
