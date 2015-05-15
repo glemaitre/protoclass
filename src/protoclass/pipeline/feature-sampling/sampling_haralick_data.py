@@ -1,4 +1,4 @@
-#title           :haralick_sampling.py
+#title           :sampling_gharalick_data.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/05/12
@@ -22,7 +22,7 @@ from os.path import join, isdir, isfile
 # The purpose will get all the data. We need to save:
 ### A data matrix of size N x M -> data
 ### A vector of size N -> label
-### A list with the patient information regarding the indexes
+### Data and vector a compacted inside an ndarray (like python list)
 
 from protoclass.extraction.sampling import SamplingHaralickFromGT
 from protoclass.extraction.sampling import SamplingVolumeFromGT
@@ -32,7 +32,10 @@ path_patients = sys.argv[1]
 path_to_haralick = "haralick"
 path_to_GT_prostate = "GT/prostate"
 path_to_GT_cap = "GT/cap"
+path_to_exp = sys.argv[2]
 
+data=[]
+label=[]
 # Go through each patient directory
 for dirs in os.listdir(path_to_data):
     
@@ -48,12 +51,19 @@ for dirs in os.listdir(path_to_data):
 
     # Extract the data for this specific patient - Haralick
     ### No other parameter since that we need all the haralick
-    SamplingHaralickFromGT(path_patient_haralick, 
-                           path_to_gt)
+    data.append(SamplingHaralickFromGT(path_patient_haralick, path_to_gt))
+
+    # Extract the label for this specific patient
+    label.append(BinarizeLabel(SamplingVolumeFromGT(path_patient_GT_cap,
+                                               path_to_GT_prostate,
+                                               reverse_volume=True)))
 
 
-### Example to get data for one patient
-data = SamplingVolumeFromGT('/DATA/prostate/public/Siemens/Patient 1036/volume_0_0.npy', '/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate')
+# Create a directory if not existing
+if not os.path.exists(path_to_exp):
+    os.makedirs(path_to_exp)
 
-label = BinarizeLabel(SamplingVolumeFromGT('/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/cap', '/DATA/prostate/public/Siemens/Patient 1036/T2WSeg/prostate', reverse_volume=True))
-
+# We will save the data and the label in the same file to ensure that we have everything properly embedded    
+filename = join(path_to_exp, 'exp1.npz')
+# Save the data with their keyword name
+np.savez(filename, data=data, label=label)
