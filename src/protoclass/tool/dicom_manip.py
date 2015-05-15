@@ -258,7 +258,7 @@ def FindExtremumDataSet(path_to_data, **kwargs):
 
     return (np.min(min_max_array), np.max(min_max_array))
 
-def BinarizeLabel(label):
+def BinariseLabel(label):
     """Function to find the minimum and maximum intensities
        in a 3D volume
 

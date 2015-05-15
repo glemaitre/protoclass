@@ -18,6 +18,8 @@ import multiprocessing
 # OS library
 import os
 from os.path import join, isdir, isfile
+# SYS library
+import sys
 
 # The purpose will get all the data. We need to save:
 ### A data matrix of size N x M -> data
@@ -26,6 +28,7 @@ from os.path import join, isdir, isfile
 
 from protoclass.extraction.sampling import SamplingHaralickFromGT
 from protoclass.extraction.sampling import SamplingVolumeFromGT
+from protoclass.tool.dicom_manip import BinariseLabel
 
 # Get the path where all the patients are stored
 path_patients = sys.argv[1]
@@ -37,10 +40,13 @@ path_to_exp = sys.argv[2]
 data=[]
 label=[]
 # Go through each patient directory
-for dirs in os.listdir(path_to_data):
+for dirs in os.listdir(path_patients):
     
     # Get the path for the patient
     path_patient = join(path_patients, dirs)
+
+    # Print the current path
+    print 'Processing path: {}'.format(path_patient)
 
     # Get the path to the haralick volume for this patient
     path_patient_haralick = join(path_patient, path_to_haralick)
@@ -51,13 +57,16 @@ for dirs in os.listdir(path_to_data):
 
     # Extract the data for this specific patient - Haralick
     ### No other parameter since that we need all the haralick
-    data.append(SamplingHaralickFromGT(path_patient_haralick, path_to_gt))
+    data.append(SamplingHaralickFromGT(path_patient_haralick, path_patient_GT_prostate))
 
     # Extract the label for this specific patient
-    label.append(BinarizeLabel(SamplingVolumeFromGT(path_patient_GT_cap,
-                                               path_to_GT_prostate,
-                                               reverse_volume=True)))
+    label.append(BinariseLabel(SamplingVolumeFromGT(path_patient_GT_cap,
+                                                    path_patient_GT_prostate,
+                                                    reverse_volume=True)))
 
+# Convert into np array
+data = np.array(data)
+label = np.array(label)
 
 # Create a directory if not existing
 if not os.path.exists(path_to_exp):

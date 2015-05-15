@@ -18,6 +18,8 @@ import multiprocessing
 # OS library
 import os
 from os.path import join, isdir, isfile
+# itertools library
+import itertools
 
 from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.tool.dicom_manip import OpenVolumeNumpy
@@ -29,6 +31,8 @@ def SamplingVolumeFromGT(path_to_volume, path_to_gt, reverse_volume=False, rever
     ### Return the matrix 
     ### Return the label vector
     ### We work for a single patient - not the time to send the size of the volume
+
+    print path_to_volume
 
     # Check if we have either a file or a directory
     if isdir(path_to_volume):
@@ -43,15 +47,24 @@ def SamplingVolumeFromGT(path_to_volume, path_to_gt, reverse_volume=False, rever
     # Return a vector 
     return volume_mod[array_gt]
 
+def ProcessingHaralick(it, path_h, path_gt):
+
+    volume_filename = 'volume_' + str(it[0]) + '_' + str(it[1]) + '.npy'
+    return SamplingVolumeFromGT(join(path_h, volume_filename), path_gt)
+
 def SamplingHaralickFromGT(path_to_haralick, path_to_gt, vec_angle=np.arange(4), vec_feat=np.arange(13)):
     # TODO: write the help for this function
     # GOAL: Extract the data from the haralick volume
     ### We work for a single patient - not the time to send the size of the volume
 
-    matrix_haralick = []
-    for a in vec_angle:
-        for f in vec_feat:
-            volume_filename = 'volume_' + str(a) + '_' + str(f)
-            matrix_haralick.append(SamplingVolumeFromGT(join(path_to_haralick, volume_filename), path_to_gt))
+    # matrix_haralick = []
+    # for a in vec_angle:
+    #     for f in vec_feat:
+    #         volume_filename = 'volume_' + str(a) + '_' + str(f) + '.npy'
+    #         matrix_haralick.append(SamplingVolumeFromGT(join(path_to_haralick, volume_filename), path_to_gt))
+
+    # Compute the Haralick statistic in parallel
+    num_cores = multiprocessing.cpu_count()
+    matrix_haralick = Parallel(n_jobs=num_cores)(delayed(ProcessingHaralick)(p, path_to_haralick, path_to_gt) for p in itertools.product(vec_angle, vec_feat))
 
     return np.array(matrix_haralick).T
