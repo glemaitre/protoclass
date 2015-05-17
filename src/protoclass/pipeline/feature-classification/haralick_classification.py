@@ -74,5 +74,5 @@ if not os.path.exists(path_to_save):
     os.makedirs(path_to_save)
 
 saving_filename = 'result_' + str(idx_testing_patient) + '.npz'
-saving_path = join(path_to_save, saving_path)
+saving_path = join(path_to_save, saving_filename)
 np.savez(saving_path, pred_label=pred_label, roc=roc)
