@@ -152,14 +152,10 @@ def OpenDataLabel(path_to_data):
         A list of 1D vector containing the label associated to the data matrix.
     """
     
-    if not (isfile(path_to_data) and 
-            path_to_data.endswith('.npz')):
-
+    if not (isfile(path_to_data) and path_to_data.endswith('.npz')):
         # Check that the path is in fact a file and npz format
         raise ValueError('protoclass.tool.OpenDataLabel: An *.npz file is expected.')
-
     else:
-
         # The file can be considered
         npzfile = np.load(path_to_data)
 
