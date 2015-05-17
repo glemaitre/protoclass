@@ -32,7 +32,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     auc = roc_auc_score(testing_label, pred_prob[:, 1])
     roc = roc_auc(fpr, tpr, thresh, auc)
 
-    return roc
+    return (pred_label, roc)
 
 def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
     
