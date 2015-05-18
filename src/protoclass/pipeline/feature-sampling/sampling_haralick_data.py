@@ -1,4 +1,4 @@
-#title           :sampling_haralick_gaussian_data.py
+#title           :sampling_haralick_data.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/05/12
@@ -21,10 +21,10 @@ from os.path import join, isdir, isfile
 # SYS library
 import sys
 
-# The purpose will get all the data. We need to save:
-### A data matrix of size N x M -> data
-### A vector of size N -> label
-### Data and vector a compacted inside an ndarray (like python list)
+# The following argument will be important
+### sys.argv[1] = path in which all patients folders are located
+### sys.argv[2] = path to consider for haralick -> 'haralick', 'haralick_rnorm', 'haralick_gnorm'
+### sys.argv[3] = path where to save the data
 
 from protoclass.extraction.sampling import SamplingHaralickFromGT
 from protoclass.extraction.sampling import SamplingVolumeFromGT
@@ -32,10 +32,10 @@ from protoclass.tool.dicom_manip import BinariseLabel
 
 # Get the path where all the patients are stored
 path_patients = sys.argv[1]
-path_to_haralick = "haralick_gnorm"
+path_to_haralick = sys.argv[2]
 path_to_GT_prostate = "GT/prostate"
 path_to_GT_cap = "GT/cap"
-path_to_exp = sys.argv[2]
+path_to_exp = sys.argv[3]
 
 data=[]
 label=[]
