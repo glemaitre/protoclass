@@ -20,6 +20,8 @@ import multiprocessing
 # OS library
 import os
 from os.path import join, isdir, isfile
+# Import namedtuple
+from collections import namedtuple
 
 def OpenOneSerieDCM(path_to_serie, reverse=False):
     """Function to read a single serie DCM to return a 3D volume
@@ -99,7 +101,7 @@ def OpenVolumeNumpy(filename, reverse_volume=False):
     return im_numpy
 
 
-def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
+def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True, reverse_data=False):
     """Function to read a DCM volume and apply a GT mask
 
     Parameters
@@ -120,7 +122,7 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True):
     """
 
     # Open the data volume
-    volume_data = OpenOneSerieDCM(path_to_data)
+    volume_data = OpenOneSerieDCM(path_to_data, reverse_data)
 
     # Open the gt volume
     tmp_volume_gt = OpenOneSerieDCM(path_to_gt)
@@ -193,6 +195,36 @@ def GetGTSamples(path_to_gt, reverse_gt=True, pos_value=255.):
 
     # Get the samples that we are interested with
     return np.nonzero(volume_gt == pos_value)
+
+def OpenResult(path_to_result):
+    """Function to read results: label and roc information
+
+    Parameters
+    ----------
+    path_to_result: str
+        Path containing the filename of the result file.
+    
+    Returns
+    -------
+    pred_label: 1D array
+        The label results for the patient considered as test.
+    roc: namedtuple
+        A named tuple such as roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
+    """
+    
+    # The results are saved into a npz file
+    if not (isfile(path_to_result) and path_to_result.endswith('.npz')):
+        raise ValueError('protoclass.tool.dicom_manip: The result file is not an *.npz file')
+    else:
+        # Load the file
+        npzfile = np.load(path_to_result)
+
+        # Define our namedtuple
+        roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
+        roc = roc_auc._make(npzfile['roc'])
+        pred_label = npzfile['pred_label']
+
+        return (pred_label, roc)
 
 def __VolumeMinMax__(path_patient):
     """Private function in order to return min max of a 3D volume
