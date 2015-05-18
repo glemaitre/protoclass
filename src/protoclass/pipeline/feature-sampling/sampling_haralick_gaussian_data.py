@@ -1,4 +1,4 @@
-#title           :sampling_gharalick_data.py
+#title           :sampling_haralick_gaussian_data.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/05/12
@@ -32,7 +32,7 @@ from protoclass.tool.dicom_manip import BinariseLabel
 
 # Get the path where all the patients are stored
 path_patients = sys.argv[1]
-path_to_haralick = "haralick"
+path_to_haralick = "haralick_gnorm"
 path_to_GT_prostate = "GT/prostate"
 path_to_GT_cap = "GT/cap"
 path_to_exp = sys.argv[2]
@@ -73,6 +73,6 @@ if not os.path.exists(path_to_exp):
     os.makedirs(path_to_exp)
 
 # We will save the data and the label in the same file to ensure that we have everything properly embedded    
-filename = join(path_to_exp, 'exp1.npz')
+filename = join(path_to_exp, 'data.npz')
 # Save the data with their keyword name
 np.savez(filename, data=data, label=label)

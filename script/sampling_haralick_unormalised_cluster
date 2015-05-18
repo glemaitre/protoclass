@@ -5,9 +5,9 @@ if [ "$#" != "1" ];
 then
     echo "**************************************************************"
     echo "Usage:"
-    echo "./haralick-2d-cluster dataPath"
+    echo "./sampling_haralick_unormalised_cluster dataPath"
     echo
-    echo "Example: ./haralick-2d-cluster ~/Home/Data/"
+    echo "Example: ./sampling_haralick_unormalised_cluster ~/Home/Data/"
     echo " "
     echo "Current entry: $0 $*"
     echo "**************************************************************"
@@ -35,7 +35,7 @@ touch $script_filename
 ### Truncate the file if it is existing
 : > $script_filename
 ### Write the command to execute
-printf "ipython protoclass/pipeline/feature-sampling/sampling_haralick_data.py \"${data_path%/}\" \"${path_save%/}\"" >> $script_filename
+printf "ipython protoclass/pipeline/feature-sampling/sampling_haralick_unormalised_data.py \"${data_path%/}\" \"${path_save%/}\"" >> $script_filename
 ### Make it executable
 chmod u+x $script_filename
 # Submit the job to the queue
