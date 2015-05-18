@@ -5,9 +5,9 @@ if [ "$#" != "1" ];
 then
     echo "**************************************************************"
     echo "Usage:"
-    echo "./haralick-2d-cluster dataPath"
+    echo "./classification_haralick_unormalised_cluster dataPath"
     echo
-    echo "Example: ./haralick-2d-cluster ~/Home/Data/"
+    echo "Example: ./classification_haralick_unormalised_cluster ~/Home/Data/"
     echo " "
     echo "Current entry: $0 $*"
     echo "**************************************************************"
@@ -25,8 +25,8 @@ script_dir=$(pwd)
 # Move to the right directory for the processing
 cd "/user1/le2i/gu5306le/Work/protoclass/src"
 
-path_data="/work/le2i/gu5306le/exp1/exp1.npz"
-path_saving="/work/le2i/gu5306le/exp1"
+path_data="/work/le2i/gu5306le/haralick_unormalised/data.npz"
+path_saving="/work/le2i/gu5306le/haralick_unormalised/lopo_results"
 
 # Submit a job for each patient
 patient_idx=0
@@ -39,7 +39,7 @@ for patient in $data_path*/; do
     ### Truncate the file if it is existing
     : > $script_filename
     ### Write the command to execute
-    printf "ipython protoclass/pipeline/feature-classification/haralick_classification.py \"${path_data}\" $patient_idx \"${path_saving}\"" >> $script_filename
+    printf "ipython protoclass/pipeline/feature-classification/classification_haralick.py \"${path_data}\" $patient_idx \"${path_saving}\"" >> $script_filename
     ### Make it executable
     chmod u+x $script_filename
     # Submit the job to the queue

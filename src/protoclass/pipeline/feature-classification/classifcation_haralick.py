@@ -1,4 +1,4 @@
-#title           :haralick_classiciation.py
+#title           :classiciation_haralick.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/05/12
