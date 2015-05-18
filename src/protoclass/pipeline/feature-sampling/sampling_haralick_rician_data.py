@@ -32,7 +32,7 @@ from protoclass.tool.dicom_manip import BinariseLabel
 
 # Get the path where all the patients are stored
 path_patients = sys.argv[1]
-path_to_haralick = "haralick_rician"
+path_to_haralick = "haralick_rnorm"
 path_to_GT_prostate = "GT/prostate"
 path_to_GT_cap = "GT/cap"
 path_to_exp = sys.argv[2]
