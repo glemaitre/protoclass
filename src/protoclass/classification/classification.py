@@ -18,7 +18,34 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import confusion_matrix
 
-def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', **kwargs):
+from random import sample
+
+def BalancingTraining(training_data, training_label, **kwargs):
+
+    strategy = kwargs.pop('balancing_criterion', 'random-sampling')
+
+    if strategy == 'random-sampling':
+        class_label = np.unique(training_label)
+        # Find which class is over represented
+        count_neg = np.count_nonzero(training_label == class_label[0])
+        count_pos = np.count_nonzero(training_label == class_label[1])
+
+        if count_neg > count_pos:
+            # Randomly select a subset in count_neg equal to count_pos
+            sel_neg = sample(np.nonzero(training_label == class_label[0])[0], count_pos)
+            sel_pos = np.nonzero(training_label == class_label[1])[0].tolist()
+        else:
+            # Randomly select a subset in count_neg equal to count_pos
+            sel_pos = sample(np.nonzero(training_label == class_label[1])[0], count_neg)
+            sel_neg = np.nonzero(training_label == class_label[0])[0].tolist()
+            
+        return (training_data[sel_neg + sel_pos, :], training_label[sel_neg + sel_pos])
+
+def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion=None, **kwargs):
+
+    # Apply the balancing
+    if not balancing_criterion == None:
+        training_data, training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion)
     
     # Check which classifier to select to classify the data
     if classifier_str == 'random-forest':
