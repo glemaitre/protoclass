@@ -64,7 +64,7 @@ def OpenOneSerieDCM(path_to_serie, reverse=False):
     
     im_numpy_cp = im_numpy.copy()
     if reverse == True:
-        print 'Inversing the GT'
+        #print 'Inversing the GT'
         for sl in range(im_numpy.shape[2]):
             im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
 
@@ -94,7 +94,7 @@ def OpenVolumeNumpy(filename, reverse_volume=False):
     # Copy the volume temporary
     im_numpy_cp = im_numpy.copy()
     if reverse_volume == True:
-        print 'Inversing the GT'
+        #print 'Inversing the GT'
         for sl in range(im_numpy.shape[2]):
             im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
 
@@ -128,7 +128,7 @@ def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True, reverse_data=
     tmp_volume_gt = OpenOneSerieDCM(path_to_gt)
     volume_gt = tmp_volume_gt.copy()
     if reverse_gt == True:
-        print 'Inversing the GT'
+        #print 'Inversing the GT'
         for sl in range(volume_gt.shape[2]):
             volume_gt[:,:,-sl] = tmp_volume_gt[:,:,sl]
 
@@ -189,12 +189,16 @@ def GetGTSamples(path_to_gt, reverse_gt=True, pos_value=255.):
     tmp_volume_gt = OpenOneSerieDCM(path_to_gt)
     volume_gt = tmp_volume_gt.copy()
     if reverse_gt == True:
-        print 'Inversing the GT'
+        #print 'Inversing the GT'
         for sl in range(volume_gt.shape[2]):
             volume_gt[:,:,-sl] = tmp_volume_gt[:,:,sl]
 
     # Get the samples that we are interested with
     return np.nonzero(volume_gt == pos_value)
+
+def VolumeToLabelUsingGT(volume, path_to_gt, reverse_gt=True):
+
+    return BinariseLabel(volume[GetGTSamples(path_to_gt, reverse_gt)])
 
 def OpenResult(path_to_result):
     """Function to read results: label and roc information

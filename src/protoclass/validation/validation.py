@@ -12,6 +12,8 @@
 import numpy as np
 # Scipy library
 import scipy as sp
+# Scikit-learn library
+from sklearn.metrics import confusion_matrix
 # Joblib library
 ### Module to performed parallel processing
 from joblib import Parallel, delayed
@@ -20,11 +22,23 @@ import multiprocessing
 # OS library
 import os
 from os.path import join, isdir, isfile
+# Matplotlib library 
+import matplotlib.pyplot as plt
 
 from protoclass.tool.dicom_manip import OpenOneSerieDCM
 from protoclass.tool.dicom_manip import OpenVolumeNumpy
 from protoclass.tool.dicom_manip import GetGTSamples
 from protoclass.tool.dicom_manip import OpenResult
+
+def ResultToLabel(path_to_result):
+    # Check if the result is an npz file
+    if not (isfile(path_to_result) and path_to_result.endswith('.npz')):
+        raise ValueError('protoclass.validation.ResultVolume: The result file should be an *.npz file.')
+    else:
+        # Now we have all the information in order to restruct the stored results
+        pred_label, roc = OpenResult(path_to_result)
+
+        return pred_label
 
 def ResultToVolume(path_to_result, path_to_gt, reverse_gt=True):
     
@@ -56,3 +70,70 @@ def ResultToVolume(path_to_result, path_to_gt, reverse_gt=True):
         volume_out[array_gt] = pred_label
             
         return volume_out
+
+def LabelsToSensitivitySpecificity(true_label, pred_label):
+
+    # Compute the confusion matrix
+    cm = BuildConfusionFromVolume(true_label, pred_label)
+
+    # Compute the sensitivity and specificity
+    sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
+    spec = float(cm[0, 0]) / float(cm[0, 0] + cm[0, 1])
+
+    return (sens, spec)
+
+def BuildConfusionFromVolume(true_label, pred_label):
+
+    return confusion_matrix(true_label, pred_label)
+
+def OpenROCPatients(path_to_results):
+    
+    # Check that the path is in fact a directory
+    if not isdir(path_to_results):
+        raise ValueError('protoclass.validation.validation: The path given is not a directory')
+    else:
+        # Read each file from the directory
+        roc = []
+        for f in os.listdir(path_to_results):
+            if isfile(join(path_to_results, f)) and f.endswith('.npz'):
+                # Read the file
+                tmp_pred_label, tmp_roc = OpenResult(join(path_to_results, f))
+                roc.append(tmp_roc)
+
+        return roc
+
+def PlotROCPatients(rocs):
+
+    fig = plt.figure()
+    mk = ['.', 
+          ',', 
+          'o', 
+          'v', 
+          '^', 
+          '<', 
+          '>', 
+          '1', 
+          '2', 
+          '3', 
+          '4', 
+          '8', 
+          's', 
+          'p', 
+          '*', 
+          'h', 
+          'H', 
+          '+', 
+          'x', 
+          'D', 
+          'd' ]
+
+    for roc in rocs:
+        plt.plot(roc.fpr, roc.tpr, mk[np.random.randint(20)], ls='-', label='AUC={:.2f}'.format(roc.auc), markevery=50)
+
+    # Put some x and y labels
+    plt.xlabel('False positive rate')
+    plt.ylabel('True negative rate')
+    # Put the legend on the bottom left
+    plt.legend(loc=4)
+    plt.show()
+
