@@ -23,9 +23,13 @@ import sys
 
 from protoclass.classification.classification import BalancingTraining
 
+from protoclass.classification.classification import Classify
+
 # Generate a vector 
 label = np.array([-1]*100 + [1]*20)
 data = np.random.random((label.shape[0], 5))
 
 # Check if the selection is done properly
 data, label = BalancingTraining(data, label)
+
+Classify(data, label, data, label, balancing_criterion='class_prior', class_weight=None, n_estimators=10)

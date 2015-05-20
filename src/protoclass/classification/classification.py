@@ -23,14 +23,23 @@ from collections import Counter
 
 def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion=None, **kwargs):
 
+    if ('class_weight' in kwargs) and (balancing_criterion == 'class_prior'):
+        print 'The keyword class_weight has been overwritten due to the keyword balancing_criterion'
+        del kwargs['class_weight']
+        class_weight = 'auto'
+    else:
+        class_weight = kwargs.pop('class_weight', None)
+
     # Apply the balancing
-    if not balancing_criterion == None:
+    if balancing_criterion == 'random-sampling':
         training_data, training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion)
-    
+    elif balancing_criterion == 'class-prior':
+        class_weight = 'auto'
+
     # Check which classifier to select to classify the data
     if classifier_str == 'random-forest':
         # Classify using random forest
-        pred_prob, pred_label = ClassifyRandomForest(training_data, training_label, testing_data, **kwargs)
+        pred_prob, pred_label = ClassifyRandomForest(training_data, training_label, testing_data, class_weight=class_weight, **kwargs)
 
     # Test the reliability of the classifier
     ### Compute the ROC curve
@@ -46,9 +55,8 @@ def BalancingTraining(training_data, training_label, **kwargs):
     strategy = kwargs.pop('balancing_criterion', 'random-sampling')
 
     if strategy == 'random-sampling':
-        
         return BalancingRandomSampling(training_data, training_label)
-    
+            
 def BalancingRandomSampling(training_data, training_label):
 
     # Count the occurence in the training_label
@@ -57,7 +65,7 @@ def BalancingRandomSampling(training_data, training_label):
     # Find the least represented class
     sel_idx = []
     for keys, values in count.iteritems():
-        print values
+        
         if keys == min(count, key=count.get):
             # Append all the indexes
             sel_idx = sel_idx + np.nonzero(training_label == keys)[0].tolist()
@@ -85,23 +93,32 @@ def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
         param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
         param_random_state = kwargs.pop('random_state', None)
         param_verbose = kwargs.pop('verbose', 1)
-        param_min_density = kwargs.pop('min_density', None)
-        param_compute_importances = kwargs.pop('compute_importances', None)
-
+        param_warm_start = kwargs.pop('warm_start', False)
+        param_class_weight = kwargs.pop('class_weight', None)
+        n_log_space = kwargs.pop('n_log_space', 10)
+        
         # If the number of estimators is not specified, it will be find by cross-validation
         if 'n_estimators' in kwargs:
             param_n_estimators = kwargs.pop('n_estimators', 10)
+
+            # Construct the Random Forest classifier
+            crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+
         else:
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+            
+            # Create the parametor grid
             param_n_estimators = {'n_estimators':np.array(np.round(np.logspace(1., 2.7, n_log_space))).astype(int)}
 
-            crf = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, min_density=param_min_density, compute_importances=param_compute_importances)
-        
-        # Construct the Random Forest classifier
-        crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, min_density=param_min_density, compute_importances=param_compute_importances)
+            # Create the random forest without the parameters to find during the grid search
+            crf_gs = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+
+            # Create the different random forest to try specifying the grid search parametors
+            crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
 
         # Train the classifier
-        sample_weight = kwargs.pop('sample_weight', None)
-        crf.fit(training_data, training_label, sample_weight)
+        crf.fit(training_data, training_label)
 
         # Test the classifier
         pred_prob = crf.predict_proba(testing_data)
