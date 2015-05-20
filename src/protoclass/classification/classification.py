@@ -19,27 +19,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import confusion_matrix
 
 from random import sample
-
-def BalancingTraining(training_data, training_label, **kwargs):
-
-    strategy = kwargs.pop('balancing_criterion', 'random-sampling')
-
-    if strategy == 'random-sampling':
-        class_label = np.unique(training_label)
-        # Find which class is over represented
-        count_neg = np.count_nonzero(training_label == class_label[0])
-        count_pos = np.count_nonzero(training_label == class_label[1])
-
-        if count_neg > count_pos:
-            # Randomly select a subset in count_neg equal to count_pos
-            sel_neg = sample(np.nonzero(training_label == class_label[0])[0], count_pos)
-            sel_pos = np.nonzero(training_label == class_label[1])[0].tolist()
-        else:
-            # Randomly select a subset in count_neg equal to count_pos
-            sel_pos = sample(np.nonzero(training_label == class_label[1])[0], count_neg)
-            sel_neg = np.nonzero(training_label == class_label[0])[0].tolist()
-            
-        return (training_data[sel_neg + sel_pos, :], training_label[sel_neg + sel_pos])
+from collections import Counter
 
 def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion=None, **kwargs):
 
@@ -60,6 +40,32 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     roc = roc_auc(fpr, tpr, thresh, auc)
 
     return (pred_label, roc)
+
+def BalancingTraining(training_data, training_label, **kwargs):
+
+    strategy = kwargs.pop('balancing_criterion', 'random-sampling')
+
+    if strategy == 'random-sampling':
+        
+        return BalancingRandomSampling(training_data, training_label)
+    
+def BalancingRandomSampling(training_data, training_label):
+
+    # Count the occurence in the training_label
+    count = Counter(training_label)
+    
+    # Find the least represented class
+    sel_idx = []
+    for keys, values in count.iteritems():
+        print values
+        if keys == min(count, key=count.get):
+            # Append all the indexes
+            sel_idx = sel_idx + np.nonzero(training_label == keys)[0].tolist()
+        else:
+            # Append a subset of indexes
+            sel_idx = sel_idx + sample(np.nonzero(training_label == keys)[0], count[min(count, key=count.get)])
+
+    return (training_data[sel_idx, :], training_label[sel_idx])
 
 def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
     

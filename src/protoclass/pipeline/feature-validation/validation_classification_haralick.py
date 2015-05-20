@@ -58,7 +58,7 @@ patient_list = [ 'Patient 513',
                  'Patient 870']
 
 
-path_results = '../results/experiments/haralick_gaussian/lopo_results'
+path_results = '../results/experiments/haralick_rician_rds/lopo_results'
 
 for idx, dirs in enumerate(patient_list):
     path_gt = join(path_data, dirs, 'T2WSeg/prostate')
@@ -82,3 +82,12 @@ for idx, dirs in enumerate(patient_list):
 # Open all the ROC curve
 rocs = OpenROCPatients(path_results)
 PlotROCPatients(rocs)
+
+# sl = 25
+
+# fig = plt.figure()
+# ax = fig.add_subplot(2, 1, 1)
+# ax.imshow(volume_gt[:, :, sl])
+# ax2 = fig.add_subplot(2, 1, 2, sharex=ax, sharey=ax)
+# ax2.imshow(volume_res[:, :, sl])
+# plt.show()
