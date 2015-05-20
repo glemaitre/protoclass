@@ -65,7 +65,7 @@ print 'Testing data: {}'.format(testing_data.shape)
 print '---------------------'
 
 # Run the classification for this specific data
-pred_label, roc = Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion='class-prior', n_estimators=1000)
+pred_label, roc = Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion='random-samples-boosting', n_estimators=1000)
 
 # Save the results somewhere
 path_to_save = sys.argv[3]

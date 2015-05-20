@@ -35,9 +35,36 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         training_data, training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion)
     elif balancing_criterion == 'class-prior':
         class_weight = 'auto'
+    elif balancing_criterion == 'random-samples-boosting':
+        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', 100)
+        boot_training_data = []
+        boot_training_label = []
+        for b in range(n_bootstrap_balancing):
+            # Generate a training set which should be balanced
+            tmp_training_data, tmp_training_label = BalancingTraining(training_data, training_label, balancing_criterion='random-sampling')
+            boot_training_data.append(tmp_training_data)
+            boot_training_label.append(tmp_training_label)
 
     # Check which classifier to select to classify the data
-    if classifier_str == 'random-forest':
+    if (classifier_str == 'random-forest') and (balancing_criterion == 'random-samples-boosting'):
+        # In this cases, we will have several training set to use
+        boot_pred_prob = []
+        boot_pred_label = []
+        for d, l in zip(boot_training_data, boot_training_label):
+            # Classify using random forest
+            tmp_pred_prob, tmp_pred_label = ClassifyRandomForest(d, l, testing_data, class_weight=class_weight, **kwargs)
+            boot_pred_prob.append(tmp_pred_prob)
+            boot_pred_label.append(tmp_pred_label)
+
+            # TO CHECK WHAT IS BETTER HERE FOR THE PROBABILITY
+            # Make the average of the probability
+            pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
+            # Make the majority voting
+            pred_label = np.sum(np.array(boot_pred_label), axis=0)
+            pred_label[pred_label >= 0] = 1
+            pred_label[pred_label < 0] = -1
+
+    elif classifier_str == 'random-forest':
         # Classify using random forest
         pred_prob, pred_label = ClassifyRandomForest(training_data, training_label, testing_data, class_weight=class_weight, **kwargs)
 
