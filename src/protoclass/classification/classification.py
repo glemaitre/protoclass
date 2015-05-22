@@ -36,7 +36,9 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     elif balancing_criterion == 'class-prior':
         class_weight = 'auto'
     elif balancing_criterion == 'random-samples-boosting':
-        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', 100)
+        # Count the occurence in the training_label
+        count_label = Counter(training_label)
+        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', int(np.round(float(count_label[max(count_label, key=count_label.get)]) / (float(count_label[min(count_label, key=count_label.get)]) * .67))))
         boot_training_data = []
         boot_training_label = []
         for b in range(n_bootstrap_balancing):

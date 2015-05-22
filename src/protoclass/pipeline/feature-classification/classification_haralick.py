@@ -55,6 +55,13 @@ for p in idx_training_patient:
     training_data = np.concatenate((training_data, data[p]))
     training_label = np.concatenate((training_label, label[p]))
 
+
+# normalise the data
+from sklearn.preprocessing import MinMaxScaler
+scaler_min_max = MinMaxScaler(feature_range=(-1., 1.), copy=False)
+scaler_min_max.fit_transform(training_data)
+scaler_min_max.transform(testing_data)
+    
 # Delete the original data and label just to take less memory
 del data
 del label
