@@ -23,6 +23,9 @@ from collections import Counter
 
 def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion=None, **kwargs):
 
+    #########################################################################
+    ### GET THE PARAMETERS
+    #########################################################################
     if ('class_weight' in kwargs) and (balancing_criterion == 'class_prior'):
         print 'The keyword class_weight has been overwritten due to the keyword balancing_criterion'
         del kwargs['class_weight']
@@ -30,24 +33,23 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     else:
         class_weight = kwargs.pop('class_weight', None)
 
-    # Apply the balancing
+
+    #########################################################################
+    ### BALANCE THE DATA IF NEEDED
+    #########################################################################
     if balancing_criterion == 'random-sampling':
         training_data, training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion)
     elif balancing_criterion == 'class-prior':
         class_weight = 'auto'
     elif balancing_criterion == 'random-samples-boosting':
-        # Count the occurence in the training_label
         count_label = Counter(training_label)
         n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', int(np.round(float(count_label[max(count_label, key=count_label.get)]) / (float(count_label[min(count_label, key=count_label.get)]) * .67))))
-        boot_training_data = []
-        boot_training_label = []
-        for b in range(n_bootstrap_balancing):
-            # Generate a training set which should be balanced
-            tmp_training_data, tmp_training_label = BalancingTraining(training_data, training_label, balancing_criterion='random-sampling')
-            boot_training_data.append(tmp_training_data)
-            boot_training_label.append(tmp_training_label)
+        boot_training_data, boot_training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion, n_bootstrap_balancing=n_bootstrap_balancing)
 
-    # Check which classifier to select to classify the data
+        
+    #########################################################################
+    ### APPLY CLASSIFICATION
+    #########################################################################
     if (classifier_str == 'random-forest') and (balancing_criterion == 'random-samples-boosting'):
         # In this cases, we will have several training set to use
         boot_pred_prob = []
@@ -72,7 +74,10 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, **kwargs)
         pred_prob, pred_label = TestRandomForest(crf, testing_data)
 
-    # Test the reliability of the classifier
+
+    #########################################################################
+    ### CHECK THE PERFORMANCE OF THE CLASSIFIER
+    #########################################################################
     ### Compute the ROC curve
     roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
     fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
@@ -87,7 +92,24 @@ def BalancingTraining(training_data, training_label, **kwargs):
 
     if strategy == 'random-sampling':
         return BalancingRandomSampling(training_data, training_label)
-            
+    if strategy == 'random-samples-boosting':
+        count_label = Counter(training_label)
+        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', int(np.round(float(count_label[max(count_label, key=count_label.get)]) / (float(count_label[min(count_label, key=count_label.get)]) * .67))))
+        return BalancingRandomSamplingBoosting(training_data, training_label, n_bootstrap_balancing)
+
+def BalancingRandomSamplingBoosting(training_data, training_label, n_bootstrap_balancing):
+    
+    # Count the occurence in the training_label    
+    boot_training_data = []
+    boot_training_label = []
+    for b in range(n_bootstrap_balancing):
+        # Generate a training set which should be balanced
+        tmp_training_data, tmp_training_label = BalancingTraining(training_data, training_label, balancing_criterion='random-sampling')
+        boot_training_data.append(tmp_training_data)
+        boot_training_label.append(tmp_training_label)
+
+    return (boot_training_data, boot_training_label)
+
 def BalancingRandomSampling(training_data, training_label):
 
     # Count the occurence in the training_label
