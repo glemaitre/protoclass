@@ -54,11 +54,12 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         boot_pred_label = []
         for d, l in zip(boot_training_data, boot_training_label):
             # Classify using random forest
-            tmp_pred_prob, tmp_pred_label = ClassifyRandomForest(d, l, testing_data, class_weight=class_weight, **kwargs)
+            crf = TrainRandomForest(d, l, class_weight=class_weight, **kwargs)
+            tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
             boot_pred_prob.append(tmp_pred_prob)
             boot_pred_label.append(tmp_pred_label)
 
-            # TO CHECK WHAT IS BETTER HERE FOR THE PROBABILITY
+            # TO CHECK WHAT IS BETTER HERE - MAJORITY VOTING FOR THE MOMENT
             # Make the average of the probability
             pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
             # Make the majority voting
@@ -68,7 +69,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
     elif classifier_str == 'random-forest':
         # Classify using random forest
-        pred_prob, pred_label = ClassifyRandomForest(training_data, training_label, testing_data, class_weight=class_weight, **kwargs)
+        crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestRandomForest(crf, testing_data)
 
     # Test the reliability of the classifier
     ### Compute the ROC curve
@@ -148,6 +150,64 @@ def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
 
         # Train the classifier
         crf.fit(training_data, training_label)
+
+        # Test the classifier
+        pred_prob = crf.predict_proba(testing_data)
+        pred_label = crf.predict(testing_data)
+
+        return (pred_prob, pred_label)
+
+def TrainRandomForest(training_data, training_label, **kwargs):
+    
+        # Import Random Forest from scikit learn
+        from sklearn.ensemble import RandomForestClassifier
+
+        # Unpack the keywords to create the classifier
+        param_criterion = kwargs.pop('criterion', 'gini')
+        param_max_depth = kwargs.pop('max_depth', None)
+        param_min_samples_split = kwargs.pop('min_samples_split', 2)
+        param_min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
+        param_min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
+        param_max_features = kwargs.pop('max_features', 'auto')
+        param_max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
+        param_bootstrap = kwargs.pop('bootstrap', True)
+        param_oob_score = kwargs.pop('oob_score', False)
+        param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
+        param_random_state = kwargs.pop('random_state', None)
+        param_verbose = kwargs.pop('verbose', 1)
+        param_warm_start = kwargs.pop('warm_start', False)
+        param_class_weight = kwargs.pop('class_weight', None)
+        n_log_space = kwargs.pop('n_log_space', 10)
+        
+        # If the number of estimators is not specified, it will be find by cross-validation
+        if 'n_estimators' in kwargs:
+            param_n_estimators = kwargs.pop('n_estimators', 10)
+
+            # Construct the Random Forest classifier
+            crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+
+        else:
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+            
+            # Create the parametor grid
+            param_n_estimators = {'n_estimators':np.array(np.round(np.logspace(1., 2.7, n_log_space))).astype(int)}
+
+            # Create the random forest without the parameters to find during the grid search
+            crf_gs = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+
+            # Create the different random forest to try specifying the grid search parametors
+            crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
+
+        # Train the classifier
+        crf.fit(training_data, training_label)
+
+        return crf
+
+def TestRandomForest(crf, testing_data):
+    
+        # Import Random Forest from scikit learn
+        from sklearn.ensemble import RandomForestClassifier
 
         # Test the classifier
         pred_prob = crf.predict_proba(testing_data)
