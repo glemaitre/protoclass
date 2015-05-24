@@ -1,0 +1,3 @@
+[submodule "src/protoclass/classification/UnbalancedDataset"]
+	path = src/protoclass/classification/UnbalancedDataset
+	url = https://github.com/glemaitre/UnbalancedDataset.git
