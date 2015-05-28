@@ -1,15 +1,14 @@
 Protoclass
 =========
 
-We will use this toolbox to aggregate different method of classification in order to have some fast prototyping
+#### Manifesto
+
+Because *Human* is **perfectible** and **error-prone**, because *Science* should be **open** and **flow** and because *cogito ergo sum*.
 
 Goal
 ----
 
-* We assume that we already have a matrix with samples by features
-* Propose some feature extractions method
-* Classify using different classifiers
-* Report results in terms of different statistics
+This toolbox will aggregate some machine learning tools from all the walk of lives in order to fast prototype.
 
 File Structure
 --------------
@@ -18,23 +17,15 @@ File Structure
     |- doc/             # documentation for the study
     |  +- paper/        # manuscript(s), whether generated or not
     |
-    |- data             # the data used for classification
-	|  |- README        # in order to add some description
+    |- script/		# script in order to deploy on cluster
+       |   |- README        # script structure description 
     |
-    |- src/             # any programmatic code
+    |- protoclass/      # any programmatic code
 	|  |- README        # software structure description
     |
-    |- results          # all output from workflows and analyses
-    |  |- figures/      # graphs, likely designated for manuscript figures
-    |  +- pictures/     # diagrams, images, and other non-graph graphics
-    |
-    |- scratch/         # temporary files that can be safely deleted or lost
     |- README           # the top level description of content
 
 Execution
 ---------
 
-Todo
-----
-
-- [ ] 
+Check the folder `protoclass/pipeline`.
