@@ -18,10 +18,10 @@ File Structure
     |  +- paper/        # manuscript(s), whether generated or not
     |
     |- script/		# script in order to deploy on cluster
-       |   |- README        # script structure description 
+    |  |- README        # script structure description 
     |
     |- protoclass/      # any programmatic code
-	|  |- README        # software structure description
+    |  |- README        # software structure description
     |
     |- README           # the top level description of content
 
