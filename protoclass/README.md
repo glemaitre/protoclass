@@ -14,59 +14,59 @@ File Structure
 --------------
 
     protoclass
-    |- classification/						#
-    |  +- UnbalancedDataset/					#
-    |  +- test/							#
-    |  |- __init__.py						#
-    |  |- classification.py					#
+    |- classification/						
+    |  +- UnbalancedDataset/					
+    |  +- test/							
+    |  |- __init__.py						
+    |  |- classification.py					
     |
-    |- extraction/						#
-    |  +- test/							#
-    |  |- __init__.py						#
-    |  |- edge_analysis.py					#
-    |  |- sampling.py						#
-    |  |- texture_analysis.py					#
+    |- extraction/						
+    |  +- test/							
+    |  |- __init__.py						
+    |  |- edge_analysis.py					
+    |  |- sampling.py						
+    |  |- texture_analysis.py					
     |
-    |- pipeline/						#
-    |  |- feature-classification/				#
-    |  |  |- classification_haralick.py				#
+    |- pipeline/						
+    |  |- feature-classification/				
+    |  |  |- classification_haralick.py				
     |  |
-    |  |- feature-detection/					#
-    |  |  |- detection_edge_rician.py				#
-    |  |  |- detection_haralick_gnormalised.py			#
-    |  |  |- detection_haralick_rnormalised.py			#
-    |  |  |- detection_haralick_unormalised_cluster.py		#
+    |  |- feature-detection/					
+    |  |  |- detection_edge_rician.py				
+    |  |  |- detection_haralick_gnormalised.py			
+    |  |  |- detection_haralick_rnormalised.py			
+    |  |  |- detection_haralick_unormalised_cluster.py		
     |  |
-    |  |- feature-normalisation/				#
-    |  |  |- normalisation_t2w_cluster.py			#
+    |  |- feature-normalisation/				
+    |  |  |- normalisation_t2w_cluster.py			
     |  |
-    |  |- feature-sampling/					#
-    |  |  |- sampling_haralick_data.py				#
+    |  |- feature-sampling/					
+    |  |  |- sampling_haralick_data.py				
     |  |
-    |  |- feature-validation/					#
-    |  |  |- validation_classification_haralick.py		#
+    |  |- feature-validation/					
+    |  |  |- validation_classification_haralick.py		
     |
-    |- preprocessing/						#
-    |  +- test/							#
-    |  |- __init__.py						#
-    |  |- normalisation.py					#
+    |- preprocessing/						
+    |  +- test/							
+    |  |- __init__.py						
+    |  |- normalisation.py					
     |
-    |- selection/						#
-    |  +- test/							#
-    |  |- __init__.py						#
+    |- selection/						
+    |  +- test/							
+    |  |- __init__.py						
     |
-    |- tool/							#
-    |  +- test/							#
-    |  |- __init__.py						#
-    |  |- dicom_manip.py					#
+    |- tool/							
+    |  +- test/							
+    |  |- __init__.py						
+    |  |- dicom_manip.py					
     |
-    |- validation/						#
-    |  +- test/							#	
-    |  |- init.py						#
-    |  |- validation.py						#
+    |- validation/						
+    |  +- test/								
+    |  |- init.py						
+    |  |- validation.py						
     |
-    |- README							#
-    |- __init__.py						#
+    |- README							
+    |- __init__.py						
 
 Execution
 ---------
