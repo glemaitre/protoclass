@@ -18,6 +18,31 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import confusion_matrix
 
+# Add the unbalanced toolbox the python path
+import sys
+sys.path.append(r'./protoclass/classification/UnbalancedDataset/')
+
+# Import over-sampling method
+from unbalanced_dataset.over_sampling import OverSampler
+from unbalanced_dataset.over_sampling import SMOTE
+
+# Import under-sampling method
+from unbalanced_dataset.under_sampling import UnderSampler
+from unbalanced_dataset.under_sampling import TomekLinks
+from unbalanced_dataset.under_sampling import ClusterCentroids
+from unbalanced_dataset.under_sampling import NearMiss
+from unbalanced_dataset.under_sampling import CondensedNearestNeighbour
+from unbalanced_dataset.under_sampling import OneSidedSelection
+from unbalanced_dataset.under_sampling import NeighbourhoodCleaningRule
+
+# Import ensemble sampling method
+from unbalanced_dataset.ensemble_sampling import EasyEnsemble
+from unbalanced_dataset.ensemble_sampling import BalanceCascade
+
+# Import known pipeline method
+from unbalanced_dataset.pipeline import SMOTEENN
+from unbalanced_dataset.pipeline import SMOTETomek 
+
 from random import sample
 from collections import Counter
 
@@ -37,14 +62,81 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     #########################################################################
     ### BALANCE THE DATA IF NEEDED
     #########################################################################
-    if balancing_criterion == 'random-sampling':
-        training_data, training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion)
-    elif balancing_criterion == 'class-prior':
-        class_weight = 'auto'
-    elif balancing_criterion == 'random-samples-boosting':
-        count_label = Counter(training_label)
-        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', int(np.round(float(count_label[max(count_label, key=count_label.get)]) / (float(count_label[min(count_label, key=count_label.get)]) * .67))))
-        boot_training_data, boot_training_label = BalancingTraining(training_data, training_label, balancing_criterion=balancing_criterion, n_bootstrap_balancing=n_bootstrap_balancing)
+
+    # Define the ration to use in case that we want to balance the data
+    count_label = Counter(training_label)
+    ratio = float(count_label[max(count_label, key=count_label.key)]) / float(count_label[min(count_label, key=count_label.key)])
+    
+# Over-sampling
+    if balancing_criterion == 'random-over-sampling':
+        os = OverSampler(ratio=ratio)
+        training_data, training_label = os.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'smote':
+        k_smote = kwargs.pop('k_smote', 5)
+        m_smote = kwargs.pop('m_smote', 10)
+        out_step_smote = kwargs.pop('out_step_smote', 0.5)
+        kind_smote = kwargs.pop('kind_smote', 'regular')
+        sm = SMOTE(ratio=ratio, k=k_smote, m=m_smote, 
+                   out_step=out_step_smote, kind=kind_smote)
+        training_data, training_label = sm.fit_transform(training_data, training_label)
+    # Under-sampling
+    elif balancing_criterion == 'random-under-sampling':
+        replacement = kwargs.pop('replacement', True)
+        us = UnderSampler(ratio=ratio, replacement=replacement)
+        training_data, training_label = us.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'tomek-links':
+        tl = TomekLinks()
+        training_data, training_label = tl.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'clustering':
+        cc = ClusterCentroids(ratio=ratio)
+        training_data, training_label = cc.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'nearmiss':
+        version_nearmiss = kwargs.pop('version_nearmiss', 1)
+        size_ngh = kwargs.pop('size_ngh', 3)
+        ver3_samp_ngh = kwargs.pop('ver3_samp_ngh', 3)
+        # Add some option to extract NN kwargs
+        nm = NearMiss(ratio=ratio, version=version_nearmiss, size_ngh=size_ngh, 
+                      ver3_samp_ngh=ver3_samp_ngh)
+        training_data, training_label = nm.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'cnn':
+        size_ngh = kwargs.pop('size_ngh', 3)
+        n_seeds_S = kwargs.pop('n_seeds_S', 1)
+        # Add some option to extract NN kwargs
+        cnn = CondensedNearestNeighbour(size_ngh=size_ngh, n_seeds_S=n_seeds_S)
+        training_data, training_label = cnn.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'one-sided-selection':
+        size_ngh = kwargs.pop('size_ngh', 1)
+        n_seeds_S = kwargs.pop('n_seeds_S', 1)
+        # Add some option to extract NN kwargs
+        oss = OneSidedSelection(size_ngh=size, n_seeds_S=n_seeds_S)
+        training_data, training_label = oss.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'ncr':
+        size_ngh = kwargs.pop('size_ngh', 3)
+        # Add some option to extract NN kwargs
+        ncr = NeighbourhoodCleaningRule(size_ngh=size_ngh)
+        training_data, training_label = ncr.fit_transform(training_data, training_label)
+    # Ensemble-sampling
+    elif balancing_criterion == 'easy-ensemble':
+        n_subsets = kwargs.pop('n_subsets', 10)
+        ee = EasyEnsemble(ratio=ratio, n_subsets=n_subsets)
+        boot_training_data, boot_training_label = ee.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'balance-cascade':
+        balancing_classifier = kwargs.pop('balancing_classifier', 'knn')
+        n_max_subset = kwargs.pop('n_max_subset', None)
+        bootstrap = kwargs.pop('bootstrap', True)
+        bc = BalanceCascade(ratio=ratio, classifier=balancing_classifier
+                          n_max_subset=n_max_subset, bootstrap=bootstrap)
+        boot_training_data, boot_training_label = bc.fit_transform(training_data, training_label)
+    # Pipeline-sampling
+    elif balancing_criterion == 'smote-enn':
+        k_smote = kwargs.pop('k_smote', 5)
+        size_ngh = kwargs.pop('size_ngh', 3)
+        sme = SMOTEENN(ratio=ratio, k=k_smote, size_ngh=size_ngh)
+        training_data, training_label = sme.fit_transform(training_data, training_label)
+    elif balancing_criterion == 'smote-tomek':
+        k_smote = kwargs.pop('k_smote', 5)
+        smt = SMOTEENN(ratio=ratio, k=k_smote)
+        training_data, training_label = smt.fit_transform(training_data, training_label)
 
         
     #########################################################################
@@ -85,48 +177,6 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     roc = roc_auc(fpr, tpr, thresh, auc)
 
     return (pred_label, roc)
-
-def BalancingTraining(training_data, training_label, **kwargs):
-
-    strategy = kwargs.pop('balancing_criterion', 'random-sampling')
-
-    if strategy == 'random-sampling':
-        return BalancingRandomSampling(training_data, training_label)
-    if strategy == 'random-samples-boosting':
-        count_label = Counter(training_label)
-        n_bootstrap_balancing = kwargs.pop('n_bootstrap_balancing', int(np.round(float(count_label[max(count_label, key=count_label.get)]) / (float(count_label[min(count_label, key=count_label.get)]) * .67))))
-        return BalancingRandomSamplingBoosting(training_data, training_label, n_bootstrap_balancing)
-
-def BalancingRandomSamplingBoosting(training_data, training_label, n_bootstrap_balancing):
-    
-    # Count the occurence in the training_label    
-    boot_training_data = []
-    boot_training_label = []
-    for b in range(n_bootstrap_balancing):
-        # Generate a training set which should be balanced
-        tmp_training_data, tmp_training_label = BalancingTraining(training_data, training_label, balancing_criterion='random-sampling')
-        boot_training_data.append(tmp_training_data)
-        boot_training_label.append(tmp_training_label)
-
-    return (boot_training_data, boot_training_label)
-
-def BalancingRandomSampling(training_data, training_label):
-
-    # Count the occurence in the training_label
-    count = Counter(training_label)
-    
-    # Find the least represented class
-    sel_idx = []
-    for keys, values in count.iteritems():
-        
-        if keys == min(count, key=count.get):
-            # Append all the indexes
-            sel_idx = sel_idx + np.nonzero(training_label == keys)[0].tolist()
-        else:
-            # Append a subset of indexes
-            sel_idx = sel_idx + sample(np.nonzero(training_label == keys)[0], count[min(count, key=count.get)])
-
-    return (training_data[sel_idx, :], training_label[sel_idx])
 
 def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
     
