@@ -65,37 +65,38 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
     # Define the ration to use in case that we want to balance the data
     count_label = Counter(training_label)
-    ratio = float(count_label[max(count_label, key=count_label.key)]) / float(count_label[min(count_label, key=count_label.key)])
-    
+    count_min_class = float(count_label[min(count_label, key=count_label.get)])
+    count_max_class = float(count_label[max(count_label, key=count_label.get)])
+    ratio_oversampling = (count_max_class - count_min_class) / count_min_class
 # Over-sampling
     if balancing_criterion == 'random-over-sampling':
-        os = OverSampler(ratio=ratio)
+        os = OverSampler(ratio=ratio_oversampling)
         training_data, training_label = os.fit_transform(training_data, training_label)
     elif balancing_criterion == 'smote':
         k_smote = kwargs.pop('k_smote', 5)
         m_smote = kwargs.pop('m_smote', 10)
         out_step_smote = kwargs.pop('out_step_smote', 0.5)
         kind_smote = kwargs.pop('kind_smote', 'regular')
-        sm = SMOTE(ratio=ratio, k=k_smote, m=m_smote, 
+        sm = SMOTE(ratio=ratio_oversampling, k=k_smote, m=m_smote, 
                    out_step=out_step_smote, kind=kind_smote)
         training_data, training_label = sm.fit_transform(training_data, training_label)
     # Under-sampling
     elif balancing_criterion == 'random-under-sampling':
         replacement = kwargs.pop('replacement', True)
-        us = UnderSampler(ratio=ratio, replacement=replacement)
+        us = UnderSampler(replacement=replacement)
         training_data, training_label = us.fit_transform(training_data, training_label)
     elif balancing_criterion == 'tomek-links':
         tl = TomekLinks()
         training_data, training_label = tl.fit_transform(training_data, training_label)
     elif balancing_criterion == 'clustering':
-        cc = ClusterCentroids(ratio=ratio)
+        cc = ClusterCentroids()
         training_data, training_label = cc.fit_transform(training_data, training_label)
     elif balancing_criterion == 'nearmiss':
         version_nearmiss = kwargs.pop('version_nearmiss', 1)
         size_ngh = kwargs.pop('size_ngh', 3)
         ver3_samp_ngh = kwargs.pop('ver3_samp_ngh', 3)
         # Add some option to extract NN kwargs
-        nm = NearMiss(ratio=ratio, version=version_nearmiss, size_ngh=size_ngh, 
+        nm = NearMiss(version=version_nearmiss, size_ngh=size_ngh, 
                       ver3_samp_ngh=ver3_samp_ngh)
         training_data, training_label = nm.fit_transform(training_data, training_label)
     elif balancing_criterion == 'cnn':
@@ -108,7 +109,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         size_ngh = kwargs.pop('size_ngh', 1)
         n_seeds_S = kwargs.pop('n_seeds_S', 1)
         # Add some option to extract NN kwargs
-        oss = OneSidedSelection(size_ngh=size, n_seeds_S=n_seeds_S)
+        oss = OneSidedSelection(size_ngh=size_ngh, n_seeds_S=n_seeds_S)
         training_data, training_label = oss.fit_transform(training_data, training_label)
     elif balancing_criterion == 'ncr':
         size_ngh = kwargs.pop('size_ngh', 3)
@@ -118,14 +119,14 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     # Ensemble-sampling
     elif balancing_criterion == 'easy-ensemble':
         n_subsets = kwargs.pop('n_subsets', 10)
-        ee = EasyEnsemble(ratio=ratio, n_subsets=n_subsets)
+        ee = EasyEnsemble(n_subsets=n_subsets)
         boot_training_data, boot_training_label = ee.fit_transform(training_data, training_label)
     elif balancing_criterion == 'balance-cascade':
         balancing_classifier = kwargs.pop('balancing_classifier', 'knn')
         n_max_subset = kwargs.pop('n_max_subset', None)
         bootstrap = kwargs.pop('bootstrap', True)
-        bc = BalanceCascade(ratio=ratio, classifier=balancing_classifier
-                          n_max_subset=n_max_subset, bootstrap=bootstrap)
+        bc = BalanceCascade(classifier=balancing_classifier,
+                            n_max_subset=n_max_subset, bootstrap=bootstrap)
         boot_training_data, boot_training_label = bc.fit_transform(training_data, training_label)
     # Pipeline-sampling
     elif balancing_criterion == 'smote-enn':
@@ -142,7 +143,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     #########################################################################
     ### APPLY CLASSIFICATION
     #########################################################################
-    if (classifier_str == 'random-forest') and (balancing_criterion == 'random-samples-boosting'):
+    if (classifier_str == 'random-forest') and ((balancing_criterion == 'easy-ensemble') or 
+                                                (balancing_criterion == 'balance-cascade')):
         # In this cases, we will have several training set to use
         boot_pred_prob = []
         boot_pred_label = []

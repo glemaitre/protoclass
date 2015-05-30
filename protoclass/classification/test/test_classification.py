@@ -21,8 +21,6 @@ from os.path import join, isdir, isfile
 # sys library
 import sys
 
-from protoclass.classification.classification import BalancingTraining
-
 from protoclass.classification.classification import Classify
 
 # Generate a vector 
@@ -32,7 +30,7 @@ data = np.random.random((label.shape[0], 5))
 label2 = np.array([-1]*100 + [1]*20)
 data2 = np.random.random((label2.shape[0], 5))
 
-# Check if the selection is done properly
-#data, label = BalancingTraining(data, label)
-
-bpb, bl = Classify(data, label, data2, label2, balancing_criterion='random-samples-boosting', n_estimators=10, n_bootstrap_balancing=5)
+balancing_criterion = 'balance-cascade'
+kind_smote = 'svm'
+version_nearmiss = 3
+pred, roc = Classify(data, label, data2, label2, balancing_criterion=balancing_criterion, n_estimators=10)
