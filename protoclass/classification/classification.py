@@ -68,7 +68,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     count_min_class = float(count_label[min(count_label, key=count_label.get)])
     count_max_class = float(count_label[max(count_label, key=count_label.get)])
     ratio_oversampling = (count_max_class - count_min_class) / count_min_class
-# Over-sampling
+    
+    # Over-sampling
     if balancing_criterion == 'random-over-sampling':
         os = OverSampler(ratio=ratio_oversampling)
         training_data, training_label = os.fit_transform(training_data, training_label)
@@ -80,6 +81,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         sm = SMOTE(ratio=ratio_oversampling, k=k_smote, m=m_smote, 
                    out_step=out_step_smote, kind=kind_smote)
         training_data, training_label = sm.fit_transform(training_data, training_label)
+    
     # Under-sampling
     elif balancing_criterion == 'random-under-sampling':
         replacement = kwargs.pop('replacement', True)
@@ -116,6 +118,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         # Add some option to extract NN kwargs
         ncr = NeighbourhoodCleaningRule(size_ngh=size_ngh)
         training_data, training_label = ncr.fit_transform(training_data, training_label)
+        
     # Ensemble-sampling
     elif balancing_criterion == 'easy-ensemble':
         n_subsets = kwargs.pop('n_subsets', 10)
@@ -128,15 +131,16 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         bc = BalanceCascade(classifier=balancing_classifier,
                             n_max_subset=n_max_subset, bootstrap=bootstrap)
         boot_training_data, boot_training_label = bc.fit_transform(training_data, training_label)
+    
     # Pipeline-sampling
     elif balancing_criterion == 'smote-enn':
         k_smote = kwargs.pop('k_smote', 5)
         size_ngh = kwargs.pop('size_ngh', 3)
-        sme = SMOTEENN(ratio=ratio, k=k_smote, size_ngh=size_ngh)
+        sme = SMOTEENN(ratio=ratio_oversampling, k=k_smote, size_ngh=size_ngh)
         training_data, training_label = sme.fit_transform(training_data, training_label)
     elif balancing_criterion == 'smote-tomek':
         k_smote = kwargs.pop('k_smote', 5)
-        smt = SMOTEENN(ratio=ratio, k=k_smote)
+        smt = SMOTEENN(ratio=ratio_oversampling, k=k_smote)
         training_data, training_label = smt.fit_transform(training_data, training_label)
 
         
