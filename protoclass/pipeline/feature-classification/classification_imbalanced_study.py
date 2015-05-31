@@ -67,10 +67,15 @@ config = [{'classifier_str' : 'random-forest', 'n_estimators' : 10, 'balancing_c
           {'classifier_str' : 'random-forest', 'n_estimators' : 10, 'balancing_criterion' : 'smote-enn', 'size_ngh' : 3},
           {'classifier_str' : 'random-forest', 'n_estimators' : 10, 'balancing_criterion' : 'smote-tomek'}]
 
-acc=[]
+rocs = []
+pred_labels = []
 # Apply the classification for each fold
 k = 1
 for training_idx, testing_idx in kf:
+    
+    # CHECK THAT THE NUMBER IN THE TESTING CAN CHANGE OR NOT 
+    # IT COULD BE PROBLEMATIC WHEN CONVERTING TO NUMPY ARRAY
+
     print 'Iteration #{}'.format(k)
     # Extract the data
     ### Training
@@ -80,8 +85,34 @@ for training_idx, testing_idx in kf:
     testing_data = data[testing_idx, :]
     testing_label = label[testing_idx]
 
+    config_roc = []
+    config_pred_label = []
     for c in config:
         pred_label, roc = Classify(training_data, training_label, testing_data, testing_label, **c)
-        acc.append(roc)
+        config_roc.append(roc)
+        config_pred_label.append(pred_label)
+
+    rocs.append(config_roc)
+    pred_labels.append(config_pred_label)
 
     k += 1
+
+# Convert the data to store to numpy data
+rocs = np.array(rocs)
+pred_labels = np.array(pred_labels)
+
+# Reshape the array to have the first index corresponding to the
+# configuration, the second index to the iteration of the k-fold
+# and the last index to the data themselve.
+rocs = np.swapaxes(rocs, 0, 1)
+pred_labels = np.swapaxes(pred_labels, 0, 1)
+
+# Save the results somewhere
+path_to_save = sys.argv[3]
+
+if not os.path.exists(path_to_save):
+    os.makedirs(path_to_save)
+
+saving_filename = 'result_' + str(filename_data) + '.npz'
+saving_path = join(path_to_save, saving_filename)
+np.savez(saving_path, pred_labels=pred_labels, rocs=rocs)
