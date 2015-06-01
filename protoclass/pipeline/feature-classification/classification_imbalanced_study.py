@@ -113,6 +113,6 @@ path_to_save = sys.argv[3]
 if not os.path.exists(path_to_save):
     os.makedirs(path_to_save)
 
-saving_filename = 'result_' + str(filename_data) + '.npz'
+saving_filename = 'result_' + str(filename_data)
 saving_path = join(path_to_save, saving_filename)
 np.savez(saving_path, pred_labels=pred_labels, rocs=rocs)

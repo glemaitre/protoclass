@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# USAGE:
+if [ "$#" != "1" ];
+then
+    echo "**************************************************************"
+    echo "Usage:"
+    echo "./classification_imbalanced_cluster dataPath"
+    echo
+    echo "Example: ./classification_imbalanced_cluster ~/Home/Data/"
+    echo " "
+    echo "Current entry: $0 $*"
+    echo "**************************************************************"
+    echo " "
+
+    exit
+fi
+
+# Affect the input folder for the data
+data_path=$1
+
+# Keep the directory of the script into a variable
+script_dir=$(pwd)
+
+# Move to the right directory for the processing
+cd "/user1/le2i/gu5306le/Work/data_balancing/src/protoclass"
+
+path_saving="/user1/le2i/gu5306le/Work/data_balancing/results/data"
+
+# Submit a job for each patient
+patient_idx=0
+for patient in $data_path*/; do
+    # Create an automatic script
+    script_filename_core='/script_'
+    script_filename="$script_dir$script_filename_core$patient_idx"
+    ### Create the file
+    touch $script_filename
+    ### Truncate the file if it is existing
+    : > $script_filename
+    ### Write the command to execute
+    printf "ipython protoclass/pipeline/feature-classification/classification_imbalanced_study.py \"${patient}\" \"${path_saving}\"" >> $script_filename
+    ### Make it executable
+    chmod u+x $script_filename
+    # Submit the job to the queue
+    # qsub -q batch -pe smp 8 $script_filename
+    ((patient_idx++))
+done
