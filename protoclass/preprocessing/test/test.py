@@ -104,15 +104,15 @@ def test_denoise_nlm():
 
     # Call the denoising function using the NLM approach
     from protoclass.preprocessing.denoising import Denoising3D
-    #volume_denoised = Denoising3D(volume)
+    volume_denoised = Denoising3D(volume)
     
-    from protoclass.preprocessing.denoising import Denoising2D
-    im_den = Denoising2D(volume[:, 60, :].T)
+    # from protoclass.preprocessing.denoising import Denoising2D
+    # im_den = Denoising2D(volume[:, 60, :].T)
 
     plt.figure()
     plt.imshow(volume[:, 60, :].T)
     plt.figure()
-    plt.imshow(im_den)
+    plt.imshow(volume_denoised[:, 60, :].T)
     plt.show()
 
 if __name__ == "__main__":

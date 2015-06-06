@@ -21,33 +21,17 @@ import multiprocessing
 def Denoising3D(volume, denoising_method='non-local-mean', **kwargs):
 
     if denoising_method == 'non-local-mean':
-        return DenoisingNLM3D(volume, **kwargs)
 
-def DenoisingNLM3D(volume, **kwargs):
-    # GOAL: denoise a 3D image and return the denoised image using NLM
+        # The dimension which will vary will be Y. 
+        # We need to swap Y in first position
+        volume_swaped = np.swapaxes(volume, 0, 1)
+        
+        # Compute the Haralick statistic in parallel
+        num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+        volume_denoised = Parallel(n_jobs=num_cores)(delayed(DenoisingNLM2D)(im, **kwargs) for im in volume_swaped)
 
-    # Import the function to apply nl means in 3D images
-    from skimage.restoration import nl_means_denoising
-
-    # Get the parameters for the denoising
-    min_dim = float(min(volume.shape))
-
-
-    patch_size = kwargs.pop('patch_size', int(np.ceil(min_dim / 10.)))
-    patch_distance = kwargs.pop('patch_distance', int(np.ceil(min_dim / 4.)))
-    h = kwargs.pop('h', 0.1)
-    multichannel = kwargs.pop('multichannel', False)
-    fast_mode = kwargs.pop('fast_mode', True)
-    
-    # Perform the denoising
-    return nl_means_denoising(volume, patch_size=patch_size, patch_distance=patch_distance, h=h, 
-                              multichannel=multichannel, fast_mode=fast_mode)
-
-
-def Denoising2D(image, denoising_method='non-local-mean', **kwargs):
-
-    if denoising_method == 'non-local-mean':
-        return DenoisingNLM2D(image, **kwargs)
+        # We need to swap back 
+        return np.swapaxes(volume_denoised, 0, 1)
 
 def DenoisingNLM2D(image, **kwargs):
     # GOAL: denoise a 2D image and return the denoised image using NLM
@@ -63,8 +47,6 @@ def DenoisingNLM2D(image, **kwargs):
     h = kwargs.pop('h', 0.04)
     multichannel = kwargs.pop('multichannel', False)
     fast_mode = kwargs.pop('fast_mode', True)
-    
-    print 'Parameters {} - {} - {} - {} - {}'.format(patch_size, patch_distance, h, multichannel, fast_mode)
 
     img_den = nl_means_denoising(image, patch_size=patch_size, patch_distance=patch_distance,
                               h=h, multichannel=multichannel, fast_mode=fast_mode)
