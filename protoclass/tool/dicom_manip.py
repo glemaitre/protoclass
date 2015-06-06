@@ -23,7 +23,7 @@ from os.path import join, isdir, isfile
 # Import namedtuple
 from collections import namedtuple
 
-def OpenRawImageOCT(filename, size, dtype='uint8'):
+def OpenRawImageOCT(filename, size, dtype='uint8', reverse=True):
     """Function to read a raw image. The size as to be known
 
     Parameters
@@ -36,6 +36,9 @@ def OpenRawImageOCT(filename, size, dtype='uint8'):
     
     dtype: default - uint8
         Type of the raw data.
+
+    reverse: bool
+        We have maybe to return the data for more convenience.
     
     Returns
     -------
@@ -43,14 +46,20 @@ def OpenRawImageOCT(filename, size, dtype='uint8'):
         A 2D or 3D numpy array in the order ()
     """
 
-    size_OCT = (size[2], size[0], size[1])
-    # Data are stored as (X, Z, Y)
+    size_OCT = (size[1], size[0], size[2])
+    # Data are stored as (Y, Z, X)
     im_numpy = np.fromfile(filename, dtype=dtype, sep="").reshape(size_OCT)
 
-    # We need to roll the x axis to obtain (Z, Y, X)
-    im_numpy = np.rollaxis(im_numpy, 0, 3)
+    # We need to roll the x axis to obtain (X, Y, Z)
+    im_numpy = np.rollaxis(im_numpy, 2, 0)
 
-    return im_numpy
+    # Return the data if needed
+    im_numpy_cp = im_numpy.copy()
+    if reverse == True:
+        for sl in range(im_numpy.shape[2]):
+            im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
+    
+    return im_numpy.astype(float)
 
 def OpenOneSerieDCM(path_to_serie, reverse=False):
     """Function to read a single serie DCM to return a 3D volume
