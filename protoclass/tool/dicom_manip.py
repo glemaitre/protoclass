@@ -31,7 +31,7 @@ def OpenRawImageOCT(filename, size, dtype='uint8', reverse=True):
     filename: str
         Filename of the raw image.
 
-    size: tuple of ints (Z, Y, X)
+    size: tuple of ints (X, Y, Z)
         Tuple with 2 or 3 values depending of the dimensionality of the data.
     
     dtype: default - uint8
@@ -46,7 +46,9 @@ def OpenRawImageOCT(filename, size, dtype='uint8', reverse=True):
         A 2D or 3D numpy array in the order ()
     """
 
-    size_OCT = (size[1], size[0], size[2])
+    from skimage import img_as_float
+
+    size_OCT = (size[1], size[2], size[0])
     # Data are stored as (Y, Z, X)
     im_numpy = np.fromfile(filename, dtype=dtype, sep="").reshape(size_OCT)
 
@@ -59,7 +61,7 @@ def OpenRawImageOCT(filename, size, dtype='uint8', reverse=True):
         for sl in range(im_numpy.shape[2]):
             im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
     
-    return im_numpy.astype(float)
+    return img_as_float(im_numpy)
 
 def OpenOneSerieDCM(path_to_serie, reverse=False):
     """Function to read a single serie DCM to return a 3D volume
