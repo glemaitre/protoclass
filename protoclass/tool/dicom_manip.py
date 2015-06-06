@@ -23,6 +23,35 @@ from os.path import join, isdir, isfile
 # Import namedtuple
 from collections import namedtuple
 
+def OpenRawImageOCT(filename, size, dtype='uint8'):
+    """Function to read a raw image. The size as to be known
+
+    Parameters
+    ----------
+    filename: str
+        Filename of the raw image.
+
+    size: tuple of ints (Z, Y, X)
+        Tuple with 2 or 3 values depending of the dimensionality of the data.
+    
+    dtype: default - uint8
+        Type of the raw data.
+    
+    Returns
+    -------
+    im_numpy: ndarray
+        A 2D or 3D numpy array in the order ()
+    """
+
+    size_OCT = (size[2], size[0], size[1])
+    # Data are stored as (X, Z, Y)
+    im_numpy = np.fromfile(filename, dtype=dtype, sep="").reshape(size_OCT)
+
+    # We need to roll the x axis to obtain (Z, Y, X)
+    im_numpy = np.rollaxis(im_numpy, 0, 3)
+
+    return im_numpy
+
 def OpenOneSerieDCM(path_to_serie, reverse=False):
     """Function to read a single serie DCM to return a 3D volume
 
