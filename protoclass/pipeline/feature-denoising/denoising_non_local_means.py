@@ -33,22 +33,34 @@ if not filename_data.endswith('.img'):
     raise ValueError('denoising-non-local: The image in input is not a raw image.')
 else:
     # Read the volume using the raw image
-    vol = OpenRawImageOCT(filename_data)
+    vol = OpenRawImageOCT(filename_data, (1024, 128, 512))
 
     # Apply the filtering using 8 cores
     num_cores = 8
     vol_denoised = Denoising3D(vol, denoising_method='non-local-means', num_cores=num_cores)
+    #vol_denoised = Denoising3D(vol, denoising_method='non-local-means')
+    
 
+    # Directory where to save the data
+    storing_folder = sys.argv[2]
+
+    # Create the folder if it is not existing
+    if not os.path.exists(storing_folder):
+        os.makedirs(storing_folder)
+
+    # Get only the filename without path directory of the input file
+    _, filename_patient = os.path.split(filename_data) 
+    
     # Get the input filename without .img
-    filename_root, _ = os.path.splitext(filename_data)
+    filename_root, _ = os.path.splitext(filename_patient)
 
     # Get the filename for numpy and matlab
-    filename_matlab = filename_root + '.mat'
-    filename_numpy = filename_root + '.npz'
+    filename_matlab = os.path.join(storing_folder, filename_root + '_nlm.mat')
+    filename_numpy = os.path.join(storing_folder, filename_root + '_nlm.npz')
 
     # Save the matfile
     from scipy.io import savemat
     savemat(filename_matlab, {'vol_denoised': vol_denoised})
 
     # Save the numpy array
-    np.save(filename_numpy, vol_denoised=vol_denoised)
+    np.savez(filename_numpy, vol_denoised=vol_denoised)

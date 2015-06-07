@@ -18,9 +18,9 @@ from joblib import Parallel, delayed
 # Multiprocessing library
 import multiprocessing
 
-def Denoising3D(volume, denoising_method='non-local-mean', **kwargs):
+def Denoising3D(volume, denoising_method='non-local-means', **kwargs):
 
-    if denoising_method == 'non-local-mean':
+    if denoising_method == 'non-local-means':
 
         # The dimension which will vary will be Y. 
         # We need to swap Y in first position
@@ -32,6 +32,9 @@ def Denoising3D(volume, denoising_method='non-local-mean', **kwargs):
 
         # We need to swap back 
         return np.swapaxes(volume_denoised, 0, 1)
+
+    else:
+        raise ValueError('protoclass.preprocessing.denoising: Unrecognize type of denoising method.')
 
 def DenoisingNLM2D(image, **kwargs):
     # GOAL: denoise a 2D image and return the denoised image using NLM
