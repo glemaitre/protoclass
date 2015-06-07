@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# USAGE:
+if [ "$#" != "1" ];
+then
+    echo "**************************************************************"
+    echo "Usage:"
+    echo "./detection_lbp_cluster dataPath"
+    echo
+    echo "Example: ./detection_lbp_cluster ~/Home/Data/"
+    echo " "
+    echo "Current entry: $0 $*"
+    echo "**************************************************************"
+    echo " "
+
+    exit
+fi
+
+# Affect the input folder for the data
+data_path=$1
+
+str_path="/work/le2i/gu5306le/OCT/lbp_data"
+
+# Keep the directory of the script into a variable
+script_dir=$(pwd)
+
+# Move to the right directory for the processing
+cd "/user1/le2i/gu5306le/Work/protoclass"
+
+# Submit a job for each patient
+patient_idx=0
+for patient in $data_path*; do
+    # Create an automatic script
+    script_filename_core='/script_'
+    script_filename="$script_dir$script_filename_core$patient_idx"
+    ### Create the file
+    touch $script_filename
+    ### Truncate the file if it is existing
+    : > $script_filename
+    ### Write the command to execute
+    printf "ipython protoclass/pipeline/feature-detection/detection_lbp.py \"${patient%/}\" \"$str_path\"" >> $script_filename
+    ### Make it executable
+    chmod u+x $script_filename
+    # Submit the job to the queue
+    #qsub -q batch -pe smp 8 $script_filename
+    ((patient_idx++))
+done

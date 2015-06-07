@@ -202,3 +202,72 @@ def ReshapePatchsToMaps2D(patches_haralick, im_shape):
 
     # We would like to have a list for the orientations and a list for the statistics 
     return maps
+
+def LBPMapExtraction(im, **kwargs):
+    # GOAL: extract the LBP map using the image
+    # We can handle 2D image, 3D image. 3D should use LBP TOP while 2.5D should use normal LBP.
+
+    # Check the dimension of the input image
+    if len(im.shape) == 2:
+        nd_im = 2
+    elif len(im.shape) == 3:
+        nd_im = 3
+        # By default, we will extract the LBP along a given axis
+        extr_3d = kwargs.pop('extr_3d', '2.5D')
+        extr_axis = kwargs.pop('extr_axis', 'y')
+    else:
+        raise ValueError('mahotas.texture.haralick: Can only handle 2D and 3D images.')
+
+    if nd_im == 2:
+
+        # Get the parameters of the lbp
+        radius = kwargs.pop('radius', 3)
+        n_points = kwargs.pop('n_points', 8 * radius)
+        method = kwargs.pop('method', 'uniform')
+
+        from skimage.feature import local_binary_pattern
+
+        lbp_map = local_binary_pattern(im, n_points, radius, method)
+
+        return lbp_map
+
+    elif nd_im == 3:
+
+        if extr_3d == '2.5D':
+            # We will process in parallel the different slice along the given axis
+            # The data are stored in (x, y, z) manner. We need to swap to the
+            # first position the axis that is not involved in the 2D image
+            if extr_axis == 'x':
+                # Do not do anythin
+                vol = im
+            elif extr_axis == 'y':
+                # Move y at the beginning
+                vol = np.swapaxes(im, 1, 0)
+            elif extr_axis == 'z':
+                # Move z at the beginning
+                vol = np.swapaxes(im, 2, 0)
+
+            # Get the parameters of the lbp
+            radius = kwargs.pop('radius', 3)
+            n_points = kwargs.pop('n_points', 8 * radius)
+            method = kwargs.pop('method', 'uniform')
+            num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+                
+            from skimage.feature import local_binary_pattern
+
+            lbp_map = Parallel(n_jobs=num_cores)(delayed(local_binary_pattern)(sl, n_points, radius, method) for sl in vol)
+
+            # We have to map back the image
+            if extr_axis == 'x':
+                # Do not do anything
+                return lbp_map
+            elif extr_axis == 'y':
+                # Move y at the beginning
+                return np.swapaxes(lbp_map, 1, 0)
+            elif extr_axis == 'z':
+                # Move z at the beginning
+                return np.swapaxes(lbp_map, 2, 0)
+
+        elif extr_3d == '3D':
+            # We need to use the LBP TOP
+            print 'LBP TOP not yet implemented'

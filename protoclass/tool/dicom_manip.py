@@ -111,7 +111,7 @@ def OpenOneSerieDCM(path_to_serie, reverse=False):
     
     return im_numpy.astype(float)
 
-def OpenVolumeNumpy(filename, reverse_volume=False):
+def OpenVolumeNumpy(filename, reverse_volume=False, **kwargs):
     """Function to read a numpy array previously saved
 
     Parameters
@@ -127,18 +127,37 @@ def OpenVolumeNumpy(filename, reverse_volume=False):
     im_numpy: ndarray
         A 3D array containing the volume.
     """
+    if filename.endswith('.npy'):
 
-    # Open the volume
-    im_numpy = np.load(filename)
+        # Open the volume
+        im_numpy = np.load(filename)
 
-    # Copy the volume temporary
-    im_numpy_cp = im_numpy.copy()
-    if reverse_volume == True:
-        #print 'Inversing the GT'
-        for sl in range(im_numpy.shape[2]):
-            im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
+        # Copy the volume temporary
+        im_numpy_cp = im_numpy.copy()
+        if reverse_volume == True:
+            #print 'Inversing the GT'
+            for sl in range(im_numpy.shape[2]):
+                im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
 
-    return im_numpy
+        return im_numpy
+                
+    elif filename.endswith('.npz'):
+
+        # Get the keyword of the name of the variable to extract
+        name_var_extract = kwargs.pop('name_var_extract', None)
+
+        # Get the volume from file
+        npzfile = np.load(filename)
+        im_numpy = npzfile[name_var_extract]
+
+        # Copy the volume temporary
+        im_numpy_cp = im_numpy.copy()
+        if reverse_volume == True:
+            #print 'Inversing the GT'
+            for sl in range(im_numpy.shape[2]):
+                im_numpy[:,:,-sl] = im_numpy_cp[:,:,sl]
+
+        return im_numpy
 
 
 def OpenSerieUsingGTDCM(path_to_data, path_to_gt, reverse_gt=True, reverse_data=False):
