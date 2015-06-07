@@ -33,7 +33,7 @@ if not filename_data.endswith('.img'):
     raise ValueError('denoising-non-local: The image in input is not a raw image.')
 else:
     # Read the volume using the raw image
-    vol = OpenRawImageOCT(filename_data, (1024, 128, 512))
+    vol = OpenRawImageOCT(filename_data, (512, 128, 1024))
 
     # Apply the filtering using 8 cores
     num_cores = 8
