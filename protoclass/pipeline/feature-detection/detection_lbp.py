@@ -33,7 +33,7 @@ else:
 
     # Apply the filtering using 8 cores
     num_cores = 8
-    radius = 4
+    radius = 64
     n_points = 8 * radius
     extr_3d = '2.5D'
     extr_axis = 'y'

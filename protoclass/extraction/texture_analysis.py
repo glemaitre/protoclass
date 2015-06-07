@@ -254,8 +254,9 @@ def LBPMapExtraction(im, **kwargs):
             num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
                 
             from skimage.feature import local_binary_pattern
+            from skimage import img_as_ubyte
 
-            lbp_map = Parallel(n_jobs=num_cores)(delayed(local_binary_pattern)(sl, n_points, radius, method) for sl in vol)
+            lbp_map = Parallel(n_jobs=num_cores)(delayed(local_binary_pattern)(img_as_ubyte(sl), n_points, radius, method) for sl in vol)
 
             # We have to map back the image
             if extr_axis == 'x':
