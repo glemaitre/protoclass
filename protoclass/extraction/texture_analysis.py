@@ -254,9 +254,8 @@ def LBPMapExtraction(im, **kwargs):
             num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
                 
             from skimage.feature import local_binary_pattern
-            from skimage import img_as_ubyte
 
-            lbp_map = Parallel(n_jobs=num_cores)(delayed(local_binary_pattern)(img_as_ubyte(sl), n_points, radius, method) for sl in vol)
+            lbp_map = Parallel(n_jobs=num_cores)(delayed(local_binary_pattern)(sl, n_points, radius, method) for sl in vol)
 
             # We have to map back the image
             if extr_axis == 'x':
@@ -272,3 +271,65 @@ def LBPMapExtraction(im, **kwargs):
         elif extr_3d == '3D':
             # We need to use the LBP TOP
             print 'LBP TOP not yet implemented'
+
+def hist_alone(im, **kwargs):
+    # Compute the pdf
+    hist, edge = np.histogram(im, **kwargs)
+    return hist
+            
+def LBPpdfExtraction(im, **kwargs):
+    # GOAL: extract the LBP pdf from a 2D image
+    # We can handle 2D image, 3D image.
+
+    # We need to get the minimum and maximum of the image
+    range_lbp = kwargs.pop('range_lbp', (np.min(im), np.max(im)))
+    # We need to decide the number of bins to be considered for
+    # the computation of the pdf
+    bins = range_lbp[1] - range_lbp[0]
+    # We need to know if we normalisaed the histogram or not
+    density = kwargs.pop('density', True)
+
+    # Check the dimension of the input image
+    if len(im.shape) == 2:
+        nd_im = 2
+    elif len(im.shape) == 3:
+        nd_im = 3
+        # By default, we will extract the LBP along a given axis
+        extr_3d = kwargs.pop('extr_3d', '2.5D')
+        extr_axis = kwargs.pop('extr_axis', 'y')
+    else:
+        raise ValueError('mahotas.texture.haralick: Can only handle 2D and 3D images.')
+
+    if nd_im == 2:
+        hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+        return hist_alone(im, **hist_dict)
+
+    elif nd_im == 3:
+
+        if extr_3d == '2.5D':
+            # We will process in parallel the different slice along the given axis
+            # The data are stored in (x, y, z) manner. We need to swap to the
+            # first position the axis that is not involved in the 2D image
+            if extr_axis == 'x':
+                # Do not do anythin
+                vol = im
+            elif extr_axis == 'y':
+                # Move y at the beginning
+                vol = np.swapaxes(im, 1, 0)
+            elif extr_axis == 'z':
+                # Move z at the beginning
+                vol = np.swapaxes(im, 2, 0)
+
+            # The number of cores to use
+            num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+
+            hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+            vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(sl, **hist_dict) for sl in vol)
+
+            return np.array(vol_hist)
+        
+        elif extr_3d == '3D':
+            # We need to use the LBP TOP
+            print 'This strategy is not yet implemented.'
+
+    

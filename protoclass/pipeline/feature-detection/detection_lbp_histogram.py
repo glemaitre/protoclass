@@ -1,4 +1,4 @@
-#title           :detection_lbp.py
+#title           :detection_lbp_histogram.py
 #description     :This will create a header for a python script.
 #author          :Guillaume Lemaitre
 #date            :2015/06/07
@@ -17,7 +17,7 @@ from os.path import join
 import sys
 
 from protoclass.tool.dicom_manip import OpenVolumeNumpy
-from protoclass.extraction.texture_analysis import LBPMapExtraction
+from protoclass.extraction.texture_analysis import LBPpdfExtraction
 
 # Get the path to file
 filename_data = sys.argv[1]
@@ -28,17 +28,14 @@ if not filename_data.endswith('.npz'):
     raise ValueError('denoising-non-local: The image in input is not a npz image.')
 else:
     # Read the volume using the raw image
-    name_var_extract = 'vol_denoised'
+    name_var_extract = 'vol_lbp'
     vol = OpenVolumeNumpy(filename_data, name_var_extract=name_var_extract)
 
     # Apply the filtering using 8 cores
     num_cores = 8
-    radius = 3
-    n_points = 8 * radius
     extr_3d = '2.5D'
     extr_axis = 'y'
-    vol_lbp = LBPMapExtraction(vol, radius=radius, n_points=n_points, 
-                               extr_3d=extr_3d, extr_axis=extr_axis,
+    vol_lbp_hist = LBPpdfExtraction(vol, extr_3d=extr_3d, extr_axis=extr_axis,
                                num_cores=num_cores)
 
     # Directory where to save the data
@@ -55,12 +52,12 @@ else:
     filename_root, _ = os.path.splitext(filename_patient)
 
     # Get the filename for numpy and matlab
-    filename_matlab = os.path.join(storing_folder, filename_root + '_lbp_' + str(radius) + '.mat')
-    filename_numpy = os.path.join(storing_folder, filename_root + '_lbp_' + str(radius) + '.npz')
+    filename_matlab = os.path.join(storing_folder, filename_root + '_hist.mat')
+    filename_numpy = os.path.join(storing_folder, filename_root + '_hist.npz')
 
     # Save the matfile
     from scipy.io import savemat
-    savemat(filename_matlab, {'vol_lbp': vol_lbp})
+    savemat(filename_matlab, {'vol_lbp_hist': vol_lbp_hist})
 
     # Save the numpy array
-    np.savez(filename_numpy, vol_lbp=vol_lbp)
+    np.savez(filename_numpy, vol_lbp_hist=vol_lbp_hist)
