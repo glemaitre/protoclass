@@ -32,7 +32,7 @@ else:
     vol = OpenVolumeNumpy(filename_data, name_var_extract=name_var_extract)
 
     # Apply the filtering using 8 cores
-    num_cores = 8
+    num_cores = 70
     extr_3d = '2.5D'
     extr_axis = 'y'
     vol_lbp_hist = LBPpdfExtraction(vol, extr_3d=extr_3d, extr_axis=extr_axis,
