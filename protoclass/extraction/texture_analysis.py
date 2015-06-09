@@ -289,6 +289,9 @@ def LBPpdfExtraction(im, **kwargs):
     # We need to know if we normalisaed the histogram or not
     density = kwargs.pop('density', True)
 
+    # Check if we wish a sliding window
+    strategy_win = kwargs.pop('strategy_win', None)
+
     # Check the dimension of the input image
     if len(im.shape) == 2:
         nd_im = 2
@@ -301,8 +304,23 @@ def LBPpdfExtraction(im, **kwargs):
         raise ValueError('mahotas.texture.haralick: Can only handle 2D and 3D images.')
 
     if nd_im == 2:
-        hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
-        return hist_alone(im, **hist_dict)
+
+        if strategy_win == 'sliding_win':
+            win_size = kwargs.pop('win_size', (21, 21))
+
+            patches = ExtractPatches2D(im, win_size)
+            # The number of cores to use
+            num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+
+            hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+            vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(p, **hist_dict) for p in patches)
+
+            return np.array(vol_hist)
+
+        else:
+
+            hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+            return hist_alone(im, **hist_dict)
 
     elif nd_im == 3:
 
@@ -320,13 +338,38 @@ def LBPpdfExtraction(im, **kwargs):
                 # Move z at the beginning
                 vol = np.swapaxes(im, 2, 0)
 
-            # The number of cores to use
-            num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+            if strategy_win == 'sliding_win':
+                # win_size = kwargs.pop('win_size', (21, 21))
 
-            hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
-            vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(sl, **hist_dict) for sl in vol)
+                # for im in vol:
+                    
 
-            return np.array(vol_hist)
+                # # The number of cores to use
+                # num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+
+                # # Extract all the patches
+                # patches = Parallel(n_jobs=num_cores)(delayed(ExtractPatches2D)(im, win_size) for im in vol)
+
+                # print np.array(patches).shape
+
+                # # hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+                # # vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(p, **hist_dict) for p in patches)
+
+                # # return np.array(vol_hist)
+
+                # print patches
+
+                return True
+
+            else:
+
+                # The number of cores to use
+                num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+
+                hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+                vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(sl, **hist_dict) for sl in vol)
+
+                return np.array(vol_hist)
         
         elif extr_3d == '3D':
             # We need to use the LBP TOP

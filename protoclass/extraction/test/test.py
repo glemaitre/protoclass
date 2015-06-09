@@ -55,27 +55,29 @@ def test_2d_lbp_hist():
     from protoclass.tool.dicom_manip import OpenVolumeNumpy
 
     # Read the first volume
-    filename = '/work/le2i/gu5306le/OCT/lbp_r_1_data_npz/P741009OS_nlm_lbp_1.npz'
+    #filename = '/work/le2i/gu5306le/OCT/lbp_r_1_data_npz/P741009OS_nlm_lbp_1.npz'
+    filename = '/DATA/OCT/P741009OS_nlm_lbp_1.npz'
 
     # Read the data
     lbp_vol = OpenVolumeNumpy(filename, name_var_extract='vol_lbp')
 
     # Compute the histogram for one frame
     from protoclass.extraction.texture_analysis import LBPpdfExtraction
-    hist = LBPpdfExtraction(lbp_vol[:, 0, :])
+    hist = LBPpdfExtraction(lbp_vol[:, 0, :], strategy_win='sliding_win')
 
-    print hist
+    print hist.shape
     
-    plt.figure()
-    plt.plot(hist)
-    plt.show()
+    # plt.figure()
+    # plt.plot(hist)
+    # plt.show()
 
 def test_25d_lbp_hist():
 
     from protoclass.tool.dicom_manip import OpenVolumeNumpy
 
     # Read the first volume
-    filename = '/work/le2i/gu5306le/OCT/lbp_r_1_data_npz/P741009OS_nlm_lbp_1.npz'
+    #filename = '/work/le2i/gu5306le/OCT/lbp_r_1_data_npz/P741009OS_nlm_lbp_1.npz'
+    filename = '/DATA/OCT/P741009OS_nlm_lbp_1.npz'
 
     # Read the data
     lbp_vol = OpenVolumeNumpy(filename, name_var_extract='vol_lbp')
@@ -85,7 +87,8 @@ def test_25d_lbp_hist():
 
     extr_3d = '2.5D'
     extr_axis = 'y'
-    hist = LBPpdfExtraction(lbp_vol, extr_3d=extr_3d, extr_axis=extr_axis)
+    hist = LBPpdfExtraction(lbp_vol, extr_3d=extr_3d, extr_axis=extr_axis,
+                            strategy_win='sliding_win')
 
     print hist.shape
     
@@ -96,5 +99,5 @@ def test_25d_lbp_hist():
 if __name__ == "__main__":
     #test_2d_lbp()
     #test_25d_lbp()
-    #test_2d_lbp_hist()
-    test_25d_lbp_hist()
+    test_2d_lbp_hist()
+    #test_25d_lbp_hist()
