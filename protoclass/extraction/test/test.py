@@ -99,5 +99,5 @@ def test_25d_lbp_hist():
 if __name__ == "__main__":
     #test_2d_lbp()
     #test_25d_lbp()
-    test_2d_lbp_hist()
-    #test_25d_lbp_hist()
+    #test_2d_lbp_hist()
+    test_25d_lbp_hist()

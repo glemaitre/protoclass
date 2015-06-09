@@ -303,15 +303,29 @@ def LBPpdfExtraction(im, **kwargs):
     else:
         raise ValueError('mahotas.texture.haralick: Can only handle 2D and 3D images.')
 
-    if nd_im == 2:
+    if (nd_im == 2):
 
-        if strategy_win == 'sliding_win':
-            win_size = kwargs.pop('win_size', (21, 21))
+        if (strategy_win == 'sliding_win'):
+            win_size = kwargs.pop('win_size', (7, 7))
+            overlap = kwargs.pop('overlap', False)
 
-            patches = ExtractPatches2D(im, win_size)
+            if (overlap == False):
+                
+                # Import the function needed to extract feature from scikit learn
+                from sklearn.feature_extraction.image import extract_patches
+                
+                patches = extract_patches(im, patch_shape=win_size, 
+                                          extraction_step=(win_size[0]))
+
+                patches = patches.reshape(-1, win_size[0], win_size[1])
+
+            else:
+
+                patches = ExtractPatches2D(im, win_size)
+
             # The number of cores to use
             num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
-
+            
             hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
             vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(p, **hist_dict) for p in patches)
 
@@ -322,44 +336,47 @@ def LBPpdfExtraction(im, **kwargs):
             hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
             return hist_alone(im, **hist_dict)
 
-    elif nd_im == 3:
+    elif (nd_im == 3):
 
-        if extr_3d == '2.5D':
+        if (extr_3d == '2.5D'):
             # We will process in parallel the different slice along the given axis
             # The data are stored in (x, y, z) manner. We need to swap to the
             # first position the axis that is not involved in the 2D image
-            if extr_axis == 'x':
+            if (extr_axis == 'x'):
                 # Do not do anythin
                 vol = im
-            elif extr_axis == 'y':
+            elif (extr_axis == 'y'):
                 # Move y at the beginning
                 vol = np.swapaxes(im, 1, 0)
-            elif extr_axis == 'z':
+            elif (extr_axis == 'z'):
                 # Move z at the beginning
                 vol = np.swapaxes(im, 2, 0)
 
-            if strategy_win == 'sliding_win':
-                # win_size = kwargs.pop('win_size', (21, 21))
+            # The number of cores to use
+            num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
 
-                # for im in vol:
-                    
+            if (strategy_win == 'sliding_win'):
+                win_size = kwargs.pop('win_size', (21, 21))
+                overlap = kwargs.pop('overlap', False)
 
-                # # The number of cores to use
-                # num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+                if (overlap == False):
 
-                # # Extract all the patches
-                # patches = Parallel(n_jobs=num_cores)(delayed(ExtractPatches2D)(im, win_size) for im in vol)
+                    # Import the function needed to extract feature from scikit learn
+                    from sklearn.feature_extraction.image import extract_patches
+                
+                    patches = Parallel(n_jobs=num_cores)(delayed(extract_patches)(im, patch_shape=win_size, extraction_step=(win_size[0])) for im in vol)
 
-                # print np.array(patches).shape
+                    patches = np.array(patches).reshape(-1, win_size[0], win_size[1])
 
-                # # hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
-                # # vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(p, **hist_dict) for p in patches)
+                else:
 
-                # # return np.array(vol_hist)
+                    raise ValueError('Still did not implemented this feature. It could take so much merory.')
 
-                # print patches
+                
+                hist_dict = {'bins' : bins, 'range' : range_lbp, 'density' : density}
+                vol_hist = Parallel(n_jobs=num_cores)(delayed(hist_alone)(p, **hist_dict) for p in patches)
 
-                return True
+                return np.array(vol_hist)
 
             else:
 
