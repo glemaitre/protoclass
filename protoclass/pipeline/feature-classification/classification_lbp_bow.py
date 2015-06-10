@@ -19,6 +19,7 @@ from os.path import join
 import sys
 
 from protoclass.extraction.codebook import *
+from protoclass.classification.classification import Classify
 
 # Read the csv file with the ground truth
 #gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
@@ -50,7 +51,8 @@ else:
 
     data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_data_npz'
     codebook_filename = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_codebook/codebook.pkl'
-    get_lbp_data = lambda f: np.load(join(data_folder,f))['vol_lbp']
+
+    get_lbp_data = lambda f: np.load(join(data_folder, f))['vol_lbp_hist']
     from sklearn.externals import joblib
 
     codebook_list = joblib.load(codebook_filename)
@@ -62,29 +64,28 @@ else:
         pat_train_norm = np.delete(filename_normal, idx_test)
         pat_train_dme = np.delete(filename_dme, idx_test)
 
-
         results_by_codebook = []
         for current_cbook in codebook_list[idx_test]:
             # Collect the current training data
-            training_normal = [current_cbook.get_BoW_features(get_lbp_data(f)) for f in pat_test_norm]
-            training_dme = [current_cbook.get_BoW_features(get_lbp_data(f)) for f in pat_test_dme]
+            training_normal = [current_cbook.get_BoF_descriptor(get_lbp_data(f))[0] for f in pat_train_norm]
+            training_dme = [current_cbook.get_BoF_descriptor(get_lbp_data(f))[0] for f in pat_train_dme]
 
             # Compose the training ( data & labels )
-            training_data = np.concatenate(training_normal+training_dme, axis=0)
-            training_label = np.array([0]*training_normal.shape[0] + [1]*training_dme.shape[0], dtype=int)
+            training_data = np.array(training_normal+training_dme)
+            training_label = np.array([0]*len(training_normal) + [1]*len(training_dme), dtype=int)
 
             # Compose the testing
-            testing_data = np.concatenate((current_cbook.get_BoW_features(filename_normal[idx_test]),
-                                           current_cbook.get_BoW_features(filename_dme[idx_test])),
-                                          axis=0)
+            testing_data = np.array([current_cbook.get_BoF_descriptor(get_lbp_data(filename_normal[idx_test]))[0]
+                                     , current_cbook.get_BoF_descriptor(get_lbp_data(filename_dme[idx_test]))[0]])
 
             # Run the classification for this specific data
             pred_label, roc = Classify(training_data,
                                        training_label,
                                        testing_data,
-                                       np.array([0 1], dtype=int),
+                                       np.array([0, 1], dtype=int),
                                        classifier_str='random-forest',
-                                       n_estimators=100)
+                                       n_estimators=100,
+                                       n_jobs=20)
 
             results_by_codebook.append((pred_label, roc))
 
