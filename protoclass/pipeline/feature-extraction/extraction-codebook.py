@@ -18,6 +18,8 @@ from os.path import join
 # SYS library
 import sys
 
+from protoclass.extraction.codebook import *
+
 # Read the csv file with the ground truth
 gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
 #gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
@@ -29,7 +31,7 @@ data_filename = gt[:, 0]
 
 # Get the good extension
 radius = 1
-data_filename = np.array([f + '_nlm_lbp_' + str(radius) + '.npz' for f in data_filename])
+data_filename = np.array([f + '_nlm_lbp_' + str(radius) + 'hist.npz' for f in data_filename])
 
 label = gt[:, 1]
 label = ((label + 1.) / 2.).astype(int)
@@ -46,8 +48,9 @@ else:
     filename_normal = data_filename[label == 0]
     filename_dme = data_filename[label == 1]
 
-    data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_data_npz'
+    data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_data_npz'
 
+    codebook_list = []
     for idx_test, (pat_test_norm, pat_test_dme) in enumerate(zip(filename_normal, filename_dme)):
 
         pat_train_norm = np.delete(filename_normal, idx_test)
@@ -55,11 +58,35 @@ else:
 
         # Load the training data
         # Define the name of the volume
-        vol_name = 'vol_lbp'
-        training_data = np.concatenate(np.concatenate([np.load(f)[vol_name] for f in pat_train_norm], axis=0),
-                                       np.concatenate([np.load(f)[vol_name] for f in pat_train_norm], axis=0),
+
+        # TODO LAMBDA FUNCTION
+        # get_lbp_data = lambda f: np.load(join(data_folder,f))['vol_lbp']
+
+        # open the training data
+        vol_name = 'vol_lbp_hist'
+        training_data = np.concatenate((np.concatenate([np.load(join(data_folder, f))[vol_name] for f in pat_train_norm], axis=0),
+                                        np.concatenate([np.load(join(data_folder, f))[vol_name] for f in pat_train_dme], axis=0)),
                                        axis=0)
-        
 
-        
+        # open the testing data
+        testing_data = np.concatenate((np.load(join(data_folder, pat_test_norm)), np.load(join(data_folder, pat_test_dme))), axis=0)
 
+        # Create the codebook using the training data
+        num_cores = 60
+        list_n_words = [2, 4, 8, 16, 32, 64, 100]
+        cbook = [CodeBook(n_words=w, n_jobs=num_cores) for w in list_n_words]
+
+        # Fit each code book for the data currently open
+        for c in cbook:
+            c.fit(training_data)
+
+        # Concatenate the codebook
+        codebook_list.append(cbook)
+
+    # We have to store the final codebook
+    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_codebook'
+    if not os.path.exists(path_to_save):
+        os.makedirs(path_to_save)
+
+    from sklearn.externals import joblib
+    joblib.dump(codebook_list, join(path_to_save, 'codebook.pkl'))
