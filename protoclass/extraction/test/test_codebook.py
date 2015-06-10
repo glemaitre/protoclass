@@ -6,7 +6,7 @@ try:
 except ImportError:
     import unittest
 
-from codebook import *
+from protoclass.extraction.codebook import *
 
 ## -----
 import sys
@@ -74,6 +74,7 @@ class Test_data_convert(unittest.TestCase):
         expected_value = float(1)/cbook.n_words
         for bin_value in cbook_hist[0]:
             assert_less(round(bin_value-expected_value,3), 0.01)
+            
         #TODO: recode this as assert_almost_equal but with higher tolerance
         #      since assert_almost_equal is assert(round(a-b,7)==0)
 

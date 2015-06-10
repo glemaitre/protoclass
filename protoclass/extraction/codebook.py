@@ -305,3 +305,9 @@ class CoodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
         return np.histogram(self.predict(X),
                             bins=range(self.n_words+1),
                             density=True)
+
+    def get_params(self, deep=True):
+        return self.cluster_core.get_params()
+
+    def set_params(self, **params):
+        self.cluster_core.set_params(**params)
