@@ -21,8 +21,8 @@ import sys
 from protoclass.extraction.codebook import *
 
 # Read the csv file with the ground truth
-gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
-#gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
+#gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
+gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
 gt_csv = pd.read_csv(gt_csv_filename)
 
 gt = gt_csv.values
@@ -31,7 +31,7 @@ data_filename = gt[:, 0]
 
 # Get the good extension
 radius = 1
-data_filename = np.array([f + '_nlm_lbp_' + str(radius) + 'hist.npz' for f in data_filename])
+data_filename = np.array([f + '_nlm_lbp_' + str(radius) + '_hist.npz' for f in data_filename])
 
 label = gt[:, 1]
 label = ((label + 1.) / 2.).astype(int)
@@ -69,7 +69,9 @@ else:
                                        axis=0)
 
         # open the testing data
-        testing_data = np.concatenate((np.load(join(data_folder, pat_test_norm)), np.load(join(data_folder, pat_test_dme))), axis=0)
+        print join(data_folder, pat_test_norm)
+        print join(data_folder, pat_test_dme)
+        testing_data = np.concatenate((np.load(join(data_folder, pat_test_norm))[vol_name], np.load(join(data_folder, pat_test_dme))[vol_name]), axis=0)
 
         # Create the codebook using the training data
         num_cores = 60

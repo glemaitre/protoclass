@@ -31,7 +31,7 @@ from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 # from sklearn.externals.joblib import delayed
 
 
-class CoodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
+class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
     """Code Book creation and manimpulation for Bag-of-(visual)Fetures.
 
     Parameters
