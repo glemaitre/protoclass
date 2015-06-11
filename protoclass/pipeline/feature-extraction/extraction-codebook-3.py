@@ -30,7 +30,7 @@ gt = gt_csv.values
 data_filename = gt[:, 0]
 
 # Get the good extension
-radius = 4
+radius = 3
 data_filename = np.array([f + '_nlm_lbp_' + str(radius) + '_hist_now.npz' for f in data_filename])
 
 label = gt[:, 1]
