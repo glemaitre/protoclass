@@ -74,8 +74,8 @@ else:
         testing_data = np.concatenate((np.load(join(data_folder, pat_test_norm))[vol_name], np.load(join(data_folder, pat_test_dme))[vol_name]), axis=0)
 
         # Create the codebook using the training data
-        num_cores = 15
-        list_n_words = [2, 4, 8, 16, 32, 64, 100]
+        num_cores = 1
+        list_n_words = [2, 4, 8, 16, 32]
         cbook = [CodeBook(n_words=w, n_jobs=num_cores, n_init=1) for w in list_n_words]
 
         # Fit each code book for the data currently open
