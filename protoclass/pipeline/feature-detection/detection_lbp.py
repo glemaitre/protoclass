@@ -24,16 +24,17 @@ filename_data = sys.argv[1]
 print 'Opening the following file: {}'.format(filename_data)
 
 # Open the data
-if not filename_data.endswith('.npz'):
+if not filename_data.endswith('.npy'):
     raise ValueError('denoising-non-local: The image in input is not a npz image.')
 else:
     # Read the volume using the raw image
-    name_var_extract = 'vol_denoised'
-    vol = OpenVolumeNumpy(filename_data, name_var_extract=name_var_extract)
+    # name_var_extract = 'vol_denoised'
+    # vol = OpenVolumeNumpy(filename_data, name_var_extract=name_var_extract)
+    vol = OpenVolumeNumpy(filename_data)
 
     # Apply the filtering using 8 cores
     num_cores = 8
-    radius = 3
+    radius = 4
     n_points = 8 * radius
     extr_3d = '2.5D'
     extr_axis = 'y'

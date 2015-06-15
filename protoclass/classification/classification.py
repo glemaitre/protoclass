@@ -46,6 +46,8 @@ from unbalanced_dataset.pipeline import SMOTETomek
 from random import sample
 from collections import Counter
 
+roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
+
 def Classify(training_data, training_label, testing_data, testing_label, classifier_str='random-forest', balancing_criterion=None, **kwargs):
 
     #########################################################################
@@ -177,7 +179,6 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     ### CHECK THE PERFORMANCE OF THE CLASSIFIER
     #########################################################################
     ### Compute the ROC curve
-    roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
     fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
     auc = roc_auc_score(testing_label, pred_prob[:, 1])
     roc = roc_auc(fpr, tpr, thresh, auc)

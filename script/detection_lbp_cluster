@@ -19,7 +19,7 @@ fi
 # Affect the input folder for the data
 data_path=$1
 
-str_path="/work/le2i/gu5306le/OCT/lbp_data"
+str_path="/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_4_data_npz"
 
 # Keep the directory of the script into a variable
 script_dir=$(pwd)

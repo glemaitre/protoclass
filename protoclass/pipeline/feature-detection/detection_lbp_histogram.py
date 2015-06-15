@@ -39,11 +39,14 @@ else:
                                num_cores=num_cores)
 
     # Directory where to save the data
-    storing_folder = sys.argv[2]
+    storing_folder_npz = sys.argv[2]
+    storing_folder_mat = sys.argv[3]
 
     # Create the folder if it is not existing
-    if not os.path.exists(storing_folder):
-        os.makedirs(storing_folder)
+    if not os.path.exists(storing_folder_npz):
+        os.makedirs(storing_folder_npz)
+    if not os.path.exists(storing_folder_mat):
+        os.makedirs(storing_folder_mat)
 
     # Get only the filename without path directory of the input file
     _, filename_patient = os.path.split(filename_data) 
@@ -52,8 +55,8 @@ else:
     filename_root, _ = os.path.splitext(filename_patient)
 
     # Get the filename for numpy and matlab
-    filename_matlab = os.path.join(storing_folder, filename_root + '_hist.mat')
-    filename_numpy = os.path.join(storing_folder, filename_root + '_hist.npz')
+    filename_matlab = os.path.join(storing_folder_mat, filename_root + '_hist.mat')
+    filename_numpy = os.path.join(storing_folder_npz, filename_root + '_hist.npz')
 
     # Save the matfile
     from scipy.io import savemat

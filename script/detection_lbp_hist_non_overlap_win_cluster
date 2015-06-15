@@ -19,7 +19,10 @@ fi
 # Affect the input folder for the data
 data_path=$1
 
-str_path="/work/le2i/gu5306le/OCT/lbp_hist_non_overlap_win_data"
+
+str_path_npz="/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_4_hist_now_data_npz"
+
+str_path_mat="/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_4_hist_now_data_mat"
 
 # Keep the directory of the script into a variable
 script_dir=$(pwd)
@@ -38,11 +41,11 @@ for patient in $data_path*; do
     ### Truncate the file if it is existing
     : > $script_filename
     ### Write the command to execute
-    printf "ipython protoclass/pipeline/feature-detection/detection_lbp_histogram_non_overlap_win.py \"${patient%/}\" \"$str_path\"" >> $script_filename
+    printf "ipython protoclass/pipeline/feature-detection/detection_lbp_histogram_non_overlap_win.py \"${patient%/}\" \"$str_path_npz\" \"$str_path_mat\"" >> $script_filename
     ### Make it executable
     chmod u+x $script_filename
     # Submit the job to the queue
-    bash $script_filename
-    # qsub -q batch -pe smp 8 $script_filename
+    #bash $script_filename
+    qsub -q batch -pe smp 8 $script_filename
     ((patient_idx++))
 done

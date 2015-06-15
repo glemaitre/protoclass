@@ -32,18 +32,21 @@ else:
     vol = OpenVolumeNumpy(filename_data, name_var_extract=name_var_extract)
 
     # Apply the filtering using 8 cores
-    num_cores = 70
+    num_cores = 8
     extr_3d = '2.5D'
     extr_axis = 'y'
     vol_lbp_hist = LBPpdfExtraction(vol, extr_3d=extr_3d, extr_axis=extr_axis,
                                     num_cores=num_cores, strategy_win='sliding_win')
 
     # Directory where to save the data
-    storing_folder = sys.argv[2]
+    storing_folder_npz = sys.argv[2]
+    storing_folder_mat = sys.argv[3]
 
     # Create the folder if it is not existing
-    if not os.path.exists(storing_folder):
-        os.makedirs(storing_folder)
+    if not os.path.exists(storing_folder_npz):
+        os.makedirs(storing_folder_npz)
+    if not os.path.exists(storing_folder_mat):
+        os.makedirs(storing_folder_mat)
 
     # Get only the filename without path directory of the input file
     _, filename_patient = os.path.split(filename_data) 
@@ -52,8 +55,8 @@ else:
     filename_root, _ = os.path.splitext(filename_patient)
 
     # Get the filename for numpy and matlab
-    filename_matlab = os.path.join(storing_folder, filename_root + '_hist_now.mat')
-    filename_numpy = os.path.join(storing_folder, filename_root + '_hist_now.npz')
+    filename_matlab = os.path.join(storing_folder_mat, filename_root + '_hist.mat')
+    filename_numpy = os.path.join(storing_folder_npz, filename_root + '_hist.npz')
 
     # Save the matfile
     from scipy.io import savemat
