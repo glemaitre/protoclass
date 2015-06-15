@@ -186,6 +186,8 @@ class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
                                        tol=tol, precompute_distances=precompute_distances,
                                        n_init=n_init, verbose=verbose, random_state=random_state,
                                        copy_x=copy_x, n_jobs=n_jobs)
+        elif self.cluster_core = 'random-words':
+            continue
 
     def _check_fit_data(self, X):
         """Verify that the number of samples given is larger than n_words"""

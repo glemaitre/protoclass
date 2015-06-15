@@ -75,8 +75,8 @@ else:
 
         # Create the codebook using the training data
         num_cores = 1
-        list_n_words = [2, 4, 8, 16, 32]
-        cbook = [CodeBook(n_words=w, n_jobs=num_cores, n_init=1) for w in list_n_words]
+        list_n_words = [2, 4, 8, 16, 32, 64, 80, 100, 150, 200, 250, 300, 350, 400]
+        cbook = [CodeBook(n_words=w, n_jobs=num_cores, n_init=1, ) for w in list_n_words]
 
         # Fit each code book for the data currently open
         for idx_cb, c in enumerate(cbook):
@@ -87,7 +87,7 @@ else:
         codebook_list.append(cbook)
 
     # We have to store the final codebook
-    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_codebook'
+    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_codebook_random'
     if not os.path.exists(path_to_save):
         os.makedirs(path_to_save)
 
