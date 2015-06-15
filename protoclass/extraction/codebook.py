@@ -175,8 +175,12 @@ class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
         self.copy_x = copy_x
         self.n_jobs = n_jobs
 
-        if ((self.cluster_core_name is         None       ) or
-            (self.cluster_core_name == 'random-clustering')):
+        if self.cluster_core_name == 'random-clustering':
+            self.n_init = 1
+            self.max_iter = 1
+
+        if ( (self.cluster_core_name is         None       ) or 
+             (self.cluster_core_name == 'random-clustering')    ):
             from sklearn.cluster import KMeans
             self.cluster_core = KMeans(n_clusters=self.n_words, init=init, max_iter=max_iter,
                                        tol=tol, precompute_distances=precompute_distances,
@@ -217,24 +221,7 @@ class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
         ----------
         X : array-like or sparse matrix, shape=(n_samples, n_features)
         """
-        if self.cluster_core_name is None:
-            # Apply K-means clustering
-            self.cluster_core = self.cluster_core.fit(X, y)
-        elif self.cluster_core_name == 'random-clustering':
-            # Apply just the initialisation of k-means
-            from sklearn.cluster.k_means_ import _init_centroids, _labels_inertia
-            from sklearn.utils.extmath import row_norms, squared_norm
-            x_squared_norms = row_norms(X, squared=True)
-            self.cluster_core.cluster_centers_ = _init_centroids(X, 
-                                                                 self.n_words, 
-                                                                 init=self.init, 
-                                                                 random_state=self.random_state,
-                                                                 x_squared_norms=x_squared_norms)
-            distances = np.zeros(shape=(X.shape[0],), dtype=np.float64)
-            self.cluster_core.labels_, self.cluster_core.inertia_ \
-                = _labels_inertia(X, x_squared_norms, self.cluster_core.cluster_centers_,
-                                  precompute_distances=True,
-                                  distances=distances)
+        self.cluster_core = self.cluster_core.fit(X, y)
         return self
 
     def fit_predict(self, X, y=None):
