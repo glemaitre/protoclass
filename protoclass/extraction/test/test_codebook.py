@@ -39,6 +39,22 @@ from sklearn.cluster import KMeans, k_means
 
 class Test_data_convert(unittest.TestCase):
 
+    def test_random_codebook(self):
+        # non centered, sparse centers to check the
+        centers = np.array([
+            [0.0, 5.0, 0.0, 0.0, 0.0],
+            [1.0, 1.0, 4.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 5.0, 1.0],
+            ])
+        n_samples = 100
+        n_clusters, n_features = centers.shape
+        X, true_labels = make_blobs(n_samples=n_samples, centers=centers,
+                                    cluster_std=1., random_state=42)
+
+        cbook = CodeBook(n_words=3, init='random', n_init=1, max_iter=1)
+        cbook = cbook.fit(X)
+
+
     # def _check_fitted_model(self):
     def test_fitted_model(self):
 

@@ -1,5 +1,5 @@
 """
-The :mod:`coodebook` module includes utilities to create a Bag-of-(visual)Fetures,
+The :mod:`codebook` module includes utilities to create a Bag-of-(visual)Fetures,
 that takes advantage of :mod:`sklearn`.
 """
 
