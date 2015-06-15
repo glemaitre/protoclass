@@ -298,13 +298,38 @@ class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
         #TODO: check that the coodebook is fitted
         return self.cluster_core.cluster_centers_
 
-    def get_BoF_descriptor(self,X):
+    def get_BoF_descriptor(self, X):
 
         # norm = lambda x: x.astype(float)/np.linalg.norm(x)
         # return norm(np.bincount(self.predict(X)))
         return np.histogram(self.predict(X),
                             bins=range(self.n_words+1),
                             density=True)
+
+    def get_BoF_pramide_descriptor(self, X):
+        """ Split the image (or volume) in a piramide manner and get
+        a descriptor for each level (and part). Concatenate the output.
+        TODO: build proper documentaiton
+
+        """
+        def split_data_by2(X):
+            # TODO: rewrite this in a nice manner that uses len(X.shape)
+            # TODO: this can rise ERROR if length of X is odd
+            parts = [np.split(x, 2, axis=2) for x in [np.split(x, 2, axis=1) for x in
+             np.slit(X, 2, axis=0) ]]
+            return parts
+
+        def get_occurrences(X):
+            return np.histogram(X, bins=range(self.n_words+1))
+
+        def build_piramide(X, level=2):
+            if level is 0:
+                return get_occurrences(X)
+            else:
+                return [get_occurrences(X)] + [build_piramide(Xpart, level-1)
+                       for Xpart in split_data_by2(X)]
+
+        return build_piramide(self.predict(X))
 
     def get_params(self, deep=True):
         return self.cluster_core.get_params()
