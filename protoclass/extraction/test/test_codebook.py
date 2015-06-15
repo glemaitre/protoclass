@@ -69,7 +69,7 @@ class Test_data_convert(unittest.TestCase):
         X, true_labels = make_blobs(n_samples=n_samples, centers=centers,
                                     cluster_std=1., random_state=42)
 
-        cbook = CodeBook(n_words=3)
+        cbook = CodeBook(n_words=3, cluster_core='random-clustering')
         cbook = cbook.fit(X) # TODO: Is it neaded to reasign? or it can be just cbook.fit(X)
 
         # check that the number of clusters centers and distinct labels match
