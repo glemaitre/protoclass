@@ -175,20 +175,20 @@ class CodeBook(BaseEstimator, ClusterMixin, TransformerMixin):
         self.copy_x = copy_x
         self.n_jobs = n_jobs
 
-        if self.cluster_core_name == 'random-clustering':
+        if self.cluster_core_name == 'random-words':
             self.n_init = 1
             self.max_iter = 1
+            print 'The number of iterations and try as been fixed to 1.'
 
-        if ( (self.cluster_core_name is         None       ) or 
-             (self.cluster_core_name == 'random-clustering')    ):
+        if ( (self.cluster_core_name is     None      ) or 
+             (self.cluster_core_name == 'random-words')    ):
             from sklearn.cluster import KMeans
-            self.cluster_core = KMeans(n_clusters=self.n_words, init=init, max_iter=max_iter,
-                                       tol=tol, precompute_distances=precompute_distances,
-                                       n_init=n_init, verbose=verbose, random_state=random_state,
-                                       copy_x=copy_x, n_jobs=n_jobs)
-        elif self.cluster_core = 'random-words':
-            continue
-
+            self.cluster_core = KMeans(n_clusters=self.n_words, init=self.init,
+                                       max_iter=self.max_iter, tol=self.tol,
+                                       precompute_distances=self.precompute_distances,
+                                       n_init=self.n_init, verbose=self.verbose,
+                                       random_state=self.random_state,
+                                       copy_x=self.copy_x, n_jobs=self.n_jobs)
     def _check_fit_data(self, X):
         """Verify that the number of samples given is larger than n_words"""
         X = check_array(X, accept_sparse='csr', dtype=np.float64)

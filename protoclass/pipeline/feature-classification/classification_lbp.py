@@ -23,7 +23,8 @@ from protoclass.classification.classification import Classify
 
 # Read the csv file with the ground truth
 #gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
-gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
+#gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
+gt_csv_filename = '/work/le2i/gu5306le/dukeOCT/data2.csv'
 gt_csv = pd.read_csv(gt_csv_filename)
 
 gt = gt_csv.values
@@ -31,8 +32,8 @@ gt = gt_csv.values
 data_filename = gt[:, 0]
 
 # Get the good extension
-radius = 4
-data_filename = np.array([f + '_nlm_lbp_' + str(radius) + '_hist.npz' for f in data_filename])
+radius = 1
+data_filename = np.array([f + '_lbp_' + str(radius) + '_hist.npz' for f in data_filename])
 
 label = gt[:, 1]
 label = ((label + 1.) / 2.).astype(int)
@@ -49,7 +50,7 @@ else:
     filename_normal = data_filename[label == 0]
     filename_dme = data_filename[label == 1]
 
-    data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_data_npz'
+    data_folder = '/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_' + str(radius) + '_hist_data_npz'
     #codebook_filename = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_codebook/codebook.pkl'
 
     get_lbp_data = lambda f: np.load(join(data_folder, f))['vol_lbp_hist'].reshape(-1)
@@ -68,13 +69,42 @@ else:
         training_normal = [get_lbp_data(f) for f in pat_train_norm]
         training_dme = [get_lbp_data(f) for f in pat_train_dme]
 
+        # We need to go through all the data and select the most present one (873,) to compute the PCA
+        from sklearn.decomposition import PCA
+        ratio_eigen_values = 27
+        dmr = PCA(n_components=ratio_eigen_values)
+
+        temp = []
+        for t in training_normal:
+            if t.shape[0] == 873:
+                temp.append(t)
+        
+        for t in training_dme:
+            if t.shape[0] == 873:
+                temp.append(t)
+
+        # Fit the PCA
+        dmr.fit(np.array(temp))
+
+        # Project the training data
+        temp = []
+        for t in training_normal:
+            print t.shape
+            temp.append(dmr.transform(np.ravel(t)))
+        for t in training_dme:
+            temp.append(dmr.transform(np.ravel(t)))
+
         # Compose the training ( data & labels )
         training_data = np.array(training_normal+training_dme)
         training_label = np.array([0]*len(training_normal) + [1]*len(training_dme), dtype=int)
 
+        print training_data.shape
+        
         # Compose the testing
-        testing_data = np.array([get_lbp_data(filename_normal[idx_test]), get_lbp_data(filename_dme[idx_test])])
+        testing_data = np.array([dmr.transform(get_lbp_data(filename_normal[idx_test])), dmr.transform(get_lbp_data(filename_dme[idx_test]))])
 
+        print testing_data.shape
+        
         # Run the classification for this specific data
         pred_label, roc = Classify(training_data,
                                    training_label,
@@ -88,7 +118,7 @@ else:
         results_cv.append((pred_label, roc))
 
     # We have to store the final codebook
-    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_results'
+    path_to_save = '/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_' + str(radius) + '_hist_results'
     if not os.path.exists(path_to_save):
         os.makedirs(path_to_save)
 

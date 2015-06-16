@@ -77,7 +77,7 @@ else:
         ratio_eigen_values = 0.99
         dmr = PCA(n_components=ratio_eigen_values)
         training_data = dmr.fit_transform(training_data)
-
+        
         # Compose the testing
         testing_data = np.array([get_lbp_data(filename_normal[idx_test]), get_lbp_data(filename_dme[idx_test])])
 

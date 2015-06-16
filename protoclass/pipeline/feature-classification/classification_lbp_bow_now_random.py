@@ -31,7 +31,7 @@ gt = gt_csv.values
 data_filename = gt[:, 0]
 
 # Get the good extension
-radius = 2
+radius = 1
 data_filename = np.array([f + '_nlm_lbp_' + str(radius) + '_hist_now.npz' for f in data_filename])
 
 label = gt[:, 1]
@@ -50,7 +50,7 @@ else:
     filename_dme = data_filename[label == 1]
 
     data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_data_npz'
-    codebook_filename = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_200_codebook/codebook.pkl'
+    codebook_filename = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_codebook_random/codebook.pkl'
 
     get_lbp_data = lambda f: np.load(join(data_folder, f))['vol_lbp_hist']
     from sklearn.externals import joblib
@@ -85,14 +85,14 @@ else:
                                        np.array([0, 1], dtype=int),
                                        classifier_str='random-forest',
                                        n_estimators=100,
-                                       n_jobs=80, max_features=None)
+                                       n_jobs=60, max_features=None)
 
             results_by_codebook.append((pred_label, roc))
 
         results_cv.append(results_by_codebook)
 
     # We have to store the final codebook
-    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_BoW_now_results_200'
+    path_to_save = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_BoW_now_random_results'
     if not os.path.exists(path_to_save):
         os.makedirs(path_to_save)
 
