@@ -26,7 +26,8 @@ from protoclass.classification.classification import Classify
 
 # Read the csv file with the ground truth
 #gt_csv_filename = '/DATA/OCT/data_organized/data.csv'
-gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
+#gt_csv_filename = '/work/le2i/gu5306le/OCT/data.csv'
+gt_csv_filename = '/work/le2i/gu5306le/dukeOCT/data2.csv'
 gt_csv = pd.read_csv(gt_csv_filename)
 
 gt = gt_csv.values
@@ -59,8 +60,8 @@ else:
 
         def radius_loading(f, cv, w, radius):
             
-            data_folder = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_data_npz'
-            codebook_filename = '/work/le2i/gu5306le/OCT/lbp_r_' + str(radius) + '_hist_now_codebook/codebook.pkl'
+            data_folder = '/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_' + str(radius) + '_hist_now_data_npz'
+            codebook_filename = '/work/le2i/gu5306le/dukeOCT/dataset/lbp_r_' + str(radius) + '_hist_now_codebook/codebook.pkl'
 
             # load the codebook
             codebook_list = joblib.load(codebook_filename)
@@ -71,7 +72,7 @@ else:
             cb = codebook_list[cv][w]
             
             # compose the filename
-            filename_data = join(data_folder, f + '_nlm_lbp_' + str(radius) + '_hist_now.npz')
+            filename_data = join(data_folder, f + '_lbp_' + str(radius) + '_hist.npz')
 
             print 'Read file {}'.format(filename_data)
 
@@ -79,7 +80,7 @@ else:
             return cb.get_BoF_descriptor(np.load(filename_data)['vol_lbp_hist'])[0]
         
         lbp_data = []
-        for radius in range(1, 5):
+        for radius in range(1, 4):
             lbp_data.append(radius_loading(f, cv, w, radius))
         #lbp_data = Parallel(n_jobs=-1)(delayed(radius_loading)(f, cv, w, radius) for radius in range(1, 5))
         return np.concatenate(lbp_data)
@@ -126,7 +127,7 @@ else:
         results_cv.append(results_by_codebook)
 
     # We have to store the final codebook
-    path_to_save = '/work/le2i/gu5306le/OCT/lbp_hist_BoW_now_comb_results'
+    path_to_save = '/work/le2i/gu5306le/dukeOCT/dataset/lbp_hist_BoW_now_comb_results'
     if not os.path.exists(path_to_save):
         os.makedirs(path_to_save)
 
