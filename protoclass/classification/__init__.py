@@ -1,3 +1,3 @@
-from . import classification
+from .classification import Classify
 
 __all__ = ['Classify']
