@@ -18,30 +18,17 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import confusion_matrix
 
-# Add the unbalanced toolbox the python path
-import sys
-sys.path.append(r'./protoclass/classification/UnbalancedDataset/')
-
 # Import over-sampling method
-from unbalanced_dataset.over_sampling import OverSampler
-from unbalanced_dataset.over_sampling import SMOTE
+from unbalanced_dataset import OverSampler, SMOTE
 
 # Import under-sampling method
-from unbalanced_dataset.under_sampling import UnderSampler
-from unbalanced_dataset.under_sampling import TomekLinks
-from unbalanced_dataset.under_sampling import ClusterCentroids
-from unbalanced_dataset.under_sampling import NearMiss
-from unbalanced_dataset.under_sampling import CondensedNearestNeighbour
-from unbalanced_dataset.under_sampling import OneSidedSelection
-from unbalanced_dataset.under_sampling import NeighbourhoodCleaningRule
+from unbalanced_dataset import UnderSampler, TomekLinks, ClusterCentroids, NearMiss, CondensedNearestNeighbour, OneSidedSelection, NeighbourhoodCleaningRule
 
 # Import ensemble sampling method
-from unbalanced_dataset.ensemble_sampling import EasyEnsemble
-from unbalanced_dataset.ensemble_sampling import BalanceCascade
+from unbalanced_dataset import EasyEnsemble, BalanceCascade
 
 # Import known pipeline method
-from unbalanced_dataset.pipeline import SMOTEENN
-from unbalanced_dataset.pipeline import SMOTETomek 
+from unbalanced_dataset import SMOTEENN, SMOTETomek 
 
 from random import sample
 from collections import Counter

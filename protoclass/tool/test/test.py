@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 def test_raw_reading():
     
-    from protoclass.tool.dicom_manip import OpenRawImageOCT
+    from ..dicom_manip import OpenRawImageOCT
 
-    filename = '/work/le2i/gu5306le/OCT/raw_data/P741009OS.img'
+    filename = 'data/oct/PMS15336OD.img'
     img = OpenRawImageOCT(filename, (512, 128, 1024))
 
     plt.imshow(img[:, 20, :].T)
