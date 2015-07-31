@@ -121,7 +121,7 @@ def Flatten2DMphMath(image, **kwargs):
         
     ### Get the morphological operator for the closing operation
     closing_kernel_type = kwargs.pop('closing_kernel_type', 'disk') # Default type of kernel disk
-    closing_kernel_size = kwargs.pop('closing_kernel_size', 20) # Default kernel size 20
+    closing_kernel_size = kwargs.pop('closing_kernel_size', 35) # Default kernel size 35
     if (closing_kernel == 'square'):
         from skimage.morphology import square
         closing_kernel = square(closing_kernel_size)
@@ -141,3 +141,29 @@ def Flatten2DMphMath(image, **kwargs):
     bin_opening = binary_opening(bin_closing, opening_kernel)
 
     # ----- 4. POLYNOMIAL FITTING ----- #
+    # PROCESSING
+    ### Get the x,y position of True value in the binary image
+    y_img, x_img = np.nonzero(bin_opening)
+
+    ### Fit a second order polynomial
+    x_interp = np.arange(bin_opening.shape[1])
+    p_fitted = np.poly1d(np.polyfit(x_img, y_img, 2))
+    y_interp = p_fitted(x_interp)
+    
+    # ----- 5. WARPING OF THE IMAGE ----- #
+    ### Allocate the memory for the image
+    warped_img = np.zeros(image.shape)
+    
+    ### Get each column of the original image
+    ### Get the minimum y of the interpolated value in order to align the value to this baseline
+    baseline_y = np.min(y_interp)
+    for col_ind, col_img in enumerate(image.T):
+        
+        ### Compute the distance to apply the rolling
+        dist_roll = int(np.round(baseline_y - y_interp[col_ind]))
+
+        ### Assign the new column to the warped image
+        warped_img[:, col_ind] = np.roll(col_img, dist_roll)
+
+    # Finally return the unflatten image
+    return warped_img
