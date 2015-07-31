@@ -19,8 +19,9 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 def Denoising3D(volume, denoising_method='non-local-means', **kwargs):
+    # GOAL : denoise a complete 3D volume
 
-    if denoising_method == 'non-local-means':
+    if (denoising_method == 'non-local-means'):
 
         # The dimension which will vary will be Y. 
         # We need to swap Y in first position
