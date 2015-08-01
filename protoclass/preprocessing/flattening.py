@@ -23,8 +23,8 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
 
     # Check that the type of image is float and in the range (0., 1.)
     ### Check the type
-    if not ( (volume.dtype() == 'float32') or 
-             (volume.dtype() != 'float64')    ):
+    if not ( (volume.dtype == 'float32') or 
+             (volume.dtype != 'float64')    ):
         raise ValueError('protoclass.preprocessing.flattening: The volume data should be float data.')
 
     ### Check the range
@@ -40,10 +40,13 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         
         # Compute the Haralick statistic in parallel
         num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
-        volume_denoised = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im, **kwargs) for im in volume_swaped)
+        volume_flatten = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
+
+        print volume.shape
+        print np.array(volume_flatten).shape
 
         # We need to swap back 
-        return np.swapaxes(volume_denoised, 0, 1)
+        return np.swapaxes(np.swapaxes(volume_flatten, 1, 2), 1, 0)
     
     else:
         raise ValueError('protoclass.preprocessing.flattening: Unrecognise type of flattening.')
@@ -84,10 +87,11 @@ def Flatten2DMphMath(image, **kwargs):
     ### Get the morphological operator for the median filtering
     median_kernel_type = kwargs.pop('median_kernel_type', 'square') # Default type of kernel square
     median_kernel_size = kwargs.pop('median_kernel_size', 5) # Default kernel size 5
-    if (median_kernel == 'square'):
+
+    if (median_kernel_type == 'square'):
         from skimage.morphology import square
         median_kernel = square(median_kernel_size)
-    if (median_kernel == 'disk'):
+    elif (median_kernel_type == 'disk'):
         from skimage.morphology import disk
         median_kernel = disk(median_kernel_size)
     else:
@@ -110,10 +114,10 @@ def Flatten2DMphMath(image, **kwargs):
     ### Get the morphological operator for the opening operation
     opening_kernel_type = kwargs.pop('opening_kernel_type', 'disk') # Default type of kernel disk
     opening_kernel_size = kwargs.pop('opening_kernel_size', 5) # Default kernel size 5
-    if (opening_kernel == 'square'):
+    if (opening_kernel_type == 'square'):
         from skimage.morphology import square
         opening_kernel = square(opening_kernel_size)
-    if (opening_kernel == 'disk'):
+    elif (opening_kernel_type == 'disk'):
         from skimage.morphology import disk
         opening_kernel = disk(opening_kernel_size)
     else:
@@ -122,10 +126,10 @@ def Flatten2DMphMath(image, **kwargs):
     ### Get the morphological operator for the closing operation
     closing_kernel_type = kwargs.pop('closing_kernel_type', 'disk') # Default type of kernel disk
     closing_kernel_size = kwargs.pop('closing_kernel_size', 35) # Default kernel size 35
-    if (closing_kernel == 'square'):
+    if (closing_kernel_type == 'square'):
         from skimage.morphology import square
         closing_kernel = square(closing_kernel_size)
-    if (closing_kernel == 'disk'):
+    elif (closing_kernel_type == 'disk'):
         from skimage.morphology import disk
         closing_kernel = disk(closing_kernel_size)
     else:

@@ -7,8 +7,8 @@
 #python_version  :2.7.6 
 #==============================================================================
 
-from ..flattening import Flatten3D
-from ..flattening import Flatten2DMphMath
+from protoclass.preprocessing.flattening import Flatten3D
+from protoclass.preprocessing.flattening import Flatten2DMphMath
 from protoclass.tool.dicom_manip import OpenVolumeNumpy
 
 def test_3d_flattening():
@@ -20,8 +20,10 @@ def test_3d_flattening():
     vol = OpenVolumeNumpy(filename, name_var_extract=name_var_extract)
 
     # Flatten the volume
-    out = Flatten3D(vol)
+    out = Flatten3D(vol, thres_type='otsu')
+
+    return out
 
 # The function that will be tested
 if __name__ == "__main__":
-    test_3d_flattening()
+    vol_out = test_3d_flattening()
