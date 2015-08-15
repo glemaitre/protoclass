@@ -6,6 +6,7 @@ install_requires = [
     'scikit-learn',
     #'SimpleITK',
     'UnbalancedDataset'
+    'pyksvd'
     ]
 
 setup(name='protoclass',
