@@ -1,6 +1,0 @@
-[submodule "protoclass/classification/UnbalancedDataset"]
-	path = protoclass/classification/UnbalancedDataset
-	url = https://github.com/glemaitre/UnbalancedDataset.git
-[submodule "third-party/pyksvd"]
-	path = third-party/pyksvd
-	url = https://github.com/hoytak/pyksvd.git
