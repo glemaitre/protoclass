@@ -1,0 +1,6 @@
+[submodule "third-party/pyksvd"]
+	path = third-party/pyksvd
+	url = https://github.com/glemaitre/pyksvd.git
+[submodule "third-party/UnbalancedDataset"]
+	path = third-party/UnbalancedDataset
+	url = https://github.com/glemaitre/UnbalancedDataset.git
