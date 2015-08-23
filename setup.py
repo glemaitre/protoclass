@@ -5,7 +5,7 @@ install_requires = [
     'scipy',
     'scikit-learn',
     #'SimpleITK',
-    'UnbalancedDataset'
+    'UnbalancedDataset',
     'pyksvd'
     ]
 
