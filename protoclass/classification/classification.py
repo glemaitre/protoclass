@@ -151,7 +151,6 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
             # ... Random Forest classifier
             if (classifier_str == 'random-forest'):
-                # Classify using random forest
                 crf = TrainRandomForest(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
 
@@ -180,6 +179,11 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
                 cksvm = TrainKernelSVM(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestKernelSVM(cksvm, testing_data)
 
+            # ... KNN classifier
+            elif (classifier_str == 'knn'):
+                cknn = TrainKNN(d, l, gs_n_jobs=gs_n_jobs, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestKNN(cknn, testing_data)
+
             # Append the different results
             boot_pred_prob.append(tmp_pred_prob)
             boot_pred_label.append(tmp_pred_label)
@@ -196,7 +200,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     # ... Random Forest classifier
     elif (classifier_str == 'random-forest'):
         # Train and classify
-        crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, **kwargs)
+        crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestRandomForest(crf, testing_data)
 
     # ... Logistic Regression classifier
@@ -220,14 +224,20 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     # ... Linear SVM classifier
     elif (classifier_str == 'linear-svm'):
         # Train and classify
-        clsvm = TrainLinearSVM(training_data, training_label, class_weight=class_weight, **kwargs)
+        clsvm = TrainLinearSVM(training_data, training_label, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestLinearSVM(clsvm, testing_data)
 
     # ... Kernel SVM classifier
     elif (classifier_str == 'kernel-svm'):
         # Train and classify
-        cksvm = TrainKernelSVM(training_data, training_label, class_weight=class_weight, **kwargs)
+        cksvm = TrainKernelSVM(training_data, training_label, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestKernelSVM(cksvm, testing_data)
+
+    # ... KNN classifier
+    elif (classifier_str == 'knn'):
+        # Train and classify
+        cknn = TrainKNN(training_data, training_label, gs_n_jobs=gs_n_jobs, **kwargs)
+        pred_prob, pred_label = TestKNN(cknn, testing_data)
 
 
     #########################################################################
@@ -237,7 +247,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     # Case to compute using the probability return by the classification
     if ((classifier_str == 'random-forest')       or 
         (classifier_str == 'logistic-regression') or   
-        (classifier_str == 'lda')                   ):
+        (classifier_str == 'lda')                 or
+        (classifier_str == 'knn')                    ):
         fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
         auc = roc_auc_score(testing_label, pred_prob[:, 1])
     # Case to compute using the decision function return by the classification
@@ -460,6 +471,7 @@ def TrainLinearSVM(training_data, training_label, **kwargs):
     verbose = kwargs.pop('verbose', 0)
     random_state = kwargs.pop('random_state', 0)
     max_iter = kwargs.pop('max_iter', 1000)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
     
     # Make a grid_search if the parameter C is not given
     if ('C' in kwargs):
@@ -813,5 +825,60 @@ def TestKernelSVM(cksvm, testing_data):
     # Test the classifier
     pred_prob = cksvm.decision_function(testing_data)
     pred_label = cksvm.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## K-NEAREST NEIGHBOUR CLASSIFIER ##############################
+
+def TrainKNN(training_data, training_label, **kwargs):
+    
+    # Import KNN from scikit learn
+    from sklearn.neighbors import KNeighborsClassifier
+
+    # Unpack the keywords to create the classifier
+    weights = kwargs.pop('weights', 'uniform')
+    algorithm = kwargs.pop('algorithm', 'auto')
+    leaf_size = kwargs.pop('leaf_size', 30)
+    p = kwargs.pop('p', 2)
+    metric = kwargs.pop('metric', 'minkowski')
+    metric_params = kwargs.pop('metric_params', None)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
+
+    # If the number of estimators is not specified, it will be find by cross-validation
+    if 'n_neighbors' in kwargs:
+        n_neighbors = kwargs.pop('n_neighbors', 5)
+
+        # Construct the KNN classifier
+        cknn = KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights, algorithm=algorithm, leaf_size=leaf_size,
+                                    p=p, metric=metric, metric_params=metric_params)
+
+    else:
+        # Import the function to perform the grid search
+        from sklearn import grid_search
+
+        # Create the parametor grid
+        n_neighbors = {'n_neighbors': np.arange(3, 9, 2, dtype=int)}
+
+        # Create the KNN without the parameters to find during the grid search
+        
+        cknn_gs = KNeighborsClassifier(weights=weights, algorithm=algorithm, leaf_size=leaf_size,
+                                    p=p, metric=metric, metric_params=metric_params)
+
+        # Create the different random forest to try specifying the grid search parametors
+        cknn = grid_search.GridSearchCV(cknn_gs, n_neighbors, n_jobs=gs_n_jobs)
+
+    # Train the classifier
+    cknn.fit(training_data, training_label)
+
+    return cknn
+
+def TestKNN(cknn, testing_data):
+    
+    # Import KNN from scikit learn
+    from sklearn.neighbors import KNeighborsClassifier
+
+    # Test the classifier
+    pred_prob = cknn.predict_proba(testing_data)
+    pred_label = cknn.predict(testing_data)
 
     return (pred_prob, pred_label)
