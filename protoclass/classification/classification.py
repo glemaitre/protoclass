@@ -154,6 +154,11 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
                 crf = TrainRandomForest(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
 
+            # ... Decision Tree classifier
+            elif (classifier_str == 'decision-tree'):
+                cdt = TrainTree(d, l, class_weight=class_weight, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestTree(cdt, testing_data)
+
             # ... Logistic Regression classifier
             elif (classifier_str == 'logistic-regression'):
                 clr = TrainLogisticRegression(d, l, class_weight=class_weight, **kwargs)
@@ -169,6 +174,11 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
                 clda = TrainLDA(d, l, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestLDA(clda, testing_data)
 
+            # ... QDA classifier
+            elif (classifier_str == 'qda'):
+                cqda = TrainQDA(d, l, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestQDA(cqda, testing_data)
+
             # ... Linear SVM classifier
             elif (classifier_str == 'linear-svm'):
                 clsvm = TrainLinearSVM(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
@@ -183,6 +193,11 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
             elif (classifier_str == 'knn'):
                 cknn = TrainKNN(d, l, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestKNN(cknn, testing_data)
+
+            # ... AdaBoost classifier
+            elif (classifier_str == 'adaboost'):
+                cadb = TrainAdaBoost(d, l, gs_n_jobs=gs_n_jobs, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestAdaBoost(cadb, testing_data)
 
             # Append the different results
             boot_pred_prob.append(tmp_pred_prob)
@@ -203,6 +218,12 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestRandomForest(crf, testing_data)
 
+    # ... Decision Tree classifier
+    elif (classifier_str == 'decision-tree'):
+        # Train and classify
+        cdt = TrainTree(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestTree(cdt, testing_data)
+
     # ... Logistic Regression classifier
     elif (classifier_str == 'logistic-regression'):
         # Train and classify
@@ -220,6 +241,12 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         # Train and classify
         clda = TrainLDA(training_data, training_label, **kwargs)
         pred_prob, pred_label = TestLDA(clda, testing_data)
+
+    # ... QDA classifier
+    elif (classifier_str == 'qda'):
+        # Train and classify
+        cqda = TrainQDA(training_data, training_label, **kwargs)
+        pred_prob, pred_label = TestQDA(cqda, testing_data)
 
     # ... Linear SVM classifier
     elif (classifier_str == 'linear-svm'):
@@ -239,15 +266,24 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         cknn = TrainKNN(training_data, training_label, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestKNN(cknn, testing_data)
 
+    # ... AdaBoost classifier
+    elif (classifier_str == 'adaboost'):
+        # Train and classify
+        cadb = TrainAdaBoost(training_data, training_label, gs_n_jobs=gs_n_jobs, **kwargs)
+        pred_prob, pred_label = TestAdaBoost(cadb, testing_data)
+
 
     #########################################################################
     ### CHECK THE PERFORMANCE OF THE CLASSIFIER
     #########################################################################
     ### Compute the ROC curve
     # Case to compute using the probability return by the classification
-    if ((classifier_str == 'random-forest')       or 
+    if ((classifier_str == 'random-forest')       or
+        (classifier_str == 'decision-tree')       or
         (classifier_str == 'logistic-regression') or   
         (classifier_str == 'lda')                 or
+        (classifier_str == 'qda')                 or
+        (classifier_str == 'adaboost')       or
         (classifier_str == 'knn')                    ):
         fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
         auc = roc_auc_score(testing_label, pred_prob[:, 1])
@@ -331,6 +367,47 @@ def TestRandomForest(crf, testing_data):
     # Test the classifier
     pred_prob = crf.predict_proba(testing_data)
     pred_label = crf.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## DECISION TREE CLASSIFICATION ##############################
+
+def TrainTree(training_data, training_label, **kwargs):
+    
+    # Import Random Forest from scikit learn
+    from sklearn.tree import DecisionTreeClassifier
+
+    # Unpack the keywords to create the classifier
+    criterion = kwargs.pop('criterion', 'gini')
+    splitter = kwargs.pop('splitter', 'best')
+    max_depth = kwargs.pop('max_depth', None)
+    min_samples_split = kwargs.pop('min_samples_split', 2)
+    min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
+    min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
+    max_features = kwargs.pop('max_features', 'auto')
+    random_state = kwargs.pop('random_state', None)
+    max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
+    class_weight = kwargs.pop('class_weight', None)
+
+    # Call the constructor
+    cdt = DecisionTreeClassifier(criterion=criterion, splitter=splitter, max_depth=max_depth, 
+                                 min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf,
+                                 min_weight_fraction_leaf=min_weight_fraction_leaf, max_features=max_features,
+                                 random_state=random_state, max_leaf_nodes=max_leaf_nodes, class_weight=class_weight)
+
+    # Train the classifier
+    cdt.fit(training_data, training_label)
+
+    return cdt
+
+def TestTree(cdt, testing_data):
+    
+    # Import decision tree from scikit learn
+    from sklearn.tree import DecisionTreeClassifier
+
+    # Test the classifier
+    pred_prob = cdt.predict_proba(testing_data)
+    pred_label = cdt.predict(testing_data)
 
     return (pred_prob, pred_label)
 
@@ -449,6 +526,36 @@ def TestLDA(clda, testing_data):
     # Test the classifier
     pred_prob = clda.predict_proba(testing_data)
     pred_label = clda.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## QDA CLASSIFIER ##############################
+
+def TrainQDA(training_data, training_label, **kwargs):
+    
+    # Import LDA from scikit learn
+    from sklearn.qda import QDA
+
+    # Unpack the keywords to create the classifier
+    priors = kwargs.pop('priors', None)
+    reg_param = kwargs.pop('reg_param', 0.0)
+
+    # Call the constructor with the proper input arguments
+    cqda = QDA(priors=priors, reg_param=reg_param)
+
+    # Train the classifier
+    cqda.fit(training_data, training_label)
+
+    return cqda
+
+def TestQDA(cqda, testing_data):
+    
+    # Import QDA from scikit learn
+    from sklearn.qda import QDA
+
+    # Test the classifier
+    pred_prob = cqda.predict_proba(testing_data)
+    pred_label = cqda.predict(testing_data)
 
     return (pred_prob, pred_label)
 
@@ -880,5 +987,109 @@ def TestKNN(cknn, testing_data):
     # Test the classifier
     pred_prob = cknn.predict_proba(testing_data)
     pred_label = cknn.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## ADABOOST CLASSIFICATION ##############################
+
+def TrainAdaBoost(training_data, training_label, **kwargs):
+    
+    # Import Random Forest from scikit learn
+    from sklearn.ensemble import AdaBoostClassifier
+
+    # Unpack the keywords to create the classifier
+    base_estimator_name = kwargs.pop('base_estimator_name', 'decision-tree')
+    algorithm = kwargs.pop('algorithm', 'SAMME.R')
+    random_state= kwargs.pop('random_state', None)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
+    verbose = kwargs.pop('verbose', False)
+
+    # Create the weak learner
+    if (base_estimator_name == 'decision-tree'):
+        from sklearn.tree import DecisionTreeClassifier
+        cbe = DecisionTreeClassifier()
+    else:
+        raise ValueError('protoclass.classification.classificatio.ababoost: base estimator not supported.')
+
+
+    # If the number of estimators is not specified, it will be find by cross-validation
+    if ('n_estimators' in kwargs):
+        n_estimators = kwargs.pop('n_estimators', 10)
+
+        # Check that the learning rate is provided
+        if ('learning_rate' in kwargs):
+            learning_rate = kwargs.pop('learning_rate', 1.0)
+
+            if verbose:
+                print 'AdaBoost performed with no grid-search'
+
+            # Call the constructor
+            cadb = AdaBoostClassifier(cbe, n_estimators=n_estimators, learning_rate=learning_rate, algorithm=algorithm,
+                            random_state=random_state)
+
+        else:
+            # Create a dictionnary with the different learning rate to try
+            dict_adb = {'learning_rate': np.linspace(.5, 1.5, 10)}
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'AdaBoost performed with a grid-search on the learning-rate'
+
+            # Call the constructor
+            cadb_gs = AdaBoostClassfier(cbe, n_estimators=n_estimators, algorithm=algorithm, random_state=random_state)
+
+            # Create the grid search classifier
+            cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
+    else:
+        # Create a dictionnary for the number of estimators
+        dict_adb = {'n_estimators': np.linspace(1, 1000, 10, dtype=int)}
+
+        # Check that the learning rate is provided
+        if ('learning_rate' in kwargs):
+            learning_rate = kwargs.pop('learning_rate', 1.0)
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'AdaBoost performed with a grid-search on the numbers of estimators'
+
+            # Call the constructor
+            cadb_gs = AdaBoostClassfier(cbe, learning_rate=learning_rate, algorithm=algorithm, random_state=random_state)
+
+            # Create the grid search classifier
+            cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
+
+        else:
+            # Create a dictionnary with the different learning rate to try
+            dict_adb['learning_rate'] = np.linspace(.5, 1.5, 10)
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'AdaBoost performed with a grid-search on the learning-rate and the number of estimators'
+
+            # Call the constructor
+            cadb_gs = AdaBoostClassfier(cbe, algorithm=algorithm, random_state=random_state)
+
+            # Create the grid search classifier
+            cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
+
+    # Train the classifier
+    cadb.fit(training_data, training_label)
+
+    return cadb
+
+def TestAdaBoost(cadb, testing_data):
+    
+    # Import AdaBoost from scikit learn
+    from sklearn.ensemble import AdaBoostClassifier
+
+    # Test the classifier
+    pred_prob = cadb.predict_proba(testing_data)
+    pred_label = cadb.predict(testing_data)
 
     return (pred_prob, pred_label)
