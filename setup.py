@@ -4,6 +4,7 @@ install_requires = [
     'numpy',
     'scipy',
     'scikit-learn',
+    'scikit-image',
     #'SimpleITK',
     'UnbalancedDataset',
     'pyksvd'
