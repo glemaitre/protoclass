@@ -513,7 +513,7 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
     kernel = kwargs.pop('kernel', 'rbf')
     #degree = kwargs.pop('degree', 3)
     #gamma = kwargs.pop('gamma', 0.0)
-    #coef0 = kwargs.pop('coef0', 0.0)
+    coef0 = kwargs.pop('coef0', 0.0)
     probability = kwargs.pop('probability', False)
     shrinking = kwargs.pop('shrinking', True)
     tol = kwargs.pop('tol', 0.0001)
@@ -523,13 +523,13 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
     max_iter = kwargs.pop('max_iter', -1)
     random_state = kwargs.pop('random_state', None)
     gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
-
     
     if (verbose):
         print 'SVM is the {} kernel'.format(kernel)
     
     # Check which kernel is needed
-    if (kernel == 'rbf'):
+    if ((kernel == 'rbf')    or 
+        (kernel == 'sigmoid')   ):
 
         # Check if the parameter C is given
         if ('C' in kwargs):
@@ -542,9 +542,9 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
                     print 'SVM training without grid search'
 
                 # Call the constructor with the proper input arguments
-                cksvm = SVC(C=C, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
-                            cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
-                            random_state=random_state)
+                cksvm = SVC(C=C, gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, shrinking=shrinking, 
+                            tol=tol, cache_size=cache_size, class_weight=class_weight, verbose=verbose, 
+                            max_iter=max_iter, random_state=random_state)
 
             # We need to make a grid search for the parameter gamma
             else:
@@ -558,7 +558,7 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
                     print 'SVM training with grid-search for the parameter gamma'
 
                 # Create the linear SVM object without the C parameters
-                cksvm_gs = SVC(C=C, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                cksvm_gs = SVC(C=C, coef0=coef0, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
                             cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
                             random_state=random_state)
 
@@ -581,7 +581,7 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
                     print 'SVM training with grid-search for the parameter C'
 
                 # Create the linear SVM object without the C parameters
-                cksvm_gs = SVC(gamma=gamma, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                cksvm_gs = SVC(gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
                                cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
                                random_state=random_state)
 
@@ -599,17 +599,177 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
                     print 'SVM training with grid-search for the parameter C and gamma'
 
                 # Create the linear SVM object without the C parameters
-                cksvm_gs = SVC(kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                cksvm_gs = SVC(kernel=kernel, coef0=coef0, probability=probability, shrinking=shrinking, tol=tol, 
                                cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
                                random_state=random_state)
 
                 # Create the different linear SVM object using the grid search
                 cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
 
+    elif (kernel == 'poly'):
 
-    # elif (kernel == 'poly'):
+        # Check if the parameter C is given
+        if ('C' in kwargs):
+            C = kwargs.pop('C', 1.0)
+            # Check if the parameter gamma is specified
+            if ('gamma' in kwargs):
+                gamma = kwargs.pop('gamma', 0.0)
 
-    # elif (kernel == 'sigmoid'):
+                # Check if the parameter degree is specified
+                if ('degree' in kwargs):
+                    degree = kwargs.pop('degree', 3)
+
+                    if (verbose):
+                        print 'SVM training without grid search'
+
+                    # Call the constructor with the proper input arguments
+                    cksvm = SVC(C=C, degree=degree, gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, 
+                                shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                verbose=verbose, max_iter=max_iter, random_state=random_state)
+                else:
+                    
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Search for degree of order 2 to 6
+                    degree = {'degree': np.arange(2, 7, 1, dtype=int)}
+
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter degree'
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(C=C, gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, degree, n_jobs=gs_n_jobs)
+
+            # We need to make a grid search for the parameter gamma
+            else:
+                # Create the parameter grid
+                dict_svm = {'gamma': np.logspace(-15, 3., num=10, endpoint=True, base=2.0)}
+
+                # Check if the paramter degree was assigned
+                if ('degree' in kwargs):
+                    degree = kwargs.pop('degree', 3)
+                    
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter gamma'
+
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(C=C, degree=degree, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+                else:
+                    dict_svm['degree'] = np.arange(2, 7, 1, dtype=int)
+
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter gamma and degree'
+
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(C=C, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+        # We need a grid search for the parameter C
+        else:
+            # We call dict_svm in case we need to add some other parameters
+            dict_svm = {'C': np.logspace(-5., 15., num=11, endpoint=True, base=2.0)}
+
+            # Check if the parameter gamma is specified
+            if ('gamma' in kwargs):
+                gamma = kwargs.pop('gamma', 0.0)
+
+                # Check if the parameter degree is specified
+                if ('degree' in kwargs):
+                    
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    degree = kwargs.pop('degree', 3)
+
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter C'
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(degree=degree, gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+                else:
+                    
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Search for degree of order 2 to 6
+                    dict_svm['degree'] = np.arange(2, 7, 1, dtype=int)
+
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter degree and C'
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(gamma=gamma, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+            # We need to make a grid search for the parameter gamma
+            else:
+                # Create the parameter grid
+                dict_svm['gamma'] = np.logspace(-15, 3., num=10, endpoint=True, base=2.0)
+
+                # Check if the paramter degree was assigned
+                if ('degree' in kwargs):
+                    degree = kwargs.pop('degree', 3)
+                    
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter C and gamma'
+
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(degree=degree, coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+                else:
+                    dict_svm['degree'] = np.arange(2, 7, 1, dtype=int)
+
+                    if (verbose):
+                        print 'SVM training with grid-search for the parameter C, gamma, and degree'
+
+                    # Import the grid search module
+                    from sklearn import grid_search
+
+                    # Create the linear SVM object without the C parameters
+                    cksvm_gs = SVC(coef0=coef0, kernel=kernel, probability=probability, 
+                                   shrinking=shrinking, tol=tol, cache_size=cache_size, class_weight=class_weight, 
+                                   verbose=verbose, max_iter=max_iter, random_state=random_state)
+
+                    # Create the different linear SVM object using the grid search
+                    cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
 
     # Linear kernel
     elif (kernel == 'linear'):
