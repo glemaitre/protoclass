@@ -136,6 +136,9 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     #########################################################################
     ### APPLY CLASSIFICATION
     #########################################################################
+
+    # Case of Ensemble or Cascade Under sampling with ....
+    # ... Random Forest classifier
     if (classifier_str == 'random-forest') and ((balancing_criterion == 'easy-ensemble') or 
                                                 (balancing_criterion == 'balance-cascade')):
         # In this cases, we will have several training set to use
@@ -148,18 +151,47 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
             boot_pred_prob.append(tmp_pred_prob)
             boot_pred_label.append(tmp_pred_label)
 
-            # TO CHECK WHAT IS BETTER HERE - MAJORITY VOTING FOR THE MOMENT
-            # Make the average of the probability
-            pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
-            # Make the majority voting
-            pred_label = np.sum(np.array(boot_pred_label), axis=0)
-            pred_label[pred_label >= 0] = 1
-            pred_label[pred_label < 0] = -1
+        # TO CHECK WHAT IS BETTER HERE - MAJORITY VOTING FOR THE MOMENT
+        # Make the average of the probability
+        pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
+        # Make the majority voting
+        pred_label = np.sum(np.array(boot_pred_label), axis=0)
+        pred_label[pred_label >= 0] = 1
+        pred_label[pred_label < 0] = -1
+    
+    # ... Logistic Regression classifier
+    elif (classifier_str == 'logistic-classifier') and ((balancing_criterion == 'easy-ensemble') or 
+                                                        (balancing_criterion == 'balance-cascade')):
+        # In this cases, we will have several training set to use
+        boot_pred_prob = []
+        boot_pred_label = []
+        for d, l in zip(boot_training_data, boot_training_label):
+            # Classify using random forest
+            clr = TrainLogisticRegression(d, l, class_weight=class_weight, **kwargs)
+            tmp_pred_prob, tmp_pred_label = TestLogisticRegression(clr, testing_data)
+            boot_pred_prob.append(tmp_pred_prob)
+            boot_pred_label.append(tmp_pred_label)
 
+        # TO CHECK WHAT IS BETTER HERE - MAJORITY VOTING FOR THE MOMENT
+        # Make the average of the probability
+        pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
+        # Make the majority voting
+        pred_label = np.sum(np.array(boot_pred_label), axis=0)
+        pred_label[pred_label >= 0] = 1
+        pred_label[pred_label < 0] = -1
+
+    # Case of any other resampling or not any sampling with ...
+    # ... Random Forest classifier
     elif classifier_str == 'random-forest':
-        # Classify using random forest
+        # Train and classify
         crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, **kwargs)
         pred_prob, pred_label = TestRandomForest(crf, testing_data)
+
+    # ... Logistic Regression classifier
+    elif classifier_str == 'random-forest':
+        # Train and classify
+        clr = TrainLogisticRegression(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestLogisticRegression(clr, testing_data)
 
 
     #########################################################################
@@ -172,111 +204,114 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
     return (pred_label, roc)
 
-def ClassifyRandomForest(training_data, training_label, testing_data, **kwargs):
-    
-        # Import Random Forest from scikit learn
-        from sklearn.ensemble import RandomForestClassifier
-
-        # Unpack the keywords to create the classifier
-        param_criterion = kwargs.pop('criterion', 'gini')
-        param_max_depth = kwargs.pop('max_depth', None)
-        param_min_samples_split = kwargs.pop('min_samples_split', 2)
-        param_min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
-        param_min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
-        param_max_features = kwargs.pop('max_features', 'auto')
-        param_max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
-        param_bootstrap = kwargs.pop('bootstrap', True)
-        param_oob_score = kwargs.pop('oob_score', False)
-        param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
-        param_random_state = kwargs.pop('random_state', None)
-        param_verbose = kwargs.pop('verbose', 1)
-        param_warm_start = kwargs.pop('warm_start', False)
-        param_class_weight = kwargs.pop('class_weight', None)
-        n_log_space = kwargs.pop('n_log_space', 10)
-        
-        # If the number of estimators is not specified, it will be find by cross-validation
-        if 'n_estimators' in kwargs:
-            param_n_estimators = kwargs.pop('n_estimators', 10)
-
-            # Construct the Random Forest classifier
-            crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
-
-        else:
-            # Import the function to perform the grid search
-            from sklearn import grid_search
-            
-            # Create the parametor grid
-            param_n_estimators = {'n_estimators':np.array(np.round(np.logspace(1., 2.7, n_log_space))).astype(int)}
-
-            # Create the random forest without the parameters to find during the grid search
-            crf_gs = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
-
-            # Create the different random forest to try specifying the grid search parametors
-            crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
-
-        # Train the classifier
-        crf.fit(training_data, training_label)
-
-        # Test the classifier
-        pred_prob = crf.predict_proba(testing_data)
-        pred_label = crf.predict(testing_data)
-
-        return (pred_prob, pred_label)
+############################## RANDOM FOREST CLASSIFICATION ##############################
 
 def TrainRandomForest(training_data, training_label, **kwargs):
     
         # Import Random Forest from scikit learn
-        from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import RandomForestClassifier
 
-        # Unpack the keywords to create the classifier
-        param_criterion = kwargs.pop('criterion', 'gini')
-        param_max_depth = kwargs.pop('max_depth', None)
-        param_min_samples_split = kwargs.pop('min_samples_split', 2)
-        param_min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
-        param_min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
-        param_max_features = kwargs.pop('max_features', 'auto')
-        param_max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
-        param_bootstrap = kwargs.pop('bootstrap', True)
-        param_oob_score = kwargs.pop('oob_score', False)
-        param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
-        param_random_state = kwargs.pop('random_state', None)
-        param_verbose = kwargs.pop('verbose', 1)
-        param_warm_start = kwargs.pop('warm_start', False)
-        param_class_weight = kwargs.pop('class_weight', None)
-        n_log_space = kwargs.pop('n_log_space', 10)
-        
-        # If the number of estimators is not specified, it will be find by cross-validation
-        if 'n_estimators' in kwargs:
-            param_n_estimators = kwargs.pop('n_estimators', 10)
+    # Unpack the keywords to create the classifier
+    param_criterion = kwargs.pop('criterion', 'gini')
+    param_max_depth = kwargs.pop('max_depth', None)
+    param_min_samples_split = kwargs.pop('min_samples_split', 2)
+    param_min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
+    param_min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
+    param_max_features = kwargs.pop('max_features', 'auto')
+    param_max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
+    param_bootstrap = kwargs.pop('bootstrap', True)
+    param_oob_score = kwargs.pop('oob_score', False)
+    param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
+    param_random_state = kwargs.pop('random_state', None)
+    param_verbose = kwargs.pop('verbose', 1)
+    param_warm_start = kwargs.pop('warm_start', False)
+    param_class_weight = kwargs.pop('class_weight', None)
+    n_log_space = kwargs.pop('n_log_space', 10)
 
-            # Construct the Random Forest classifier
-            crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+    # If the number of estimators is not specified, it will be find by cross-validation
+    if 'n_estimators' in kwargs:
+        param_n_estimators = kwargs.pop('n_estimators', 10)
 
-        else:
-            # Import the function to perform the grid search
-            from sklearn import grid_search
-            
-            # Create the parametor grid
-            param_n_estimators = {'n_estimators':np.array(np.round(np.logspace(1., 2.7, n_log_space))).astype(int)}
+        # Construct the Random Forest classifier
+        crf = RandomForestClassifier(n_estimators=param_n_estimators, criterion=param_criterion, 
+                                     max_depth=param_max_depth, min_samples_split=param_min_samples_split, 
+                                     min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, 
+                                     bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, 
+                                     random_state=param_random_state, verbose=param_verbose, 
+                                     warm_start=param_warm_start, class_weight=param_class_weight)
 
-            # Create the random forest without the parameters to find during the grid search
-            crf_gs = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, min_samples_split=param_min_samples_split, min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, random_state=param_random_state, verbose=param_verbose, warm_start=param_warm_start, class_weight=param_class_weight)
+    else:
+        # Import the function to perform the grid search
+        from sklearn import grid_search
 
-            # Create the different random forest to try specifying the grid search parametors
-            crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
+        # Create the parametor grid
+        param_n_estimators = {'n_estimators':np.array(np.round(np.logspace(1., 2.7, n_log_space))).astype(int)}
 
-        # Train the classifier
-        crf.fit(training_data, training_label)
+        # Create the random forest without the parameters to find during the grid search
+        crf_gs = RandomForestClassifier(criterion=param_criterion, max_depth=param_max_depth, 
+                                        min_samples_split=param_min_samples_split, 
+                                        min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, 
+                                        bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, 
+                                        random_state=param_random_state, verbose=param_verbose, 
+                                        warm_start=param_warm_start, class_weight=param_class_weight)
 
-        return crf
+        # Create the different random forest to try specifying the grid search parametors
+        crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
+
+    # Train the classifier
+    crf.fit(training_data, training_label)
+
+    return crf
 
 def TestRandomForest(crf, testing_data):
     
-        # Import Random Forest from scikit learn
-        from sklearn.ensemble import RandomForestClassifier
+    # Import Random Forest from scikit learn
+    from sklearn.ensemble import RandomForestClassifier
 
-        # Test the classifier
-        pred_prob = crf.predict_proba(testing_data)
-        pred_label = crf.predict(testing_data)
+    # Test the classifier
+    pred_prob = crf.predict_proba(testing_data)
+    pred_label = crf.predict(testing_data)
 
-        return (pred_prob, pred_label)
+    return (pred_prob, pred_label)
+
+############################## LOGISTIC REGRESSION CLASSIFIER ##############################
+
+def TrainLogisticRegression(training_data, training_label, **kwargs):
+    
+    # Import Logistic Regression from scikit learn
+    from sklearn.linear_model import LogisticRegression
+
+    # Unpack the keywords to create the classifier
+    penalty = kwargs.pop('penalty', 'l2')
+    dual = kwargs.pop('dual', False)
+    tol = kwargs.pop('tol', 0.0001)
+    C = kwargs.pop('C', 1.0)
+    fit_intercept = kwargs.pop('fit_intercept', True)
+    intercept_scaling = kwargs.pop('intercept_scaling', 1)
+    class_weight = kwargs.pop('class_weight', None)
+    random_state = kwargs.pop('random_state', None)
+    solver = kwargs.pop('solver', 'liblinear')
+    max_iter = kwargs.pop('max_iter', 100)
+    multi_class = kwargs.pop('multi_class', 'ovr')
+    verbose = kwargs.pop('verbose', 0)
+
+    # Call the constructor with the proper input arguments
+    clr = LogisticRegression(penalty=penalty, dual=dual, tol=tol, C=C, fit_intercept=fit_intercept, 
+                             intercept_scaling=intercept_scaling, class_weight=class_weight, random_state=random_state,
+                             solver=solver, max_iter=max_iter, multi_class=multi_class, verbose=verbose)
+
+    # Train the classifier
+    clr.fit(training_data, training_label)
+
+    return clr
+
+def TestLogisticRegression(clr, testing_data):
+    
+    # Import Random Forest from scikit learn
+    from sklearn.linear_model import LogisticRegression
+
+    # Test the classifier
+    pred_prob = clr.predict_proba(testing_data)
+    pred_label = clr.predict(testing_data)
+
+    return (pred_prob, pred_label)
