@@ -138,37 +138,42 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     #########################################################################
 
     # Case of Ensemble or Cascade Under sampling with ....
-    # ... Random Forest classifier
-    if (classifier_str == 'random-forest') and ((balancing_criterion == 'easy-ensemble') or 
-                                                (balancing_criterion == 'balance-cascade')):
-        # In this cases, we will have several training set to use
-        boot_pred_prob = []
-        boot_pred_label = []
-        for d, l in zip(boot_training_data, boot_training_label):
-            # Classify using random forest
-            crf = TrainRandomForest(d, l, class_weight=class_weight, **kwargs)
-            tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
-            boot_pred_prob.append(tmp_pred_prob)
-            boot_pred_label.append(tmp_pred_label)
-
-        # TO CHECK WHAT IS BETTER HERE - MAJORITY VOTING FOR THE MOMENT
-        # Make the average of the probability
-        pred_prob = np.mean(np.array(boot_pred_prob), axis=0)
-        # Make the majority voting
-        pred_label = np.sum(np.array(boot_pred_label), axis=0)
-        pred_label[pred_label >= 0] = 1
-        pred_label[pred_label < 0] = -1
     
-    # ... Logistic Regression classifier
-    elif (classifier_str == 'logistic-classifier') and ((balancing_criterion == 'easy-ensemble') or 
-                                                        (balancing_criterion == 'balance-cascade')):
+    if ((balancing_criterion == 'easy-ensemble') or 
+        (balancing_criterion == 'balance-cascade')):
+
         # In this cases, we will have several training set to use
         boot_pred_prob = []
         boot_pred_label = []
         for d, l in zip(boot_training_data, boot_training_label):
-            # Classify using random forest
-            clr = TrainLogisticRegression(d, l, class_weight=class_weight, **kwargs)
-            tmp_pred_prob, tmp_pred_label = TestLogisticRegression(clr, testing_data)
+
+            # ... Random Forest classifier
+            if (classifier_str == 'random-forest'):
+                # Classify using random forest
+                crf = TrainRandomForest(d, l, class_weight=class_weight, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
+
+            # ... Logistic Regression classifier
+            elif (classifier_str == 'logistic-regression'):
+                clr = TrainLogisticRegression(d, l, class_weight=class_weight, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestLogisticRegression(clr, testing_data)
+
+            # ... Perceptron classifier
+            elif (classifier_str == 'perceptron'):
+                cp = TrainPerceptron(d, l, class_weight=class_weight, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestPerceptron(cp, testing_data)
+
+            # ... LDA classifier
+            elif (classifier_str == 'lda'):
+                clda = TrainLDA(d, l, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestLDA(clda, testing_data)
+
+            # ... Linear SVM classifier
+            elif (classifier_str == 'linear-svm'):
+                clsvm = TrainLinearSVM(d, l, class_weight=class_weight, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestLinearSVM(clsvm, testing_data)
+
+            # Append the different results
             boot_pred_prob.append(tmp_pred_prob)
             boot_pred_label.append(tmp_pred_label)
 
@@ -182,24 +187,53 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
     # Case of any other resampling or not any sampling with ...
     # ... Random Forest classifier
-    elif classifier_str == 'random-forest':
+    elif (classifier_str == 'random-forest'):
         # Train and classify
         crf = TrainRandomForest(training_data, training_label, class_weight=class_weight, **kwargs)
         pred_prob, pred_label = TestRandomForest(crf, testing_data)
 
     # ... Logistic Regression classifier
-    elif classifier_str == 'random-forest':
+    elif (classifier_str == 'logistic-regression'):
         # Train and classify
         clr = TrainLogisticRegression(training_data, training_label, class_weight=class_weight, **kwargs)
         pred_prob, pred_label = TestLogisticRegression(clr, testing_data)
+
+    # ... Perceptron classifier
+    elif (classifier_str == 'perceptron'):
+        # Train and classify
+        cp = TrainPerceptron(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestPerceptron(cp, testing_data)
+
+    # ... LDA classifier
+    elif (classifier_str == 'lda'):
+        # Train and classify
+        clda = TrainLDA(training_data, training_label, **kwargs)
+        pred_prob, pred_label = TestLDA(clda, testing_data)
+
+    # ... Linear SVM classifier
+    elif (classifier_str == 'linear-svm'):
+        # Train and classify
+        clsvm = TrainLinearSVM(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestLinearSVM(clsvm, testing_data)
 
 
     #########################################################################
     ### CHECK THE PERFORMANCE OF THE CLASSIFIER
     #########################################################################
     ### Compute the ROC curve
-    fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
-    auc = roc_auc_score(testing_label, pred_prob[:, 1])
+    # Case to compute using the probability return by the classification
+    if ((classifier_str == 'random-forest')       or 
+        (classifier_str == 'logistic-regression') or   
+        (classifier_str == 'lda')                   ):
+        fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
+        auc = roc_auc_score(testing_label, pred_prob[:, 1])
+    # Case to compute using the decision function return by the classification
+    elif ((classifier_str == 'perceptron') or
+          (classifier_str == 'linear-svm')    ):
+        fpr, tpr, thresh = roc_curve(testing_label, pred_prob)
+        auc = roc_auc_score(testing_label, pred_prob)
+
+    # Put the element inside a structure
     roc = roc_auc(fpr, tpr, thresh, auc)
 
     return (pred_label, roc)
@@ -221,7 +255,7 @@ def TrainRandomForest(training_data, training_label, **kwargs):
     param_max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
     param_bootstrap = kwargs.pop('bootstrap', True)
     param_oob_score = kwargs.pop('oob_score', False)
-    param_n_jobs = kwargs.pop('n_jobs', multiprocessing.cpu_count())
+    param_n_jobs = kwargs.pop('n_jobs', -1)
     param_random_state = kwargs.pop('random_state', None)
     param_verbose = kwargs.pop('verbose', 1)
     param_warm_start = kwargs.pop('warm_start', False)
@@ -307,7 +341,7 @@ def TrainLogisticRegression(training_data, training_label, **kwargs):
 
 def TestLogisticRegression(clr, testing_data):
     
-    # Import Random Forest from scikit learn
+    # Import Logistic Regression from scikit learn
     from sklearn.linear_model import LogisticRegression
 
     # Test the classifier
@@ -315,3 +349,180 @@ def TestLogisticRegression(clr, testing_data):
     pred_label = clr.predict(testing_data)
 
     return (pred_prob, pred_label)
+
+############################## PERCEPTRON CLASSIFIER ##############################
+
+def TrainPerceptron(training_data, training_label, **kwargs):
+    
+    # Import Perceptron from scikit learn
+    from sklearn.linear_model import Perceptron
+
+    # Unpack the keywords to create the classifier
+    penalty = kwargs.pop('penalty', None)
+    alpha = kwargs.pop('alpha', 0.0001)
+    fit_intercept = kwargs.pop('fit_intercept', True)
+    n_iter = kwargs.pop('n_iter', 5)
+    shuffle = kwargs.pop('suffle', True)
+    verbose = kwargs.pop('verbose', 0)
+    eta0 = kwargs.pop('eta0', 1.0)
+    n_jobs = kwargs.pop('n_jobs', -1)
+    random_state = kwargs.pop('random_state', 0)
+    class_weight = kwargs.pop('class_weight', None)
+    warm_start = kwargs.pop('warm_start', False)
+
+    # Call the constructor with the proper input arguments
+    cp = Perceptron(penalty=penalty, alpha=alpha, fit_intercept=fit_intercept, n_iter=n_iter, shuffle=shuffle, 
+                             verbose=verbose, eta0=eta0, n_jobs=n_jobs, random_state=random_state, 
+                             class_weight=class_weight, warm_start=warm_start)
+
+    # Train the classifier
+    cp.fit(training_data, training_label)
+
+    return cp
+
+def TestPerceptron(cp, testing_data):
+    
+    # Import Perceptron from scikit learn
+    from sklearn.linear_model import Perceptron
+
+    # Test the classifier
+    pred_prob = cp.decision_function(testing_data)
+    pred_label = cp.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## LDA CLASSIFIER ##############################
+
+def TrainLDA(training_data, training_label, **kwargs):
+    
+    # Import LDA from scikit learn
+    from sklearn.lda import LDA
+
+    # Unpack the keywords to create the classifier
+    solver = kwargs.pop('solver', 'svd')
+    shrinkage = kwargs.pop('shrinkage', None)
+    priors = kwargs.pop('priors', None)
+    n_components = kwargs.pop('n_components', None)
+    store_covariance = kwargs.pop('store_covariance', False)
+    tol = kwargs.pop('tol', 0.0001)
+
+    # Call the constructor with the proper input arguments
+    clda = LDA(solver=solver, shrinkage=shrinkage, priors=priors, n_components=n_components, 
+              store_covariance=store_covariance, tol=tol)
+
+    # Train the classifier
+    clda.fit(training_data, training_label)
+
+    return clda
+
+def TestLDA(clda, testing_data):
+    
+    # Import LDA from scikit learn
+    from sklearn.lda import LDA
+
+    # Test the classifier
+    pred_prob = clda.predict_proba(testing_data)
+    pred_label = clda.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## LINEAR SVM CLASSIFIER ##############################
+
+def TrainLinearSVM(training_data, training_label, **kwargs):
+    
+    # Import Linear SVM from scikit learn
+    from sklearn.svm import LinearSVC
+
+    # Unpack the keywords to create the classifier
+    penalty = kwargs.pop('penalty', 'l2')
+    loss = kwargs.pop('loss', 'squared_hinge')
+    dual = kwargs.pop('dual', True)
+    tol = kwargs.pop('tol', 0.0001)
+    multi_class = kwargs.pop('multi_class', 'ovr')
+    fit_intercept = kwargs.pop('fit_intercept', True)
+    intercept_scaling = kwargs.pop('intercept_scaling', 1)
+    class_weight = kwargs.pop('class_weight', None)
+    verbose = kwargs.pop('verbose', 0)
+    random_state = kwargs.pop('random_state', 0)
+    max_iter = kwargs.pop('max_iter', 1000)
+    
+    # Make a grid_search if the parameter C is not given
+    if ('C' in kwargs):
+        C = kwargs.pop('C', 1.0)
+
+        # Call the constructor with the proper input arguments
+        clsvm = LinearSVC(penalty=penalty, loss=loss, dual=dual, tol=tol, C=C, multi_class=multi_class, 
+                          fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight=class_weight, 
+                          verbose=verbose, random_state=random_state, max_iter=max_iter)
+
+    else:
+        # Import the grid search module
+        from sklearn import grid_search
+
+        # Create the parameter grid
+        C = {'C': np.logspace(-5., 15., num=11, endpoint=True, base=2.0)}
+        
+        # Create the linear SVM object without the C parameters
+        clsvm_gs = LinearSVC(penalty=penalty, loss=loss, dual=dual, tol=tol, multi_class=multi_class, 
+                          fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight=class_weight, 
+                          verbose=verbose, random_state=random_state, max_iter=max_iter)
+
+        # Create the different linear SVM object using the grid search
+        clsvm = grid_search.GridSearchCV(clsvm_gs, C)
+
+    # Train the classifier
+    clsvm.fit(training_data, training_label)
+
+    return clsvm
+
+def TestLinearSVM(clsvm, testing_data):
+    
+    # Import Linear SVM from scikit learn
+    from sklearn.svm import LinearSVC
+
+    # Test the classifier
+    pred_prob = clsvm.decision_function(testing_data)
+    pred_label = clsvm.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+# ############################## KERNEL SVM CLASSIFIER ##############################
+
+# def TrainKernelSVM(training_data, training_label, **kwargs):
+    
+#     # Import Kernel SVM from scikit learn
+#     from sklearn.svm import SVC
+
+#     # Unpack the keywords to create the classifier
+#     C = kwargs.pop('C', 1.0)
+#     kernel = kwargs.pop('kernel', 'rbf')
+#     degree = kwargs.pop('degree', 3)
+#     gamma = kwargs.pop('gamma', 0.0)
+#     coef0 = kwargs.pop('coef0', 0.0)
+#     probability = kwargs.pop('probability', False)
+#     shrinking = kwargs.pop('shrinking', True)
+#     tol = kwargs.pop('tol', 0.0001)
+#     cache_size = kwargs.popp('cache_size', 200)
+#     class_weight = kwargs.pop('class_weight', None)
+#     verbose = kwargs.pop('verbose', False)
+#     max_iter = kwargs.pop('max_iter', -1)
+#     random_state = kwargs.pop('random_state', None)
+    
+#     # Call the constructor with the proper input arguments
+#     cksvm = SVC()
+
+#     # Train the classifier
+#     clsvm.fit(training_data, training_label)
+
+#     return clsvm
+
+# def TestKernelSVM(clsvm, testing_data):
+    
+#     # Import Linear SVM from scikit learn
+#     from sklearn.svm import LinearSVC
+
+#     # Test the classifier
+#     pred_prob = clsvm.decision_function(testing_data)
+#     pred_label = clsvm.predict(testing_data)
+
+#     return (pred_prob, pred_label)
