@@ -47,6 +47,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     else:
         class_weight = kwargs.pop('class_weight', None)
 
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
+
 
     #########################################################################
     ### BALANCE THE DATA IF NEEDED
@@ -150,7 +152,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
             # ... Random Forest classifier
             if (classifier_str == 'random-forest'):
                 # Classify using random forest
-                crf = TrainRandomForest(d, l, class_weight=class_weight, **kwargs)
+                crf = TrainRandomForest(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestRandomForest(crf, testing_data)
 
             # ... Logistic Regression classifier
@@ -170,8 +172,13 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
 
             # ... Linear SVM classifier
             elif (classifier_str == 'linear-svm'):
-                clsvm = TrainLinearSVM(d, l, class_weight=class_weight, **kwargs)
+                clsvm = TrainLinearSVM(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestLinearSVM(clsvm, testing_data)
+
+            # ... Kernel SVM classifier
+            elif (classifier_str == 'kernel-svm'):
+                cksvm = TrainKernelSVM(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestKernelSVM(cksvm, testing_data)
 
             # Append the different results
             boot_pred_prob.append(tmp_pred_prob)
@@ -216,6 +223,12 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         clsvm = TrainLinearSVM(training_data, training_label, class_weight=class_weight, **kwargs)
         pred_prob, pred_label = TestLinearSVM(clsvm, testing_data)
 
+    # ... Kernel SVM classifier
+    elif (classifier_str == 'kernel-svm'):
+        # Train and classify
+        cksvm = TrainKernelSVM(training_data, training_label, class_weight=class_weight, **kwargs)
+        pred_prob, pred_label = TestKernelSVM(cksvm, testing_data)
+
 
     #########################################################################
     ### CHECK THE PERFORMANCE OF THE CLASSIFIER
@@ -229,7 +242,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         auc = roc_auc_score(testing_label, pred_prob[:, 1])
     # Case to compute using the decision function return by the classification
     elif ((classifier_str == 'perceptron') or
-          (classifier_str == 'linear-svm')    ):
+          (classifier_str == 'linear-svm') or
+          (classifier_str == 'kernel-svm')    ):
         fpr, tpr, thresh = roc_curve(testing_label, pred_prob)
         auc = roc_auc_score(testing_label, pred_prob)
 
@@ -261,6 +275,7 @@ def TrainRandomForest(training_data, training_label, **kwargs):
     param_warm_start = kwargs.pop('warm_start', False)
     param_class_weight = kwargs.pop('class_weight', None)
     n_log_space = kwargs.pop('n_log_space', 10)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
 
     # If the number of estimators is not specified, it will be find by cross-validation
     if 'n_estimators' in kwargs:
@@ -290,7 +305,7 @@ def TrainRandomForest(training_data, training_label, **kwargs):
                                         warm_start=param_warm_start, class_weight=param_class_weight)
 
         # Create the different random forest to try specifying the grid search parametors
-        crf = grid_search.GridSearchCV(crf_gs, param_n_estimators)
+        crf = grid_search.GridSearchCV(crf_gs, param_n_estimators, n_jobs=gs_n_jobs)
 
     # Train the classifier
     crf.fit(training_data, training_label)
@@ -468,7 +483,7 @@ def TrainLinearSVM(training_data, training_label, **kwargs):
                           verbose=verbose, random_state=random_state, max_iter=max_iter)
 
         # Create the different linear SVM object using the grid search
-        clsvm = grid_search.GridSearchCV(clsvm_gs, C)
+        clsvm = grid_search.GridSearchCV(clsvm_gs, C, n_jobs=gs_n_jobs)
 
     # Train the classifier
     clsvm.fit(training_data, training_label)
@@ -486,43 +501,157 @@ def TestLinearSVM(clsvm, testing_data):
 
     return (pred_prob, pred_label)
 
-# ############################## KERNEL SVM CLASSIFIER ##############################
+############################## KERNEL SVM CLASSIFIER ##############################
 
-# def TrainKernelSVM(training_data, training_label, **kwargs):
+def TrainKernelSVM(training_data, training_label, **kwargs):
     
-#     # Import Kernel SVM from scikit learn
-#     from sklearn.svm import SVC
+    # Import Kernel SVM from scikit learn
+    from sklearn.svm import SVC
 
-#     # Unpack the keywords to create the classifier
-#     C = kwargs.pop('C', 1.0)
-#     kernel = kwargs.pop('kernel', 'rbf')
-#     degree = kwargs.pop('degree', 3)
-#     gamma = kwargs.pop('gamma', 0.0)
-#     coef0 = kwargs.pop('coef0', 0.0)
-#     probability = kwargs.pop('probability', False)
-#     shrinking = kwargs.pop('shrinking', True)
-#     tol = kwargs.pop('tol', 0.0001)
-#     cache_size = kwargs.popp('cache_size', 200)
-#     class_weight = kwargs.pop('class_weight', None)
-#     verbose = kwargs.pop('verbose', False)
-#     max_iter = kwargs.pop('max_iter', -1)
-#     random_state = kwargs.pop('random_state', None)
+    # Unpack the keywords to create the classifier
+    #C = kwargs.pop('C', 1.0)
+    kernel = kwargs.pop('kernel', 'rbf')
+    #degree = kwargs.pop('degree', 3)
+    #gamma = kwargs.pop('gamma', 0.0)
+    #coef0 = kwargs.pop('coef0', 0.0)
+    probability = kwargs.pop('probability', False)
+    shrinking = kwargs.pop('shrinking', True)
+    tol = kwargs.pop('tol', 0.0001)
+    cache_size = kwargs.pop('cache_size', 200)
+    class_weight = kwargs.pop('class_weight', None)
+    verbose = kwargs.pop('verbose', False)
+    max_iter = kwargs.pop('max_iter', -1)
+    random_state = kwargs.pop('random_state', None)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
+
     
-#     # Call the constructor with the proper input arguments
-#     cksvm = SVC()
-
-#     # Train the classifier
-#     clsvm.fit(training_data, training_label)
-
-#     return clsvm
-
-# def TestKernelSVM(clsvm, testing_data):
+    if (verbose):
+        print 'SVM is the {} kernel'.format(kernel)
     
-#     # Import Linear SVM from scikit learn
-#     from sklearn.svm import LinearSVC
+    # Check which kernel is needed
+    if (kernel == 'rbf'):
 
-#     # Test the classifier
-#     pred_prob = clsvm.decision_function(testing_data)
-#     pred_label = clsvm.predict(testing_data)
+        # Check if the parameter C is given
+        if ('C' in kwargs):
+            C = kwargs.pop('C', 1.0)
+            # Check if the parameter gamma is specified
+            if ('gamma' in kwargs):
+                gamma = kwargs.pop('gamma', 0.0)
 
-#     return (pred_prob, pred_label)
+                if (verbose):
+                    print 'SVM training without grid search'
+
+                # Call the constructor with the proper input arguments
+                cksvm = SVC(C=C, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                            cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                            random_state=random_state)
+
+            # We need to make a grid search for the parameter gamma
+            else:
+                # Import the grid search module
+                from sklearn import grid_search
+
+                # Create the parameter grid
+                gamma = {'gamma': np.logspace(-15, 3., num=10, endpoint=True, base=2.0)}
+                
+                if (verbose):
+                    print 'SVM training with grid-search for the parameter gamma'
+
+                # Create the linear SVM object without the C parameters
+                cksvm_gs = SVC(C=C, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                            cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                            random_state=random_state)
+
+                # Create the different linear SVM object using the grid search
+                cksvm = grid_search.GridSearchCV(cksvm_gs, gamma, n_jobs=gs_n_jobs)
+
+        # We need a grid search for the parameter C
+        else:
+            # We call dict_svm in case we need to add some other parameters
+            dict_svm = {'C': np.logspace(-5., 15., num=11, endpoint=True, base=2.0)}
+
+            # Check if the parameter gamma is specified
+            if ('gamma' in kwargs):
+                # Import the grid search module
+                from sklearn import grid_search
+
+                gamma = kwargs.pop('gamma', 0.0)
+
+                if (verbose):
+                    print 'SVM training with grid-search for the parameter C'
+
+                # Create the linear SVM object without the C parameters
+                cksvm_gs = SVC(gamma=gamma, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                               cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                               random_state=random_state)
+
+                # Create the different linear SVM object using the grid search
+                cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+            # We need also to make a grid-search for the param gamma
+            else:
+                # Import the grid search module
+                from sklearn import grid_search
+
+                dict_svm['gamma'] = np.logspace(-15, 3., num=10, endpoint=True, base=2.0)
+                
+                if (verbose):
+                    print 'SVM training with grid-search for the parameter C and gamma'
+
+                # Create the linear SVM object without the C parameters
+                cksvm_gs = SVC(kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                               cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                               random_state=random_state)
+
+                # Create the different linear SVM object using the grid search
+                cksvm = grid_search.GridSearchCV(cksvm_gs, dict_svm, n_jobs=gs_n_jobs)
+
+
+    # elif (kernel == 'poly'):
+
+    # elif (kernel == 'sigmoid'):
+
+    # Linear kernel
+    elif (kernel == 'linear'):
+        # Make a grid_search if the parameter C is not given
+        if ('C' in kwargs):
+            C = kwargs.pop('C', 1.0)
+
+            # Call the constructor with the proper input arguments
+            cksvm = SVC(C=C, kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                        cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                        random_state=random_state)
+        else:
+            # Import the grid search module
+            from sklearn import grid_search
+
+            # Create the parameter grid
+            C = {'C': np.logspace(-5., 15., num=11, endpoint=True, base=2.0)}
+
+            # Create the linear SVM object without the C parameters
+            cksvm_gs = SVC(kernel=kernel, probability=probability, shrinking=shrinking, tol=tol, 
+                        cache_size=cache_size, class_weight=class_weight, verbose=verbose, max_iter=max_iter,
+                        random_state=random_state)
+
+            # Create the different linear SVM object using the grid search
+            cksvm = grid_search.GridSearchCV(cksvm_gs, C)
+
+    else:
+        raise ValueError('protoclass.classification.classification.KernelSVM: Wrong kernel type.')
+
+
+    # Train the classifier
+    cksvm.fit(training_data, training_label)
+
+    return cksvm
+
+def TestKernelSVM(cksvm, testing_data):
+    
+    # Import Linear SVM from scikit learn
+    from sklearn.svm import SVC
+
+    # Test the classifier
+    pred_prob = cksvm.decision_function(testing_data)
+    pred_label = cksvm.predict(testing_data)
+
+    return (pred_prob, pred_label)
