@@ -199,6 +199,14 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
                 cadb = TrainAdaBoost(d, l, gs_n_jobs=gs_n_jobs, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestAdaBoost(cadb, testing_data)
 
+            # ... Gradient Boosting classifier
+            elif (classifier_str == 'gradient-boosting'):
+                cgb = TrainGradientBoosting(d, l, gs_n_jobs=gs_n_jobs, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestGradientBoosting(cgb, testing_data)
+
+            else:
+                raise ValueError('protoclass.classification: Classifier unknown')
+
             # Append the different results
             boot_pred_prob.append(tmp_pred_prob)
             boot_pred_label.append(tmp_pred_label)
@@ -272,6 +280,15 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         cadb = TrainAdaBoost(training_data, training_label, gs_n_jobs=gs_n_jobs, **kwargs)
         pred_prob, pred_label = TestAdaBoost(cadb, testing_data)
 
+    # ... Gradient Boosting classifier
+    elif (classifier_str == 'gradient-boosting'):
+        # Train and classify
+        cgb = TrainGradientBoosting(training_data, training_label, gs_n_jobs=gs_n_jobs, **kwargs)
+        pred_prob, pred_label = TestGradientBoosting(cgb, testing_data)
+
+    else:
+        raise ValueError('protoclass.classification: Unknown classifier')
+
 
     #########################################################################
     ### CHECK THE PERFORMANCE OF THE CLASSIFIER
@@ -283,7 +300,8 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         (classifier_str == 'logistic-regression') or   
         (classifier_str == 'lda')                 or
         (classifier_str == 'qda')                 or
-        (classifier_str == 'adaboost')       or
+        (classifier_str == 'adaboost')            or
+        (classifier_str == 'gradient-boosting')   or
         (classifier_str == 'knn')                    ):
         fpr, tpr, thresh = roc_curve(testing_label, pred_prob[:, 1])
         auc = roc_auc_score(testing_label, pred_prob[:, 1])
@@ -1029,7 +1047,7 @@ def TrainAdaBoost(training_data, training_label, **kwargs):
 
         else:
             # Create a dictionnary with the different learning rate to try
-            dict_adb = {'learning_rate': np.linspace(.5, 1.5, 10)}
+            dict_adb = {'learning_rate': np.linspace(.1, 1., 10)}
 
             # Import the function to perform the grid search
             from sklearn import grid_search
@@ -1038,7 +1056,7 @@ def TrainAdaBoost(training_data, training_label, **kwargs):
                 print 'AdaBoost performed with a grid-search on the learning-rate'
 
             # Call the constructor
-            cadb_gs = AdaBoostClassfier(cbe, n_estimators=n_estimators, algorithm=algorithm, random_state=random_state)
+            cadb_gs = AdaBoostClassifier(cbe, n_estimators=n_estimators, algorithm=algorithm, random_state=random_state)
 
             # Create the grid search classifier
             cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
@@ -1057,14 +1075,15 @@ def TrainAdaBoost(training_data, training_label, **kwargs):
                 print 'AdaBoost performed with a grid-search on the numbers of estimators'
 
             # Call the constructor
-            cadb_gs = AdaBoostClassfier(cbe, learning_rate=learning_rate, algorithm=algorithm, random_state=random_state)
+            cadb_gs = AdaBoostClassifier(cbe, learning_rate=learning_rate, algorithm=algorithm, 
+                                        random_state=random_state)
 
             # Create the grid search classifier
             cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
 
         else:
             # Create a dictionnary with the different learning rate to try
-            dict_adb['learning_rate'] = np.linspace(.5, 1.5, 10)
+            dict_adb['learning_rate'] = np.linspace(.1, 1., 10)
 
             # Import the function to perform the grid search
             from sklearn import grid_search
@@ -1073,7 +1092,7 @@ def TrainAdaBoost(training_data, training_label, **kwargs):
                 print 'AdaBoost performed with a grid-search on the learning-rate and the number of estimators'
 
             # Call the constructor
-            cadb_gs = AdaBoostClassfier(cbe, algorithm=algorithm, random_state=random_state)
+            cadb_gs = AdaBoostClassifier(cbe, algorithm=algorithm, random_state=random_state)
 
             # Create the grid search classifier
             cadb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
@@ -1091,5 +1110,129 @@ def TestAdaBoost(cadb, testing_data):
     # Test the classifier
     pred_prob = cadb.predict_proba(testing_data)
     pred_label = cadb.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## GRADIENT BOOSTING CLASSIFICATION ##############################
+
+def TrainGradientBoosting(training_data, training_label, **kwargs):
+    
+    # Import Random Forest from scikit learn
+    from sklearn.ensemble import GradientBoostingClassifier
+
+    # Unpack the keywords to create the classifier
+    loss = kwargs.pop('loss', 'deviance')
+    subsample = kwargs.pop('subsample', 1.0)
+    min_samples_split = kwargs.pop('min_samples_split', 2)
+    min_samples_leaf = kwargs.pop('min_samples_leaf', 1)
+    min_weight_fraction_leaf = kwargs.pop('min_weight_fraction_leaf', 0.0)
+    max_depth = kwargs.pop('max_depth', 3)
+    init = kwargs.pop('init', None)
+    random_state = kwargs.pop('random_state', None)
+    max_features = kwargs.pop('max_features', None)
+    max_leaf_nodes = kwargs.pop('max_leaf_nodes', None)
+    warm_start = kwargs.pop('warm_start', False)
+    gs_n_jobs = kwargs.pop('gs_n_jobs', multiprocessing.cpu_count())
+    verbose = kwargs.pop('verbose', False)
+
+    # If the number of estimators is not specified, it will be find by cross-validation
+    if ('n_estimators' in kwargs):
+        n_estimators = kwargs.pop('n_estimators', 10)
+
+        # Check that the learning rate is provided
+        if ('learning_rate' in kwargs):
+            learning_rate = kwargs.pop('learning_rate', 1.0)
+
+            if verbose:
+                print 'Gradient Boosting performed with no grid-search'
+
+            # Call the constructor
+            cgb = GradientBoostingClassifier(loss=loss, subsample=subsample, min_samples_split=min_samples_split, 
+                                             min_samples_leaf=min_samples_leaf, 
+                                             min_weight_fraction_leaf=min_weight_fraction_leaf,
+                                             max_depth=max_depth, init=init, random_state=random_state, 
+                                             max_features=max_features, max_leaf_nodes=max_leaf_nodes, 
+                                             warm_start=warm_start, learning_rate=learning_rate, 
+                                             n_estimators=n_estimators)
+
+        else:
+            # Create a dictionnary with the different learning rate to try
+            dict_adb = {'learning_rate': np.linspace(.1, 1., 10)}
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'Gradient Boosting performed with a grid-search on the learning-rate'
+
+            # Call the constructor
+            cgb_gs = GradientBoostingClassifier(loss=loss, subsample=subsample, min_samples_split=min_samples_split, 
+                                                min_samples_leaf=min_samples_leaf, 
+                                                min_weight_fraction_leaf=min_weight_fraction_leaf,
+                                                max_depth=max_depth, init=init, random_state=random_state, 
+                                                max_features=max_features, max_leaf_nodes=max_leaf_nodes, 
+                                                warm_start=warm_start, n_estimators=n_estimators)
+
+            # Create the grid search classifier
+            cgb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
+    else:
+        # Create a dictionnary for the number of estimators
+        dict_adb = {'n_estimators': np.linspace(1, 1000, 10, dtype=int)}
+
+        # Check that the learning rate is provided
+        if ('learning_rate' in kwargs):
+            learning_rate = kwargs.pop('learning_rate', 1.0)
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'Gradient Boosting performed with a grid-search on the numbers of estimators'
+
+            # Call the constructor
+            cgb_gs = GradientBoostingClassifier(loss=loss, subsample=subsample, min_samples_split=min_samples_split, 
+                                                min_samples_leaf=min_samples_leaf, 
+                                                min_weight_fraction_leaf=min_weight_fraction_leaf,
+                                                max_depth=max_depth, init=init, random_state=random_state, 
+                                                max_features=max_features, max_leaf_nodes=max_leaf_nodes, 
+                                                warm_start=warm_start, learning_rate=learning_rate)
+
+            # Create the grid search classifier
+            cgb = grid_search.GridSearchCV(cgb_gs, dict_adb, n_jobs=gs_n_jobs)
+
+        else:
+            # Create a dictionnary with the different learning rate to try
+            dict_adb['learning_rate'] = np.linspace(.1, 1., 10)
+
+            # Import the function to perform the grid search
+            from sklearn import grid_search
+
+            if verbose:
+                print 'Gradient Boosting performed with a grid-search on the learning-rate and the number of estimators'
+
+            # Call the constructor
+            cgb_gs = GradientBoostingClassifier(loss=loss, subsample=subsample, min_samples_split=min_samples_split, 
+                                                min_samples_leaf=min_samples_leaf, 
+                                                min_weight_fraction_leaf=min_weight_fraction_leaf,
+                                                max_depth=max_depth, init=init, random_state=random_state, 
+                                                max_features=max_features, max_leaf_nodes=max_leaf_nodes, 
+                                                warm_start=warm_start)
+
+            # Create the grid search classifier
+            cgb = grid_search.GridSearchCV(cgb_gs, dict_adb, n_jobs=gs_n_jobs)
+
+    # Train the classifier
+    cgb.fit(training_data, training_label)
+
+    return cgb
+
+def TestGradientBoosting(cgb, testing_data):
+    
+    # Import Gradient Boosting from scikit learn
+    from sklearn.ensemble import GradientBoostingClassifier
+
+    # Test the classifier
+    pred_prob = cgb.predict_proba(testing_data)
+    pred_label = cgb.predict(testing_data)
 
     return (pred_prob, pred_label)
