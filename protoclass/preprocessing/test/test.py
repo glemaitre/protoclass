@@ -94,6 +94,45 @@ def test_rician():
     # Normalise the whole data
     data_normalised = rician_norm_t2w.Normalise(volume)
 
+#################################################################################
+## LINEAR NORMALISATION BY PARTS
+
+def test_linear():
+
+    from protoclass.tool.dicom_manip import FindLandmarksDataset
+
+    path_patients = '/DATA/prostate/public/Siemens'
+
+    atlas = FindLandmarksDataset(path_patients)
+
+    from protoclass.preprocessing.normalisation import LinearNormalisationByParts
+    
+    linear_norm_t2w = LinearNormalisationByParts(atlas)
+
+    from protoclass.tool.dicom_manip import OpenOneSerieDCM
+    from protoclass.tool.dicom_manip import OpenSerieUsingGTDCM
+
+    # Give the path to a patient
+    path_patient = '/home/lemaitre/Documents/Data/public/Siemens/Patient 799'
+    path_t2w = 'T2W'
+    path_gt = 'T2WSeg/prostate'
+
+    path_dcm_t2w = join(path_patient, path_t2w)
+    path_dcm_gt = join(path_patient, path_gt)
+
+    # Read a volume
+    volume = OpenOneSerieDCM(path_dcm_t2w)
+    volume_emd_gt = OpenSerieUsingGTDCM(path_dcm_t2w, path_dcm_gt)
+
+    # Extract only the prostate data
+    prostate_data = volume_emd_gt[np.nonzero(~np.isnan(volume_emd_gt))]
+   
+    # Normalise the whole data
+    data_normalised = linear_norm_t2w.Normalise(volume)
+
+#################################################################################
+## OCT DENOISING
+
 def test_denoise_nlm():
 
     # Read one volume
@@ -118,4 +157,5 @@ def test_denoise_nlm():
 if __name__ == "__main__":
     #### NEED TO REVIEW THE NORMALISATION TEST
     
-    test_denoise_nlm()
+    #test_denoise_nlm()
+    test_linear()

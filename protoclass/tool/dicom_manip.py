@@ -368,3 +368,80 @@ def BinariseLabel(label):
     label = label * 2. - 1.
 
     return label
+
+def __VolumePercentiles__(path_patient, n_landmarks=5, min_perc=0.02, max_perc=0.98):
+    """Private function in order to find the different percentiles of a dataset
+
+    Parameters
+    ----------
+    path_patient: str
+        Path where the data are localised.
+    
+    n_landmarks: int (default=5)
+        Number of landmarks which have to be extracted
+
+    min_perc: float (default=0.02)
+        The minimum percentile of interest
+
+    max_perc: float (default=0.98)
+        The maximum percentile of interest
+    
+    Returns
+    -------
+    intensities_arr: array
+        Return an array with the intensities corresponding to the percentiles of interest.
+    """
+
+    # Check if we have either a file or a directory
+    if isdir(path_patient):
+        # Read a volume for the current patient
+        volume = OpenOneSerieDCM(path_patient)
+    elif isfile(path_patient):
+        volume = OpenVolumeNumpy(path_patient)
+
+    intensities_arr = []
+    # Find iteratively the different percentiles of the volume of interest
+    ### Create the array of percentiles to find
+    perc_arr = np.linspace(min_perc, max_perc, num=n_landmarks, endpoint=True)
+    for perc in perc_arr:
+        intensities_arr.append(np.percentiles(volume, perc))
+
+    # Return a tuple with the min and max
+    return np.array(intensities_arr)
+
+def FindLandmarksDataset(path_to_data, **kwargs):
+    """Function to find the minimum and maximum intensities
+       in a 3D volume
+
+    Parameters
+    ----------
+    path_to_data: str
+        Path containing the modality data.
+    modality: str
+        String containing the name of the modality to treat.
+    
+    Returns
+    -------
+    (min_int, max_int): tuple
+        A tuple containing the minimum and the maximum intensities.
+    """
+    
+    # Define the path to the modality
+    path_modality = kwargs.pop('modality', 'T2W')
+
+    # Create a list with the path name
+    path_patients = []
+    for dirs in os.listdir(path_to_data):
+        # Create the path variable
+        path_patient = join(path_to_data, dirs)
+        path_patients.append(join(path_patient, path_modality))
+       
+    # Compute the Haralick statistic in parallel
+    num_cores = multiprocessing.cpu_count()
+    # Check if we have original DICOM or Numpy volume
+    intensities_list = Parallel(n_jobs=num_cores)(delayed(__VolumePercentiles__)(path) for path in path_patients)
+    # Convert the list into numpy array
+    intensities_list = np.array(intensities_list)
+
+    # We have to return the mean landmarks
+    return (np.mean(intensities_list, axis=0))
