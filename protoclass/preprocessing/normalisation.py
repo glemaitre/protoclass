@@ -430,7 +430,7 @@ class LinearNormalisationByParts(object):
     -----
     """
 
-    def __init__(self, atlas, min_perc=0.02, max_perc=0.98):
+    def __init__(self, atlas, min_perc=2., max_perc=98.):
         """Constructor of the GaussianNormalisation object
         
         Parameters
@@ -439,10 +439,10 @@ class LinearNormalisationByParts(object):
             Array of the mean value of landmarks dedicting from the full dataset
             Refers to the function FindLandmarksDataset()
 
-        min_perc: float
+        min_perc: float (default=2.)
             Minimum percentiles to consider
 
-        max_perc: float 
+        max_perc: float (default=98.)
             Maximum percentiles to consider
     
         """
@@ -452,7 +452,7 @@ class LinearNormalisationByParts(object):
         self.__min_perc = min_perc
         self.__max_perc = max_perc
         # Find the number of landmarks to compute depending of the atlas provided to the constructor
-        self.__n_landmarks = size(atlas)
+        self.__n_landmarks = atlas.size
 
     def __InitFromData__(self, x):
         """Function to initialise the class members using data
@@ -464,10 +464,10 @@ class LinearNormalisationByParts(object):
 
         """
 
-        from protoclass.tool.dicom_manip import __VolumePercentiles__
+        from protoclass.tool.dicom_manip import __VolumePercentilesFromData__
 
         # Compute the percentiles from the data
-        self.__percentiles = __VolumePercentiles__(x, self.__n_landmarks, self.__min_perc, self.__max_perc)
+        self.__percentiles = __VolumePercentilesFromData__(x, self.__n_landmarks, self.__min_perc, self.__max_perc)
 
     def GetParameters(self):
         """Function to get the parameter of the object
@@ -480,6 +480,21 @@ class LinearNormalisationByParts(object):
         """
         
         return (self.__atlas, self.__percentiles)
+
+    def Fit(self, x):
+        """Function to find the best member parameters to make the mapping
+        
+        Parameters
+        ----------
+        x: ndarray
+            Array containing the data
+
+    
+        """
+
+        # Initalise the object using the data provided
+        self.__InitFromData__(x)
+
 
     def __RescaleParts__(self, x, x_norm, org_inf, org_sup, pro_inf, pro_sup):
         """Function to rescale for a given parts
@@ -536,15 +551,12 @@ class LinearNormalisationByParts(object):
     
         """
 
-        # Initalise the object using the data provided
-        self.__InitFromData__(x)
-
         x_norm = x.copy()
         # We need to go through the n_landmarks - 1 parts
-        for ld in range(self.n_landmarks - 1):
+        for ld in range(self.__n_landmarks - 1):
             x_norm = self.__RescaleParts__(x, x_norm, 
-                                           self.percentiles[ld], self.percentiles[ld+1],
-                                           self.atlas[ld], self.atlas[ld+1])
+                                           self.__percentiles[ld], self.__percentiles[ld+1],
+                                           self.__atlas[ld], self.__atlas[ld+1])
 
         return x_norm
 
@@ -565,9 +577,9 @@ class LinearNormalisationByParts(object):
 
         x_norm = x.copy()
         # We need to go through the n_landmarks - 1 parts
-        for ld in range(self.n_landmarks - 1):
+        for ld in range(self.__n_landmarks - 1):
             x_norm = self.__RescaleParts__(x, x_norm, 
-                                           self.atlas[ld], self.atlas[ld+1],
-                                           self.percentiles[ld], self.percentiles[ld+1])
+                                           self.__atlas[ld], self.__atlas[ld+1],
+                                           self.__percentiles[ld], self.___percentiles[ld+1])
 
         return x_norm

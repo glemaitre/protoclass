@@ -102,18 +102,22 @@ def test_linear():
     from protoclass.tool.dicom_manip import FindLandmarksDataset
 
     path_patients = '/DATA/prostate/public/Siemens'
+    path_t2w = 'T2W'
+    path_gt = 'T2WSeg/prostate'
 
-    atlas = FindLandmarksDataset(path_patients)
+    atlas = FindLandmarksDataset(path_patients, path_t2w, path_gt, n_landmarks=5, min_perc=0., max_perc=100.)
+
+    print atlas
 
     from protoclass.preprocessing.normalisation import LinearNormalisationByParts
     
-    linear_norm_t2w = LinearNormalisationByParts(atlas)
+    linear_norm_t2w = LinearNormalisationByParts(atlas, min_perc=0., max_perc=100.)
 
     from protoclass.tool.dicom_manip import OpenOneSerieDCM
     from protoclass.tool.dicom_manip import OpenSerieUsingGTDCM
 
     # Give the path to a patient
-    path_patient = '/home/lemaitre/Documents/Data/public/Siemens/Patient 799'
+    path_patient = '/DATA/prostate/public/Siemens/Patient 799'
     path_t2w = 'T2W'
     path_gt = 'T2WSeg/prostate'
 
@@ -126,9 +130,17 @@ def test_linear():
 
     # Extract only the prostate data
     prostate_data = volume_emd_gt[np.nonzero(~np.isnan(volume_emd_gt))]
-   
+    linear_norm_t2w.Fit(prostate_data)
+
+    print linear_norm_t2w.GetParameters()
+    
     # Normalise the whole data
     data_normalised = linear_norm_t2w.Normalise(volume)
+
+    n, bins, patches = plt.hist(data_normalised.reshape(-1), np.max(data_normalised), 
+                                normed=1, facecolor='green', alpha=0.75)
+    plt.show()
+
 
 #################################################################################
 ## OCT DENOISING

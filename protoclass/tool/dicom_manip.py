@@ -369,21 +369,24 @@ def BinariseLabel(label):
 
     return label
 
-def __VolumePercentiles__(path_patient, n_landmarks=5, min_perc=0.02, max_perc=0.98):
+def __VolumePercentilesFromPath__(path_patient, path_gt, n_landmarks=5, min_perc=2., max_perc=98.):
     """Private function in order to find the different percentiles of a dataset
 
     Parameters
     ----------
     path_patient: str
         Path where the data are localised.
+
+    path_gt: str
+        Path where the data are localised.
     
     n_landmarks: int (default=5)
         Number of landmarks which have to be extracted
 
-    min_perc: float (default=0.02)
+    min_perc: float (default=2.)
         The minimum percentile of interest
 
-    max_perc: float (default=0.98)
+    max_perc: float (default=98.)
         The maximum percentile of interest
     
     Returns
@@ -396,20 +399,56 @@ def __VolumePercentiles__(path_patient, n_landmarks=5, min_perc=0.02, max_perc=0
     if isdir(path_patient):
         # Read a volume for the current patient
         volume = OpenOneSerieDCM(path_patient)
+        volume_emd_gt = OpenSerieUsingGTDCM(path_patient, path_gt)
     elif isfile(path_patient):
         volume = OpenVolumeNumpy(path_patient)
+
+    prostate_data = volume_emd_gt[np.nonzero(~np.isnan(volume_emd_gt))]
 
     intensities_arr = []
     # Find iteratively the different percentiles of the volume of interest
     ### Create the array of percentiles to find
     perc_arr = np.linspace(min_perc, max_perc, num=n_landmarks, endpoint=True)
     for perc in perc_arr:
-        intensities_arr.append(np.percentiles(volume, perc))
+        intensities_arr.append(np.percentile(prostate_data, perc))
 
     # Return a tuple with the min and max
     return np.array(intensities_arr)
 
-def FindLandmarksDataset(path_to_data, **kwargs):
+def __VolumePercentilesFromData__(volume, n_landmarks=5, min_perc=2., max_perc=98.):
+    """Private function in order to find the different percentiles of a dataset
+
+    Parameters
+    ----------
+    volume: array
+        Array with the data.
+    
+    n_landmarks: int (default=5)
+        Number of landmarks which have to be extracted
+
+    min_perc: float (default=2.)
+        The minimum percentile of interest
+
+    max_perc: float (default=98.)
+        The maximum percentile of interest
+    
+    Returns
+    -------
+    intensities_arr: array
+        Return an array with the intensities corresponding to the percentiles of interest.
+    """
+
+    intensities_arr = []
+    # Find iteratively the different percentiles of the volume of interest
+    ### Create the array of percentiles to find
+    perc_arr = np.linspace(min_perc, max_perc, num=n_landmarks, endpoint=True)
+    for perc in perc_arr:
+        intensities_arr.append(np.percentile(volume, perc))
+
+    # Return a tuple with the min and max
+    return np.array(intensities_arr)
+
+def FindLandmarksDataset(path_to_data, path_modality, path_gt, n_landmarks=5, min_perc=2., max_perc=98.):
     """Function to find the minimum and maximum intensities
        in a 3D volume
 
@@ -425,21 +464,21 @@ def FindLandmarksDataset(path_to_data, **kwargs):
     (min_int, max_int): tuple
         A tuple containing the minimum and the maximum intensities.
     """
-    
-    # Define the path to the modality
-    path_modality = kwargs.pop('modality', 'T2W')
 
     # Create a list with the path name
     path_patients = []
+    path_patients_gt = []
     for dirs in os.listdir(path_to_data):
         # Create the path variable
         path_patient = join(path_to_data, dirs)
         path_patients.append(join(path_patient, path_modality))
+        path_patients_gt.append(join(path_patient, path_gt))
        
     # Compute the Haralick statistic in parallel
     num_cores = multiprocessing.cpu_count()
     # Check if we have original DICOM or Numpy volume
-    intensities_list = Parallel(n_jobs=num_cores)(delayed(__VolumePercentiles__)(path) for path in path_patients)
+    intensities_list = Parallel(n_jobs=num_cores)(delayed(__VolumePercentilesFromPath__)(path, path2, n_landmarks, min_perc, max_perc) 
+                                                  for (path, path2) in zip(path_patients, path_patients_gt))
     # Convert the list into numpy array
     intensities_list = np.array(intensities_list)
 
