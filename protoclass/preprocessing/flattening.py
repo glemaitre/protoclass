@@ -40,7 +40,7 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         
         # Compute the Haralick statistic in parallel
         num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
-        volume_flatten = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
+        baseline_volume, volume_flatten = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
 
         print volume.shape
         print np.array(volume_flatten).shape
@@ -170,4 +170,4 @@ def Flatten2DMphMath(image, **kwargs):
         warped_img[:, col_ind] = np.roll(col_img, dist_roll)
 
     # Finally return the unflatten image
-    return warped_img
+    return baseline_y, warped_img
