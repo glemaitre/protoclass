@@ -40,13 +40,22 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         
         # Compute the Haralick statistic in parallel
         num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
-        baseline_volume, volume_flatten = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
+        data = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
 
-        print volume.shape
-        print np.array(volume_flatten).shape
+        # Unpack the data
+        volume_flatten = []
+        baseline_volume = []
+        for sl in data:
+            baseline_volume.append(sl[0])
+            volume_flatten.append(sl[1])
+
+        # We need now to align the volume
+        center_line = np.mean(baseline_volume)
+        volume_aligned = Parallel(n_jobs=num_cores)(delayed(Align2DIm)(im.T, baseline_volume[idx_im], center_line)
+                                                    for idx_im, im in enumerate(volume_flatten))
 
         # We need to swap back 
-        return np.swapaxes(np.swapaxes(volume_flatten, 1, 2), 1, 0)
+        return np.swapaxes(np.swapaxes(volume_aligned, 1, 2), 1, 0)
     
     else:
         raise ValueError('protoclass.preprocessing.flattening: Unrecognise type of flattening.')
@@ -170,4 +179,14 @@ def Flatten2DMphMath(image, **kwargs):
         warped_img[:, col_ind] = np.roll(col_img, dist_roll)
 
     # Finally return the unflatten image
-    return baseline_y, warped_img
+    return (np.round(baseline_y), warped_img)
+
+def Align2DIm(image, baseline_im, center_line):
+    # GOAL: All the different images need to be aligned to the same reference
+
+    ### Compute the distance to apply the rolling
+    dist_roll = int(np.round(center_line - baseline_im))
+
+    ### Roll each column of the image
+    return np.roll(image, dist_roll, axis=1)
+    

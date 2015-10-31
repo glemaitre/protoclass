@@ -238,7 +238,7 @@ def LBPMapExtraction(im, **kwargs):
             # The data are stored in (x, y, z) manner. We need to swap to the
             # first position the axis that is not involved in the 2D image
             if extr_axis == 'x':
-                # Do not do anythin
+                # Do not do anything
                 vol = im
             elif extr_axis == 'y':
                 # Move y at the beginning
