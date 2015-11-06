@@ -1174,7 +1174,7 @@ def TrainGradientBoosting(training_data, training_label, **kwargs):
                                                 warm_start=warm_start, n_estimators=n_estimators)
 
             # Create the grid search classifier
-            cgb = grid_search.GridSearchCV(cadb_gs, dict_adb, n_jobs=gs_n_jobs)
+            cgb = grid_search.GridSearchCV(cgb_gs, dict_adb, n_jobs=gs_n_jobs)
     else:
         # Create a dictionnary for the number of estimators
         dict_adb = {'n_estimators': np.linspace(1, 1000, 10, dtype=int)}
