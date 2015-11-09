@@ -40,6 +40,7 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         
         # Compute the Haralick statistic in parallel
         num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
+        print num_cores
         data = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
 
         # Unpack the data
@@ -54,8 +55,9 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         volume_aligned = Parallel(n_jobs=num_cores)(delayed(Align2DIm)(im.T, baseline_volume[idx_im], center_line)
                                                     for idx_im, im in enumerate(volume_flatten))
 
-        # We need to swap back 
-        return np.swapaxes(np.swapaxes(volume_aligned, 1, 2), 1, 0)
+        # We need to swap back
+        return np.swapaxes(volume_aligned, 0, 1)
+        #return np.swapaxes(np.swapaxes(volume_aligned, 1, 2), 1, 0)
     
     else:
         raise ValueError('protoclass.preprocessing.flattening: Unrecognise type of flattening.')
