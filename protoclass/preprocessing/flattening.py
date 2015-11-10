@@ -18,7 +18,7 @@ from joblib import Parallel, delayed
 # Multiprocessing library
 import multiprocessing
 
-def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
+def Flatten3D(volume, flattening_method='morph-mat', thres_type = 'otsu', crop = None, **kwargs):
     # GOAL: flatten a complete 3D volume
 
     # Check that the type of image is float and in the range (0., 1.)
@@ -41,7 +41,7 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         # Compute the Haralick statistic in parallel
         num_cores = kwargs.pop('num_cores', multiprocessing.cpu_count())
         print num_cores
-        data = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, **kwargs) for im in volume_swaped)
+        data = Parallel(n_jobs=num_cores)(delayed(Flatten2DMphMath)(im.T, thres_type, **kwargs) for im in volume_swaped)
 
         # Unpack the data
         volume_flatten = []
@@ -54,6 +54,15 @@ def Flatten3D(volume, flattening_method='morph-mat', **kwargs):
         center_line = np.mean(baseline_volume)
         volume_aligned = Parallel(n_jobs=num_cores)(delayed(Align2DIm)(im.T, baseline_volume[idx_im], center_line)
                                                     for idx_im, im in enumerate(volume_flatten))
+
+        # Do we want to crop an image
+        if not (crop == None):
+            crop_size = kwargs.pop('crop_size', 400)
+            volume_cropped = Parallel(n_jobs=num_cores)(delayed(Cropping2DIm)(im, center_line, crop_size)
+                                                        for im in volume_aligned)
+
+            # We need to swap back
+            return np.swapaxes(volume_cropped, 0, 1)
 
         # We need to swap back
         return np.swapaxes(volume_aligned, 0, 1)
@@ -192,3 +201,14 @@ def Align2DIm(image, baseline_im, center_line):
     ### Roll each column of the image
     return np.roll(image, dist_roll, axis=1)
     
+def Cropping2DIm(image, center_line, crop_size, **kwargs):
+    # GOAL: Crop each 2D image
+
+    print image.shape
+
+    ### Compute the top and bottom limits
+    top_limit = center_line - int(crop_size / 2.0)
+    bottom_limit = center_line + int(crop_size / 2.0)
+
+    return image[top_limit:bottom_limit, :]
+
