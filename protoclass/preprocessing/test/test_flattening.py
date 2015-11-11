@@ -22,7 +22,7 @@ def test_3d_flattening():
     vol = OpenVolumeNumpy(filename, name_var_extract=name_var_extract)
     
     # Flatten the volume
-    out = Flatten3D(vol, thres_type='otsu', num_cores=8)
+    out = Flatten3D(vol, thres_type='otsu', num_cores=8, crop=True)
 
     # Assert if the size are not identical
     testing.assert_equal(vol.shape, out.shape)
