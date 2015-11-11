@@ -210,5 +210,13 @@ def Cropping2DIm(image, center_line, crop_size, **kwargs):
     top_limit = center_line - int(crop_size / 2.0)
     bottom_limit = center_line + int(crop_size / 2.0)
 
+    ### Check the validity of the limit
+    if (top_limit < 0):
+        top_limit = 0
+        bottom_limit = crop_size - 1
+    elif (bottom_limit > image.shape[1]):
+        bottom_limit = image.shape[1] - 1
+        top_limit = bottom_limit - crop_size
+
     return image[:, top_limit:bottom_limit]
 
