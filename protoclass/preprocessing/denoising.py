@@ -41,7 +41,7 @@ def DenoisingNLM2D(image, **kwargs):
     # GOAL: denoise a 2D image and return the denoised image using NLM
 
     # Import the function to apply nl means in 2D images
-    from skimage.restoration import nl_means_denoising
+    from skimage.restoration import denoise_nl_means
 
     # Get the parameters for the denoising
     min_dim = float(min(image.shape))
@@ -52,7 +52,7 @@ def DenoisingNLM2D(image, **kwargs):
     multichannel = kwargs.pop('multichannel', False)
     fast_mode = kwargs.pop('fast_mode', True)
 
-    img_den = nl_means_denoising(image, patch_size=patch_size, patch_distance=patch_distance,
+    img_den = denoise_nl_means(image, patch_size=patch_size, patch_distance=patch_distance,
                               h=h, multichannel=multichannel, fast_mode=fast_mode)
 
     # Perform the denoising
