@@ -71,21 +71,6 @@ def ResultToVolume(path_to_result, path_to_gt, reverse_gt=True):
             
         return volume_out
 
-def LabelsToSensitivitySpecificity(true_label, pred_label):
-
-    # Compute the confusion matrix
-    cm = BuildConfusionFromVolume(true_label, pred_label)
-
-    # Compute the sensitivity and specificity
-    sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
-    spec = float(cm[0, 0]) / float(cm[0, 0] + cm[0, 1])
-
-    return (sens, spec)
-
-def BuildConfusionFromVolume(true_label, pred_label):
-
-    return confusion_matrix(true_label, pred_label)
-
 def OpenROCPatients(path_to_results):
     
     # Check that the path is in fact a directory
@@ -136,4 +121,3 @@ def PlotROCPatients(rocs):
     # Put the legend on the bottom left
     plt.legend(loc=4)
     plt.show()
-
