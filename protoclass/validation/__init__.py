@@ -1,8 +1,15 @@
-from .validation import LabelsToSensitivitySpecificity, ResultToLabel, ResultToVolume, BuildConfusionFromVolume, PlotROCPatients, OpenROCPatients
+from .validation import ResultToLabel, ResultToVolume, PlotROCPatients, OpenROCPatients
 
-__all__ = ['LabelsToSensitivitySpecificity', 
-           'ResultToLabel', 
+from .metric import LabelsToSensitivitySpecificity, LabelsToPrecisionNegativePredictiveValue, LabelsToGeometricMean, LabelsToAccuracy, LabelsToF1score, LabelsToMatthewCorrCoef, LabelsToGeneralizedIndexBalancedAccuracy
+
+__all__ = ['ResultToLabel', 
            'ResultToVolume', 
-           'BuildConfusionFromVolume', 
            'PlotROCPatients', 
-           'OpenROCPatients']
+           'OpenROCPatients',
+           'LabelsToSensitivitySpecificity', 
+           'LabelsToPrecisionNegativePredictiveValue', 
+           'LabelsToGeometricMean', 
+           'LabelsToAccuracy', 
+           'LabelsToF1score',
+           'LabelsToMatthewCorrCoef', 
+           'LabelsToGeneralizedIndexBalancedAccuracy']

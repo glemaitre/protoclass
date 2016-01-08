@@ -31,10 +31,11 @@ from protoclass.tool.dicom_manip import GetGTSamples
 from protoclass.tool.dicom_manip import BinariseLabel
 from protoclass.tool.dicom_manip import VolumeToLabelUsingGT
 
-from protoclass.validation.validation import LabelsToSensitivitySpecificity
+from protoclass.validation.metric import LabelsToSensitivitySpecificity
+from protoclass.validation.metric import BuildConfusionFromVolume
+
 from protoclass.validation.validation import ResultToVolume
 from protoclass.validation.validation import ResultToLabel
-from protoclass.validation.validation import BuildConfusionFromVolume
 from protoclass.validation.validation import PlotROCPatients
 from protoclass.validation.validation import OpenROCPatients
 

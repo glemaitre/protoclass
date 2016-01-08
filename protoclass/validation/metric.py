@@ -166,7 +166,7 @@ def LabelsToMatthewCorrCoef(true_label, pred_label):
     return matthews_corrcoef(true_label, pred_label);
 
 
-def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', alpha=0.1):
+def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', alpha=0.1, squared=True):
     """Function to compute the the generalized index of balanced accuracy.
     Parameters
     ----------
