@@ -4,3 +4,6 @@
 [submodule "third-party/UnbalancedDataset"]
 	path = third-party/UnbalancedDataset
 	url = https://github.com/glemaitre/UnbalancedDataset.git
+[submodule "third-party/scikit-learn"]
+	path = third-party/scikit-learn
+	url = https://github.com/glemaitre/scikit-learn.git
