@@ -179,6 +179,11 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
                 cqda = TrainQDA(d, l, **kwargs)
                 tmp_pred_prob, tmp_pred_label = TestQDA(cqda, testing_data)
 
+            # ... Gaussian Naive-Bayes classifier
+            elif (classifier_str == 'naive-bayes'):
+                cgnb = TrainGNB(d, l, **kwargs)
+                tmp_pred_prob, tmp_pred_label = TestGNB(cgnb, testing_data)
+
             # ... Linear SVM classifier
             elif (classifier_str == 'linear-svm'):
                 clsvm = TrainLinearSVM(d, l, class_weight=class_weight, gs_n_jobs=gs_n_jobs, **kwargs)
@@ -256,6 +261,12 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         cqda = TrainQDA(training_data, training_label, **kwargs)
         pred_prob, pred_label = TestQDA(cqda, testing_data)
 
+    # ... Gaussian Naive-Bayes classifier
+    elif (classifier_str == 'naive-bayes'):
+        # Train and classify
+        cgnb = TrainGNB(training_data, training_label, **kwargs)
+        pred_prob, pred_label = TestGNB(cgnb, testing_data)
+
     # ... Linear SVM classifier
     elif (classifier_str == 'linear-svm'):
         # Train and classify
@@ -300,6 +311,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
         (classifier_str == 'logistic-regression') or   
         (classifier_str == 'lda')                 or
         (classifier_str == 'qda')                 or
+        (classifier_str == 'naive-bayes')         or
         (classifier_str == 'adaboost')            or
         (classifier_str == 'gradient-boosting')   or
         (classifier_str == 'knn')                    ):
@@ -315,7 +327,7 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     # Put the element inside a structure
     roc = roc_auc(fpr, tpr, thresh, auc)
 
-    return (pred_label, roc)
+    return (pred_label, pred_prob, roc)
 
 ############################## RANDOM FOREST CLASSIFICATION ##############################
 
@@ -574,6 +586,32 @@ def TestQDA(cqda, testing_data):
     # Test the classifier
     pred_prob = cqda.predict_proba(testing_data)
     pred_label = cqda.predict(testing_data)
+
+    return (pred_prob, pred_label)
+
+############################## GAUSSIAN NAIVE BAYES CLASSIFIER ##############################
+
+def TrainGNB(training_data, training_label, **kwargs):
+    
+    # Import LDA from scikit learn
+    from sklearn.naive_bayes import GaussianNB
+
+    # Call the constructor with the proper input arguments
+    cgnb = GaussianNB(**kwargs)
+
+    # Train the classifier
+    cgnb.fit(training_data, training_label)
+
+    return cgnb
+
+def TestGNB(cgnb, testing_data):
+    
+    # Import QDA from scikit learn
+    from sklearn.naive_bayes import GaussianNB
+
+    # Test the classifier
+    pred_prob = cgnb.predict_proba(testing_data)
+    pred_label = cgnb.predict(testing_data)
 
     return (pred_prob, pred_label)
 

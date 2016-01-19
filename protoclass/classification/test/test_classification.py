@@ -33,4 +33,8 @@ data2 = np.random.random((label2.shape[0], 5))
 balancing_criterion = 'balance-cascade'
 kind_smote = 'svm'
 version_nearmiss = 3
-pred, roc = Classify(data, label, data2, label2, balancing_criterion=balancing_criterion, n_estimators=10)
+classifier_str = 'naive-bayes'
+pred, roc = Classify(data, label, data2, label2, classifier_str=classifier_str, class_prior_override=(.1, .9))# ,
+                     # balancing_criterion=balancing_criterion)
+print pred
+print roc
