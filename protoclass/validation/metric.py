@@ -52,8 +52,14 @@ def LabelsToSensitivitySpecificity(true_label, pred_label):
     cm = BuildConfusionFromVolume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
-    sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
-    spec = float(cm[0, 0]) / float(cm[0, 0] + cm[0, 1])
+    if (cm[1, 1] > 0):
+        sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
+    else:
+        sens = 0
+    if (cm[0, 0] > 0):
+        spec = float(cm[0, 0]) / float(cm[0, 0] + cm[0, 1])
+    else:
+        spec = 0
 
     return (sens, spec)
 
@@ -77,8 +83,14 @@ def LabelsToPrecisionNegativePredictiveValue(true_label, pred_label):
     cm = BuildConfusionFromVolume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
-    prec = float(cm[1, 1]) / float(cm[1, 1] + cm[0, 1])
-    npv = float(cm[0, 0]) / float(cm[0, 0] + cm[1, 0])
+    if (cm[1, 1] > 0):
+        prec = float(cm[1, 1]) / float(cm[1, 1] + cm[0, 1])
+    else:
+        prec = 0
+    if (cm[0, 0] > 0):
+        npv = float(cm[0, 0]) / float(cm[0, 0] + cm[1, 0])
+    else:
+        npv = 0
 
     return (prec, npv)
 
