@@ -44,7 +44,7 @@ def MakeTable(data, featurelist, savepath, filename, ext='.tex'):
     None
     """
 
-    filename = join(savepath, filename, ext)
+    filename = join(savepath, filename+ ext)
     
     fi = open(filename, 'w+')
     for fId in range(0, data.shape[0]): 
