@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 # import the system package
 import sys
 
-def MakeTable(data, featurelist, savepath, filename, ext='.txt'):     
-    """Function to build the confusion matrix.
+def MakeTable(data, featurelist, savepath, filename, ext='.tex'):
+    """Function to build a latex table from a numpy matrix.
     Parameters
     ----------
     filename: str
