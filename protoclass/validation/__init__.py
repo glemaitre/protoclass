@@ -2,7 +2,7 @@ from .validation import ResultToLabel, ResultToVolume, PlotROCPatients, OpenROCP
 
 from .utility import MakeTable
 
-from .metric import LabelsToSensitivitySpecificity, LabelsToPrecisionNegativePredictiveValue, LabelsToGeometricMean, LabelsToAccuracy, LabelsToF1score, LabelsToMatthewCorrCoef, LabelsToGeneralizedIndexBalancedAccuracy
+from .metric import LabelsToSensitivitySpecificity, LabelsToPrecisionNegativePredictiveValue, LabelsToGeometricMean, LabelsToAccuracy,LabelsToCostValue, LabelsToF1score, LabelsToMatthewCorrCoef, LabelsToGeneralizedIndexBalancedAccuracy
 
 __all__ = ['ResultToLabel', 
            'ResultToVolume', 
@@ -13,6 +13,7 @@ __all__ = ['ResultToLabel',
            'LabelsToPrecisionNegativePredictiveValue', 
            'LabelsToGeometricMean', 
            'LabelsToAccuracy', 
+           'LabelsToCostValue'
            'LabelsToF1score',
            'LabelsToMatthewCorrCoef', 
            'LabelsToGeneralizedIndexBalancedAccuracy']
