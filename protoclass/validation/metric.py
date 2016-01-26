@@ -15,6 +15,7 @@ import scipy as sp
 # Scikit-learn library
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, matthews_corrcoef
 
+
 def BuildConfusionFromVolume(true_label, pred_label):
     """Function to build the confusion matrix.
     Parameters
@@ -143,23 +144,47 @@ def LabelsToAccuracy(true_label, pred_label):
 
     return accuracy_score(true_label, pred_label);
 
-def LabelsToCostValue(true_label,pred_label): 
-    """Function to compute cost value parameter.
+
+def CostWithBias(sens, spec, bias_pos, bias_neg):
+    """Function to compute cost value parameter given the sensitivity and specificity.
     ----------
-    true_label: ndarray
-        Ground-truth array.
-    pred_label: ndarray
-        Prediction label given by the machine learning method.
+    sens: float
+        Sensitivity.
+    spec: float
+        Specificity.
+    bias_pos: float
+        Constant influencing the bias of the positive class.
+    bias_neg: float 
+        Constant influecing the bias of the negative class.
     Returns
     -------
     cval: double
         The resulting cost value.
     """
+
+    return (bias_pos * (1.0 - sens) + bias_neg * (1.0 - spec)) / (bias_pos + bias_neg)
+
+
+def LabelsToCostValue(true_label, pred_label, bias_pos=1.5, bias_neg=1.): 
+    """Function to compute cost value parameter given the ground-truth label and predicted label.
+    ----------
+    true_label: ndarray
+        Ground-truth array.
+    pred_label: ndarray
+        Prediction label given by the machine learning method.
+    bias_pos: float
+        Constant influencing the bias of the positive class.
+    bias_neg: float 
+        Constant influecing the bias of the negative class.
+    Returns
+    -------
+    cval: double
+        The resulting cost value.
+    """
+
     sens, spec = LabelsToSensitivitySpecificity(true_label, pred_label)
-    c10 = 1.5
-    c01 = 1 
-    cval = (c10 * (1.0 - sens) + c01 * (1.0 - spec)) / (c10+c01)
-    return cval
+    
+    return CostWithBias(sens, spec, bias_pos, bias_neg)
 
 
 def LabelsToF1score(true_label, pred_label):
@@ -194,7 +219,6 @@ def LabelsToMatthewCorrCoef(true_label, pred_label):
     """
 
     return matthews_corrcoef(true_label, pred_label)
-	
 
 
 def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', alpha=0.1, squared=True):

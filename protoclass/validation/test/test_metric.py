@@ -11,7 +11,7 @@ import numpy as np
 from numpy import testing
 from numpy.testing import assert_equal
 
-from protoclass.validation.metric import LabelsToSensitivitySpecificity, LabelsToPrecisionNegativePredictiveValue, LabelsToGeometricMean, LabelsToAccuracy, LabelsToF1score, LabelsToMatthewCorrCoef, LabelsToGeneralizedIndexBalancedAccuracy
+from protoclass.validation.metric import LabelsToSensitivitySpecificity, LabelsToPrecisionNegativePredictiveValue, LabelsToGeometricMean, LabelsToAccuracy, LabelsToF1score, LabelsToMatthewCorrCoef, LabelsToGeneralizedIndexBalancedAccuracy, LabelsToCostValue, CostWithBias
 
 
 def test_metrics():
@@ -49,6 +49,14 @@ def test_metrics():
     # If the other metric can be computed fine, nothing can go wrong apart of the implementation of this function
     iba = LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label)
     assert_equal(iba, 0.25)
+
+    # Check the cost with sensitivity and specificity with a class bias
+    cval1 = LabelsToCostValue(true_label, pred_label, bias_pos=1.5, bias_neg=1.)
+    assert_equal(cval1, 0.5)
+
+    # Check the cost function itself with sensitivity and specificity with a class bias
+    cval2 = CostWithBias(sens, spec, bias_pos=1.5, bias_neg=1.)
+    assert_equal(cval2, cval2)
     
 
 if __name__ == '__main__':
