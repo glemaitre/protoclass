@@ -143,6 +143,24 @@ def LabelsToAccuracy(true_label, pred_label):
 
     return accuracy_score(true_label, pred_label);
 
+def LabelsToCostValue(true_label,pred_label): 
+    """Function to compute cost value parameter.
+    ----------
+    true_label: ndarray
+        Ground-truth array.
+    pred_label: ndarray
+        Prediction label given by the machine learning method.
+    Returns
+    -------
+    cval: double
+        The resulting cost value.
+    """
+    sens, spec = LabelsToSensitivitySpecificity(true_label, pred_label)
+    c10 = 1.5
+    c01 = 1 
+    cval = (c10 * (1.0 - sens) + c01 * (1.0 - spec)) / (c10+c01)
+    return cval
+
 
 def LabelsToF1score(true_label, pred_label):
     """Function to compute the F1 score.
@@ -175,7 +193,8 @@ def LabelsToMatthewCorrCoef(true_label, pred_label):
         The resulting Matthew correlation coefficient.
     """
 
-    return matthews_corrcoef(true_label, pred_label);
+    return matthews_corrcoef(true_label, pred_label)
+	
 
 
 def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', alpha=0.1, squared=True):
@@ -200,6 +219,8 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
             use the geometric mean.
         ``'acc'``:
             use the accuracy score.
+	``'cost'``:
+	    use the cost value.
         ``'f1score'``:
             use the F1 score.
         ``'mcc'``:
@@ -212,6 +233,9 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
     -------
     iba: double
         The resulting generalized index of balanced accuracy.
+        
+     
+	 
 
     References
     ----------
@@ -233,10 +257,13 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
         _, met = LabelsToPrecisionNegativePredictiveValue(true_label, pred_label)
     elif (M == 'gmean'):
         # Compute the negative predictive value
-        _, met = LabelsToPrecisionNegativePredictiveValue(true_label, pred_label)
+        met = LabelsToGeometricMean(true_label, pred_label)
     elif (M == 'acc'):
         # Compute the accuracy
         met = LabelsToAccuracy(true_label, pred_label)
+    elif (M == 'cost'):
+        # Compute the accuracy
+        met = LabelsToCostValue(true_label, pred_label)
     elif (M == 'f1score'):
         # Compute the F1 Score
         met = LabelsToF1score(true_label, pred_label)
@@ -250,7 +277,7 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
     if not ((alpha >= 0.) and (alpha <= 1.)):
         raise ValueError('protoclass.metric.GIBA: The value of alpha sould be set between 0 and 1.')
 
-    # Check if we should squqre the metric
+    # Check if we should square the metric
     if (squared == True):
         met = met ** 2
 
