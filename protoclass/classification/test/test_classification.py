@@ -34,7 +34,8 @@ balancing_criterion = 'balance-cascade'
 kind_smote = 'svm'
 version_nearmiss = 3
 classifier_str = 'naive-bayes'
-pred, roc = Classify(data, label, data2, label2, classifier_str=classifier_str, class_prior_override=(.1, .9))# ,
-                     # balancing_criterion=balancing_criterion)
-print pred
+pred_label, pred_prob, roc = Classify(data, label, data2, label2, classifier_str=classifier_str, 
+                                      class_prior=np.array([0.3, 0.7]))#, balancing_criterion=balancing_criterion)
+print pred_label
+print pred_prob
 print roc
