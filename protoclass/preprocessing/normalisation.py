@@ -51,7 +51,7 @@ class GaussianNormalisation(object):
         self.__mu = mu
         self.__sigma = sigma
 
-    def __InitFromData__(self, x, norm_factor):
+    def __init_from_data__(self, x, norm_factor):
         """Function to initialise the class members using data
         
         Parameters
@@ -68,7 +68,7 @@ class GaussianNormalisation(object):
         self.__mu = np.mean(x)
         self.__sigma = np.std(x)
 
-    def GetParameters(self):
+    def get_parameters(self):
         """Function to get the parameter of the object
         
         Returns
@@ -81,7 +81,7 @@ class GaussianNormalisation(object):
         
         return (self.__norm_factor, self.__mu, self.__sigma)
 
-    def __Parametrization__(self, x, norm_factor, mu, sigma):
+    def __parametrization__(self, x, norm_factor, mu, sigma):
         """Function to parametrise the Gaussian PDF
         
         Parameters
@@ -104,7 +104,7 @@ class GaussianNormalisation(object):
         
         return norm.pdf(x, mu, sigma) / norm_factor
 
-    def __ComputeHistogram__(self, x, x_range):
+    def __compute_histogram__(self, x, x_range):
         """Function to compute the histogram of the data
         
         Parameters
@@ -137,7 +137,7 @@ class GaussianNormalisation(object):
 
         return (pdf_abs, bin_edges_abs)
 
-    def Fit(self, x, x_range):
+    def fit(self, x, x_range):
         """Function to find the best member parameters to fit 
            the class parametrisation using Levenverg-Marquardt
            curve fitting
@@ -162,7 +162,7 @@ class GaussianNormalisation(object):
             raise ValueError('normalisation.GaussianNormalisation: Wrong range specifications for the x.')
 
         # Compute the histogram of x
-        x_pdf, x_pdf_bins = self.__ComputeHistogram__(x, x_range)
+        x_pdf, x_pdf_bins = self.__compute_histogram__(x, x_range)
 
         # We need to normalise the absicisse of the histogram between 0 and 1.
         norm_factor = x_range[1]
@@ -170,10 +170,10 @@ class GaussianNormalisation(object):
         x_pdf_bins = x_pdf_bins.astype(float) / norm_factor
 
         # Get the initial parameter for the given data
-        self.__InitFromData__(x, norm_factor)
+        self.__init_from_data__(x, norm_factor)
         
         # We have to fit the pdf now
-        popt, pcov = curve_fit(self.__Parametrization__,
+        popt, pcov = curve_fit(self.__parametrization__,
                                x_pdf_bins[:-1],
                                x_pdf,
                                p0=(self.__norm_factor, self.__mu, self.__sigma))
@@ -189,7 +189,7 @@ class GaussianNormalisation(object):
 
         return pcov
 
-    def Normalise(self, x):
+    def normalise(self, x):
         """Function to normalise the data
         
         Parameters
@@ -206,7 +206,7 @@ class GaussianNormalisation(object):
 
         return (x - (self.__mu * self.__norm_factor)) / (self.__sigma * self.__norm_factor)
 
-    def Denormalise(self, x):
+    def denormalise(self, x):
         """Function to unormalise the data
         
         Parameters
@@ -251,7 +251,7 @@ class RicianNormalisation(object):
         self.__loc = loc
         self.__sigma = sigma
 
-    def __InitFromData__(self, x, norm_factor):
+    def __init_from_data__(self, x, norm_factor):
         """Function to initialise the class members using data
         
         Parameters
@@ -269,7 +269,7 @@ class RicianNormalisation(object):
         self.__loc = np.min(x)
         self.__sigma = np.std(x)
 
-    def GetParameters(self):
+    def get_parameters(self):
         """Function to get the parameter of the object
         
         Returns
@@ -281,7 +281,7 @@ class RicianNormalisation(object):
 
         return (self.__norm_factor, self.__v, self.__loc, self.__sigma)
 
-    def __Parametrization__(self, x, norm_factor, v, loc, sigma):
+    def __parametrization__(self, x, norm_factor, v, loc, sigma):
         """Function to parametrise the Rician PDF
         
         Parameters
@@ -306,7 +306,7 @@ class RicianNormalisation(object):
 
         return rice.pdf(x, v, loc, sigma) / norm_factor
 
-    def __ComputeHistogram__(self, x, x_range):
+    def __compute_histogram__(self, x, x_range):
         """Function to compute the histogram of the data
         
         Parameters
@@ -338,7 +338,7 @@ class RicianNormalisation(object):
 
         return (pdf_abs, bin_edges_abs)
 
-    def Fit(self, x, x_range):
+    def fit(self, x, x_range):
         """Function to find the best member parameters to fit 
            the class parametrisation using Levenverg-Marquardt
            curve fitting
@@ -362,7 +362,7 @@ class RicianNormalisation(object):
             raise ValueError('normalisation.GaussianNormalisation: Wrong range specifications for the x.')
 
         # Compute the histogram of x
-        x_pdf, x_pdf_bins = self.__ComputeHistogram__(x, x_range)
+        x_pdf, x_pdf_bins = self.__compute_histogram__(x, x_range)
 
         # We need to normalise the absicisse of the histogram between 0 and 1.
         norm_factor = x_range[1]
@@ -370,10 +370,10 @@ class RicianNormalisation(object):
         x_pdf_bins = x_pdf_bins.astype(float) / norm_factor
         
         # Get the initial parameter for the given data
-        self.__InitFromData__(x, norm_factor)
+        self.__init_from_data__(x, norm_factor)
         
         # We have to fit the pdf now
-        popt, pcov = curve_fit(self.__Parametrization__,
+        popt, pcov = curve_fit(self.__parametrization__,
                                x_pdf_bins[:-1],
                                x_pdf,
                                p0=(self.__norm_factor, self.__v, self.__loc, self.__sigma))
@@ -389,7 +389,7 @@ class RicianNormalisation(object):
 
         return pcov
 
-    def Normalise(self, x):
+    def normalise(self, x):
         """Function to normalise the data
         
         Parameters
@@ -404,9 +404,10 @@ class RicianNormalisation(object):
     
         """
 
-        return (x - rice.mean(self.__v, self.__loc, self.__sigma) * self.__norm_factor) / (self.__sigma * self.__norm_factor)
+        return ( (x - rice.mean(self.__v, self.__loc, self.__sigma) * self.__norm_factor) / 
+                 (self.__sigma * self.__norm_factor) )
 
-    def Denormalise(self, x):
+    def denormalise(self, x):
         """Function to unormalise the data
         
         Parameters
@@ -421,7 +422,8 @@ class RicianNormalisation(object):
     
         """
 
-        return x * (self.__sigma * self.__norm_factor) + (rice.mean(self.__v, self.__loc, self.__sigma) * self.__norm_factor)
+        return ( x * (self.__sigma * self.__norm_factor) + 
+                 (rice.mean(self.__v, self.__loc, self.__sigma) * self.__norm_factor) )
 
 class LinearNormalisationByParts(object):
     """ Class to perform linear normalisation by parts
@@ -454,7 +456,7 @@ class LinearNormalisationByParts(object):
         # Find the number of landmarks to compute depending of the atlas provided to the constructor
         self.__n_landmarks = atlas.size
 
-    def __InitFromData__(self, x):
+    def __init_from_data__(self, x):
         """Function to initialise the class members using data
         
         Parameters
@@ -469,7 +471,7 @@ class LinearNormalisationByParts(object):
         # Compute the percentiles from the data
         self.__percentiles = __VolumePercentilesFromData__(x, self.__n_landmarks, self.__min_perc, self.__max_perc)
 
-    def GetParameters(self):
+    def get_parameters(self):
         """Function to get the parameter of the object
         
         Returns
@@ -481,7 +483,7 @@ class LinearNormalisationByParts(object):
         
         return (self.__atlas, self.__percentiles)
 
-    def Fit(self, x):
+    def fit(self, x):
         """Function to find the best member parameters to make the mapping
         
         Parameters
@@ -493,10 +495,10 @@ class LinearNormalisationByParts(object):
         """
 
         # Initalise the object using the data provided
-        self.__InitFromData__(x)
+        self.__init_from_data__(x)
 
 
-    def __RescaleParts__(self, x, x_norm, org_inf, org_sup, pro_inf, pro_sup):
+    def __rescale_parts__(self, x, x_norm, org_inf, org_sup, pro_inf, pro_sup):
         """Function to rescale for a given parts
         
         Parameters
@@ -533,7 +535,7 @@ class LinearNormalisationByParts(object):
 
         return x_norm
 
-    def Normalise(self, x):
+    def normalise(self, x):
         """Function to normalise the data
         
         Parameters
@@ -554,13 +556,13 @@ class LinearNormalisationByParts(object):
         x_norm = x.copy()
         # We need to go through the n_landmarks - 1 parts
         for ld in range(self.__n_landmarks - 1):
-            x_norm = self.__RescaleParts__(x, x_norm, 
-                                           self.__percentiles[ld], self.__percentiles[ld+1],
-                                           self.__atlas[ld], self.__atlas[ld+1])
+            x_norm = self.__rescale_parts__(x, x_norm, 
+                                            self.__percentiles[ld], self.__percentiles[ld+1],
+                                            self.__atlas[ld], self.__atlas[ld+1])
 
         return x_norm
 
-    def Denormalise(self, x):
+    def denormalise(self, x):
         """Function to unormalise the data
         
         Parameters
@@ -578,8 +580,8 @@ class LinearNormalisationByParts(object):
         x_norm = x.copy()
         # We need to go through the n_landmarks - 1 parts
         for ld in range(self.__n_landmarks - 1):
-            x_norm = self.__RescaleParts__(x, x_norm, 
-                                           self.__atlas[ld], self.__atlas[ld+1],
-                                           self.__percentiles[ld], self.___percentiles[ld+1])
+            x_norm = self.__rescale_parts__(x, x_norm, 
+                                            self.__atlas[ld], self.__atlas[ld+1],
+                                            self.__percentiles[ld], self.___percentiles[ld+1])
 
         return x_norm
