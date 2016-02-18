@@ -334,7 +334,8 @@ class RicianNormalisation(object):
         pdf_abs = np.zeros((x_range[1] - x_range[0],))
         bin_edges_abs = np.array(range(x_range[0], x_range[1] + 1))
         ### Copy the relative pdf at the right position
-        pdf_abs[np.flatnonzero(bin_edges_abs==bin_edges_rel[0])[0] : np.flatnonzero(bin_edges_abs==bin_edges_rel[-1])[0]] = pdf_rel[:]
+        pdf_abs[np.flatnonzero(bin_edges_abs==bin_edges_rel[0])[0] : 
+                np.flatnonzero(bin_edges_abs==bin_edges_rel[-1])[0]] = pdf_rel[:]
 
         return (pdf_abs, bin_edges_abs)
 
