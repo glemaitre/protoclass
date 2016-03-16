@@ -1,4 +1,10 @@
 #from . import classification
 #from . import extraction
 
-__all__ = ['classification', 'extraction', 'preprocessing', 'tool', 'validation']
+__all__ = [
+    'classification',
+    'extraction',
+    'preprocessing',
+    'tool',
+    'utils',
+    'validation',]
