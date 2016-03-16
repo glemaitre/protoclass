@@ -1,6 +1,7 @@
 """ Test the function allowing input/output of DICOM data. """
 
 import numpy as np
+import os
 
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_equal
@@ -8,7 +9,7 @@ from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
 
-from ..io_dicom import read_dce_serie_dicom
+from protoclass.utils.io_dicom import read_dce_serie_dicom
 
 
 def test_read_dce_dicom_no_dir():
@@ -42,4 +43,4 @@ def test_read_dce_data():
     # Check the type of the data
     assert_equal(serie_data_dce.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(serie_data_dce.shape, (364, 512, 64, 2))
+    assert_equal(serie_data_dce.shape, (368, 448, 64, 2))
