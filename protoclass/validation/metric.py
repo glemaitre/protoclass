@@ -1,22 +1,15 @@
-#title           :metric.py
-#description     :This will create a header for a python script.
-#author          :Guillaume Lemaitre
-#date            :2015/05/18
-#version         :0.1
-#notes           :
-#python_version  :2.7.6  
-#==============================================================================
-
-# Import the needed libraries
-# Numpy library
+""" Methods to compute classification statistics from the
+prediction and labels.
+"""
 import numpy as np
-# Scipy library
-import scipy as sp
-# Scikit-learn library
-from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, matthews_corrcoef
+
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import matthews_corrcoef
 
 
-def BuildConfusionFromVolume(true_label, pred_label):
+def build_confusion_from_volume(true_label, pred_label):
     """Function to build the confusion matrix.
     Parameters
     ----------
@@ -33,7 +26,7 @@ def BuildConfusionFromVolume(true_label, pred_label):
     return confusion_matrix(true_label, pred_label)
 
 
-def LabelsToSensitivitySpecificity(true_label, pred_label):
+def labels_to_sensitivity_specificity(true_label, pred_label):
     """Function to compute the sensitivity and specificty.
     Parameters
     ----------
@@ -45,12 +38,12 @@ def LabelsToSensitivitySpecificity(true_label, pred_label):
     -------
     sens, spec: double
         The resulting sensitivity and specificity.
-        The sensitivity is also known as true positive rate, hit rate, or recall.
-        The specificity is also known as true negative rate.
+        The sensitivity is also known as true positive rate, hit rate,
+        or recall. The specificity is also known as true negative rate.
     """
 
     # Compute the confusion matrix
-    cm = BuildConfusionFromVolume(true_label, pred_label)
+    cm = build_confusion_from_volume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
     if (cm[1, 1] > 0):
@@ -65,7 +58,7 @@ def LabelsToSensitivitySpecificity(true_label, pred_label):
     return (sens, spec)
 
 
-def LabelsToPrecisionNegativePredictiveValue(true_label, pred_label):
+def labels_to_precision_negative_predictive_value(true_label, pred_label):
     """Function to compute the precision and the negative predictive value.
     Parameters
     ----------
@@ -81,7 +74,7 @@ def LabelsToPrecisionNegativePredictiveValue(true_label, pred_label):
     """
 
     # Compute the confusion matrix
-    cm = BuildConfusionFromVolume(true_label, pred_label)
+    cm = build_confusion_from_volume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
     if (cm[1, 1] > 0):
@@ -96,7 +89,7 @@ def LabelsToPrecisionNegativePredictiveValue(true_label, pred_label):
     return (prec, npv)
 
 
-def LabelsToGeometricMean(true_label, pred_label):
+def labels_to_geometric_mean(true_label, pred_label):
     """Function to compute the geometric mean.
     Parameters
     ----------
@@ -111,12 +104,12 @@ def LabelsToGeometricMean(true_label, pred_label):
 
     References
     ----------
-    .. [1] Kubat, M. and Matwin, S. "Addressing the curse of imbalanced training sets: 
-           one-sided selection" ICML (1997)
+    .. [1] Kubat, M. and Matwin, S. "Addressing the curse of
+    imbalanced training sets: one-sided selection" ICML (1997)
     """
 
     # Compute the confusion matrix
-    cm = BuildConfusionFromVolume(true_label, pred_label)
+    cm = build_confusion_from_volume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
     sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
@@ -128,7 +121,7 @@ def LabelsToGeometricMean(true_label, pred_label):
     return gmean
 
 
-def LabelsToAccuracy(true_label, pred_label):
+def labels_to_accuracy(true_label, pred_label):
     """Function to compute the accuracy score.
     Parameters
     ----------
@@ -142,11 +135,11 @@ def LabelsToAccuracy(true_label, pred_label):
         The resulting accuracy.
     """
 
-    return accuracy_score(true_label, pred_label);
+    return accuracy_score(true_label, pred_label)
 
 
-def CostWithBias(sens, spec, bias_pos, bias_neg):
-    """Function to compute cost value parameter given the sensitivity and specificity.
+def cost_with_bias(sens, spec, bias_pos, bias_neg):
+    """Function to compute cost given the sensitivity and specificity.
     ----------
     sens: float
         Sensitivity.
@@ -154,7 +147,7 @@ def CostWithBias(sens, spec, bias_pos, bias_neg):
         Specificity.
     bias_pos: float
         Constant influencing the bias of the positive class.
-    bias_neg: float 
+    bias_neg: float
         Constant influecing the bias of the negative class.
     Returns
     -------
@@ -162,11 +155,13 @@ def CostWithBias(sens, spec, bias_pos, bias_neg):
         The resulting cost value.
     """
 
-    return (bias_pos * (1.0 - sens) + bias_neg * (1.0 - spec)) / (bias_pos + bias_neg)
+    return (bias_pos * (1.0 - sens) +
+            bias_neg * (1.0 - spec)) / (bias_pos + bias_neg)
 
 
-def LabelsToCostValue(true_label, pred_label, bias_pos=1.5, bias_neg=1.): 
-    """Function to compute cost value parameter given the ground-truth label and predicted label.
+def labels_to_cost_value(true_label, pred_label, bias_pos=1.5, bias_neg=1.):
+    """Function to compute cost given the ground-truth label
+    and predicted label.
     ----------
     true_label: ndarray
         Ground-truth array.
@@ -174,7 +169,7 @@ def LabelsToCostValue(true_label, pred_label, bias_pos=1.5, bias_neg=1.):
         Prediction label given by the machine learning method.
     bias_pos: float
         Constant influencing the bias of the positive class.
-    bias_neg: float 
+    bias_neg: float
         Constant influecing the bias of the negative class.
     Returns
     -------
@@ -182,12 +177,12 @@ def LabelsToCostValue(true_label, pred_label, bias_pos=1.5, bias_neg=1.):
         The resulting cost value.
     """
 
-    sens, spec = LabelsToSensitivitySpecificity(true_label, pred_label)
-    
-    return CostWithBias(sens, spec, bias_pos, bias_neg)
+    sens, spec = labels_to_sensitivity_specificity(true_label, pred_label)
+
+    return cost_with_bias(sens, spec, bias_pos, bias_neg)
 
 
-def LabelsToF1score(true_label, pred_label):
+def labels_to_f1_score(true_label, pred_label):
     """Function to compute the F1 score.
     Parameters
     ----------
@@ -201,10 +196,10 @@ def LabelsToF1score(true_label, pred_label):
         The resulting F1 score.
     """
 
-    return f1_score(true_label, pred_label);
+    return f1_score(true_label, pred_label)
 
 
-def LabelsToMatthewCorrCoef(true_label, pred_label):
+def labels_to_matthew_corrcoef(true_label, pred_label):
     """Function to compute the Matthew correlation coefficient.
     Parameters
     ----------
@@ -221,7 +216,11 @@ def LabelsToMatthewCorrCoef(true_label, pred_label):
     return matthews_corrcoef(true_label, pred_label)
 
 
-def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', alpha=0.1, squared=True):
+def labels_to_generalized_index_balanced_accuracy(true_label,
+                                                  pred_label,
+                                                  M='gmean',
+                                                  alpha=0.1,
+                                                  squared=True):
     """Function to compute the the generalized index of balanced accuracy.
     Parameters
     ----------
@@ -232,23 +231,23 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
     M: str (default: 'gmean')
         Name of the metric to consider
         ``sens``:
-            use the sensitivity.
+        use the sensitivity.
         ``'spec'``:
-            use the specificity.
+        use the specificity.
         ``'prec'``:
-            use the precision.
+        use the precision.
         ``'npv'``:
-            use the negative predictive value.
+        use the negative predictive value.
         ``'gmean'``:
-            use the geometric mean.
+        use the geometric mean.
         ``'acc'``:
-            use the accuracy score.
-	``'cost'``:
-	    use the cost value.
+        use the accuracy score.
+        ``'cost'``:
+        use the cost value.
         ``'f1score'``:
-            use the F1 score.
+        use the F1 score.
         ``'mcc'``:
-            use the Matthew correlation coefficient.
+        use the Matthew correlation coefficient.
     alpha: float (default: 0.1)
         Dominance weight
     squared: bool (default: True)
@@ -257,58 +256,59 @@ def LabelsToGeneralizedIndexBalancedAccuracy(true_label, pred_label, M='gmean', 
     -------
     iba: double
         The resulting generalized index of balanced accuracy.
-        
-     
-	 
 
     References
     ----------
-    .. [1] Garcia, V. and Mollineda, R.A. and Sanchez, J.S. "Theoretical analysis of a performance measure for 
-           imbalanced data" ICPR (2010)
+    .. [1] Garcia, V. and Mollineda, R.A. and Sanchez, J.S. "Theoretical
+    analysis of a performance measure for imbalanced data" ICPR (2010)
     """
 
-    if (M == 'sens'):
+    if M == 'sens':
         # Compute the sensitivity
-        met, _ = LabelsToSensitivitySpecificity(true_label, pred_label)
-    elif (M == 'spec'):
+        met, _ = labels_to_sensitivity_specificity(true_label, pred_label)
+    elif M == 'spec':
         # Compute the specificity
-        _, met = LabelsToSensitivitySpecificity(true_label, pred_label)
-    elif (M == 'prec'):
+        _, met = labels_to_sensitivity_specificity(true_label, pred_label)
+    elif M == 'prec':
         # Compute the precision
-        met, _ = LabelsToPrecisionNegativePredictiveValue(true_label, pred_label)
-    elif (M == 'npv'):
+        met, _ = labels_to_precision_negative_predictive_value(true_label,
+                                                               pred_label)
+    elif M == 'npv':
         # Compute the precision
-        _, met = LabelsToPrecisionNegativePredictiveValue(true_label, pred_label)
-    elif (M == 'gmean'):
+        _, met = labels_to_precision_negative_predictive_value(true_label,
+                                                               pred_label)
+    elif M == 'gmean':
         # Compute the negative predictive value
-        met = LabelsToGeometricMean(true_label, pred_label)
-    elif (M == 'acc'):
+        met = labels_to_geometric_mean(true_label, pred_label)
+    elif M == 'acc':
         # Compute the accuracy
-        met = LabelsToAccuracy(true_label, pred_label)
-    elif (M == 'cost'):
+        met = labels_to_accuracy(true_label, pred_label)
+    elif M == 'cost':
         # Compute the accuracy
-        met = LabelsToCostValue(true_label, pred_label)
-    elif (M == 'f1score'):
+        met = labels_to_cost_value(true_label, pred_label)
+    elif M == 'f1score':
         # Compute the F1 Score
-        met = LabelsToF1score(true_label, pred_label)
-    elif (M == 'mcc'):
+        met = labels_to_f1_score(true_label, pred_label)
+    elif M == 'mcc':
         # Compute the Matthew correlation coefficient
-        met  = LabelsToMatthewCorrCoef(true_label, pred_label)
+        met = labels_to_matthew_corrcoef(true_label, pred_label)
     else:
-        raise ValueError('protoclass.metric.GIBA: The metric that you attend to correct is not implemented.')
+        raise ValueError('protoclass.metric.GIBA: The metric that you'
+                         ' attend to correct is not implemented.')
 
     # Check the value of alpha is meaningful
     if not ((alpha >= 0.) and (alpha <= 1.)):
-        raise ValueError('protoclass.metric.GIBA: The value of alpha sould be set between 0 and 1.')
+        raise ValueError('protoclass.metric.GIBA: The value of alpha'
+                         ' sould be set between 0 and 1.')
 
     # Check if we should square the metric
-    if (squared == True):
+    if squared:
         met = met ** 2
 
-    # Compute the dominance 
-    ### We need the sensitivity and specificity
-    sens, spec = LabelsToSensitivitySpecificity(true_label, pred_label)
-    ### Compute the dominance as the difference of the sensitiy and specificity
+    # Compute the dominance
+    # We need the sensitivity and specificity
+    sens, spec = labels_to_sensitivity_specificity(true_label, pred_label)
+    # Compute the dominance as the difference of the sensitiy and specificity
     dom = sens - spec
 
     # Compute the generalized index of balanced accuracy
