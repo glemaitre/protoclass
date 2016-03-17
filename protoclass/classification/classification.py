@@ -16,7 +16,6 @@ import numpy as np
 
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
-from sklearn.metrics import confusion_matrix
 
 # Import over-sampling method
 from unbalanced_dataset import OverSampler, SMOTE
@@ -364,7 +363,9 @@ def TrainRandomForest(training_data, training_label, **kwargs):
                                      min_samples_leaf=param_min_samples_leaf, max_features=param_max_features, 
                                      bootstrap=param_bootstrap, oob_score=param_oob_score, n_jobs=param_n_jobs, 
                                      random_state=param_random_state, verbose=param_verbose, 
-                                     warm_start=param_warm_start, class_weight=param_class_weight)
+                                     warm_start=param_warm_start, class_weight=param_class_weight,
+                                     min_weight_fraction_leaf=param_min_weight_fraction_leaf,
+                                     max_leaf_nodes=param_max_leaf_nodes)
 
     else:
         # Import the function to perform the grid search
@@ -391,10 +392,7 @@ def TrainRandomForest(training_data, training_label, **kwargs):
 
 def TestRandomForest(crf, testing_data):
     
-    # Import Random Forest from scikit learn
-    from sklearn.ensemble import RandomForestClassifier
-
-    # Test the classifier
+   # Test the classifier
     pred_prob = crf.predict_proba(testing_data)
     pred_label = crf.predict(testing_data)
 
@@ -404,7 +402,7 @@ def TestRandomForest(crf, testing_data):
 
 def TrainTree(training_data, training_label, **kwargs):
     
-    # Import Random Forest from scikit learn
+    # Import Decision Tree from scikit learn
     from sklearn.tree import DecisionTreeClassifier
 
     # Unpack the keywords to create the classifier
@@ -432,9 +430,6 @@ def TrainTree(training_data, training_label, **kwargs):
 
 def TestTree(cdt, testing_data):
     
-    # Import decision tree from scikit learn
-    from sklearn.tree import DecisionTreeClassifier
-
     # Test the classifier
     pred_prob = cdt.predict_proba(testing_data)
     pred_label = cdt.predict(testing_data)
@@ -474,9 +469,6 @@ def TrainLogisticRegression(training_data, training_label, **kwargs):
 
 def TestLogisticRegression(clr, testing_data):
     
-    # Import Logistic Regression from scikit learn
-    from sklearn.linear_model import LogisticRegression
-
     # Test the classifier
     pred_prob = clr.predict_proba(testing_data)
     pred_label = clr.predict(testing_data)
@@ -515,9 +507,6 @@ def TrainPerceptron(training_data, training_label, **kwargs):
 
 def TestPerceptron(cp, testing_data):
     
-    # Import Perceptron from scikit learn
-    from sklearn.linear_model import Perceptron
-
     # Test the classifier
     pred_prob = cp.decision_function(testing_data)
     pred_label = cp.predict(testing_data)
@@ -550,9 +539,6 @@ def TrainLDA(training_data, training_label, **kwargs):
 
 def TestLDA(clda, testing_data):
     
-    # Import LDA from scikit learn
-    from sklearn.lda import LDA
-
     # Test the classifier
     pred_prob = clda.predict_proba(testing_data)
     pred_label = clda.predict(testing_data)
@@ -580,9 +566,6 @@ def TrainQDA(training_data, training_label, **kwargs):
 
 def TestQDA(cqda, testing_data):
     
-    # Import QDA from scikit learn
-    from sklearn.qda import QDA
-
     # Test the classifier
     pred_prob = cqda.predict_proba(testing_data)
     pred_label = cqda.predict(testing_data)
@@ -606,9 +589,6 @@ def TrainGNB(training_data, training_label, **kwargs):
 
 def TestGNB(cgnb, testing_data):
     
-    # Import QDA from scikit learn
-    from sklearn.naive_bayes import GaussianNB
-
     # Test the classifier
     pred_prob = cgnb.predict_proba(testing_data)
     pred_label = cgnb.predict(testing_data)
@@ -667,9 +647,6 @@ def TrainLinearSVM(training_data, training_label, **kwargs):
 
 def TestLinearSVM(clsvm, testing_data):
     
-    # Import Linear SVM from scikit learn
-    from sklearn.svm import LinearSVC
-
     # Test the classifier
     pred_prob = clsvm.decision_function(testing_data)
     pred_label = clsvm.predict(testing_data)
@@ -982,9 +959,6 @@ def TrainKernelSVM(training_data, training_label, **kwargs):
 
 def TestKernelSVM(cksvm, testing_data):
     
-    # Import Linear SVM from scikit learn
-    from sklearn.svm import SVC
-
     # Test the classifier
     pred_prob = cksvm.decision_function(testing_data)
     pred_label = cksvm.predict(testing_data)
@@ -1037,9 +1011,6 @@ def TrainKNN(training_data, training_label, **kwargs):
 
 def TestKNN(cknn, testing_data):
     
-    # Import KNN from scikit learn
-    from sklearn.neighbors import KNeighborsClassifier
-
     # Test the classifier
     pred_prob = cknn.predict_proba(testing_data)
     pred_label = cknn.predict(testing_data)
@@ -1142,9 +1113,6 @@ def TrainAdaBoost(training_data, training_label, **kwargs):
 
 def TestAdaBoost(cadb, testing_data):
     
-    # Import AdaBoost from scikit learn
-    from sklearn.ensemble import AdaBoostClassifier
-
     # Test the classifier
     pred_prob = cadb.predict_proba(testing_data)
     pred_label = cadb.predict(testing_data)
@@ -1266,9 +1234,6 @@ def TrainGradientBoosting(training_data, training_label, **kwargs):
 
 def TestGradientBoosting(cgb, testing_data):
     
-    # Import Gradient Boosting from scikit learn
-    from sklearn.ensemble import GradientBoostingClassifier
-
     # Test the classifier
     pred_prob = cgb.predict_proba(testing_data)
     pred_label = cgb.predict(testing_data)
