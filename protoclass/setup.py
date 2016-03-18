@@ -4,12 +4,12 @@ def configuration(parent_package='', top_path=None):
     config = Configuration('protoclass', parent_package, top_path)
 
     config.add_subpackage('classification')
+    config.add_subpackage('data_management')
+    config.add_subpackage('data_management/tests')
     config.add_subpackage('extraction')
     config.add_subpackage('preprocessing')
     config.add_subpackage('selection')
     config.add_subpackage('tool')
-    config.add_subpackage('utils')
-    config.add_subpackage('utils/tests')
     config.add_subpackage('validation')
 
     return config

@@ -33,7 +33,7 @@ def _raise_build_error(e):
         # the install is an 'inplace build'
         msg = _INPLACE_MSG
     raise ImportError("""%s
-    It seems that scikit-image has not been built correctly.
+    It seems that protoclass has not been built correctly.
     %s""" % (e, msg))
 
 try:
@@ -50,11 +50,11 @@ if __PROTOCLASS_SETUP__:
     # process, as it may not be compiled yet
 else:
     __all__ = ['classification',
+               'data_management',
                'extraction',
                'preprocessing',
                'selection',
                'tool',
-               'utils',
                'validation']
 
 del warnings, functools, os, imp, sys
