@@ -17,6 +17,11 @@ class BaseModality(object):
         self.path_data_ = path_data
 
     @abstractmethod
+    def _update_histogram(self):
+        """ Method to compute histogram and statistics. """
+        raise NotImplementedError
+
+    @abstractmethod
     def read_data_from_path(self):
         """ Method allowing to read the data. """
         raise NotImplementedError

@@ -21,19 +21,60 @@ class DCEModality(BaseModality):
     path_data_ : string
         Location of the data
 
-    data_ : array-like, shape (Y, X, Z, T)
+    data_ : array-like, shape (T, Y, X, Z)
             The different volume of the DCE serie. The data are saved in
-            Y, X, Z, T ordered.
+            T, Y, X, Z ordered.
     """
 
     def __init__(self,
                  path_data):
         super(DCEModality, self).__init__(
             path_data=path_data)
+        self.data_ = None
+
+    def _update_histogram(self):
+        """Function to compute histogram of each serie and store it
+        The min and max of the series are also stored
+
+        Parameters
+        ----------
+
+        Return:
+        -------
+        self : object
+            Returns self.
+        """
+        # Check if the data have been read
+        if self.data_ is None:
+            raise ValueError('You need to read the data first. Call the'
+                             'function read_data_from_path()')
+
+        # Compute the min and max from all DCE series
+        self.max_series_ = np.ndarray.max(self.data_)
+        self.min_series_ = np.ndarray.min(self.data_)
+
+        # For each serie compute the pdfs and store them
+        pdf_series = []
+        bin_series = []
+
+        for data_serie in self.data_:
+            bins = int(np.round(np.ndarray.max(data_serie) -
+                                np.ndarray.min(data_serie)))
+
+            pdf_s, bin_s = np.histogram(data_serie,
+                                        bins=bins,
+                                        density=True)
+            pdf_series.append(pdf_s)
+            bin_series.append(bin_s)
+
+        # Keep these data in the object
+        self.pdf_series_ = pdf_series
+        self.bin_series_ = bin_series
+
+        return self
 
     def read_data_from_path(self):
-        """
-        Function to read DCE images which is of 3D volume over time.
+        """Function to read DCE images which is of 3D volume over time.
 
         Parameters
         ----------
@@ -98,6 +139,13 @@ class DCEModality(BaseModality):
             list_volume.append(vol_numpy)
 
         # We can create a numpy array
-        # Additionaly, we need to roll the first dimension to the
-        # last one since this is the index of each DCE serie
-        self.data_ = np.rollaxis(np.array(list_volume), 0, 4)
+        # The first dimension correspond to the time dimension
+        # When processing the data, we need to slice the data
+        # considering this dimension emphasizing the decision to let
+        # it at the first position.
+        self.data_ = np.array(list_volume)
+
+        # Compute the information regarding the pdf of the DCE series
+        self._update_histogram()
+
+        return self
