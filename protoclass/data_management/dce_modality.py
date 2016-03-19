@@ -22,8 +22,29 @@ class DCEModality(BaseModality):
         Location of the data
 
     data_ : array-like, shape (T, Y, X, Z)
-            The different volume of the DCE serie. The data are saved in
-            T, Y, X, Z ordered.
+        The different volume of the DCE serie. The data are saved in
+        T, Y, X, Z ordered.
+
+    pdf_series_ : list, length (n_serie)
+        List of the PDF for each serie.
+
+    bin_series_ : list of ndarray, length (n_serie)
+        List of the bins used to plot the pdfs.
+
+    max_series_ : float
+        Maximum intensity of all the DCE series.
+
+    min_series_ : float
+        Minimum intensity of all the DCE series.
+
+    n_serie_ : integer
+        Number of serie in this DCE sequence.
+
+    max_series_list_ : list of float
+        List of the maximum intensity for each DCE serie.
+
+    min_series_list_ : list of float
+        List of the minimum intensity for each DCE serie.
     """
 
     def __init__(self,
@@ -56,6 +77,8 @@ class DCEModality(BaseModality):
         # For each serie compute the pdfs and store them
         pdf_series = []
         bin_series = []
+        min_series_list = []
+        max_series_list = []
 
         for data_serie in self.data_:
             bins = int(np.round(np.ndarray.max(data_serie) -
@@ -66,12 +89,53 @@ class DCEModality(BaseModality):
                                         density=True)
             pdf_series.append(pdf_s)
             bin_series.append(bin_s)
+            min_series_list.append(np.ndarray.min(data_serie))
+            max_series_list.append(np.ndarray.max(data_serie))
 
         # Keep these data in the object
         self.pdf_series_ = pdf_series
         self.bin_series_ = bin_series
+        self.min_series_list_ = min_series_list
+        self.max_series_list_ = max_series_list
 
         return self
+
+    def build_heatmap(self):
+        """ Function which return a heatmap using the pdf of each serie
+
+        Parameters
+        ----------
+
+        Return
+        ------
+        heatmap : array-like, shape (n_serie, intensity_range)
+             Return an heatmap of the different pdfs. This equivalent to
+             pdf_series_ but properly shifted inside an array.
+        """
+        # Check that the data have been read
+        if self.data_ is None:
+            raise ValueError('You need to load the data first. Refer to the'
+                             'function read_data_from_path().')
+
+        # Allocate the heatmap array
+        # Compute the intensity range
+        int_range = int(np.ceil(self.max_series_) - np.floor(self.min_series_))
+        heatmap = np.zeros((self.n_serie_, int_range))
+
+        # Build the heatmap
+        # Go through each serie and paste it inside the array
+        for idx_serie, pdf_serie in enumerate(self.pdf_series_):
+            # Define the range of the current histogram
+            int_range = pdf_serie.size
+            # Compute the offset between the minimum of all series and the
+            # current one
+            offset_minimum = int(np.floor(self.min_series_) -
+                                 np.floor(self.min_series_list_[idx_serie]))
+            # Copy the data at the right position
+            heatmap[idx_serie, range(offset_minimum,
+                                     offset_minimum + int_range)] = pdf_serie
+
+        return heatmap
 
     def read_data_from_path(self):
         """Function to read DCE images which is of 3D volume over time.
@@ -87,7 +151,6 @@ class DCEModality(BaseModality):
         self : object
            Returns self.
         """
-
         # Check that the directory exist
         if os.path.isdir(self.path_data_) is not True:
             raise ValueError('The directory specified does not exist.')
@@ -144,6 +207,7 @@ class DCEModality(BaseModality):
         # considering this dimension emphasizing the decision to let
         # it at the first position.
         self.data_ = np.array(list_volume)
+        self.n_serie_ = self.data_.shape[0]
 
         # Compute the information regarding the pdf of the DCE series
         self._update_histogram()

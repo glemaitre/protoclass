@@ -110,3 +110,36 @@ def test_update_histogram_wt_data():
     dce_mod = DCEModality(path_data)
 
     assert_raises(ValueError, dce_mod._update_histogram)
+
+
+def test_build_heatmap_wt_data():
+    """ Test whether an error is raised if heatmap build function is called
+    before to read the data. """
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality(path_data)
+
+    assert_raises(ValueError, dce_mod.build_heatmap)
+
+
+def test_build_heatmap():
+    """ Test if the heatmap is built properly. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality(path_data)
+
+    # Read the data
+    dce_mod.read_data_from_path()
+
+    # Build the heatmap
+    heatmap = dce_mod.build_heatmap()
+
+    # Check that heatmap is what we expect
+    data = np.load(os.path.join(currdir, 'data', 'heatmap.npy'))
+    assert_array_equal(heatmap, data)
