@@ -34,9 +34,8 @@ class TemporalModality(BaseModality):
 
         Parameters
         ----------
-
         path_data : str
-            Path to the DCE data.
+            Path to the temporal data.
 
         Return
         ------
@@ -56,7 +55,7 @@ class TemporalModality(BaseModality):
         # Check that you have more than one serie
         if len(series_time) < 2:
             raise ValueError('The time serie should at least contain'
-                             '2 series.')
+                             ' 2 series.')
 
         # The IDs need to be re-ordered in an incremental manner
         # Create a list by converting to integer the number after

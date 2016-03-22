@@ -26,6 +26,9 @@ class TemporalNormalization(BaseNormalization):
         normalization. """
 
         # Check that the base modality is a subclass of TemporalModality
-        if not issubclass(self.base_modality, TemporalModality):
+        if not issubclass(type(self.base_modality), TemporalModality):
             raise ValueError('The base modality provided in the constructor is'
                              'not a TemporalModality.')
+        else:
+            self.base_modality_ = self.base_modality
+

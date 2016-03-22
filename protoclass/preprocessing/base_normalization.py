@@ -15,7 +15,7 @@ class BaseNormalization(object):
     @abstractmethod
     def __init__(self):
         """ Constructor """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def _validate_modality(self):

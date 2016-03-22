@@ -20,7 +20,8 @@ class MultisequenceModality(BaseModality):
 
     @abstractmethod
     def __init__(self, path_data):
-        super(MultisequenceModality, self).__init__(path_data=path_data)
+        raise NotImplementedError
+        #super(MultisequenceModality, self).__init__(path_data=path_data)
 
     @abstractmethod
     def _update_histogram(self):

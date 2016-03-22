@@ -140,7 +140,6 @@ class DCEModality(TemporalModality):
 
         Parameters
         ----------
-
         path_data : str
             Path to the DCE data.
 
