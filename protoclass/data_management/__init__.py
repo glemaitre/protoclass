@@ -12,5 +12,5 @@ from .dce_modality import DCEModality
 __all__ = ['BaseModality',
            'StandaloneModality',
            'TemporalModality',
-           'Multisequencemodality',
+           'MultisequenceModality',
            'DCEModality']
