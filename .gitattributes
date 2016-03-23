@@ -1,0 +1,2 @@
+protoclass/data_management/tests/data/ filter=lfs diff=lfs merge=lfs -text
+protoclass/preprocessing/tests/data/ filter=lfs diff=lfs merge=lfs -text
