@@ -22,3 +22,19 @@ class BaseNormalization(object):
         """ Check if the provided modality is of interest with the type of
         normalization. """
         raise NotImplementedError
+
+    @abstractmethod
+    def fit(self):
+        """ Method to find the parameters needed to apply the
+        normalization. """
+        raise NotImplementedError
+
+    @abstractmethod
+    def normalize(self):
+        """ Normalize the data after fitting the data. """
+        raise NotImplementedError
+
+    @abstractmethod
+    def denormalize(self):
+        """ Reverse the normalization. """
+        raise NotImplementedError
