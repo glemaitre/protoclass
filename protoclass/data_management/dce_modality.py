@@ -13,8 +13,9 @@ class DCEModality(TemporalModality):
 
     Parameters
     ----------
-    path_data : string
-         The folder in which the data are stored.
+    path_data : str or None, optional (default=None)
+        Path where the data are located. Can also be specified
+        when reading the data. It will be overidden with this function.
 
     Attributes
     ----------
@@ -47,7 +48,7 @@ class DCEModality(TemporalModality):
         List of the minimum intensity for each DCE serie.
     """
 
-    def __init__(self, path_data):
+    def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
         self.data_ = None
 
@@ -66,7 +67,7 @@ class DCEModality(TemporalModality):
         # Check if the data have been read
         if self.data_ is None:
             raise ValueError('You need to read the data first. Call the'
-                             'function read_data_from_path()')
+                             ' function read_data_from_path()')
 
         # Compute the min and max from all DCE series
         self.max_series_ = np.ndarray.max(self.data_)
@@ -135,13 +136,14 @@ class DCEModality(TemporalModality):
 
         return heatmap
 
-    def read_data_from_path(self):
+    def read_data_from_path(self, path_data=None):
         """Function to read DCE images which is of 3D volume over time.
 
         Parameters
         ----------
-        path_data : str
-            Path to the DCE data.
+        path_data : str or None, optional (default=None)
+            Path to the temporal data. It will overrides the path given
+            in the constructor.
 
         Return
         ------
@@ -149,7 +151,7 @@ class DCEModality(TemporalModality):
            Returns self.
         """
         # Called the parent function to read the data
-        super(DCEModality, self).read_data_from_path()
+        super(DCEModality, self).read_data_from_path(path_data=path_data)
 
         # Compute the information regarding the pdf of the DCE series
         self._update_histogram()

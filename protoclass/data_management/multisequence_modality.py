@@ -19,9 +19,9 @@ class MultisequenceModality(BaseModality):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, path_data):
+    def __init__(self):
+        """ Constructor. """
         raise NotImplementedError
-        #super(MultisequenceModality, self).__init__(path_data=path_data)
 
     @abstractmethod
     def _update_histogram(self):
@@ -29,6 +29,6 @@ class MultisequenceModality(BaseModality):
         raise NotImplementedError
 
     @abstractmethod
-    def read_data_from_path(self):
+    def read_data_from_path(self, path_data):
         """ Method allowing to read the data. """
         raise NotImplementedError

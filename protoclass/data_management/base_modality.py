@@ -3,6 +3,8 @@
 
 from abc import ABCMeta, abstractmethod
 
+from ..utils.validation import check_path_data
+
 
 class BaseModality(object):
     """ Basic class for medical modality.
@@ -13,8 +15,12 @@ class BaseModality(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, path_data):
-        self.path_data_ = path_data
+    def __init__(self, path_data=None):
+        """ Constructor. """
+        if path_data is not None:
+            self.path_data_ = check_path_data(path_data)
+        else:
+            self.path_data_ = None
 
     @abstractmethod
     def _update_histogram(self):
@@ -22,6 +28,7 @@ class BaseModality(object):
         raise NotImplementedError
 
     @abstractmethod
-    def read_data_from_path(self):
+    def read_data_from_path(self, path_data):
         """ Method allowing to read the data. """
         raise NotImplementedError
+

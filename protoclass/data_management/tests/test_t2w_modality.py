@@ -6,6 +6,7 @@ import os
 from numpy.testing import assert_equal
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
+from numpy.testing import assert_warns
 
 from protoclass.data_management import T2WModality
 
@@ -16,9 +17,9 @@ def test_read_t2w_dicom_no_dir():
     # Create a dummy named directory
     path_data = 'None'
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    t2w_mod = T2WModality()
     # Check that an error is risen
-    assert_raises(ValueError, t2w_mod.read_data_from_path)
+    assert_raises(ValueError, t2w_mod.read_data_from_path, path_data)
 
 
 def test_read_t2w_dicom_more_2_serie():
@@ -28,9 +29,9 @@ def test_read_t2w_dicom_more_2_serie():
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 'dce')
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    t2w_mod = T2WModality()
     # Check the assert
-    assert_raises(ValueError, t2w_mod.read_data_from_path)
+    assert_raises(ValueError, t2w_mod.read_data_from_path, path_data)
 
 
 def test_read_dce_data():
@@ -40,9 +41,9 @@ def test_read_dce_data():
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 't2w')
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    t2w_mod = T2WModality()
 
-    t2w_mod.read_data_from_path()
+    t2w_mod.read_data_from_path(path_data)
 
     # Check the type of the data
     assert_equal(t2w_mod.data_.dtype, np.float64)
@@ -68,9 +69,9 @@ def test_update_histogram():
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 't2w')
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    t2w_mod = T2WModality()
 
-    t2w_mod.read_data_from_path()
+    t2w_mod.read_data_from_path(path_data)
 
     # Change something in the data to check that the computation
     # is working
@@ -96,6 +97,50 @@ def test_update_histogram_wt_data():
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 't2w')
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    t2w_mod = T2WModality()
 
     assert_raises(ValueError, t2w_mod._update_histogram)
+
+
+def test_dce_path_data_warning():
+    """ Test either if a warning is raised if the path will be overriden. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality(path_data)
+
+    # Check that a warning is raised when reading the data with a data path
+    # after specifying one previously.
+    assert_warns(UserWarning, t2w_mod.read_data_from_path, path_data)
+
+
+def test_dce_path_data_constructor():
+    """ Test if the dce function is working when passing the path data to the
+    constructor. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality(path_data)
+
+    t2w_mod.read_data_from_path()
+
+    # Check the type of the data
+    assert_equal(t2w_mod.data_.dtype, np.float64)
+    # Check that the dimension are the one that we expect
+    assert_equal(t2w_mod.data_.shape, (360, 448, 64))
+
+    # We need to check that the minimum and maximum were proprely computed
+    assert_equal(t2w_mod.min_, 0.)
+    assert_equal(t2w_mod.max_, 1014.)
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data.npy'))
+    assert_array_equal(t2w_mod.bin_, data)
+    data = np.load(os.path.join(currdir, 'data', 'pdf_t2w_data.npy'))
+    assert_array_equal(t2w_mod.pdf_, data)
+    data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
+    assert_array_equal(t2w_mod.data_, data)

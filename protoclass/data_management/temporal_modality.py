@@ -4,10 +4,12 @@
 import numpy as np
 import SimpleITK as sitk
 import os
+import warnings
 
 from abc import ABCMeta, abstractmethod
 
 from .base_modality import BaseModality
+from ..utils.validation import check_path_data
 
 
 class TemporalModality(BaseModality):
@@ -19,7 +21,8 @@ class TemporalModality(BaseModality):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, path_data):
+    def __init__(self, path_data=None):
+        """ Constructor. """
         super(TemporalModality, self).__init__(path_data=path_data)
 
     @abstractmethod
@@ -28,23 +31,32 @@ class TemporalModality(BaseModality):
         raise NotImplementedError
 
     @abstractmethod
-    def read_data_from_path(self):
+    def read_data_from_path(self, path_data=None):
         """Function to read temporal images which represent a 3D volume
         over time.
 
         Parameters
         ----------
-        path_data : str
-            Path to the temporal data.
+        path_data : str or None, optional (default=None)
+            Path to the temporal data. It will overrides the path given
+            in the constructor.
 
         Return
         ------
         self : object
            Returns self.
         """
-        # Check that the directory exist
-        if os.path.isdir(self.path_data_) is not True:
-            raise ValueError('The directory specified does not exist.')
+        # Check the consistency of the path data
+        if self.path_data_ is not None and path_data is not None:
+            # We will overide the path and raise a warning
+            warnings.warn('The data path will be overriden using the path'
+                          ' given in the function.')
+            self.path_data_ = check_path_data(path_data)
+        elif self.path_data_ is None and path_data is not None:
+            self.path_data_ = check_path_data(path_data)
+        elif self.path_data_ is None and path_data is None:
+            raise ValueError('You need to give a path_data from where to read'
+                             ' the data.')
 
         # Create a reader object
         reader = sitk.ImageSeriesReader()
