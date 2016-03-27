@@ -37,7 +37,7 @@ class TemporalModality(BaseModality):
 
         Parameters
         ----------
-        path_data : str or None, optional (default=None)
+        path_data : str, list of str, or None, optional (default=None)
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
@@ -58,59 +58,119 @@ class TemporalModality(BaseModality):
             raise ValueError('You need to give a path_data from where to read'
                              ' the data.')
 
-        # Create a reader object
-        reader = sitk.ImageSeriesReader()
+        # There is two possibilities to open the data. If path_data is a list,
+        # each path will contain only one serie and we can open the data as
+        # in standalone. If path_data is a single string, the folder contain
+        # several series and we can go through each of them.
 
-        # Find the different series present inside the folder
-        series_time = np.array(reader.GetGDCMSeriesIDs(self.path_data_))
+        # Case that we have a single string
+        if isinstance(self.path_data_, basestring):
+            # Create a reader object
+            reader = sitk.ImageSeriesReader()
 
-        # Check that you have more than one serie
-        if len(series_time) < 2:
-            raise ValueError('The time serie should at least contain'
-                             ' 2 series.')
+            # Find the different series present inside the folder
+            series_time = np.array(reader.GetGDCMSeriesIDs(self.path_data_))
 
-        # The IDs need to be re-ordered in an incremental manner
-        # Create a list by converting to integer the number after
-        # the last full stop
-        id_series_time_int = np.array([int(s[s.rfind('.')+1:])
-                                      for s in series_time])
-        # Sort and get the corresponding index
-        idx_series_sorted = np.argsort(id_series_time_int)
+            # Check that you have more than one serie
+            if len(series_time) < 2:
+                raise ValueError('The time serie should at least contain'
+                                 ' 2 series.')
 
-        # Open the volume in the sorted order
-        list_volume = []
-        for id_time in series_time[idx_series_sorted]:
-            # Get the filenames corresponding to the current ID
-            dicom_names_serie = reader.GetGDCMSeriesFileNames(self.path_data_,
-                                                              id_time)
-            # Set the list of files to read the volume
-            reader.SetFileNames(dicom_names_serie)
+            # The IDs need to be re-ordered in an incremental manner
+            # Create a list by converting to integer the number after
+            # the last full stop
+            id_series_time_int = np.array([int(s[s.rfind('.')+1:])
+                                          for s in series_time])
+            # Sort and get the corresponding index
+            idx_series_sorted = np.argsort(id_series_time_int)
 
-            # Read the data for the current volume
-            vol = reader.Execute()
+            # Open the volume in the sorted order
+            list_volume = []
+            for id_time in series_time[idx_series_sorted]:
+                # Get the filenames corresponding to the current ID
+                dicom_names_serie = reader.GetGDCMSeriesFileNames(self.path_data_,
+                                                                  id_time)
+                # Set the list of files to read the volume
+                reader.SetFileNames(dicom_names_serie)
 
-            # Get a numpy volume
-            vol_numpy = sitk.GetArrayFromImage(vol)
+                # Read the data for the current volume
+                vol = reader.Execute()
 
-            # The Matlab convention is (Y, X, Z)
-            # The Numpy convention is (Z, Y, X)
-            # We have to swap these axis
-            # Swap Z and X
-            vol_numpy = np.swapaxes(vol_numpy, 0, 2)
-            vol_numpy = np.swapaxes(vol_numpy, 0, 1)
+                # Get a numpy volume
+                vol_numpy = sitk.GetArrayFromImage(vol)
 
-            # Convert the volume to float
-            vol_numpy = vol_numpy.astype(np.float64)
+                # The Matlab convention is (Y, X, Z)
+                # The Numpy convention is (Z, Y, X)
+                # We have to swap these axis
+                # Swap Z and X
+                vol_numpy = np.swapaxes(vol_numpy, 0, 2)
+                vol_numpy = np.swapaxes(vol_numpy, 0, 1)
 
-            # Concatenate the different volume
-            list_volume.append(vol_numpy)
+                # Convert the volume to float
+                vol_numpy = vol_numpy.astype(np.float64)
 
-        # We can create a numpy array
-        # The first dimension corresponds to the time dimension
-        # When processing the data, we need to slice the data
-        # considering this dimension emphasizing the decision to let
-        # it at the first position.
-        self.data_ = np.array(list_volume)
-        self.n_serie_ = self.data_.shape[0]
+                # Concatenate the different volume
+                list_volume.append(vol_numpy)
+
+            # We can create a numpy array
+            # The first dimension corresponds to the time dimension
+            # When processing the data, we need to slice the data
+            # considering this dimension emphasizing the decision to let
+            # it at the first position.
+            self.data_ = np.array(list_volume)
+            self.n_serie_ = self.data_.shape[0]
+
+        # Case that we have a list of string
+        else:
+            # We have to iterate through each folder and check that we have
+            # only one serie
+            # Create a reader object
+
+            # Check that you have more than one serie
+            if len(self.path_data_) < 2:
+                raise ValueError('The multisequence should at least contain'
+                                 ' 2 sequences.')
+
+            list_volume = []
+            for path_serie in self.path_data_:
+
+                reader = sitk.ImageSeriesReader()
+
+                # Find the different series present inside the folder
+                series = np.array(reader.GetGDCMSeriesIDs(path_serie))
+
+                # Check that you have more than one serie
+                if len(series) > 1:
+                    raise ValueError('The number of series should not be'
+                                     ' larger than 1 when a list of path is'
+                                     ' given.')
+
+                # The data can be read
+                dicom_names_serie = reader.GetGDCMSeriesFileNames(path_serie)
+                # Set the list of files to read the volume
+                reader.SetFileNames(dicom_names_serie)
+
+                # Read the data for the current volume
+                vol = reader.Execute()
+
+                # Get a numpy volume
+                vol_numpy = sitk.GetArrayFromImage(vol)
+
+                # The Matlab convention is (Y, X, Z)
+                # The Numpy convention is (Z, Y, X)
+                # We have to swap these axis
+                # Swap Z and X
+                vol_numpy = np.swapaxes(vol_numpy, 0, 2)
+                vol_numpy = np.swapaxes(vol_numpy, 0, 1)
+
+                # Convert the volume to float
+                vol_numpy = vol_numpy.astype(np.float64)
+
+                # Append inside the volume list
+                list_volume.append(vol_numpy)
+
+            # We can create a numpy array
+            self.data_ = np.array(list_volume)
+            self.n_serie_ = self.data_.shape[0]
 
         return self

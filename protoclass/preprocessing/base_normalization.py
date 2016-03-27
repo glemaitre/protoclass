@@ -24,17 +24,17 @@ class BaseNormalization(object):
         raise NotImplementedError
 
     @abstractmethod
-    def fit(self):
+    def fit(self, modality):
         """ Method to find the parameters needed to apply the
         normalization. """
         raise NotImplementedError
 
-    @abstractmethod
-    def normalize(self):
-        """ Normalize the data after fitting the data. """
-        raise NotImplementedError
+    # @abstractmethod
+    # def normalize(self):
+    #     """ Normalize the data after fitting the data. """
+    #     raise NotImplementedError
 
-    @abstractmethod
-    def denormalize(self):
-        """ Reverse the normalization. """
-        raise NotImplementedError
+    # @abstractmethod
+    # def denormalize(self):
+    #     """ Reverse the normalization. """
+    #     raise NotImplementedError

@@ -13,13 +13,13 @@ class T2WModality(StandaloneModality):
 
     Parameters
     ----------
-    path_data : string
+    path_data : str, optional (default=None)
          The folder in which the data are stored.
 
     Attributes
     ----------
     path_data_ : string
-        Location of the data
+        Location of the data.
 
     data_ : array-like, shape (Y, X, Z)
         The different volume of the T2W volume. The data are saved in

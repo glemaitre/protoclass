@@ -16,16 +16,18 @@ class MultisequenceNormalization(BaseNormalization):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, base_modality):
-        super(MultisequenceNormalization, self).__init__()
-        self.base_modality = base_modality
-        self._validate_modality()
+    def __init__(self):
+        """ Constructor. """
+        raise NotImplementedError
 
+    @abstractmethod
     def _validate_modality(self):
         """ Check if the provided modality is of interest with the type of
         normalization. """
+        raise NotImplementedError
 
-        # Check that the base modality is a subclass of MultisequenceModality
-        if not issubclass(self.base_modality, MultisequenceModality):
-            raise ValueError('The base modality provided in the constructor is'
-                             'not a Multisequencemodality.')
+    @abstractmethod
+    def fit(self):
+        """ Method to find the parameters needed to apply the
+        normalization. """
+        raise NotImplementedError

@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 
 from .base_normalization import BaseNormalization
 from ..data_management import StandaloneModality
+from ..utils.validation import check_modality
 
 
 class StandaloneNormalization(BaseNormalization):
@@ -15,7 +16,6 @@ class StandaloneNormalization(BaseNormalization):
     """
     __metaclass__ = ABCMeta
 
-    @abstractmethod
     def __init__(self, base_modality):
         super(StandaloneNormalization, self).__init__()
         self.base_modality = base_modality
@@ -25,7 +25,30 @@ class StandaloneNormalization(BaseNormalization):
         """ Check if the provided modality is of interest with the type of
         normalization. """
 
-        # Check that the base modality is a subclass of StandaloneModality
-        if not issubclass(self.base_modality, StandaloneModality):
+        # Check that the base modality is a subclass of TemporalModality
+        if not issubclass(type(self.base_modality), StandaloneModality):
             raise ValueError('The base modality provided in the constructor is'
-                             'not a StandaloneModality.')
+                             ' not a TemporalModality.')
+        else:
+            self.base_modality_ = self.base_modality
+
+    @abstractmethod
+    def fit(self, modality):
+        """ Method to find the parameters needed to apply the
+        normalization.
+
+        Parameters
+        ----------
+        modality : object
+            Object inherated from TemporalModality.
+
+        Return
+        ------
+        self : object
+             Return self.
+        """
+        # Check that the class of modality is the same than the template
+        # modality
+        check_modality(modality, self.base_modality_)
+
+        return self

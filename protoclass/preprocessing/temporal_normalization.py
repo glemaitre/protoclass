@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 
 from .base_normalization import BaseNormalization
 from ..data_management import TemporalModality
-
+from ..utils.validation import check_modality
 
 class TemporalNormalization(BaseNormalization):
     """ Basic class to normalize temporal modality.
@@ -28,7 +28,27 @@ class TemporalNormalization(BaseNormalization):
         # Check that the base modality is a subclass of TemporalModality
         if not issubclass(type(self.base_modality), TemporalModality):
             raise ValueError('The base modality provided in the constructor is'
-                             'not a TemporalModality.')
+                             ' not a TemporalModality.')
         else:
             self.base_modality_ = self.base_modality
 
+    @abstractmethod
+    def fit(self, modality):
+        """ Method to find the parameters needed to apply the
+        normalization.
+
+        Parameters
+        ----------
+        modality : object
+            Object inherated from TemporalModality.
+
+        Return
+        ------
+        self : object
+             Return self.
+        """
+        # Check that the class of modality is the same than the template
+        # modality
+        check_modality(modality, self.base_modality_)
+
+        return self

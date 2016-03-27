@@ -20,7 +20,7 @@ class DCEModality(TemporalModality):
     Attributes
     ----------
     path_data_ : string
-        Location of the data
+        Location of the data.
 
     data_ : array-like, shape (T, Y, X, Z)
         The different volume of the DCE serie. The data are saved in

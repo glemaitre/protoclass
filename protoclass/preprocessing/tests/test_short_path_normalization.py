@@ -17,27 +17,39 @@ def test_spn_bad_mod():
     """ Test either if an error is raised when the base modality does not
     inherate from TemporalModality. """
 
-    # Read some T2W image which is not inheriting from TemporalModality to
-    # create the object
+    # Try to create the normalization object with the wrong class object
+    assert_raises(ValueError, ShortPathNormalization, T2WModality())
+
+
+def test_snp_bad_mod_fit():
+    """ Test either if an error is raised when a modality to fit does not
+    correspond to the template modality given at the construction. """
+
+    # Create the normalization object with the right modality
+    dce_norm = ShortPathNormalization(DCEModality())
+
+    # Try to fit an object with another modality
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 't2w')
-    t2w_mod = T2WModality(path_data)
-    t2w_mod.read_data_from_path()
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+    t2w_mod.read_data_from_path(path_data)
+    # Fit and raise the error
+    assert_raises(ValueError, dce_norm.fit, t2w_mod)
 
-    # Try to create the normalization object
-    assert_raises(ValueError, ShortPathNormalization, t2w_mod)
 
-
-def test_spn_right_mod():
+def test_spn_right_fitting():
     """ Test if the construction of the normalization object is correct. """
 
-    # Read some DCE images that can be normalized using the
-    # TemporalNormalization class
+    # Create the object and check that it contains the same modality
+    dce_norm = ShortPathNormalization(DCEModality())
+
+    # Load the data with only a single serie
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 'dce')
-    dce_mod = DCEModality(path_data)
-    dce_mod.read_data_from_path()
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+    dce_mod.read_data_from_path(path_data)
 
-    # Create the object and check that it contains the same modality
-    dce_norm = ShortPathNormalization(dce_mod)
-    assert_equal(dce_norm.base_modality_, dce_mod)
+    # Fit the modality
+    dce_norm.fit(dce_mod)
