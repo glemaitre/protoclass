@@ -8,98 +8,173 @@ from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
-from protoclass.data_management import T2WModality
+from protoclass.data_management import GTModality
 
 
-def test_read_t2w_dicom_no_dir():
+def test_path_list_no_dir():
+    """ Test either if an error is raised when the directory does not
+    exist. """
+    # Create a dummy named directory
+    path_data = 'None'
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
+    # Create an object to handle the data
+    gt_mod = GTModality()
+
+    # We can pass a list of unknown path
+    path_data_list = [path_data, path_data]
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+
+
+def test_path_list_wrong_type():
+    """ Test either an error is raised if the type in the list is
+    not string. """
+    # Create a dummy named directory
+    path_data = 'None'
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
+    # Create an object to handle the data
+    gt_mod = GTModality()
+
+    # We can a list we incorrect type
+    path_data_list = [1, path_data, path_data]
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+
+
+def test_path_no_dir():
+    """ Test either if an error is raised when no path is given at
+    any point. """
+    # Create an object to handle the data
+    gt_mod = GTModality()
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
+
+    # Check that an error is risen
+    assert_raises(ValueError, gt_mod.read_data_from_path, label)
+
+
+def test_path_wrong_type():
+    """ Test either if an error is raised when the type of the path is not a
+    string. """
+    # Create a dummy type
+    path_data = 1
+    # Create an object to handle the data
+    gt_mod = GTModality()
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
+    # Check that an error is risen
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data)
+
+
+def test_path_wrong_dir():
     """ Test if an error is raised when the directory does not exist. """
 
     # Create a dummy named directory
     path_data = 'None'
     # Create an object to handle the data
-    t2w_mod = T2WModality()
+    gt_mod = GTModality()
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
     # Check that an error is risen
-    assert_raises(ValueError, t2w_mod.read_data_from_path, path_data)
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data)
 
 
-def test_read_t2w_dicom_more_2_serie():
-    """ Test if an error is raised if there is more than 2 series. """
+def test_read_gt_dicom_path_list_larger_1():
+    """ Test if an error is raised when the path is a list and an item contain
+    more than one serie. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = [os.path.join(currdir, 'data', 't2w'),
+                 os.path.join(currdir, 'data', 'dce')]
+    # Create an object to handle the data
+    gt_mod = GTModality()
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'pca']
+    # Check the assert
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data)
+
+
+def test_read_gt_data_path_list():
+    """ Test if we can read gt series. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_list = [os.path.join(path_data, 'prostate'),
+                      os.path.join(path_data, 'cg'),
+                      os.path.join(path_data, 'pz'),
+                      os.path.join(path_data, 'cap')]
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'cap']
+    # Create an object to handle the data
+    gt_mod = GTModality()
+
+    gt_mod.read_data_from_path(label, path_data=path_data_list)
+
+
+def test_read_gt_data_path_list_constructor():
+    """ Test if we can read gt series. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_list = [os.path.join(path_data, 'prostate'),
+                      os.path.join(path_data, 'cg'),
+                      os.path.join(path_data, 'pz'),
+                      os.path.join(path_data, 'cap')]
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'cap']
+    # Create an object to handle the data
+    gt_mod = GTModality(path_data_list)
+
+    gt_mod.read_data_from_path(label)
+
+    # Check the data here
+    data = np.load(os.path.join(currdir, 'data', 'gt_path_list.npy'))
+    assert_array_equal(gt_mod.data_, data)
+    assert_equal(gt_mod.n_serie_, 4)
+
+
+def test_read_gt_data():
+    """ Test either if an error is raised when the length of the label list
+    is different from the number of GT read. """
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_list = [os.path.join(path_data, 'prostate'),
+                      os.path.join(path_data, 'cg'),
+                      os.path.join(path_data, 'pz'),
+                      os.path.join(path_data, 'cap')]
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg']
+    # Create an object to handle the data
+    gt_mod = GTModality()
+
+    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+
+
+def test_read_gt_path():
+    """ Test if we can read data from the same folder organized with
+    different serie ID. """
 
     # Load the data with only a single serie
     currdir = os.path.dirname(os.path.abspath(__file__))
     path_data = os.path.join(currdir, 'data', 'dce')
+
+    # Give the list for the ground_truth
+    label = ['prostate', 'pz']
     # Create an object to handle the data
-    t2w_mod = T2WModality()
-    # Check the assert
-    assert_raises(ValueError, t2w_mod.read_data_from_path, path_data)
+    gt_mod = GTModality()
 
+    # Read the data
+    gt_mod.read_data_from_path(label, path_data=path_data)
 
-def test_read_dce_data():
-    """ Test if we can read t2w series. """
-
-    # Load the data with only a single serie
-    currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 't2w')
-    # Create an object to handle the data
-    t2w_mod = T2WModality()
-
-    t2w_mod.read_data_from_path(path_data)
-
-    # Check the type of the data
-    assert_equal(t2w_mod.data_.dtype, np.float64)
-    # Check that the dimension are the one that we expect
-    assert_equal(t2w_mod.data_.shape, (360, 448, 64))
-
-    # We need to check that the minimum and maximum were proprely computed
-    assert_equal(t2w_mod.min_, 0.)
-    assert_equal(t2w_mod.max_, 1014.)
-
-    # Check that the data correspond to the one save inside the the test
-    data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data.npy'))
-    assert_array_equal(t2w_mod.bin_, data)
-    data = np.load(os.path.join(currdir, 'data', 'pdf_t2w_data.npy'))
-    assert_array_equal(t2w_mod.pdf_, data)
-    data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
-    assert_array_equal(t2w_mod.data_, data)
-
-def test_update_histogram():
-    """ Test that the function properly update the value of the histogram. """
-
-    # Load the data and then call the function independently
-    currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 't2w')
-    # Create an object to handle the data
-    t2w_mod = T2WModality()
-
-    t2w_mod.read_data_from_path(path_data)
-
-    # Change something in the data to check that the computation
-    # is working
-    t2w_mod.data_[20:40, :, :] = 1050.
-    t2w_mod._update_histogram()
-
-    # We need to check that the minimum and maximum were proprely computed
-    assert_equal(t2w_mod.min_, 0.)
-    assert_equal(t2w_mod.max_, 1050.)
-
-    # Check the pdf and bins
-    data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data_update.npy'))
-    assert_array_equal(t2w_mod.bin_, data)
-    data = np.load(os.path.join(currdir, 'data', 'pdf_t2w_data_update.npy'))
-    assert_array_equal(t2w_mod.pdf_, data)
-
-
-def test_update_histogram_wt_data():
-    """ Test whether an error is raised if the histogram function is called
-    before to read the data. """
-
-    # Load the data and then call the function independently
-    currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 't2w')
-    # Create an object to handle the data
-    t2w_mod = T2WModality()
-
-    assert_raises(ValueError, t2w_mod._update_histogram)
+    # Check the data here
+    data = np.load(os.path.join(currdir, 'data', 'gt_path.npy'))
+    assert_array_equal(gt_mod.data_, data)
+    assert_equal(gt_mod.n_serie_, 2)
 
 
 def test_dce_path_data_warning():
@@ -107,40 +182,16 @@ def test_dce_path_data_warning():
 
     # Load the data with only a single serie
     currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 't2w')
+    path_data = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_list = [os.path.join(path_data, 'prostate'),
+                      os.path.join(path_data, 'cg'),
+                      os.path.join(path_data, 'pz'),
+                      os.path.join(path_data, 'cap')]
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'cap']
     # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
+    gt_mod = GTModality(path_data_list)
 
     # Check that a warning is raised when reading the data with a data path
     # after specifying one previously.
-    assert_warns(UserWarning, t2w_mod.read_data_from_path, path_data)
-
-
-def test_dce_path_data_constructor():
-    """ Test if the dce function is working when passing the path data to the
-    constructor. """
-
-    # Load the data with only a single serie
-    currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 't2w')
-    # Create an object to handle the data
-    t2w_mod = T2WModality(path_data)
-
-    t2w_mod.read_data_from_path()
-
-    # Check the type of the data
-    assert_equal(t2w_mod.data_.dtype, np.float64)
-    # Check that the dimension are the one that we expect
-    assert_equal(t2w_mod.data_.shape, (360, 448, 64))
-
-    # We need to check that the minimum and maximum were proprely computed
-    assert_equal(t2w_mod.min_, 0.)
-    assert_equal(t2w_mod.max_, 1014.)
-
-    # Check that the data correspond to the one save inside the the test
-    data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data.npy'))
-    assert_array_equal(t2w_mod.bin_, data)
-    data = np.load(os.path.join(currdir, 'data', 'pdf_t2w_data.npy'))
-    assert_array_equal(t2w_mod.pdf_, data)
-    data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
-    assert_array_equal(t2w_mod.data_, data)
+    assert_warns(UserWarning, gt_mod.read_data_from_path, label, path_data_list)
