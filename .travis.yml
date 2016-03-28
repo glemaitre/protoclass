@@ -20,6 +20,7 @@ addons:
       - libatlas-dev
       - gfortran
       - libgfortran3
+      - eigen3
 env:
   global:
     # Directory where tests are run from

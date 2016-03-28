@@ -59,7 +59,7 @@ if [[ "$DISTRIB" == "conda" ]]; then
     pip install nose-timer
 
     # Install libgfortran with conda
-    conda install --yes libgfortran
+    conda install --yes libgfortran cython
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
@@ -83,7 +83,22 @@ python -c "import scipy; print('scipy %s' % scipy.__version__)"
 python setup.py develop
 
 # Install Unbalanced-dataset
-cd $CACHED_BUILD_DIR/protoclass/third-party/python-fitparse
+cd $CACHED_BUILD_DIR/protoclass/third-party/UnbalancedDataset
+python setup.py install
+# Install pyFFTW
+cd $CACHED_BUILD_DIR/protoclass/third-party/pyFFTW
+python setup.py install
+# Install phasepack
+cd $CACHED_BUILD_DIR/protoclass/third-party/phasepack
+python setup.py install
+# Install mahotas
+cd $CACHED_BUILD_DIR/protoclass/third-party/mahotas
+python setup.py install
+# Install pyksvd
+cd $CACHED_BUILD_DIR/protoclass/third-party/pyksvd
+python setup.py install
+# Install scikit-learn
+cd $CACHED_BUILD_DIR/protoclass/third-party/scikit-learn
 python setup.py install
 
 # Go back to the protoclass directory to run the test
