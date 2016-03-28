@@ -1,7 +1,7 @@
 Protoclass
 =========
 
-[![Code Health](https://landscape.io/github/glemaitre/protoclass/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/protoclass/master) 
+[![Code Health](https://landscape.io/github/glemaitre/protoclass/master/landscape.svg?style=flat)](https://landscape.io/github/glemaitre/protoclass/master) [![Build Status](https://travis-ci.org/glemaitre/protoclass.svg?branch=master)](https://travis-ci.org/glemaitre/protoclass) [![Coverage Status](https://coveralls.io/repos/github/glemaitre/protoclass/badge.svg?branch=master)](https://coveralls.io/github/glemaitre/protoclass?branch=master)
 
 #### Manifesto
 
