@@ -61,6 +61,8 @@ def check_modality(modality, template_modality):
         raise ValueError('The input modality is different from the template'
                          ' modality given during the construction of the'
                          ' object.')
+    else:
+        pass
 
 
 def check_modality_gt(modality, ground_truth):
