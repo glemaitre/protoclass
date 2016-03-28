@@ -53,8 +53,9 @@ else:
                'data_management',
                'extraction',
                'preprocessing',
-               'selection',
+               #'selection',
                'tool',
+               'utils',
                'validation']
 
 del warnings, functools, os, imp, sys
