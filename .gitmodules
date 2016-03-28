@@ -10,3 +10,6 @@
 [submodule "third-party/mahotas"]
 	path = third-party/mahotas
 	url = https://github.com/glemaitre/mahotas.git
+[submodule "third-party/phasepack"]
+	path = third-party/phasepack
+	url = https://github.com/glemaitre/phasepack.git
