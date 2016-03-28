@@ -16,6 +16,8 @@ cache:
 addons:
   apt:
     packages:
+      - libfftw3-dev
+      - libfftw3-3
       - libatlas3gf-base
       - libatlas-dev
       - gfortran
