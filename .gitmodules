@@ -7,3 +7,6 @@
 [submodule "third-party/scikit-learn"]
 	path = third-party/scikit-learn
 	url = https://github.com/glemaitre/scikit-learn.git
+[submodule "third-party/mahotas"]
+	path = third-party/mahotas
+	url = https://github.com/glemaitre/mahotas.git
