@@ -95,11 +95,11 @@ def test_read_t2w_data():
     # Check the type of the data
     assert_equal(t2w_mod.data_.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(t2w_mod.data_.shape, (360, 448, 64))
+    assert_equal(t2w_mod.data_.shape, (360, 448, 5))
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(t2w_mod.min_, 0.)
-    assert_equal(t2w_mod.max_, 1014.)
+    assert_equal(t2w_mod.max_, 959.)
 
     # Check that the data correspond to the one save inside the the test
     data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data.npy'))
@@ -178,11 +178,11 @@ def test_t2w_path_data_constructor():
     # Check the type of the data
     assert_equal(t2w_mod.data_.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(t2w_mod.data_.shape, (360, 448, 64))
+    assert_equal(t2w_mod.data_.shape, (360, 448, 5))
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(t2w_mod.min_, 0.)
-    assert_equal(t2w_mod.max_, 1014.)
+    assert_equal(t2w_mod.max_, 959.)
 
     # Check that the data correspond to the one save inside the the test
     data = np.load(os.path.join(currdir, 'data', 'bin_t2w_data.npy'))
