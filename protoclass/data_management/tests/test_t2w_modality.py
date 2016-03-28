@@ -109,6 +109,7 @@ def test_read_t2w_data():
     data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
     assert_array_equal(t2w_mod.data_, data)
 
+
 def test_update_histogram():
     """ Test that the function properly update the value of the histogram. """
 

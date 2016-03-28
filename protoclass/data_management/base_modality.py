@@ -31,4 +31,3 @@ class BaseModality(object):
     def read_data_from_path(self, path_data):
         """ Method allowing to read the data. """
         raise NotImplementedError
-

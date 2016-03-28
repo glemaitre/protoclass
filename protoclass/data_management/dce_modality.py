@@ -2,8 +2,6 @@
 """
 
 import numpy as np
-import SimpleITK as sitk
-import os
 
 from .temporal_modality import TemporalModality
 

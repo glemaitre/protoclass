@@ -3,7 +3,6 @@
 
 import numpy as np
 import SimpleITK as sitk
-import os
 import warnings
 
 from abc import ABCMeta, abstractmethod
@@ -81,7 +80,7 @@ class MultisequenceModality(BaseModality):
             # Create a list by converting to integer the number after
             # the last full stop
             id_series_seq_int = np.array([int(s[s.rfind('.')+1:])
-                                           for s in series_seq])
+                                          for s in series_seq])
             # Sort and get the corresponding index
             idx_series_sorted = np.argsort(id_series_seq_int)
 

@@ -23,7 +23,8 @@ def test_path_list_no_dir():
 
     # We can pass a list of unknown path
     path_data_list = [path_data, path_data]
-    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+    assert_raises(ValueError, gt_mod.read_data_from_path,
+                  label, path_data_list)
 
 
 def test_path_list_wrong_type():
@@ -38,7 +39,8 @@ def test_path_list_wrong_type():
 
     # We can a list we incorrect type
     path_data_list = [1, path_data, path_data]
-    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+    assert_raises(ValueError, gt_mod.read_data_from_path,
+                  label, path_data_list)
 
 
 def test_path_no_dir():
@@ -76,7 +78,8 @@ def test_path_wrong_dir():
     # Give the list for the ground_truth
     label = ['prostate', 'cg', 'pz', 'pca']
     # Check that an error is risen
-    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data)
+    assert_raises(ValueError, gt_mod.read_data_from_path,
+                  label, path_data)
 
 
 def test_read_gt_dicom_path_list_larger_1():
@@ -92,7 +95,8 @@ def test_read_gt_dicom_path_list_larger_1():
     # Give the list for the ground_truth
     label = ['prostate', 'cg', 'pz', 'pca']
     # Check the assert
-    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data)
+    assert_raises(ValueError, gt_mod.read_data_from_path,
+                  label, path_data)
 
 
 def test_read_gt_data_path_list():
@@ -152,7 +156,8 @@ def test_read_gt_data():
     # Create an object to handle the data
     gt_mod = GTModality()
 
-    assert_raises(ValueError, gt_mod.read_data_from_path, label, path_data_list)
+    assert_raises(ValueError, gt_mod.read_data_from_path,
+                  label, path_data_list)
 
 
 def test_read_gt_path():
@@ -194,4 +199,5 @@ def test_dce_path_data_warning():
 
     # Check that a warning is raised when reading the data with a data path
     # after specifying one previously.
-    assert_warns(UserWarning, gt_mod.read_data_from_path, label, path_data_list)
+    assert_warns(UserWarning, gt_mod.read_data_from_path,
+                 label, path_data_list)

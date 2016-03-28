@@ -2,8 +2,6 @@
 """
 
 import numpy as np
-import SimpleITK as sitk
-import os
 
 from .standalone_modality import StandaloneModality
 
@@ -65,7 +63,9 @@ class T2WModality(StandaloneModality):
 
         # Build the histogram corresponding to the current volume
         bins = int(np.round(self.max_ - self.min_))
-        self.pdf_, self.bin_ = np.histogram(self.data_, bins=bins, density=True)
+        self.pdf_, self.bin_ = np.histogram(self.data_,
+                                            bins=bins,
+                                            density=True)
 
         return self
 

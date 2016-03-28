@@ -3,7 +3,6 @@
 
 import numpy as np
 import SimpleITK as sitk
-import os
 import warnings
 
 from abc import ABCMeta, abstractmethod
