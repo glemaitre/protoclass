@@ -95,11 +95,14 @@ def test_read_dce_data():
     # Check the type of the data
     assert_equal(dce_mod.data_.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(dce_mod.data_.shape, (2, 368, 448, 64))
+    assert_equal(dce_mod.data_.shape, (2, 368, 448, 5))
+    # Check that the data are identical
+    data = np.load(os.path.join(currdir, 'data', 'data_dce_data.npy'))
+    assert_array_equal(dce_mod.data_, data)
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dce_mod.min_series_, 0.)
-    assert_equal(dce_mod.max_series_, 676.)
+    assert_equal(dce_mod.max_series_, 616.)
 
     # Check that bin is what we expect
     data = np.load(os.path.join(currdir, 'data', 'bin_dce_data.npy'))
@@ -222,11 +225,15 @@ def test_dce_path_data_constructor():
     # Check the type of the data
     assert_equal(dce_mod.data_.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(dce_mod.data_.shape, (2, 368, 448, 64))
+    assert_equal(dce_mod.data_.shape, (2, 368, 448, 5))
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dce_mod.min_series_, 0.)
-    assert_equal(dce_mod.max_series_, 676.)
+    assert_equal(dce_mod.max_series_, 616.)
+
+    # Check that the data are identical
+    data = np.load(os.path.join(currdir, 'data', 'data_dce_data.npy'))
+    assert_array_equal(dce_mod.data_, data)
 
     # Check that bin is what we expect
     data = np.load(os.path.join(currdir, 'data', 'bin_dce_data.npy'))
@@ -259,11 +266,15 @@ def test_dce_path_data_list():
     # Check the type of the data
     assert_equal(dce_mod.data_.dtype, np.float64)
     # Check that the dimension are the one that we expect
-    assert_equal(dce_mod.data_.shape, (2, 368, 448, 64))
+    assert_equal(dce_mod.data_.shape, (2, 368, 448, 5))
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dce_mod.min_series_, 0.)
-    assert_equal(dce_mod.max_series_, 676.)
+    assert_equal(dce_mod.max_series_, 616.)
+
+    # Check that the data are identical
+    data = np.load(os.path.join(currdir, 'data', 'data_dce_data.npy'))
+    assert_array_equal(dce_mod.data_, data)
 
     # Check that bin is what we expect
     data = np.load(os.path.join(currdir, 'data', 'bin_dce_data.npy'))
