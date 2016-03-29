@@ -58,8 +58,9 @@ if [[ "$DISTRIB" == "conda" ]]; then
     # Install nose-timer via pip
     pip install nose-timer
 
-    # Install libgfortran with conda
+    # Install libgfortran cython and simpleitk with conda
     conda install --yes libgfortran cython
+    conda install --yes -c https://conda.anaconda.org/simpleitk SimpleITK
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
