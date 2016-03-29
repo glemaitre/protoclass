@@ -10,6 +10,7 @@ from .multisequence_modality import MultisequenceModality
 
 from .dce_modality import DCEModality
 from .t2w_modality import T2WModality
+from .dwi_modality import DWIModality
 from .gt_modality import GTModality
 
 __all__ = ['BaseModality',
@@ -18,4 +19,5 @@ __all__ = ['BaseModality',
            'MultisequenceModality',
            'DCEModality',
            'T2WModality',
+           'DWIModality',
            'GTModality']
