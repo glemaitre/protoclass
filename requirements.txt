@@ -1,5 +1,5 @@
 matplotlib>=1.4.3
-scipy>=0.16.0
-numpy>=1.9.3
+scipy>=0.17.0
+numpy>=1.10.0
 joblib>=0.8.4
 testfixtures>=4.9.0
