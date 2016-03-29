@@ -4,7 +4,6 @@
 import numpy as np
 
 from .multisequence_modality import MultisequenceModality
-from ..utils.validation import check_path_data
 
 
 class DWIModality(MultisequenceModality):
