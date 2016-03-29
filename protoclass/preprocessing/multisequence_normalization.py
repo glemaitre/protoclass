@@ -26,6 +26,11 @@ class MultisequenceNormalization(BaseNormalization):
         normalization. """
         raise NotImplementedError
 
+    def _validate_modality_gt(self, modality, ground_truth, cat):
+        """ Method to check the consistency of the modality with the
+        ground-truth. """
+        raise NotImplementedError
+
     @abstractmethod
     def fit(self):
         """ Method to find the parameters needed to apply the
