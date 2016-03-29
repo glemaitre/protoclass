@@ -32,6 +32,11 @@ class TemporalNormalization(BaseNormalization):
         else:
             self.base_modality_ = self.base_modality
 
+    def _validate_modality_gt(self, modality, ground_truth, cat):
+        """ Method to check the consistency of the modality with the
+        ground-truth. """
+        raise NotImplementedError
+
     @abstractmethod
     def fit(self, modality):
         """ Method to find the parameters needed to apply the

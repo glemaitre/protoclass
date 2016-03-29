@@ -1,10 +1,15 @@
 """ Basic class to normalize standalone modality.
 """
 
+import warnings
+
 from abc import ABCMeta, abstractmethod
 
 from .base_normalization import BaseNormalization
+
 from ..data_management import StandaloneModality
+from ..data_management import GTModality
+
 from ..utils.validation import check_modality
 
 
@@ -32,23 +37,92 @@ class StandaloneNormalization(BaseNormalization):
         else:
             self.base_modality_ = self.base_modality
 
+    def _validate_modality_gt(self, modality, ground_truth, cat):
+        """ Method to check the consistency of the modality with the
+        ground-truth.
+
+        Parameters
+        ----------
+        modality : object
+            The modality object of interest.
+
+        ground-truth : object of type GTModality
+            The ground-truth of GTModality.
+
+        cat : str
+            String corresponding at the ground-truth of interest.
+
+        Return
+        ------
+        roi_data : ndarray, shape (non_zero_samples, 3)
+            Corresponds to the indexes of the data of insterest
+            extracted from the ground-truth.
+        """
+
+        # Check that the ground-truth is from GTModality
+        if not isinstance(ground_truth, GTModality):
+            raise ValueError('The ground-truth should be an object of'
+                             ' class GTModality.')
+
+        # Check that the category given is part of the ground-truth
+        if cat not in ground_truth.cat_gt_:
+            raise ValueError('The ground-truth category required has not been'
+                             ' loaded during the instance of the'
+                             ' GTModality object.')
+        else:
+            # Extract the indexes of interest to be returned
+            idx_gt = ground_truth.cat_gt.index(cat)
+
+        # Check that the size of the ground-truth and the modality
+        # are consistant
+        if modality.data_.shape != ground_truth.data_[idx_gt, :, :, :]:
+            raise ValueError('The ground-truth does not correspond to the'
+                             ' given modality volume.')
+
+        # Find the element which are not zero
+        return np.nonzero(ground_truth.data_[idx_gt, :, :, :])
+
     @abstractmethod
-    def fit(self, modality):
+    def fit(self, modality, ground_truth=None, cat=None):
         """ Method to find the parameters needed to apply the
         normalization.
 
         Parameters
         ----------
-        modality : object
-            Object inherated from TemporalModality.
+        modality : object of type StandaloneModality
+            The modality object of interest.
+
+        ground-truth : object of type GTModality or None
+            The ground-truth of GTModality. If None, the whole data will be
+            considered.
+
+        cat : str or None
+            String corresponding at the ground-truth of interest. Cannot be
+            None if ground-truth is not None.
 
         Return
         ------
         self : object
              Return self.
         """
-        # Check that the class of modality is the same than the template
-        # modality
+        # Check that the modality is from the template class
         check_modality(modality, self.base_modality_)
+
+        # Check the consistency of the data
+        if ground_truth is None and cat is not None:
+            warnings.warn('You specified a category for the ground-truth'
+                          ' without giving any ground-truth. The whole volume'
+                          ' will be considered for the fitting.')
+            self.roi_data_ = np.ones(modality.data_.shape)
+        elif ground_truth is None and cat is None:
+            self.roi_data_ = np.ones(modality.data_.shape)
+        elif ground_truth is not None and cat is None:
+            raise ValueError('The category label of the ground-truth from'
+                             ' which you want to extract the information needs'
+                             ' to be specified.')
+        else:
+            self.roi_data_ = self._validate_modality_gt(modality,
+                                                        ground_truth,
+                                                        cat)
 
         return self

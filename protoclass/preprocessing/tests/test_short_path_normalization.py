@@ -1,3 +1,5 @@
+""" Test the short path normalization. """
+
 import numpy as np
 import os
 
