@@ -48,7 +48,6 @@ class DCEModality(TemporalModality):
 
     def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
-        self.data_ = None
 
     def _update_histogram(self):
         """Function to compute histogram of each serie and store it

@@ -8,6 +8,8 @@ from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
+from nose.tools import assert_true
+
 from protoclass.data_management import DCEModality
 
 
@@ -90,7 +92,13 @@ def test_read_dce_data():
     # Create an object to handle the data
     dce_mod = DCEModality()
 
+    # Check that the data have not been read
+    assert_true(not dce_mod.is_read())
+
     dce_mod.read_data_from_path(path_data)
+
+    # Check that the data have been read
+    assert_true(dce_mod.is_read())
 
     # Check the type of the data
     assert_equal(dce_mod.data_.dtype, np.float64)
@@ -220,7 +228,13 @@ def test_dce_path_data_constructor():
     # Create an object to handle the data
     dce_mod = DCEModality(path_data)
 
+    # Check that the data have not been read
+    assert_true(not dce_mod.is_read())
+
     dce_mod.read_data_from_path()
+
+    # Check that the data have been read
+    assert_true(dce_mod.is_read())
 
     # Check the type of the data
     assert_equal(dce_mod.data_.dtype, np.float64)

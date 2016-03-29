@@ -36,7 +36,6 @@ class GTModality(MultisequenceModality):
 
     def __init__(self, path_data=None):
         super(GTModality, self).__init__(path_data=path_data)
-        self.data_ = None
 
     def _update_histogram(self):
         """ Method to compute histogram and statistics. """

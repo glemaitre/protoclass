@@ -21,6 +21,7 @@ class BaseModality(object):
             self.path_data_ = check_path_data(path_data)
         else:
             self.path_data_ = None
+        self.data_ = None
 
     @abstractmethod
     def _update_histogram(self):
@@ -31,3 +32,16 @@ class BaseModality(object):
     def read_data_from_path(self, path_data):
         """ Method allowing to read the data. """
         raise NotImplementedError
+
+    def is_read(self):
+        """ Function to know if the data have been read.
+
+        Return
+        ------
+        is_read : bool
+            If True, the data have been read at least once.
+        """
+        if self.data_ is None:
+            return False
+        else:
+            return True

@@ -8,6 +8,8 @@ from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
+from nose.tools import assert_true
+
 from protoclass.data_management import DWIModality
 
 
@@ -90,7 +92,13 @@ def test_read_dwi_data():
     # Create an object to handle the data
     dwi_mod = DWIModality()
 
+    # Check that the data have been read
+    assert_true(not dwi_mod.is_read())
+
     dwi_mod.read_data_from_path(path_data)
+
+    # Check that the data have been read
+    assert_true(dwi_mod.is_read())
 
     # Check the type of the data
     assert_equal(dwi_mod.data_.dtype, np.float64)
@@ -187,7 +195,13 @@ def test_dwi_path_data_constructor():
     # Create an object to handle the data
     dwi_mod = DWIModality(path_data)
 
+    # Check that the data have been read
+    assert_true(not dwi_mod.is_read())
+
     dwi_mod.read_data_from_path()
+
+    # Check that the data have been read
+    assert_true(dwi_mod.is_read())
 
     # Check the type of the data
     assert_equal(dwi_mod.data_.dtype, np.float64)
