@@ -8,10 +8,10 @@ from numpy.testing import assert_raises
 
 from protoclass.utils.validation import check_path_data
 from protoclass.utils.validation import check_modality
-from protoclass.utils.validation import check_modality_gt
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
+from protoclass.data_management import GTModality
 
 def test_check_path_data_str_exist():
     """ Test that the path is return properly when it exists. """

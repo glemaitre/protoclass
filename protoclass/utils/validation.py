@@ -1,7 +1,7 @@
 """Utilities for input validation"""
 
+import numpy as np
 import os
-
 
 def check_path_data(path_data):
     """ Method to check if the path data exist.
@@ -64,6 +64,4 @@ def check_modality(modality, template_modality):
     else:
         pass
 
-
-def check_modality_gt(modality, ground_truth):
-    """ Method to check the consistency of the modality with the ground-truth. """
+    return None

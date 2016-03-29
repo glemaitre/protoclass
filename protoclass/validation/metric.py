@@ -46,14 +46,14 @@ def labels_to_sensitivity_specificity(true_label, pred_label):
     cm = build_confusion_from_volume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
-    if (cm[1, 1] > 0):
+    if cm[1, 1] > 0:
         sens = float(cm[1, 1]) / float(cm[1, 1] + cm[1, 0])
     else:
-        sens = 0
-    if (cm[0, 0] > 0):
+        sens = 0.
+    if cm[0, 0] > 0:
         spec = float(cm[0, 0]) / float(cm[0, 0] + cm[0, 1])
     else:
-        spec = 0
+        spec = 0.
 
     return (sens, spec)
 
@@ -77,14 +77,14 @@ def labels_to_precision_negative_predictive_value(true_label, pred_label):
     cm = build_confusion_from_volume(true_label, pred_label)
 
     # Compute the sensitivity and specificity
-    if (cm[1, 1] > 0):
+    if cm[1, 1] > 0:
         prec = float(cm[1, 1]) / float(cm[1, 1] + cm[0, 1])
     else:
-        prec = 0
-    if (cm[0, 0] > 0):
+        prec = 0.
+    if cm[0, 0] > 0:
         npv = float(cm[0, 0]) / float(cm[0, 0] + cm[1, 0])
     else:
-        npv = 0
+        npv = 0.
 
     return (prec, npv)
 
@@ -309,9 +309,9 @@ def labels_to_generalized_index_balanced_accuracy(true_label,
     # We need the sensitivity and specificity
     sens, spec = labels_to_sensitivity_specificity(true_label, pred_label)
     # Compute the dominance as the difference of the sensitiy and specificity
-    dom = sens - spec
+    dom = float(sens - spec)
 
     # Compute the generalized index of balanced accuracy
-    iba = (1 + alpha * dom) * met
+    iba = (1. + float(alpha) * dom) * met
 
     return iba
