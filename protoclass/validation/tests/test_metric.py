@@ -3,6 +3,7 @@
 import numpy as np
 
 from numpy.testing import assert_equal
+from numpy.testing import assert_raises
 
 from protoclass.validation.metric import labels_to_accuracy
 from protoclass.validation.metric import labels_to_cost_value
@@ -28,6 +29,22 @@ def test_sens_spec():
     assert_equal(spec, 0.5)
 
 
+def test_sens_spec_0():
+    """ Test the specific case when the sensitivity and specificity can be
+    equal to zero. """
+    pred_label_corr = np.array([0] * 20)
+    sens, spec = labels_to_sensitivity_specificity(true_label,
+                                                   pred_label_corr)
+    assert_equal(sens, 0.)
+    assert_equal(spec, 1.)
+
+    pred_label_corr = np.array([1] * 20)
+    sens, spec = labels_to_sensitivity_specificity(true_label,
+                                                   pred_label_corr)
+    assert_equal(sens, 1.)
+    assert_equal(spec, 0.)
+
+
 def test_npv_precision():
     """ Test precision and NPV. """
     # Compute the precision and negative predictive value
@@ -35,6 +52,23 @@ def test_npv_precision():
                                                               pred_label)
     assert_equal(prec, 0.5)
     assert_equal(npv, 0.5)
+
+
+def test_npv_precision_0():
+    """ Test the specific case when the precision and npv can be
+    equal to zero. """
+    pred_label_corr = np.array([0] * 20)
+    prec, npv = labels_to_precision_negative_predictive_value(true_label,
+                                                              pred_label_corr)
+
+    assert_equal(prec, 0.)
+    assert_equal(npv, .5)
+
+    pred_label_corr = np.array([1] * 20)
+    prec, npv = labels_to_precision_negative_predictive_value(true_label,
+                                                              pred_label_corr)
+    assert_equal(prec, .5)
+    assert_equal(npv, 0.)
 
 
 def test_geometric_mean():
@@ -69,8 +103,42 @@ def test_iba():
     """ Test the generalized index balanced. """
     # If the other metric can be computed fine, nothing can go wrong
     # apart of the implementation of this function
-    iba = labels_to_generalized_index_balanced_accuracy(true_label, pred_label)
-    assert_equal(iba, 0.25)
+
+    # Create an array of the method to try
+    metrics = ['sens', 'spec', 'prec', 'npv', 'gmean',
+               'acc', 'cost', 'f1score', 'mcc']
+
+    res_metrics = [.5, .5, .5, .5, .5, .5, .5, .5, .0]
+
+    for res_curr, m_curr in zip(res_metrics, metrics):
+        iba = labels_to_generalized_index_balanced_accuracy(true_label,
+                                                            pred_label,
+                                                            M=m_curr,
+                                                            squared=False)
+        assert_equal(iba, res_curr)
+        iba = labels_to_generalized_index_balanced_accuracy(true_label,
+                                                            pred_label,
+                                                            M=m_curr,
+                                                            squared=True)
+        assert_equal(iba, res_curr ** 2)
+
+
+def test_iba_no_metric():
+    """ Test either if an error is raised when an unknown metric is given. """
+
+    assert_raises(ValueError, labels_to_generalized_index_balanced_accuracy,
+                  true_label, pred_label, M='unknown', squared=True)
+
+
+def test_iba_wrong_alpha():
+    """ Test either if an error is raised when alpha is not in the range
+    it should be. """
+
+    assert_raises(ValueError, labels_to_generalized_index_balanced_accuracy,
+                  true_label, pred_label, alpha=-1.)
+
+    assert_raises(ValueError, labels_to_generalized_index_balanced_accuracy,
+                  true_label, pred_label, alpha=1.5)
 
 
 def test_cost():
