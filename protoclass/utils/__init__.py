@@ -10,5 +10,5 @@ from .export import make_table
 
 __all__ = ['check_path_data',
            'check_modality',
-           'check_modaity_gt',
+           'check_modality_gt',
            'make_table']
