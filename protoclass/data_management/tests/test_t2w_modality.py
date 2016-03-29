@@ -8,6 +8,8 @@ from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
+from nose.tools import assert_true
+
 from protoclass.data_management import T2WModality
 
 
@@ -90,7 +92,13 @@ def test_read_t2w_data():
     # Create an object to handle the data
     t2w_mod = T2WModality()
 
+    # Check that the data have been read
+    assert_true(not t2w_mod.is_read())
+
     t2w_mod.read_data_from_path(path_data)
+
+    # Check that the data have been read
+    assert_true(t2w_mod.is_read())
 
     # Check the type of the data
     assert_equal(t2w_mod.data_.dtype, np.float64)
@@ -175,6 +183,9 @@ def test_t2w_path_data_constructor():
     t2w_mod = T2WModality(path_data)
 
     t2w_mod.read_data_from_path()
+
+    # Check that the data have been read
+    assert_true(t2w_mod.is_read())
 
     # Check the type of the data
     assert_equal(t2w_mod.data_.dtype, np.float64)

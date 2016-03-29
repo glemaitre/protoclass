@@ -8,6 +8,8 @@ from numpy.testing import assert_array_equal
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
+from nose.tools import assert_true
+
 from protoclass.data_management import GTModality
 
 
@@ -114,8 +116,18 @@ def test_read_gt_data_path_list():
     # Create an object to handle the data
     gt_mod = GTModality()
 
+    # Check that the data have been read
+    assert_true(not gt_mod.is_read())
+
     gt_mod.read_data_from_path(label, path_data=path_data_list)
 
+    # Check that the data have been read
+    assert_true(gt_mod.is_read())
+
+    # Check the data here
+    data = np.load(os.path.join(currdir, 'data', 'gt_path_list.npy'))
+    assert_array_equal(gt_mod.data_, data)
+    assert_equal(gt_mod.n_serie_, 4)
 
 def test_read_gt_data_path_list_constructor():
     """ Test if we can read gt series. """
@@ -132,7 +144,13 @@ def test_read_gt_data_path_list_constructor():
     # Create an object to handle the data
     gt_mod = GTModality(path_data_list)
 
+    # Check that the data have been read
+    assert_true(not gt_mod.is_read())
+
     gt_mod.read_data_from_path(label)
+
+    # Check that the data have been read
+    assert_true(gt_mod.is_read())
 
     # Check the data here
     data = np.load(os.path.join(currdir, 'data', 'gt_path_list.npy'))

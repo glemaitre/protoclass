@@ -38,7 +38,6 @@ class T2WModality(StandaloneModality):
 
     def __init__(self, path_data=None):
         super(T2WModality, self).__init__(path_data=path_data)
-        self.data_ = None
 
     def _update_histogram(self):
         """Function to compute histogram of each serie and store it
