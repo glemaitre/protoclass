@@ -35,6 +35,8 @@ env:
       NUMPY_VERSION="1.9.3" SCIPY_VERSION="0.16.0"
       CACHED_BUILD_DIR="$HOME/protoclass_build_conda"
 
+before_install:
+  - git submodule update --init --recursive
 install: source build_tools/travis/install.sh
 script: bash build_tools/travis/test_script.sh
 after_success: source build_tools/travis/after_success.sh

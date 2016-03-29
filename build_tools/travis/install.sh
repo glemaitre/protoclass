@@ -96,8 +96,6 @@ cd $CACHED_BUILD_DIR/protoclass/third-party/mahotas
 python setup.py install
 # Install pyksvd
 cd $CACHED_BUILD_DIR/protoclass/third-party/pyksvd
-git submodule init
-git submodule update
 python setup.py install
 # Install scikit-learn
 cd $CACHED_BUILD_DIR/protoclass/third-party/scikit-learn
