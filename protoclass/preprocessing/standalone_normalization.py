@@ -1,6 +1,7 @@
 """ Basic class to normalize standalone modality.
 """
 
+import numpy as np
 import warnings
 
 from abc import ABCMeta, abstractmethod
@@ -71,11 +72,11 @@ class StandaloneNormalization(BaseNormalization):
                              ' GTModality object.')
         else:
             # Extract the indexes of interest to be returned
-            idx_gt = ground_truth.cat_gt.index(cat)
+            idx_gt = ground_truth.cat_gt_.index(cat)
 
         # Check that the size of the ground-truth and the modality
         # are consistant
-        if modality.data_.shape != ground_truth.data_[idx_gt, :, :, :]:
+        if modality.data_.shape != ground_truth.data_[idx_gt, :, :, :].shape:
             raise ValueError('The ground-truth does not correspond to the'
                              ' given modality volume.')
 
@@ -113,26 +114,25 @@ class StandaloneNormalization(BaseNormalization):
             raise ValueError('No data have been read during the construction'
                              ' of the modality object.')
 
-        # Check that the data were read during the creation of the
-        #ground-truth modality
-        if not ground_truth.is_read():
-            raise ValueError('No data have been read during the construction'
-                             ' of the GT modality object.')
-
-
         # Check the consistency of the data
         if ground_truth is None and cat is not None:
             warnings.warn('You specified a category for the ground-truth'
                           ' without giving any ground-truth. The whole volume'
                           ' will be considered for the fitting.')
-            self.roi_data_ = np.ones(modality.data_.shape)
+            self.roi_data_ = np.nonzero(np.ones(modality.data_.shape))
         elif ground_truth is None and cat is None:
-            self.roi_data_ = np.ones(modality.data_.shape)
+            self.roi_data_ = np.nonzero(np.ones(modality.data_.shape))
         elif ground_truth is not None and cat is None:
             raise ValueError('The category label of the ground-truth from'
                              ' which you want to extract the information needs'
                              ' to be specified.')
         else:
+            # Check that the data were read during the creation of the
+            # ground-truth modality
+            if not ground_truth.is_read():
+                raise ValueError('No data have been read during the'
+                                 'construction of the GT modality object.')
+
             self.roi_data_ = self._validate_modality_gt(modality,
                                                         ground_truth,
                                                         cat)

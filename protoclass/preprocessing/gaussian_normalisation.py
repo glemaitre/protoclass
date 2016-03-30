@@ -1,6 +1,8 @@
 """ Gaussian normalization to normalize standalone modality.
 """
 
+import numpy as np
+
 from scipy.stats import norm
 from scipy.optimize import curve_fit
 
@@ -61,7 +63,7 @@ class GaussianNormalization(StandaloneNormalization):
             # Check that mu and sigma are inside the dictionary
             valid_presets = ('mu', 'sigma')
             for val_param in valid_presets:
-                if not val_param in params.keys():
+                if val_param not in params.keys():
                     raise ValueError('At least the parameter {} is not specify'
                                       ' in the dictionary.'.format(val_param))
             # For each key, check if this is a known parameters
@@ -178,7 +180,7 @@ class GaussianNormalization(StandaloneNormalization):
 
         # Assign the value after convergence
         self.mu_ = popt[0]
-        self.sigma = popt[1]
+        self.sigma_ = popt[1]
         self.is_fitted_ = True
 
         return self
