@@ -4,6 +4,8 @@ import os
 
 from numpy.testing import assert_raises
 from numpy.testing import assert_equal
+from numpy.testing import assert_warns
+from numpy.testing import assert_almost_equal
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
@@ -88,30 +90,265 @@ def test_gn_init_dict():
     assert_equal(cmp(obj.fit_params_, params), 0)
 
 
+def test_gn_fit_wrong_modality():
+    """ Test either if an error is raised in case that a wrong
+    modality is provided for fitting. """
 
-# def test_gn_init():
-#     """ Test the routine to initialize the Gaussian normalization. """
+    # Create a DCEModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_dce = os.path.join(currdir, 'data', 'dce')
+    dce_mod = DCEModality()
+    dce_mod.read_data_from_path(path_data=path_data_dce)
 
-# def test_gn_fit():
-#     """ Test either if an error is raised when the object given as
-#     ground-truth is not a GTModality object. """
+    # Create the Gaussian normalization object
+    gaussian_norm = GaussianNormalization(T2WModality())
 
-#     # Create a T2WModality object
-#     currdir = os.path.dirname(os.path.abspath(__file__))
-#     path_data_t2w = os.path.join(currdir, 'data', 't2w')
-#     t2w_mod = T2WModality()
-#     t2w_mod.read_data_from_path(path_data=path_data_t2w)
+    # Try to make the fitting with another based modality
+    assert_raises(ValueError, gaussian_norm.fit, dce_mod)
 
-#     # Create the GTModality object
-#     path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
-#     path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
-#                          os.path.join(path_data_gt, 'pz'),
-#                          os.path.join(path_data_gt, 'cg'),
-#                          os.path.join(path_data_gt, 'cap')]
-#     label_gt = ['prostate', 'pz', 'cg', 'cap']
-#     gt_mod = GTModality()
-#     gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
 
-#     # Create the object for the standalone normalization
-#     standalone_norm = StandaloneNormalization(T2WModality())
-#     standalone_norm.fit(t2w_mod, gt_mod, 'prostate')
+def test_gn_fit_modality_not_read():
+    """ Test either if an error is raised when the data from the
+    modality where not read. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+
+    # Create the Gaussian normalization object
+    gaussian_norm = GaussianNormalization(T2WModality())
+
+    # Call the fitting before to have read the data
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod)
+
+
+def test_gn_fit_no_gt_1_cat():
+    """ Test either if a warning is raised to inform that no
+    ground-truth has been provided. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the Gaussian normalization object
+    gaussian_norm = GaussianNormalization(T2WModality())
+
+    # Call the fitting before to have read the data
+    assert_warns(UserWarning, gaussian_norm.fit, t2w_mod, None, 'prostate')
+    assert_almost_equal(gaussian_norm.mu_, 91.3885267391)
+    assert_almost_equal(gaussian_norm.sigma_, 156.874802646)
+
+
+def test_gn_fit_no_cat():
+    """ Test either if an error is raised when the category of the
+    ground-truth is not provided and ground-truth is. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Try to normalize without saying which label to use
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, gt_mod)
+
+
+def test_gn_fit_gt_not_read():
+    """ Test either if the ground-truth is read or not. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+
+    # Try to normalize without saying which label to use
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, gt_mod, label_gt[0])
+
+
+def test_gn_fit_wrong_gt():
+    """ Test either if an error is raised when the wrong class is provided for
+    the ground-truth. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, t2w_mod, label_gt[0])
+
+
+def test_gn_wrong_label_gt():
+    """ Test either if an error is raised when the category label asked was
+    not load by the GTModality. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, gt_mod, 'None')
+
+
+def test_gn_wrong_size_gt():
+    """ Test either if an error is raised when the size of the ground-truth
+    is different from the size of the base modality. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Change the size of the data of the modality
+    t2w_mod.data_ = t2w_mod.data_[:-1, :, :]
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, gt_mod, label_gt[0])
+
+
+def test_gn_fit_wrong_params():
+    """ Test either if an error is raised when the params change just before
+    fitting. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    gaussian_norm.params = 'None'
+    assert_raises(ValueError, gaussian_norm.fit, t2w_mod, gt_mod, label_gt[0])
+
+
+def test_gn_fit_wt_gt():
+    """ Test the fitting routine without ground-truth. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    gaussian_norm.fit(t2w_mod)
+    assert_almost_equal(gaussian_norm.mu_, 91.3885267391)
+    assert_almost_equal(gaussian_norm.sigma_, 156.874802646)
+
+def test_gn_fit_auto():
+    """ Test the fitting routine with auto parameters. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    gaussian_norm = GaussianNormalization(T2WModality())
+    gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
+    assert_almost_equal(gaussian_norm.mu_, 250.20018737)
+    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658)
+
+def test_gn_fit_fix_mu_sigma():
+    """ Test the fitting routine with fixed mean and std. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    params = {'mu' : 1., 'sigma': 3.}
+    gaussian_norm = GaussianNormalization(T2WModality(), params=params)
+    gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
+    assert_almost_equal(gaussian_norm.mu_, 250.20018737)
+    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658)
