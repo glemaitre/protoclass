@@ -1,6 +1,9 @@
 """ Gaussian normalization to normalize standalone modality.
 """
 
+from scipy.stats import norm
+from scipy.optimize import curve_fit
+
 from .standalone_normalization import StandaloneNormalization
 
 
@@ -57,19 +60,72 @@ class GaussianNormalization(StandaloneNormalization):
             self.params = 'fixed'
             # Check that mu and sigma are inside the dictionary
             valid_presets = ('mu', 'sigma')
-            if params not in valid_presets:
-                raise ValueError('You need to specify to arguments mu and'
-                                 ' sigma for the mean and std, respectively.')
-            else:
-                self.fit_params_ = {}
-                for k in valid_presets:
-                    # Incrementaly add the key and values
-                    self.fit_params_[k] = params[k]
+            for val_param in valid_presets:
+                if not val_param in params.keys():
+                    raise ValueError('At least the parameter {} is not specify'
+                                      ' in the dictionary.'.format(val_param))
+            # For each key, check if this is a known parameters
+            self.fit_params_ = {}
+            for k_param in params.keys():
+                if k_param in valid_presets:
+                    # The key is valid, build our dictionary
+                    if isinstance(params[k_param], float):
+                        self.fit_params_[k_param] = params[k_param]
+                    else:
+                        raise ValueError('The parameter mu and sigma should be'
+                                         ' some float.')
+                else:
+                    raise ValueError('Unknown parameter inside the dictionary.'
+                                     ' `mu` and `sigma` are the only two'
+                                     ' solutions and need to be float.')
         else:
             raise ValueError('The type of the object params does not fulfill'
                              ' any requirement.')
         # Initialize the fitting boolean
         self.is_fitted_ = False
+
+    def _model_fit(self, x, mu, sigma):
+        """ Function defining the Gaussian model.
+
+        Parameters
+        ----------
+        x : ndarray, shape (n_samples, )
+            Array for which we have to compute the PDF.
+
+        mu : float
+            Mean of the Gaussian model.
+
+        std : float
+            Standard deviation of the model.
+
+        Return
+        ------
+        pdf : ndarray, shape (n_samples)
+            The associated PDF to x parametrize through mu and sigma.
+        """
+
+        return norm.pdf(x, mu, sigma)
+
+    def _compute_histogram(self, X):
+        """ Function allowing to compute the histogram from the data.
+
+        Parameters
+        ----------
+        X : ndarray, shape (n_samples, )
+            The data of interest from which we want to estimate the PDF.
+
+        Return
+        ------
+        pdf : ndarray, shape (n_samples, )
+            The PDF associated with the data of interest define by the ROI.
+
+        bins : ndarray, shape (n_samples + 1, )
+            The bins associated with the PDF
+        """
+        # Compute the histogram from the data of insterest
+        pdf, bins = np.histogram(X, bins=np.max(X) - np.min(X), density=True)
+
+        return (pdf, bins)
 
     def fit(self, modality, ground_truth=None, cat=None):
         """ Method to find the parameters needed to apply the
@@ -102,13 +158,27 @@ class GaussianNormalization(StandaloneNormalization):
         if self.params == 'auto':
             # Find an original guess of the fitted parameters depending of
             # the data
-            mu = np.ndarray.mean(modality.data_)
-            sigma = 1
+            mu = np.ndarray.mean(modality.data_[self.roi_data_])
+            sigma = np.ndarray.std(modality.data_[self.roi_data_])
         elif self.params == 'fixed':
             mu = self.fit_params_['mu']
             sigma = self.fit_params_['sigma']
         else:
             raise ValueError('The value of self.params is unknown. Something'
                              ' went wrong.')
+
+        # Compute the histogram that need to be fitted
+        pdf, bins = self._compute_histogram(modality.data_[self.roi_data_])
+        # Compute the bins centers
+        bincenters = 0.5*(bins[1:]+bins[:-1])
+
+        # Fit the histogram using the model defined previously
+        popt, _ = curve_fit(self._model_fit, bincenters, pdf,
+                            p0=(mu, sigma))
+
+        # Assign the value after convergence
+        self.mu_ = popt[0]
+        self.sigma = popt[1]
+        self.is_fitted_ = True
 
         return self

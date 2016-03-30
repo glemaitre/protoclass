@@ -33,7 +33,7 @@ class StandaloneNormalization(BaseNormalization):
         # Check that the base modality is a subclass of TemporalModality
         if not issubclass(type(self.base_modality), StandaloneModality):
             raise ValueError('The base modality provided in the constructor is'
-                             ' not a TemporalModality.')
+                             ' not a StandaloneModality.')
         else:
             self.base_modality_ = self.base_modality
 
@@ -107,6 +107,18 @@ class StandaloneNormalization(BaseNormalization):
         """
         # Check that the modality is from the template class
         check_modality(modality, self.base_modality_)
+
+        # Check that the data were read during the creation of the modality
+        if not modality.is_read():
+            raise ValueError('No data have been read during the construction'
+                             ' of the modality object.')
+
+        # Check that the data were read during the creation of the
+        #ground-truth modality
+        if not ground_truth.is_read():
+            raise ValueError('No data have been read during the construction'
+                             ' of the GT modality object.')
+
 
         # Check the consistency of the data
         if ground_truth is None and cat is not None:

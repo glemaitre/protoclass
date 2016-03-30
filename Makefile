@@ -6,7 +6,7 @@ all:
 	$(PYTHON) setup.py build_ext --inplace
 
 clean:
-	find . -name "*.so" -o -name "*.pyc" -o -name "*.md5" -o -name "*.pyd" | xargs rm -f
+	find . -name "*.so" -o -name "*.pyc" -o -name "*.md5" -o -name "*.pyd" -o -name "*~" | xargs rm -f
 	rm -rf coverage
 	rm -rf dist
 	rm -rf build
@@ -18,7 +18,7 @@ test:
 # 	$(PYTHON) -c "import protoclass, sys, io; sys.exit(protoclass.doctest_verbose())"
 
 coverage:
-	$(NOSETESTS) protoclass --with-coverage --cover-package=protoclass
+	$(NOSETESTS) -s -v protoclass --with-coverage --cover-package=protoclass
 
 html:
 	conda install sphinx
