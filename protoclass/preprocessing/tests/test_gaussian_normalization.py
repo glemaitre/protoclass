@@ -13,6 +13,7 @@ from protoclass.data_management import GTModality
 
 from protoclass.preprocessing import GaussianNormalization
 
+DECIMAL_PRECISON = 3
 
 def test_gn_init_wrong_base_modality():
     """ Test either if an error is raised when a wrong base modality
@@ -138,8 +139,10 @@ def test_gn_fit_no_gt_1_cat():
 
     # Call the fitting before to have read the data
     assert_warns(UserWarning, gaussian_norm.fit, t2w_mod, None, 'prostate')
-    assert_almost_equal(gaussian_norm.mu_, 91.3885267391)
-    assert_almost_equal(gaussian_norm.sigma_, 156.874802646)
+    assert_almost_equal(gaussian_norm.mu_, 91.3885267391,
+                        decimal=DECIMAL_PRECISON)
+    assert_almost_equal(gaussian_norm.sigma_, 156.874802646,
+                        decimal=DECIMAL_PRECISON)
 
 
 def test_gn_fit_no_cat():
@@ -301,8 +304,10 @@ def test_gn_fit_wt_gt():
 
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod)
-    assert_almost_equal(gaussian_norm.mu_, 91.3885267391)
-    assert_almost_equal(gaussian_norm.sigma_, 156.874802646)
+    assert_almost_equal(gaussian_norm.mu_, 91.3885267391,
+                        decimal=DECIMAL_PRECISON)
+    assert_almost_equal(gaussian_norm.sigma_, 156.874802646,
+                        decimal=DECIMAL_PRECISON)
 
 def test_gn_fit_auto():
     """ Test the fitting routine with auto parameters. """
@@ -325,8 +330,10 @@ def test_gn_fit_auto():
 
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.mu_, 250.20018737)
-    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658)
+    assert_almost_equal(gaussian_norm.mu_, 250.20018737,
+                        decimal=DECIMAL_PRECISON)
+    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658,
+                        decimal=DECIMAL_PRECISON)
 
 def test_gn_fit_fix_mu_sigma():
     """ Test the fitting routine with fixed mean and std. """
@@ -350,5 +357,7 @@ def test_gn_fit_fix_mu_sigma():
     params = {'mu' : 1., 'sigma': 3.}
     gaussian_norm = GaussianNormalization(T2WModality(), params=params)
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.mu_, 250.20018737)
-    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658)
+    assert_almost_equal(gaussian_norm.mu_, 250.20018737,
+                        decimal=DECIMAL_PRECISON)
+    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658,
+                        decimal=DECIMAL_PRECISON)
