@@ -21,5 +21,5 @@ coverage:
 	$(NOSETESTS) -s -v protoclass --with-coverage --cover-package=protoclass
 
 html:
-	conda install sphinx
+	conda install -y sphinx sphinx_rtd_theme	
 	export SPHINXOPTS=-W; make -C doc html
