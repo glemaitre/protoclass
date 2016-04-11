@@ -21,10 +21,6 @@ def make_table(data, feature_list, filename, decimals=1):
 
     decimal: int
         The precision to report the results.
-
-    Returns
-    -------
-    None
     """
     # Check the extension of filename
     if not filename.endswith('.tex'):

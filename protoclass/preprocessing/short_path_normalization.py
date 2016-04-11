@@ -32,8 +32,8 @@ class ShortPathNormalization(TemporalNormalization):
         modality : object
             Object inherated from TemporalModality.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
              Return self.
         """

@@ -17,14 +17,14 @@ class DCEModality(TemporalModality):
 
     Attributes
     ----------
-    path_data_ : string
+    path_data_ : str
         Location of the data.
 
-    data_ : array-like, shape (T, Y, X, Z)
+    data_ : ndarray, shape (T, Y, X, Z)
         The different volume of the DCE serie. The data are saved in
         T, Y, X, Z ordered.
 
-    pdf_series_ : list, length (n_serie)
+    pdf_series_ : list of ndarray, length (n_serie)
         List of the PDF for each serie.
 
     bin_series_ : list of ndarray, length (n_serie)
@@ -36,7 +36,7 @@ class DCEModality(TemporalModality):
     min_series_ : float
         Minimum intensity of all the DCE series.
 
-    n_serie_ : integer
+    n_serie_ : int
         Number of serie in this DCE sequence.
 
     max_series_list_ : list of float
@@ -53,10 +53,7 @@ class DCEModality(TemporalModality):
         """Function to compute histogram of each serie and store it
         The min and max of the series are also stored
 
-        Parameters
-        ----------
-
-        Return:
+        Returns
         -------
         self : object
             Returns self.
@@ -99,12 +96,9 @@ class DCEModality(TemporalModality):
     def build_heatmap(self):
         """ Function which return a heatmap using the pdf of each serie
 
-        Parameters
-        ----------
-
-        Return
-        ------
-        heatmap : array-like, shape (n_serie, intensity_range)
+        Returns
+        -------
+        heatmap : ndarray, shape (n_serie, intensity_range)
              Return an heatmap of the different pdfs. This equivalent to
              pdf_series_ but properly shifted inside an array.
         """
@@ -142,8 +136,8 @@ class DCEModality(TemporalModality):
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
         """

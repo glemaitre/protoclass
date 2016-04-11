@@ -100,8 +100,8 @@ class GaussianNormalization(StandaloneNormalization):
         std : float
             Standard deviation of the model.
 
-        Return
-        ------
+        Returns
+        -------
         pdf : ndarray, shape (n_samples)
             The associated PDF to x parametrize through mu and sigma.
         """
@@ -116,8 +116,8 @@ class GaussianNormalization(StandaloneNormalization):
         X : ndarray, shape (n_samples, )
             The data of interest from which we want to estimate the PDF.
 
-        Return
-        ------
+        Returns
+        -------
         pdf : ndarray, shape (n_samples, )
             The PDF associated with the data of interest define by the ROI.
 
@@ -146,8 +146,8 @@ class GaussianNormalization(StandaloneNormalization):
             String corresponding at the ground-truth of interest. Cannot be
             None if ground-truth is not None.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
              Return self.
         """

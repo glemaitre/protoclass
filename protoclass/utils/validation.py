@@ -11,8 +11,8 @@ def check_path_data(path_data):
     path_data : str or list of str
         Path to the temporal data.
 
-    Return
-    ------
+    Returns
+    -------
     path_data : str or list of str
         Path to the temporal data.
     """
@@ -50,10 +50,6 @@ def check_modality(modality, template_modality):
 
     template_modality : object
         The template modality object of interest.
-
-    Return
-    ------
-    None
     """
 
     # Check that the two modality classes are coherent

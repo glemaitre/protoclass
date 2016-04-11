@@ -43,10 +43,7 @@ class T2WModality(StandaloneModality):
         """Function to compute histogram of each serie and store it
         The min and max of the series are also stored
 
-        Parameters
-        ----------
-
-        Return:
+        Returns
         -------
         self : object
             Returns self.
@@ -77,8 +74,8 @@ class T2WModality(StandaloneModality):
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
         """

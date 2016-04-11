@@ -40,8 +40,8 @@ class TemporalModality(BaseModality):
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
         """

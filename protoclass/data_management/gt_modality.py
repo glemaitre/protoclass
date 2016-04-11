@@ -22,7 +22,7 @@ class GTModality(MultisequenceModality):
     path_data_ : str or list of str
         Location of the data.
 
-    data_ : array-like, shape (GT, Y, X, Z)
+    data_ : ndarray, shape (GT, Y, X, Z)
         The different volume of the GT volume. The data are saved in
         GT, Y, X, Z ordered.
 
@@ -54,8 +54,8 @@ class GTModality(MultisequenceModality):
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
 

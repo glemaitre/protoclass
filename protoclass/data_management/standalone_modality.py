@@ -39,8 +39,8 @@ class StandaloneModality(BaseModality):
         path_data : str or None, optional (default=None)
             Path to the standalone modality data.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
         """

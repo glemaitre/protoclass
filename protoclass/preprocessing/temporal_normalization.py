@@ -47,8 +47,8 @@ class TemporalNormalization(BaseNormalization):
         modality : object
             Object inherated from TemporalModality.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
              Return self.
         """

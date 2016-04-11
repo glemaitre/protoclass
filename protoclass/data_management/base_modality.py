@@ -36,8 +36,8 @@ class BaseModality(object):
     def is_read(self):
         """ Function to know if the data have been read.
 
-        Return
-        ------
+        Returns
+        -------
         is_read : bool
             If True, the data have been read at least once.
         """

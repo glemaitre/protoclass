@@ -19,11 +19,11 @@ class DWIModality(MultisequenceModality):
     path_data_ : str or list of str
         Location of the data.
 
-    data_ : array-like, shape (B_seq, Y, X, Z)
+    data_ : ndarray, shape (B_seq, Y, X, Z)
         The different volume from different B sequuences. The data are
         saved in B_seq, Y, X, Z ordered.
 
-    pdf_series_ : list, length (n_serie)
+    pdf_series_ : list of ndarray, length (n_serie)
         List of the PDF for each serie.
 
     bin_series_ : list of ndarray, length (n_serie)
@@ -35,7 +35,7 @@ class DWIModality(MultisequenceModality):
     min_series_ : float
         Minimum intensity of all the DCE series.
 
-    n_serie_ : integer
+    n_serie_ : int
         Number of serie in this DCE sequence.
 
     max_series_list_ : list of float
@@ -52,10 +52,7 @@ class DWIModality(MultisequenceModality):
         """Function to compute histogram of each serie and store it
         The min and max of the series are also stored
 
-        Parameters
-        ----------
-
-        Return:
+        Returns
         -------
         self : object
             Returns self.
@@ -104,8 +101,8 @@ class DWIModality(MultisequenceModality):
             Path to the temporal data. It will overrides the path given
             in the constructor.
 
-        Return
-        ------
+        Returns
+        -------
         self : object
            Returns self.
         """
