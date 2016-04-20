@@ -184,3 +184,17 @@ class GaussianNormalization(StandaloneNormalization):
         self.is_fitted_ = True
 
         return self
+
+    def normalize(self, modality):
+        """ Method to normalize the given modality using the fitted parameters.
+
+        Parameters
+        ----------
+        modality: object of type StandaloneModality
+            The modality object from which the data need to be normalized.
+
+        Returns
+        -------
+        modality: object of type StandaloneModality
+            The modality object in which the data will be normalized.
+        """

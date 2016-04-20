@@ -138,3 +138,8 @@ class StandaloneNormalization(BaseNormalization):
                                                         cat)
 
         return self
+
+    @abstractmethod
+    def normalize(self, modality):
+        """ Function to normalize a modality object. """
+        raise NotImplementedError
