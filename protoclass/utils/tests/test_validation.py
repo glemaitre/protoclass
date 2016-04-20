@@ -8,10 +8,12 @@ from numpy.testing import assert_raises
 
 from protoclass.utils.validation import check_path_data
 from protoclass.utils.validation import check_modality
+from protoclass.utils.validation import check_img_filename
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
 from protoclass.data_management import GTModality
+
 
 def test_check_path_data_str_exist():
     """ Test that the path is return properly when it exists. """
@@ -84,3 +86,24 @@ def test_check_modality_wrong_modality():
 def test_check_modality():
     """ Test that everything is fine when the modalities are the same. """
     assert_equal(check_modality(T2WModality(), T2WModality()), None)
+
+
+def test_check_img_filename_no_file():
+    """ Test if an error is raised when the file does not exist. """
+    assert_raises(check_img_filename, 'random.rnd')
+
+
+def test_check_img_filename_not_img():
+    """ Test if an error is raised when the file is not of img extension. """
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data', 'path_list_data',
+                            's_2', 'README.md')
+    assert_raises(check_img_filename, filename)
+
+def test_check_img_filename():
+    """ Test the routine to check if the file is of type img. """
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data', 'path_list_data',
+                            's_2', 'README.img')
+
+    assert_equal(check_img_filename(filename), filename)

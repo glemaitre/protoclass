@@ -1,7 +1,7 @@
 """Utilities for input validation."""
 
-import numpy as np
 import os
+import numpy as np
 
 def check_path_data(path_data):
     """Check if the path data exist.
@@ -65,3 +65,25 @@ def check_modality(modality, template_modality):
         pass
 
     return None
+
+
+def check_img_filename(filename):
+    """ Method to check that the filename is an `img` file.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to check.
+
+    Returns
+    -------
+        The filename checked.
+    """
+    # Check that filename point to a file
+    if os.path.isfile(filename):
+        if filename.endswith('.img'):
+            return filename
+        else:
+            raise ValueError('The file needs to be with an img extension.')
+    else:
+        raise ValueError('The filename provided does not point to a file.')
