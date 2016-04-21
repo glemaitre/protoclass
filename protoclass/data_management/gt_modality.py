@@ -37,7 +37,7 @@ class GTModality(MultisequenceModality):
     def __init__(self, path_data=None):
         super(GTModality, self).__init__(path_data=path_data)
 
-    def _update_histogram(self):
+    def update_histogram(self):
         """ Method to compute histogram and statistics. """
         raise NotImplementedError
 

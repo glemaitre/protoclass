@@ -39,6 +39,9 @@ class GaussianNormalization(StandaloneNormalization):
         - 'mu' is the fitted mean.
         - 'sigma' is the standard deviation.
 
+        The precision of the parameters is the unit to avoid any precision
+        problem during normalization and denormalization.
+
     is_fitted_ : bool
         Boolean to know if the `fit` function has been already called.
 
@@ -179,8 +182,8 @@ class GaussianNormalization(StandaloneNormalization):
                             p0=(mu, sigma))
 
         # Assign the value after convergence
-        self.mu_ = popt[0]
-        self.sigma_ = popt[1]
+        self.mu_ = np.round(popt[0])
+        self.sigma_ = np.round(popt[1])
         self.is_fitted_ = True
 
         return self

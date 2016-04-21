@@ -6,6 +6,7 @@ from numpy.testing import assert_raises
 from numpy.testing import assert_equal
 from numpy.testing import assert_warns
 from numpy.testing import assert_almost_equal
+from numpy.testing import assert_array_equal
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
@@ -139,9 +140,9 @@ def test_gn_fit_no_gt_1_cat():
 
     # Call the fitting before to have read the data
     assert_warns(UserWarning, gaussian_norm.fit, t2w_mod, None, 'prostate')
-    assert_almost_equal(gaussian_norm.mu_, 91.3885267391,
+    assert_almost_equal(gaussian_norm.mu_, 91,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(gaussian_norm.sigma_, 156.874802646,
+    assert_almost_equal(gaussian_norm.sigma_, 157,
                         decimal=DECIMAL_PRECISON)
 
 
@@ -304,9 +305,9 @@ def test_gn_fit_wt_gt():
 
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod)
-    assert_almost_equal(gaussian_norm.mu_, 91.3885267391,
+    assert_almost_equal(gaussian_norm.mu_, 91,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(gaussian_norm.sigma_, 156.874802646,
+    assert_almost_equal(gaussian_norm.sigma_, 157,
                         decimal=DECIMAL_PRECISON)
 
 def test_gn_fit_auto():
@@ -330,9 +331,9 @@ def test_gn_fit_auto():
 
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.mu_, 250.20018737,
+    assert_almost_equal(gaussian_norm.mu_, 250,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658,
+    assert_almost_equal(gaussian_norm.sigma_, 66,
                         decimal=DECIMAL_PRECISON)
 
 def test_gn_fit_fix_mu_sigma():
@@ -357,7 +358,47 @@ def test_gn_fit_fix_mu_sigma():
     params = {'mu' : 1., 'sigma': 3.}
     gaussian_norm = GaussianNormalization(T2WModality(), params=params)
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.mu_, 250.20018737,
+    assert_almost_equal(gaussian_norm.mu_, 250,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(gaussian_norm.sigma_, 65.9800837658,
+    assert_almost_equal(gaussian_norm.sigma_, 66,
                         decimal=DECIMAL_PRECISON)
+
+
+def test_gn_normalize():
+    """ Test the normalize function. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Store the data before the normalization
+    pdf_copy = t2w_mod.pdf_.copy()
+    data_copy = t2w_mod.data_.copy()
+
+    # Normalize the data
+    gaussian_norm = GaussianNormalization(T2WModality())
+    gaussian_norm.fit(t2w_mod, gt_mod, 'prostate')
+    t2w_mod = gaussian_norm.normalize(t2w_mod)
+
+    # Check that the data are equal to what they should be
+    assert_array_equal(t2w_mod.data_, (data_copy - 250.) / 66.)
+
+    # Denormalize the data
+    t2w_mod = gaussian_norm.denormalize(t2w_mod)
+
+    # Check that the data are equal to the original data
+    assert_array_equal(t2w_mod.data_, data_copy)
+    assert_array_equal(t2w_mod.pdf_, pdf_copy)
+
