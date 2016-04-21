@@ -198,3 +198,45 @@ class GaussianNormalization(StandaloneNormalization):
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
         """
+        # Check that the parameters have been fitted
+        if not self.is_fitted_:
+            raise ValueError('Fir the parameters previous to normalize'
+                             ' the data.')
+
+        # Normalize the data of the modality
+        modality.data_ -= self.mu_
+        modality.data_ /= self.sigma_
+
+        # Update the histogram associated to the data
+        modality.update_histogram()
+
+        return modality
+
+    def denormalize(self, modality):
+        """ Method to denormalize the given modality using the
+        fitted parameters.
+
+        Parameters
+        ----------
+        modality: object of type StandaloneModality
+            The modality object from which the data need to be normalized.
+
+        Returns
+        -------
+        modality: object of type StandaloneModality
+            The modality object in which the data will be normalized.
+        """
+        # Check that the parameters have been fitted
+        if not self.is_fitted_:
+            raise ValueError('Fir the parameters previous to normalize'
+                             ' the data.')
+
+        # Normalize the data of the modality
+        modality.data_ *= self.sigma_
+        modality.data_ += self.mu_
+
+        # Update the histogram associated to the data
+        modality.update_histogram()
+
+        return modality
+
