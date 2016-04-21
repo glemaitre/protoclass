@@ -49,7 +49,7 @@ class DCEModality(TemporalModality):
     def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
 
-    def _update_histogram(self):
+    def update_histogram(self):
         """Function to compute histogram of each serie and store it
         The min and max of the series are also stored
 
@@ -145,6 +145,6 @@ class DCEModality(TemporalModality):
         super(DCEModality, self).read_data_from_path(path_data=path_data)
 
         # Compute the information regarding the pdf of the DCE series
-        self._update_histogram()
+        self.update_histogram()
 
         return self

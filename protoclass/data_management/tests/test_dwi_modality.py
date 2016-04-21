@@ -139,7 +139,7 @@ def test_update_histogram():
     # Change something in the data to check that the computation
     # is working
     dwi_mod.data_[0, 20:40, :, :] = 2000.
-    dwi_mod._update_histogram()
+    dwi_mod.update_histogram('auto')
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dwi_mod.min_series_, 0.)
@@ -168,7 +168,7 @@ def test_update_histogram_wt_data():
     # Create an object to handle the data
     dwi_mod = DWIModality()
 
-    assert_raises(ValueError, dwi_mod._update_histogram)
+    assert_raises(ValueError, dwi_mod.update_histogram)
 
 
 def test_dwi_path_data_warning():

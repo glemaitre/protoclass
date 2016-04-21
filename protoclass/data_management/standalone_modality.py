@@ -25,7 +25,7 @@ class StandaloneModality(BaseModality):
         super(StandaloneModality, self).__init__(path_data=path_data)
 
     @abstractmethod
-    def _update_histogram(self):
+    def update_histogram(self):
         """ Method to compute histogram and statistics. """
         raise NotImplementedError
 

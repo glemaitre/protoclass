@@ -132,7 +132,7 @@ def test_update_histogram():
     # Change something in the data to check that the computation
     # is working
     t2w_mod.data_[20:40, :, :] = 1050.
-    t2w_mod._update_histogram()
+    t2w_mod.update_histogram('auto')
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(t2w_mod.min_, 0.)
@@ -155,7 +155,7 @@ def test_update_histogram_wt_data():
     # Create an object to handle the data
     t2w_mod = T2WModality()
 
-    assert_raises(ValueError, t2w_mod._update_histogram)
+    assert_raises(ValueError, t2w_mod.update_histogram)
 
 
 def test_dce_path_data_warning():

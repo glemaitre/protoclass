@@ -39,14 +39,28 @@ class T2WModality(StandaloneModality):
     def __init__(self, path_data=None):
         super(T2WModality, self).__init__(path_data=path_data)
 
-    def _update_histogram(self):
+    def update_histogram(self, nb_bins=None):
         """Function to compute histogram of each serie and store it
-        The min and max of the series are also stored
+        The min and max of the series are also stored.
+
+        Parameters
+        ----------
+        nb_bins : int or None, optional (default=None)
+            The numbers of bins to use to compute the histogram.
+            The possibilities are:
+            - If None, the number of bins found at reading will be used.
+            - If 'auto', the number of bins is found at fitting time.
+            - Otherwise, an integer needs to be given.
 
         Returns
         -------
         self : object
             Returns self.
+
+        Notes
+        -----
+        There is the possibility to redifine the number of bins to use for
+        the histogram since it can be tricky to play with normalized data.
         """
         # Check if the data have been read
         if self.data_ is None:
@@ -58,9 +72,14 @@ class T2WModality(StandaloneModality):
         self.min_ = np.ndarray.min(self.data_)
 
         # Build the histogram corresponding to the current volume
-        bins = int(np.round(self.max_ - self.min_))
+        # Find how many bins do we need
+        if nb_bins is None:
+            nb_bins = self.nb_bins_
+        elif nb_bins == 'auto':
+            nb_bins = int(np.round(self.max_ - self.min_))
+
         self.pdf_, self.bin_ = np.histogram(self.data_,
-                                            bins=bins,
+                                            bins=nb_bins,
                                             density=True)
 
         return self
@@ -83,6 +102,10 @@ class T2WModality(StandaloneModality):
         super(T2WModality, self).read_data_from_path(path_data=path_data)
 
         # Compute the information regarding the T2W images
-        self._update_histogram()
+        # Set the number of bins that will be later used to compute
+        # the histogram
+        self.nb_bins_ = int(np.round(np.ndarray.max(self.data_) -
+                                     np.ndarray.min(self.data_)))
+        self.update_histogram()
 
         return self

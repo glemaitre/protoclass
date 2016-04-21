@@ -24,7 +24,7 @@ class BaseModality(object):
         self.data_ = None
 
     @abstractmethod
-    def _update_histogram(self):
+    def update_histogram(self):
         """ Method to compute histogram and statistics. """
         raise NotImplementedError
 

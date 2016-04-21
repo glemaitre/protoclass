@@ -139,7 +139,7 @@ def test_update_histogram():
     # Change something in the data to check that the computation
     # is working
     dce_mod.data_[0, 20:40, :, :] = 1000.
-    dce_mod._update_histogram()
+    dce_mod.update_histogram()
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dce_mod.min_series_, 0.)
@@ -168,7 +168,7 @@ def test_update_histogram_wt_data():
     # Create an object to handle the data
     dce_mod = DCEModality()
 
-    assert_raises(ValueError, dce_mod._update_histogram)
+    assert_raises(ValueError, dce_mod.update_histogram)
 
 
 def test_build_heatmap_wt_data():
