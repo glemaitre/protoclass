@@ -55,3 +55,44 @@ class TemporalNormalization(BaseNormalization):
         check_modality(modality, self.base_modality_)
 
         return self
+
+    @abstractmethod
+    def normalize(self, modality):
+        """ Method to normalize the given modality using the fitted parameters.
+
+        Parameters
+        ----------
+        modality: object of type StandaloneModality
+            The modality object from which the data need to be normalized.
+
+        Returns
+        -------
+        modality: object of type StandaloneModality
+            The modality object in which the data will be normalized.
+        """
+        # Check that the class of modality is the same than the template
+        # modality
+        check_modality(modality, self.base_modality_)
+
+        return self
+
+    @abstractmethod
+    def denormalize(self, modality):
+        """ Method to denormalize the given modality using the
+        fitted parameters.
+
+        Parameters
+        ----------
+        modality: object of type StandaloneModality
+            The modality object from which the data need to be normalized.
+
+        Returns
+        -------
+        modality: object of type StandaloneModality
+            The modality object in which the data will be normalized.
+        """
+        # Check that the class of modality is the same than the template
+        # modality
+        check_modality(modality, self.base_modality_)
+
+        return self
