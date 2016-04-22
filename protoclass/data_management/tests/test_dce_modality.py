@@ -139,7 +139,7 @@ def test_update_histogram():
     # Change something in the data to check that the computation
     # is working
     dce_mod.data_[0, 20:40, :, :] = 1000.
-    dce_mod.update_histogram()
+    dce_mod.update_histogram('auto')
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(dce_mod.min_series_, 0.)

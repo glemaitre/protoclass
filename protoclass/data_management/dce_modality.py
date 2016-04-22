@@ -49,9 +49,16 @@ class DCEModality(TemporalModality):
     def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
 
-    def update_histogram(self):
+    def update_histogram(self, nb_bins=None):
         """Function to compute histogram of each serie and store it
         The min and max of the series are also stored
+
+        Parameters
+        ----------
+        nb_bins : list of int or None, optional (default=None)
+            The numbers of bins to use to compute the histogram. Since that we
+            deal with several series, a list needs to be provided. If None, the
+            number of bins found at reading will be used.
 
         Returns
         -------
@@ -73,10 +80,23 @@ class DCEModality(TemporalModality):
         min_series_list = []
         max_series_list = []
 
-        for data_serie in self.data_:
-            bins = int(np.round(np.ndarray.max(data_serie) -
-                                np.ndarray.min(data_serie)))
+        # Check that we have a proper list of bins
+        if ((nb_bins is not None) and
+            (nb_bins != 'auto') and
+            (len(nb_bins) != len(self.data_))):
+            raise ValueError('Provide a list of number of bins with the same'
+                             ' size as the number of serie in the data.')
+        # Get the list of number of bins if not specify
+        elif nb_bins is None:
+            nb_bins = self.nb_bins_
+        elif nb_bins is 'auto':
+            nb_bins = []
+            for data_serie in self.data_:
+                nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
+                                            np.ndarray.min(data_serie))))
 
+
+        for data_serie, bins in zip(self.data_, nb_bins):
             pdf_s, bin_s = np.histogram(data_serie,
                                         bins=bins,
                                         density=True)
@@ -143,6 +163,13 @@ class DCEModality(TemporalModality):
         """
         # Called the parent function to read the data
         super(DCEModality, self).read_data_from_path(path_data=path_data)
+
+        # Create the list of number of bins to compute the histogram
+        self.nb_bins_ = []
+        for data_serie in self.data_:
+            self.nb_bins_.append(int(np.round(np.ndarray.max(data_serie) -
+                                              np.ndarray.min(data_serie))))
+
 
         # Compute the information regarding the pdf of the DCE series
         self.update_histogram()
