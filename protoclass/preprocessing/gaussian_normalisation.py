@@ -201,6 +201,8 @@ class GaussianNormalization(StandaloneNormalization):
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
         """
+        super(GaussianNormalization, self).normalize(modality)
+
         # Check that the parameters have been fitted
         if not self.is_fitted_:
             raise ValueError('Fir the parameters previous to normalize'
@@ -229,6 +231,8 @@ class GaussianNormalization(StandaloneNormalization):
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
         """
+        super(GaussianNormalization, self).denormalize(modality)
+
         # Check that the parameters have been fitted
         if not self.is_fitted_:
             raise ValueError('Fir the parameters previous to normalize'
@@ -242,4 +246,3 @@ class GaussianNormalization(StandaloneNormalization):
         modality.update_histogram()
 
         return modality
-

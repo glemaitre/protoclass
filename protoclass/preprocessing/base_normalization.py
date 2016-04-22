@@ -35,12 +35,12 @@ class BaseNormalization(object):
         normalization. """
         raise NotImplementedError
 
-    # @abstractmethod
-    # def normalize(self):
-    #     """ Normalize the data after fitting the data. """
-    #     raise NotImplementedError
+    @abstractmethod
+    def normalize(self, modality):
+        """ Normalize the data after fitting the data. """
+        raise NotImplementedError
 
-    # @abstractmethod
-    # def denormalize(self):
-    #     """ Reverse the normalization. """
-    #     raise NotImplementedError
+    @abstractmethod
+    def denormalize(self, modality):
+        """ Reverse the normalization. """
+        raise NotImplementedError
