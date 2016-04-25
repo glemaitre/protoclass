@@ -1,5 +1,4 @@
-""" Basic class for standalone modality (T1, T2, etc.).
-"""
+"""Basic class for standalone modality (T1, T2, etc.)."""
 
 import numpy as np
 import SimpleITK as sitk
@@ -12,7 +11,7 @@ from ..utils.validation import check_path_data
 
 
 class StandaloneModality(BaseModality):
-    """ Basic class for medical modality (T1, T2, etc.).
+    """Basic class for medical modality (T1, T2, etc.).
 
     Warning: This class should not be used directly. Use the derive classes
     instead.
@@ -21,18 +20,17 @@ class StandaloneModality(BaseModality):
 
     @abstractmethod
     def __init__(self, path_data=None):
-        """ Constructor. """
+        """Constructor."""
         super(StandaloneModality, self).__init__(path_data=path_data)
 
     @abstractmethod
     def update_histogram(self):
-        """ Method to compute histogram and statistics. """
+        """Method to compute histogram and statistics."""
         raise NotImplementedError
 
     @abstractmethod
     def read_data_from_path(self, path_data=None):
-        """Function to read standalone images which represent a single 3D
-        volume.
+        """Read standalone images which represent a single 3D volume.
 
         Parameters
         ----------
@@ -43,6 +41,7 @@ class StandaloneModality(BaseModality):
         -------
         self : object
            Returns self.
+
         """
         # Check the consistency of the path data
         if self.path_data_ is not None and path_data is not None:

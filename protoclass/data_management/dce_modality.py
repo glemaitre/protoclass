@@ -1,5 +1,4 @@
-""" DCE modality class.
-"""
+"""DCE modality class."""
 
 import numpy as np
 
@@ -7,7 +6,7 @@ from .temporal_modality import TemporalModality
 
 
 class DCEModality(TemporalModality):
-    """ Class to handle DCE-MRI modality.
+    """Class to handle DCE-MRI modality.
 
     Parameters
     ----------
@@ -44,14 +43,14 @@ class DCEModality(TemporalModality):
 
     min_series_list_ : list of float
         List of the minimum intensity for each DCE serie.
+
     """
 
     def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
 
     def update_histogram(self, nb_bins=None):
-        """Function to compute histogram of each serie and store it
-        The min and max of the series are also stored
+        """Update the histogram of each serie and first-order statistics.
 
         Parameters
         ----------
@@ -64,6 +63,7 @@ class DCEModality(TemporalModality):
         -------
         self : object
             Returns self.
+
         """
         # Check if the data have been read
         if self.data_ is None:
@@ -114,13 +114,14 @@ class DCEModality(TemporalModality):
         return self
 
     def build_heatmap(self):
-        """ Function which return a heatmap using the pdf of each serie
+        """Function which return a heatmap using the pdf of each serie.
 
         Returns
         -------
         heatmap : ndarray, shape (n_serie, intensity_range)
              Return an heatmap of the different pdfs. This equivalent to
              pdf_series_ but properly shifted inside an array.
+
         """
         # Check that the data have been read
         if self.data_ is None:
@@ -160,6 +161,7 @@ class DCEModality(TemporalModality):
         -------
         self : object
            Returns self.
+
         """
         # Called the parent function to read the data
         super(DCEModality, self).read_data_from_path(path_data=path_data)

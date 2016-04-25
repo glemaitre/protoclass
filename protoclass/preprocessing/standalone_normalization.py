@@ -1,5 +1,4 @@
-""" Basic class to normalize standalone modality.
-"""
+"""Basic class to normalize standalone modality."""
 
 import numpy as np
 import warnings
@@ -15,7 +14,7 @@ from ..utils.validation import check_modality
 
 
 class StandaloneNormalization(BaseNormalization):
-    """ Basic class to normalize standalone modality.
+    """Basic class to normalize standalone modality.
 
     Warning: This class should not be used directly. Use the derive classes
     instead.
@@ -28,8 +27,8 @@ class StandaloneNormalization(BaseNormalization):
         self._validate_modality()
 
     def _validate_modality(self):
-        """ Check if the provided modality is of interest with the type of
-        normalization. """
+        """Check if the provided modality is of interest with the type of
+        normalization."""
 
         # Check that the base modality is a subclass of TemporalModality
         if not issubclass(type(self.base_modality), StandaloneModality):
@@ -39,8 +38,7 @@ class StandaloneNormalization(BaseNormalization):
             self.base_modality_ = self.base_modality
 
     def _validate_modality_gt(self, modality, ground_truth, cat):
-        """ Method to check the consistency of the modality with the
-        ground-truth.
+        """Check the consistency of the modality with the ground-truth.
 
         Parameters
         ----------
@@ -58,6 +56,7 @@ class StandaloneNormalization(BaseNormalization):
         roi_data : ndarray, shape (non_zero_samples, 3)
             Corresponds to the indexes of the data of insterest
             extracted from the ground-truth.
+
         """
 
         # Check that the ground-truth is from GTModality
@@ -85,8 +84,7 @@ class StandaloneNormalization(BaseNormalization):
 
     @abstractmethod
     def fit(self, modality, ground_truth=None, cat=None):
-        """ Method to find the parameters needed to apply the
-        normalization.
+        """Find the parameters needed to apply the normalization.
 
         Parameters
         ----------
@@ -105,6 +103,7 @@ class StandaloneNormalization(BaseNormalization):
         ------
         self : object
              Return self.
+
         """
         # Check that the modality is from the template class
         check_modality(modality, self.base_modality_)
@@ -141,7 +140,7 @@ class StandaloneNormalization(BaseNormalization):
 
     @abstractmethod
     def normalize(self, modality):
-        """ Method to normalize the given modality using the fitted parameters.
+        """Method to normalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -152,6 +151,7 @@ class StandaloneNormalization(BaseNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         # Check that the class of modality is the same than the template
         # modality
@@ -161,8 +161,7 @@ class StandaloneNormalization(BaseNormalization):
 
     @abstractmethod
     def denormalize(self, modality):
-        """ Method to denormalize the given modality using the
-        fitted parameters.
+        """Denormalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -173,6 +172,7 @@ class StandaloneNormalization(BaseNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         # Check that the class of modality is the same than the template
         # modality

@@ -1,4 +1,4 @@
-""" GT modality class.
+"""GT modality class.
 """
 
 import numpy as np
@@ -10,7 +10,7 @@ from ..utils.validation import check_path_data
 
 
 class GTModality(MultisequenceModality):
-    """ Class to handle GT modality.
+    """Class to handle GT modality.
 
     Parameters
     ----------
@@ -32,18 +32,19 @@ class GTModality(MultisequenceModality):
 
     cat_gt_ : list of str
         Categorical labels associated with each ground-truth volume read.
+
     """
 
     def __init__(self, path_data=None):
         super(GTModality, self).__init__(path_data=path_data)
 
     def update_histogram(self):
-        """ Method to compute histogram and statistics. """
+        """Method to compute histogram and statistics."""
         raise NotImplementedError
 
     def read_data_from_path(self, cat_gt, path_data=None):
-        """Function to read GT images which correspond to a 3D volume,
-        a volume for different information.
+        """Read GT images which correspond to a 3D volume, a volume
+        for different information.
 
         Parameters
         ----------
@@ -63,6 +64,7 @@ class GTModality(MultisequenceModality):
         -----
         This function overwrite the function of MultisequenceModality since
         that a GT can contain only one sequence as well.
+
         """
         # Check the consistency of the path data
         if self.path_data_ is not None and path_data is not None:

@@ -1,10 +1,10 @@
-"""Utilities for input validation"""
+"""Utilities for input validation."""
 
 import numpy as np
 import os
 
 def check_path_data(path_data):
-    """ Method to check if the path data exist.
+    """Check if the path data exist.
 
     Parameters
     ----------
@@ -15,6 +15,7 @@ def check_path_data(path_data):
     -------
     path_data : str or list of str
         Path to the temporal data.
+
     """
 
     # Check if we have a list or a single string object
@@ -40,8 +41,7 @@ def check_path_data(path_data):
 
 
 def check_modality(modality, template_modality):
-    """ Method to check the modality class is the same than a template
-    modality.
+    """Check the modality class is the same than a template modality.
 
     Parameters
     ----------
@@ -50,6 +50,10 @@ def check_modality(modality, template_modality):
 
     template_modality : object
         The template modality object of interest.
+
+    Returns
+    -------
+    None
     """
 
     # Check that the two modality classes are coherent

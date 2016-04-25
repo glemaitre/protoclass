@@ -1,5 +1,4 @@
-""" DWI modality class.
-"""
+"""DWI modality class."""
 
 import numpy as np
 
@@ -7,7 +6,7 @@ from .multisequence_modality import MultisequenceModality
 
 
 class DWIModality(MultisequenceModality):
-    """ Class to handle DWI modality.
+    """Class to handle DWI modality.
 
     Parameters
     ----------
@@ -43,14 +42,14 @@ class DWIModality(MultisequenceModality):
 
     min_series_list_ : list of float
         List of the minimum intensity for each DCE serie.
+
     """
 
     def __init__(self, path_data=None):
         super(DWIModality, self).__init__(path_data=path_data)
 
     def update_histogram(self, nb_bins=None):
-        """Function to compute histogram of each serie and store it
-        The min and max of the series are also stored.
+        """Update the histogram of each serie and first-order statistics.
 
         Parameters
         ----------
@@ -63,6 +62,7 @@ class DWIModality(MultisequenceModality):
         -------
         self : object
             Returns self.
+
         """
         # Check if the data have been read
         if self.data_ is None:
@@ -124,6 +124,7 @@ class DWIModality(MultisequenceModality):
         -------
         self : object
            Returns self.
+
         """
         # Called the parent function to read the data
         super(DWIModality, self).read_data_from_path(path_data=path_data)

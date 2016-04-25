@@ -1,5 +1,4 @@
-""" Basic class for multisequence modality (DW, GT).
-"""
+"""Basic class for multisequence modality (DW, GT)."""
 
 import numpy as np
 import SimpleITK as sitk
@@ -12,7 +11,7 @@ from ..utils.validation import check_path_data
 
 
 class MultisequenceModality(BaseModality):
-    """ Basic class for multisequence medical modality (DW).
+    """Basic class for multisequence medical modality (DW).
 
     Warning: This class should not be used directly. Use the derive classes
     instead.
@@ -21,12 +20,12 @@ class MultisequenceModality(BaseModality):
 
     @abstractmethod
     def __init__(self, path_data=None):
-        """ Constructor. """
+        """Constructor."""
         super(MultisequenceModality, self).__init__(path_data=path_data)
 
     @abstractmethod
     def update_histogram(self):
-        """ Method to compute histogram and statistics. """
+        """Method to compute histogram and statistics."""
         raise NotImplementedError
 
     @abstractmethod
@@ -44,6 +43,7 @@ class MultisequenceModality(BaseModality):
         -------
         self : object
            Returns self.
+
         """
 
         # Check the consistency of the path data

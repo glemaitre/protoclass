@@ -1,5 +1,4 @@
-""" Gaussian normalization to normalize standalone modality.
-"""
+"""Gaussian normalization to normalize standalone modality."""
 
 import numpy as np
 
@@ -10,7 +9,7 @@ from .standalone_normalization import StandaloneNormalization
 
 
 class GaussianNormalization(StandaloneNormalization):
-    """ Gaussian normalization to normalize standalone modality.
+    """Gaussian normalization to normalize standalone modality.
 
     Parameters
     ----------
@@ -47,6 +46,7 @@ class GaussianNormalization(StandaloneNormalization):
 
     roi_data_ : ndarray, shape ()
         Corresponds to the index to consider in order to fit the data.
+
     """
 
     def __init__(self, base_modality, params='auto'):
@@ -90,7 +90,7 @@ class GaussianNormalization(StandaloneNormalization):
         self.is_fitted_ = False
 
     def _model_fit(self, x, mu, sigma):
-        """ Function defining the Gaussian model.
+        """Function defining the Gaussian model.
 
         Parameters
         ----------
@@ -107,12 +107,13 @@ class GaussianNormalization(StandaloneNormalization):
         -------
         pdf : ndarray, shape (n_samples)
             The associated PDF to x parametrize through mu and sigma.
+
         """
 
         return norm.pdf(x, mu, sigma)
 
     def _compute_histogram(self, X):
-        """ Function allowing to compute the histogram from the data.
+        """Function allowing to compute the histogram from the data.
 
         Parameters
         ----------
@@ -125,7 +126,8 @@ class GaussianNormalization(StandaloneNormalization):
             The PDF associated with the data of interest define by the ROI.
 
         bins : ndarray, shape (n_samples + 1, )
-            The bins associated with the PDF
+            The bins associated with the PDF.
+
         """
         # Compute the histogram from the data of insterest
         pdf, bins = np.histogram(X, bins=np.max(X) - np.min(X), density=True)
@@ -133,8 +135,7 @@ class GaussianNormalization(StandaloneNormalization):
         return (pdf, bins)
 
     def fit(self, modality, ground_truth=None, cat=None):
-        """ Method to find the parameters needed to apply the
-        normalization.
+        """Method to find the parameters needed to apply the normalization.
 
         Parameters
         ----------
@@ -153,6 +154,7 @@ class GaussianNormalization(StandaloneNormalization):
         -------
         self : object
              Return self.
+
         """
         super(GaussianNormalization, self).fit(modality=modality,
                                                ground_truth=ground_truth,
@@ -189,7 +191,7 @@ class GaussianNormalization(StandaloneNormalization):
         return self
 
     def normalize(self, modality):
-        """ Method to normalize the given modality using the fitted parameters.
+        """Method to normalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -200,6 +202,7 @@ class GaussianNormalization(StandaloneNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         super(GaussianNormalization, self).normalize(modality)
 
@@ -218,8 +221,7 @@ class GaussianNormalization(StandaloneNormalization):
         return modality
 
     def denormalize(self, modality):
-        """ Method to denormalize the given modality using the
-        fitted parameters.
+        """Denormalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -230,6 +232,7 @@ class GaussianNormalization(StandaloneNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         super(GaussianNormalization, self).denormalize(modality)
 

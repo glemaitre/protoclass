@@ -1,5 +1,4 @@
-""" T2W modality class.
-"""
+"""T2W modality class."""
 
 import numpy as np
 
@@ -7,7 +6,7 @@ from .standalone_modality import StandaloneModality
 
 
 class T2WModality(StandaloneModality):
-    """ Class to handle T2W-MRI modality.
+    """Class to handle T2W-MRI modality.
 
     Parameters
     ----------
@@ -34,14 +33,14 @@ class T2WModality(StandaloneModality):
 
     min_ : float
         Minimum intensity of the T2W-MRI volume.
+
     """
 
     def __init__(self, path_data=None):
         super(T2WModality, self).__init__(path_data=path_data)
 
     def update_histogram(self, nb_bins=None):
-        """Function to compute histogram of each serie and store it
-        The min and max of the series are also stored.
+        """Update the PDF and the first-order statistics.
 
         Parameters
         ----------
@@ -61,6 +60,7 @@ class T2WModality(StandaloneModality):
         -----
         There is the possibility to redifine the number of bins to use for
         the histogram since it can be tricky to play with normalized data.
+
         """
         # Check if the data have been read
         if self.data_ is None:
@@ -97,6 +97,7 @@ class T2WModality(StandaloneModality):
         -------
         self : object
            Returns self.
+
         """
         # Called the parent function to read the data
         super(T2WModality, self).read_data_from_path(path_data=path_data)

@@ -1,5 +1,4 @@
-""" Basic class for modality.
-"""
+"""Basic class for modality."""
 
 from abc import ABCMeta, abstractmethod
 
@@ -7,7 +6,7 @@ from ..utils.validation import check_path_data
 
 
 class BaseModality(object):
-    """ Basic class for medical modality.
+    """Basic class for medical modality.
 
     Warning: This class should not be used directly. Use the derive classes
     instead.
@@ -16,7 +15,7 @@ class BaseModality(object):
 
     @abstractmethod
     def __init__(self, path_data=None):
-        """ Constructor. """
+        """Constructor."""
         if path_data is not None:
             self.path_data_ = check_path_data(path_data)
         else:
@@ -25,21 +24,22 @@ class BaseModality(object):
 
     @abstractmethod
     def update_histogram(self):
-        """ Method to compute histogram and statistics. """
+        """Method to compute histogram and statistics."""
         raise NotImplementedError
 
     @abstractmethod
     def read_data_from_path(self, path_data):
-        """ Method allowing to read the data. """
+        """Method allowing to read the data."""
         raise NotImplementedError
 
     def is_read(self):
-        """ Function to know if the data have been read.
+        """Function to know if the data have been read.
 
         Returns
         -------
         is_read : bool
             If True, the data have been read at least once.
+
         """
         if self.data_ is None:
             return False
