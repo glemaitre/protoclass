@@ -184,8 +184,8 @@ class GaussianNormalization(StandaloneNormalization):
                             p0=(mu, sigma))
 
         # Assign the value after convergence
-        self.mu_ = np.round(popt[0])
-        self.sigma_ = np.round(popt[1])
+        self.mu_ = np.around(popt[0], decimals=2)
+        self.sigma_ = np.around(popt[1], decimals=2)
         self.is_fitted_ = True
 
         return self
