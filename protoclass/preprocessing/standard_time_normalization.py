@@ -23,7 +23,7 @@ class StandardTimeNormalization(TemporalNormalization):
     def __init__(self, base_modality):
         super(StandardTimeNormalization, self).__init__(base_modality)
 
-    def fit(self, modality):
+    def fit(self, modality, ground_truth=None, cat=None):
         """ Method to find the parameters needed to apply the
         normalization.
 
@@ -31,6 +31,14 @@ class StandardTimeNormalization(TemporalNormalization):
         ----------
         modality : object
             Object inherated from TemporalModality.
+
+        ground-truth : object of type GTModality or None
+            The ground-truth of GTModality. If None, the whole data will be
+            considered.
+
+        cat : str or None
+            String corresponding at the ground-truth of interest. Cannot be
+            None if ground-truth is not None.
 
         Returns
         -------

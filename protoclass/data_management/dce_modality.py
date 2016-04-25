@@ -49,6 +49,24 @@ class DCEModality(TemporalModality):
     def __init__(self, path_data=None):
         super(DCEModality, self).__init__(path_data=path_data)
 
+    def get_pdf_list(self, roi_data=None):
+        """ Extrac the a list of pdf related with the data.
+
+        Parameters
+        ----------
+        roi_data : tuple
+            Indices of elements to consider while computing the histogram.
+
+        Returns
+        -------
+        pdf_list : list of ndarray, length (n_serie)
+            List of the pdf with the associated series.
+
+        bin_series : list of ndarray, length (n_series)
+            List of the bins associated with the list of pdf.
+
+        """
+
     def update_histogram(self, nb_bins=None):
         """Update the histogram of each serie and first-order statistics.
 
