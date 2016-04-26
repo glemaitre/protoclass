@@ -53,10 +53,12 @@ class DWIModality(MultisequenceModality):
 
         Parameters
         ----------
-        nb_bins : list of int or None, optional (default=None)
-            The numbers of bins to use to compute the histogram. Since that we
-            deal with several series, a list needs to be provided. If None, the
-            number of bins found at reading will be used.
+        nb_bins : int, str, or None, optional (default=None)
+            The numbers of bins to use to compute the histogram.
+            The possibilities are:
+            - If None, the number of bins found at reading will be used.
+            - If 'auto', the number of bins is found at fitting time.
+            - Otherwise, an integer needs to be given.
 
         Returns
         -------
@@ -88,7 +90,7 @@ class DWIModality(MultisequenceModality):
         # Get the list of number of bins if not specify
         elif nb_bins is None:
             nb_bins = self.nb_bins_
-        elif nb_bins is 'auto':
+        elif nb_bins == 'auto':
             nb_bins = []
             for data_serie in self.data_:
                 nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
