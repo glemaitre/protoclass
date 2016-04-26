@@ -90,7 +90,7 @@ def test_check_modality():
 
 def test_check_img_filename_no_file():
     """ Test if an error is raised when the file does not exist. """
-    assert_raises(check_img_filename, 'random.rnd')
+    assert_raises(ValueError, check_img_filename, 'random.rnd')
 
 
 def test_check_img_filename_not_img():
@@ -98,7 +98,8 @@ def test_check_img_filename_not_img():
     currdir = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(currdir, 'data', 'path_list_data',
                             's_2', 'README.md')
-    assert_raises(check_img_filename, filename)
+    assert_raises(ValueError, check_img_filename, filename)
+
 
 def test_check_img_filename():
     """ Test the routine to check if the file is of type img. """
@@ -106,4 +107,4 @@ def test_check_img_filename():
     filename = os.path.join(currdir, 'data', 'path_list_data',
                             's_2', 'README.img')
 
-    assert_equal(check_img_filename(filename), filename)
+    assert_equal(ValueError, check_img_filename(filename), filename)
