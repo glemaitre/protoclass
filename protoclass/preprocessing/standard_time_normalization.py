@@ -69,7 +69,9 @@ class StandardTimeNormalization(TemporalNormalization):
         """
         # By calling the parents function, self.roi_data_ will be affected
         # and can be used in all cases.
-        super(StandardTimeNormalization, self).fit(modality=modality)
+        super(StandardTimeNormalization, self).fit(modality=modality,
+                                                   ground_truth=ground_truth,
+                                                   cat=cat)
 
                 # Check the gaussian parameters argument
         if isinstance(params, basestring):
