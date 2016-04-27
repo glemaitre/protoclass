@@ -39,8 +39,7 @@ class TemporalNormalization(BaseNormalization):
             self.base_modality_ = self.base_modality
 
     def _validate_modality_gt(self, modality, ground_truth, cat):
-        """ Method to check the consistency of the modality with the
-        ground-truth.
+        """Check the consistency of the modality with the ground-truth.
 
         Parameters
         ----------
@@ -58,6 +57,7 @@ class TemporalNormalization(BaseNormalization):
         roi_data : ndarray, shape (non_zero_samples, 3)
             Corresponds to the indexes of the data of insterest
             extracted from the ground-truth.
+
         """
 
         # Check that the ground-truth is from GTModality
@@ -85,8 +85,7 @@ class TemporalNormalization(BaseNormalization):
 
     @abstractmethod
     def fit(self, modality, ground_truth=None, cat=None):
-        """ Method to find the parameters needed to apply the
-        normalization.
+        """Find the parameters needed to apply the normalization.
 
         Parameters
         ----------
@@ -142,7 +141,7 @@ class TemporalNormalization(BaseNormalization):
 
     @abstractmethod
     def normalize(self, modality):
-        """ Method to normalize the given modality using the fitted parameters.
+        """Normalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -153,6 +152,7 @@ class TemporalNormalization(BaseNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         # Check that the class of modality is the same than the template
         # modality
@@ -162,8 +162,7 @@ class TemporalNormalization(BaseNormalization):
 
     @abstractmethod
     def denormalize(self, modality):
-        """ Method to denormalize the given modality using the
-        fitted parameters.
+        """Denormalize the given modality using the fitted parameters.
 
         Parameters
         ----------
@@ -174,6 +173,7 @@ class TemporalNormalization(BaseNormalization):
         -------
         modality: object of type StandaloneModality
             The modality object in which the data will be normalized.
+
         """
         # Check that the class of modality is the same than the template
         # modality

@@ -6,6 +6,7 @@ from scipy.interpolate import interp1d
 
 from .temporal_modality import TemporalModality
 
+from ..utils import find_nearest
 
 class DCEModality(TemporalModality):
     """Class to handle DCE-MRI modality.
@@ -93,8 +94,9 @@ class DCEModality(TemporalModality):
                     nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
                                                 np.ndarray.min(data_serie))))
                 else:
-                    nb_bins.append(int(np.round(np.ndarray.max(data_serie[roi_data]) -
-                                                np.ndarray.min(data_serie[roi_data]))))
+                    nb_bins.append(int(np.round(
+                        np.ndarray.max(data_serie[roi_data]) -
+                        np.ndarray.min(data_serie[roi_data]))))
 
         pdf_list = []
         bin_list = []
@@ -240,10 +242,6 @@ class DCEModality(TemporalModality):
                                        np.min(ratio_bins)))
         heatmap = np.zeros((self.n_serie_, bins_heatmap.size))
 
-        def find_nearest(array, value):
-            idx = (np.abs(array-value)).argmin()
-            return array[idx], idx
-
         # Build the heatmap
         # Go through each serie and paste it inside the array
         for idx_serie, (bin_serie, pdf_serie) in enumerate(zip(center_bins_list, pdf_list)):
@@ -263,26 +261,6 @@ class DCEModality(TemporalModality):
             heatmap[idx_serie, min_idx:max_idx+1] = pdf_serie
 
         return heatmap, bins_heatmap
-
-        # # Allocate the heatmap array
-        # # Compute the intensity range
-        # int_range = int(np.ceil(self.max_series_) - np.floor(self.min_series_))
-        # heatmap = np.zeros((self.n_serie_, int_range))
-
-        # # Build the heatmap
-        # # Go through each serie and paste it inside the array
-        # for idx_serie, pdf_serie in enumerate(self.pdf_series_):
-        #     # Define the range of the current histogram
-        #     int_range = pdf_serie.size
-        #     # Compute the offset between the minimum of all series and the
-        #     # current one
-        #     offset_minimum = int(np.floor(self.min_series_) -
-        #                          np.floor(self.min_series_list_[idx_serie]))
-        #     # Copy the data at the right position
-        #     heatmap[idx_serie, range(offset_minimum,
-        #                              offset_minimum + int_range)] = pdf_serie
-
-        # return heatmap
 
     def read_data_from_path(self, path_data=None):
         """Function to read DCE images which is of 3D volume over time.

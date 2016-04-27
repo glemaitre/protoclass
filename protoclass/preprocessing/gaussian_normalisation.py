@@ -38,9 +38,6 @@ class GaussianNormalization(StandaloneNormalization):
         - 'mu' is the fitted mean.
         - 'sigma' is the standard deviation.
 
-        The precision of the parameters is the unit to avoid any precision
-        problem during normalization and denormalization.
-
     is_fitted_ : bool
         Boolean to know if the `fit` function has been already called.
 
