@@ -32,7 +32,7 @@ class StandardTimeNormalization(TemporalNormalization):
         # Initialize the fitting boolean
         self.is_fitted_ = False
 
-    def fit(self, modality, ground_truth=None, cat=None, params='auto', verbose=True):
+    def fit(self, modality, ground_truth=None, cat=None, params='default', verbose=True):
         """Find the parameters needed to apply the normalization.
 
         Parameters
