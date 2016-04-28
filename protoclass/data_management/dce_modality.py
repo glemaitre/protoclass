@@ -250,15 +250,17 @@ class DCEModality(TemporalModality):
                                               min_series[idx_serie])
             max_value, max_idx = find_nearest(bins_heatmap,
                                               max_series[idx_serie])
-            nb_bin = int((max_value - min_value) / np.min(ratio_bins))
-            bins_serie = np.linspace(min_value, max_value, nb_bin)
 
             # Interpolate the value using nearest neighbour
-            f = interp1d(bin_serie, pdf_serie, kind='nearest')
-            pdf_serie = f(bin_serie)
+            f = interp1d(bin_serie, pdf_serie, kind='nearest',
+                         bounds_error=False, fill_value=0.)
+            
+            nb_bin = int((max_value - min_value) / np.min(ratio_bins))
+            bin_serie_interpolated = np.linspace(min_value, max_value, nb_bin)
+            pdf_serie_interpolated = f(bin_serie_interpolated)
 
             # Copy the data at the right position
-            heatmap[idx_serie, min_idx:max_idx+1] = pdf_serie
+            heatmap[idx_serie, min_idx:min_idx + nb_bin] = pdf_serie_interpolated
 
         return heatmap, bins_heatmap
 

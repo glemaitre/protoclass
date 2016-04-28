@@ -76,7 +76,10 @@ class TemporalNormalization(BaseNormalization):
 
         # Check that the size of the ground-truth and the modality
         # are consistant
-        if modality.data_.shape != ground_truth.data_[idx_gt, :, :, :].shape:
+        # In this case check only the last three dimension
+        if (np.size(modality.data_, 1),
+            np.size(modality.data_, 2),
+            np.size(modality.data_, 3)) != ground_truth.data_[idx_gt, :, :, :].shape:
             raise ValueError('The ground-truth does not correspond to the'
                              ' given modality volume.')
 
@@ -119,9 +122,13 @@ class TemporalNormalization(BaseNormalization):
             warnings.warn('You specified a category for the ground-truth'
                           ' without giving any ground-truth. The whole volume'
                           ' will be considered for the fitting.')
-            self.roi_data_ = np.nonzero(np.ones(modality.data_.shape))
+            self.roi_data_ = np.nonzero(np.ones((np.size(modality.data_, 1),
+                                                 np.size(modality.data_, 2),
+                                                 np.size(modality.data_, 3))))
         elif ground_truth is None and cat is None:
-            self.roi_data_ = np.nonzero(np.ones(modality.data_.shape))
+            self.roi_data_ = np.nonzero(np.ones((np.size(modality.data_, 1),
+                                                 np.size(modality.data_, 2),
+                                                 np.size(modality.data_, 3))))
         elif ground_truth is not None and cat is None:
             raise ValueError('The category label of the ground-truth from'
                              ' which you want to extract the information needs'

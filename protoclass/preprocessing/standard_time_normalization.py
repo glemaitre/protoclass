@@ -1,10 +1,13 @@
 """Standard time normalization to normalize temporal modality."""
 
+import numpy as np
+
 from scipy.ndimage.filters import gaussian_filter1d
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import shortest_path
 
 from skimage import img_as_float
+from skimage.graph import route_through_array
 
 from .temporal_normalization import TemporalNormalization
 
@@ -32,6 +35,143 @@ class StandardTimeNormalization(TemporalNormalization):
         # Initialize the fitting boolean
         self.is_fitted_ = False
 
+    def _build_graph(self, heatmap, verbose=True):
+        """Build a graph representation from the heatmap.
+
+        Parameters
+        ----------
+        heatmap : ndarray, shape (n_serie, nb_bins)
+            The heatmap from which the graph will be built.
+
+        verbose : bool
+            Display the completion or not.
+
+        Returns
+        -------
+        graph : ndarray, shape (n_serie * nb_bins, n_serie * nb_bins)
+            Fully connected graph computed from the heatmap.
+
+        """
+
+        # We can build the graph associated with the heatmap
+        graph = np.empty((heatmap.size, heatmap.size), dtype=float)
+        for y in np.arange(graph.shape[0]):
+            # Come back to the pixel index
+            px_idx = np.unravel_index(y, heatmap.shape)
+            if (px_idx[0] >= (heatmap.shape[0] - 1) or
+                px_idx[1] >= (heatmap.shape[1] - 1)):
+                continue
+            # Get the pixel value
+            edge_val = heatmap[px_idx]
+            # Assign the verteces
+            # Find the position of the verteces inside the graph
+            p_1 = np.ravel_multi_index((px_idx[0] + 1, px_idx[1]),
+                                       heatmap.shape)
+            p_2 = np.ravel_multi_index((px_idx[0], px_idx[1] + 1),
+                                       heatmap.shape)
+            # Assign the edge value
+            graph[y, p_1] = self.params_['alpha'] * edge_val
+            graph[y, p_2] = (1. - self.params_['alpha']) * edge_val
+
+        graph = coo_matrix(graph)
+
+        if verbose:
+            print 'Graph built ...'
+
+        return graph
+
+    def _walk_through_graph(self, graph, heatmap, start_end_vertices, method='shortest-path', verbose=True):
+        """Find path through the path with different a-priori.
+
+        Parameters
+        ----------
+        graph : ndarray, shape (n_serie * nb_bins, n_serie * nb_bins)
+            Fully connected graph computed from the heatmap.
+
+        heatmap : ndarray, shape (n_serie, nb_bins)
+            The heatmap from which the graph will be built.
+
+        start_end_vertices : tuple, shape ((start_vertice, end_vertice))
+            Tuple containing the starting and ending vertices to enter and exit
+            the graph.
+
+        method : str, optional (default='shortest-path')
+            Method to use to walk through the graph. The following
+            possibilities:
+            - 'shortest-path' : find shortest-path using scipy implementation.
+            - 'route-through-graph' : find the path using MCP algorithm from
+                skimage.
+
+        verbose : bool
+            Show the processing stage.
+
+        Returns
+        -------
+        path : ndarray, shape (n_serie, 2)
+            The path found to walk through the graph.
+
+        """
+        # Split the starting and ending vertices
+        start_tuple = start_end_vertices[0]
+        end_tuple = start_end_vertices[1]
+
+        if method == 'shortest-path':
+            # Define a function to go from px to vertices
+            def px2v(px, im_shape):
+                return np.ravel_multi_index(px, im_shape)
+
+            # Define a function to go from vertices to px
+            def v2px(v, im_shape):
+                return np.unravel_index(v, im_shape)
+
+            # Compute the shortest path for the whole graph
+            d, p = shortest_path(graph, return_predecessors=True)
+            # Initialize the path
+            path_list = [end_tuple]
+            # Find the shortest path thorugh an iterative process
+            while end_tuple != start_tuple:
+                # Convert coord from px to v
+                s_v = px2v(start_tuple, heatmap.shape)
+                e_v = px2v(end_tuple, heatmap.shape)
+
+                # Find the predecessor
+                pred_v = p[s_v, e_v]
+
+                # Convert into pixel
+                pred_px = v2px(pred_v, heatmap.shape)
+                path_list.append(pred_px)
+
+                # Update the last point of the path
+                end_tuple = pred_px
+        elif method == 'route-through-graph':
+            # Call the function from skimage
+            indices, weight = route_through_array(heatmap,
+                                                  start_tuple,
+                                                  end_tuple, 
+                                                  geometric=True)
+            path_list = np.array(indices)
+        else:
+            raise NotImplementedError
+
+        # Convert the list into array
+        path_list = np.array(path_list)
+
+        # Clean the path serie by serie to have a unique value
+        cleaned_path = []
+        for t_serie in range(heatmap.shape[0]):
+            # Find all the intensities corresponding to this serie
+            poi = path_list[np.nonzero(path_list[:, 0] == t_serie)]
+
+            # Compute the median of the second column
+            med_path = np.median(poi[:, 1])
+            cleaned_path.append([t_serie, med_path])
+
+        if verbose:
+            print 'Walked through the graph ...'
+
+        # Convert list to array
+        return np.round(np.array(cleaned_path))
+
     def fit(self, modality, ground_truth=None, cat=None, params='default', verbose=True):
         """Find the parameters needed to apply the normalization.
 
@@ -57,6 +197,11 @@ class StandardTimeNormalization(TemporalNormalization):
             - If dict, a dictionary with the keys 'std', 'exp',and 'alpha'
             should be specified. The corresponding value of these parameters
             should be float. They will be the initial value during fitting.
+
+            'std' corresponds to the standard deviation when applying the 
+            Gaussian filter; 'exp' corresponds to the factor in the
+            exponential; 'alpha' corresponds to the parameters to penalize
+            vertical and horizontal weight in the graph.
 
         verbose : bool, optional (default=True)
             Whether to show the fitting process information.
@@ -109,6 +254,7 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
+        self.heatmap = heatmap
         # Smooth the heatmap using a Gaussian filter
         heatmap = gaussian_filter1d(heatmap, self.params_['std'], axis=1)
         # Inverse the map such that we can take the shortest path
@@ -119,30 +265,7 @@ class StandardTimeNormalization(TemporalNormalization):
         if verbose:
             print 'Heatmap built ...'
 
-        # We can build the graph associated with the heatmap
-        graph = np.empty((heatmap.size, heatmap.size), dtype=float)
-        for y in np.arange(graph.shape[0]):
-            # Come back to the pixel index
-            px_idx = np.unravel_index(y, heatmap.shape)
-            if (px_idx[0] >= (heatmap.shape[0] - 1) or
-                px_idx[1] >= (heatmap.shape[1] - 1)):
-                continue
-            # Get the pixel value
-            edge_val = heatmap[px_idx]
-            # Assign the verteces
-            # Find the position of the verteces inside the graph
-            p_1 = np.ravel_multi_index((px_idx[0] + 1, px_idx[1]),
-                                       heatmap.shape)
-            p_2 = np.ravel_multi_index((px_idx[0], px_idx[1] + 1),
-                                       heatmap.shape)
-            # Assign the edge value
-            graph[y, p_1] = self.params_['alpha'] * edge_val
-            graph[y, p_2] = (1. - self.params_['alpha']) * edge_val
-
-        graph = coo_matrix(graph)
-
-        if verbose:
-            print 'Graph built ...'
+        graph = self._build_graph(heatmap, verbose)
 
         # Find the starting and ending point in the graph - the median is used
         # Get data from the first serie
@@ -162,50 +285,13 @@ class StandardTimeNormalization(TemporalNormalization):
         # Create the starting and ending tuple
         start_tuple = (0, idx_start)
         end_tuple = (modality.n_serie_ - 1, idx_end)
+        start_end_tuple = (start_tuple, end_tuple)
 
-        # Define a function to go from px to vertices
-        def px2v(px, im_shape):
-            return np.ravel_multi_index(px, im_shape)
-
-        # Define a function to go from vertices to px
-        def v2px(v, im_shape):
-            return np.unravel_index(v, im_shape)
-
-        # Compute the shortest path for the whole graph
-        d, p = shortest_path(graph, return_predecessors=True)
-        # Initialize the path
-        path_list = [end_tuple]
-        # Find the shortest path thorugh an iterative process
-        while end_tuple != start_tuple:
-            # Convert coord from px to v
-            s_v = px2v(start_tuple, heatmap.shape)
-            e_v = px2v(end_tuple, heatmap.shape)
-
-            # Find the predecessor
-            pred_v = p[s_v, e_v]
-
-            # Convert into pixel
-            pred_px = v2px(pred_v, heatmap.shape)
-            path_list.append(pred_px)
-
-            # Update the last point of the path
-            end_tuple = pred_px
-
-        # Convert the list into array
-        path_list = np.array(path_list)
-
-        # Clean the path serie by serie to have a unique value
-        cleaned_path = []
-        for t_serie in range(modality.n_serie_ - 1):
-            # Find all the intensities corresponding to this serie
-            poi = path_list[np.nonzero(path_list[:, 0] == t_serie)]
-
-            # Compute the median of the second column
-            med_path = np.median(poi[:, 1])
-            cleaned_path.append([t_serie, med_path])
-
-        # Convert list to array
-        cleaned_path = np.round(np.array(cleaned_path))
+        # Compute the shortest path
+        method = 'shortest-path'
+        self.path = self._walk_through_graph(graph, heatmap, 
+                                             start_end_tuple, 
+                                             method, verbose)
 
         # Fitting performed
         self.is_fitted_ = True
