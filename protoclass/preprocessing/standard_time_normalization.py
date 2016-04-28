@@ -172,6 +172,39 @@ class StandardTimeNormalization(TemporalNormalization):
         # Convert list to array
         return np.round(np.array(cleaned_path))
 
+    @staticmethod
+    def _shift_heatmap(heatmap, path):
+        """Roll the heatmap depending on a given path.
+
+        Parameters
+        ----------
+        heatmap : ndarray, shape (n_series, nb_bins)
+            The heatmap to be shifted.
+
+        path : ndarray, shape (n_series, 2)
+            The path to use in order to make the shifting.
+
+        Returns
+        -------
+        heatmap_shifted : ndarray, shape (n_series, nb_bins)
+            The shifted heatmap.
+
+        """
+        # Check that we have the same number of series
+        if heatmap.shape[0] != path.shape[0] and path.shape[1] != 2:
+            raise ValueError('Inconsitent size for the data.')
+
+        # Find the index where to align every sequence
+        middle_idx = int(heatmap.shape[1] / 2.)
+        # Shift the heatmap accordling
+        heatmap_shifted = heatmap.copy()
+        for idx_serie, heatmap_serie in enumerate(heatmap):
+            # Define the shift to perform
+            shift = int(middle_idx - path[idx_serie, 1])
+            heatmap_shifted[idx_serie] = np.roll(heatmap_serie, shift)
+
+        return heatmap_shifted
+
     def fit(self, modality, ground_truth=None, cat=None, params='default', verbose=True):
         """Find the parameters needed to apply the normalization.
 
@@ -193,15 +226,17 @@ class StandardTimeNormalization(TemporalNormalization):
             The initial estimation of the parameters:
 
             - If 'default', the value following value will be affected:
-            {'std' : 50., 'exp' : 25., 'alpha' : .9}
-            - If dict, a dictionary with the keys 'std', 'exp',and 'alpha'
-            should be specified. The corresponding value of these parameters
-            should be float. They will be the initial value during fitting.
+            {'std' : 50., 'exp' : 25., 'alpha' : .9, 'max_iter' : 5}
+            - If dict, a dictionary with the keys 'std', 'exp', 'alpha', 
+            and 'max_iter' should be specified. The corresponding value of
+            these parameters should be float. They will be the initial value
+            during fitting.
 
             'std' corresponds to the standard deviation when applying the 
             Gaussian filter; 'exp' corresponds to the factor in the
             exponential; 'alpha' corresponds to the parameters to penalize
-            vertical and horizontal weight in the graph.
+            vertical and horizontal weight in the graph; 'max_iter' is the
+            maximum number of walks through the graph.
 
         verbose : bool, optional (default=True)
             Whether to show the fitting process information.
@@ -222,13 +257,14 @@ class StandardTimeNormalization(TemporalNormalization):
         if isinstance(params, basestring):
             if params == 'default':
                 # Give the default values for each parameter
-                self.params_ = {'std' : 50., 'exp' : 25., 'alpha' : .9}
+                self.params_ = {'std' : 50., 'exp' : 25.,
+                                'alpha' : .9, 'max_iter' : 5}
             else:
                 raise ValueError('The string for the object params is'
                                  ' unknown.')
         elif isinstance(params, dict):
             # Check that mu and sigma are inside the dictionary
-            valid_presets = ('std', 'exp', 'alpha')
+            valid_presets = ('std', 'exp', 'alpha', 'max_iter')
             for val_param in valid_presets:
                 if val_param not in params.keys():
                     raise ValueError('At least the parameter {} is not specify'
@@ -241,20 +277,19 @@ class StandardTimeNormalization(TemporalNormalization):
                     if isinstance(params[k_param], float):
                         self.params_[k_param] = params[k_param]
                     else:
-                        raise ValueError('The parameter std, exp, or alpha'
-                                         ' should be some float.')
+                        raise ValueError('The parameter std, exp, alpha, or'
+                                         ' max_iter should be some float.')
                 else:
                     raise ValueError('Unknown parameter inside the dictionary.'
-                                     ' `std`, `exp`, and `alpha` are the'
-                                     ' only two solutions and need to be'
-                                     ' float.')
+                                     ' `std`, `exp`, `alpha`, and `max_iter`'
+                                     ' are the only two solutions and need to'
+                                     ' be float.')
         else:
             raise ValueError('The type of the object params does not fulfill'
                              ' any requirement.')
 
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
-        self.heatmap = heatmap
         # Smooth the heatmap using a Gaussian filter
         heatmap = gaussian_filter1d(heatmap, self.params_['std'], axis=1)
         # Inverse the map such that we can take the shortest path
@@ -264,6 +299,9 @@ class StandardTimeNormalization(TemporalNormalization):
 
         if verbose:
             print 'Heatmap built ...'
+
+        # Initialization of the output
+        self.shift_ = np.zeros(modality.n_serie_, )
 
         graph = self._build_graph(heatmap, verbose)
 
@@ -289,9 +327,41 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the shortest path
         method = 'shortest-path'
-        self.path = self._walk_through_graph(graph, heatmap, 
-                                             start_end_tuple, 
-                                             method, verbose)
+        absolute_shift = self._walk_through_graph(graph, heatmap, 
+                                                  start_end_tuple, 
+                                                  method, verbose)
+
+        # do-while loop
+        middle_idx = 0
+        itr_loop = 1
+        while True:
+            # Increment the shifting of the previous iteration
+            self.shift_ += (absolute_shift[:, 1] - middle_idx)
+            # Shift the heatmap accordingly
+            heatmap = self._shift_heatmap(heatmap, absolute_shift)
+            # Apply again the shortest path
+            graph = self._build_graph(heatmap, verbose)
+
+            # Create the starting and ending tuple
+            middle_idx = int(heatmap.shape[1] / 2.)
+            start_tuple = (0, middle_idx)
+            end_tuple = (modality.n_serie_ - 1, middle_idx)
+            start_end_tuple = (start_tuple, end_tuple)
+
+            # Compute the shortest path
+            method = 'route-through-graph'
+            absolute_shift = self._walk_through_graph(graph, heatmap, 
+                                                      start_end_tuple, 
+                                                      method, verbose)
+            itr_loop += 1
+            if verbose:
+                print 'Iteration #{}'.format(itr_loop)
+            # Breaking condition - We don't move
+            if (np.sum(absolute_shift[:, 1] - middle_idx) == 0 or 
+                itr_loop > self.params_['max_iter']):
+                break
+
+        self.heatmap = heatmap
 
         # Fitting performed
         self.is_fitted_ = True
