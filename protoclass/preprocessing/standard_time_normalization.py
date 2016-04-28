@@ -28,6 +28,11 @@ class StandardTimeNormalization(TemporalNormalization):
         The base modality on which the normalization will be applied. The base
         modality should inherate from TemporalModality class.
 
+    fit_params_ : dict of str : float
+        There is the following keys:
+
+        - 'shift' is the shift found thorugh graph walking.
+
     """
 
     def __init__(self, base_modality):
@@ -288,6 +293,9 @@ class StandardTimeNormalization(TemporalNormalization):
             raise ValueError('The type of the object params does not fulfill'
                              ' any requirement.')
 
+        # Initialize the parameter dictionary
+        self.fit_params_ = {}
+
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
         # Smooth the heatmap using a Gaussian filter
@@ -335,6 +343,8 @@ class StandardTimeNormalization(TemporalNormalization):
         middle_idx = 0
         itr_loop = 1
         while True:
+            if verbose:
+                print 'Iteration #{}'.format(itr_loop)
             # Increment the shifting of the previous iteration
             self.shift_ += (absolute_shift[:, 1] - middle_idx)
             # Shift the heatmap accordingly
@@ -354,14 +364,13 @@ class StandardTimeNormalization(TemporalNormalization):
                                                       start_end_tuple, 
                                                       method, verbose)
             itr_loop += 1
-            if verbose:
-                print 'Iteration #{}'.format(itr_loop)
             # Breaking condition - We don't move
             if (np.sum(absolute_shift[:, 1] - middle_idx) == 0 or 
                 itr_loop > self.params_['max_iter']):
                 break
 
-        self.heatmap = heatmap
+        # Store the shift in the dictionary
+        self.fit_params_['shift'] = self.shift_
 
         # Fitting performed
         self.is_fitted_ = True
