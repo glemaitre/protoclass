@@ -34,9 +34,9 @@ class StandardTimeNormalization(TemporalNormalization):
     fit_params_ : dict of str : float
         There is the following keys:
 
-        - 'shift_int' is the shift found using graph walking. It corresponds
+        - 'shift-int' is the shift found using graph walking. It corresponds
         to an intensity shift.
-        - 'shift_time' corresponds to the time shifting equivalent to a shift
+        - 'shift-time' corresponds to the time shifting equivalent to a shift
         of serie.
         - 'scale-int' is a scaling factor for the intensity.
 
@@ -707,7 +707,7 @@ class StandardTimeNormalization(TemporalNormalization):
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
 
         # Find the shift in the data
-        self.fit_params_['shift_int'], \
+        self.fit_params_['shift-int'], \
             self.shift_int_idx_ = self._find_shift(heatmap,
                                                    bins_heatmap,
                                                    self.params_['std'],
@@ -718,7 +718,7 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the associated RMSE of the estimator found
         rmse = self._compute_rmse(heatmap, bins_heatmap,
-                                  self.fit_params_['shift_int'],
+                                  self.fit_params_['shift-int'],
                                   self.shift_int_idx_,
                                   verbose)
 
@@ -731,6 +731,42 @@ class StandardTimeNormalization(TemporalNormalization):
         self.is_fitted_ = True
 
         return self
+
+    def _shift_time_data(self, data, tau):
+        """Shift the data from tau.
+
+        Parameters
+        ----------
+        data : ndarray, shape (T, Y, X, Z)
+            The data to be shifted.
+
+        tau : int
+            The delay to insert in the data time serie.
+
+        Returns
+        -------
+        data_shifted : ndarray, shape (T, Y, X, Z)
+            The shifted data.
+
+        """
+        # Forece tau to be an integer
+        tau = int(tau)
+        # Allocate the ouptut
+        data_shifted = np.zeros(data.shape)
+        if tau > 0:
+            # We need to shift the serie to positive time
+            data_shifted[:, tau::] = data[:, 0:-tau]
+            data_shifted[:, 0:tau] = np.tile(data[:, 0:1], (1, tau))
+
+            return data_shifted
+        elif tau < 0:
+            # We need to shift the serie to negative time
+            data_shifted[:, 0:tau] = data[:, -tau::]
+            data_shifted[:, tau::] = np.tile(data[:, -1:], (1, -tau))
+
+            return data_shifted
+        else:
+            return data
 
     def normalize(self, modality):
         """Normalize the given modality using the fitted parameters.
@@ -747,6 +783,21 @@ class StandardTimeNormalization(TemporalNormalization):
 
         """
         super(StandardTimeNormalization, self).normalize(modality=modality)
+
+        # Check that the parameters have been fitted
+        if not self.is_fitted_:
+            raise ValueError('Fit the parameters previous to normalize'
+                             ' the data.')
+
+        # Apply the intensity shift first
+        for idx_serie in range(modality.n_serie_):
+            modality.data_[idx_serie, :, :, :] -= self.fit_params_['shift-int'][idx_serie]
+
+        # Apply the time shifting
+        modality.data_ = self._shift_time_data(modality.data_,
+                                               self.fit_params_['shift-time'])
+        # Apply the scaling factor
+        modality.data_ *= self.fit_params_['scale-int']
 
         return self
 
@@ -765,5 +816,20 @@ class StandardTimeNormalization(TemporalNormalization):
 
         """
         super(StandardTimeNormalization, self).denormalize(modality=modality)
+
+                # Check that the parameters have been fitted
+        if not self.is_fitted_:
+            raise ValueError('Fit the parameters previous to normalize'
+                             ' the data.')
+
+        # Apply the intensity shift first
+        for idx_serie in range(modality.n_serie_):
+            modality.data_[idx_serie, :, :, :] += self.fit_params_['shift-int'][idx_serie]
+
+        # Apply the time shifting
+        modality.data_ = self._shift_time_data(modality.data_,
+                                               -self.fit_params_['shift-time'])
+        # Apply the scaling factor
+        modality.data_ /= self.fit_params_['scale-int']
 
         return self

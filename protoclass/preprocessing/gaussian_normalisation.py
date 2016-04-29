@@ -205,7 +205,7 @@ class GaussianNormalization(StandaloneNormalization):
 
         # Check that the parameters have been fitted
         if not self.is_fitted_:
-            raise ValueError('Fir the parameters previous to normalize'
+            raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
         # Normalize the data of the modality
@@ -235,7 +235,7 @@ class GaussianNormalization(StandaloneNormalization):
 
         # Check that the parameters have been fitted
         if not self.is_fitted_:
-            raise ValueError('Fir the parameters previous to normalize'
+            raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
         # Normalize the data of the modality
