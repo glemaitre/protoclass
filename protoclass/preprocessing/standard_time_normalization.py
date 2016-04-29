@@ -1,6 +1,7 @@
 """Standard time normalization to normalize temporal modality."""
 
 import numpy as np
+from numpy.matlib import repmat
 
 from scipy.ndimage.filters import gaussian_filter1d
 from scipy.sparse import coo_matrix
@@ -40,13 +41,17 @@ class StandardTimeNormalization(TemporalNormalization):
         # Initialize the fitting boolean
         self.is_fitted_ = False
 
-    def _build_graph(self, heatmap, verbose=True):
+    @staticmethod
+    def _build_graph(heatmap, param_alpha, verbose=True):
         """Build a graph representation from the heatmap.
 
         Parameters
         ----------
         heatmap : ndarray, shape (n_serie, nb_bins)
             The heatmap from which the graph will be built.
+
+        param_alpha : float
+            Weight for the vertical and horizontal vertices.
 
         verbose : bool
             Display the completion or not.
@@ -75,8 +80,8 @@ class StandardTimeNormalization(TemporalNormalization):
             p_2 = np.ravel_multi_index((px_idx[0], px_idx[1] + 1),
                                        heatmap.shape)
             # Assign the edge value
-            graph[y, p_1] = self.params_['alpha'] * edge_val
-            graph[y, p_2] = (1. - self.params_['alpha']) * edge_val
+            graph[y, p_1] = param_alpha * edge_val
+            graph[y, p_2] = (1. - param_alpha) * edge_val
 
         graph = coo_matrix(graph)
 
@@ -85,7 +90,8 @@ class StandardTimeNormalization(TemporalNormalization):
 
         return graph
 
-    def _walk_through_graph(self, graph, heatmap, start_end_vertices, method='shortest-path', verbose=True):
+    @staticmethod
+    def _walk_through_graph(graph, heatmap, start_end_vertices, method='shortest-path', verbose=True):
         """Find path through the path with different a-priori.
 
         Parameters
@@ -178,16 +184,16 @@ class StandardTimeNormalization(TemporalNormalization):
         return np.round(np.array(cleaned_path))
 
     @staticmethod
-    def _shift_heatmap(heatmap, path):
-        """Roll the heatmap depending on a given path.
+    def _shift_heatmap(heatmap, shift):
+        """Roll the heatmap depending on a given shift.
 
         Parameters
         ----------
         heatmap : ndarray, shape (n_series, nb_bins)
             The heatmap to be shifted.
 
-        path : ndarray, shape (n_series, 2)
-            The path to use in order to make the shifting.
+        shift : ndarray, shape (n_series, )
+            The shift to apply.
 
         Returns
         -------
@@ -196,7 +202,7 @@ class StandardTimeNormalization(TemporalNormalization):
 
         """
         # Check that we have the same number of series
-        if heatmap.shape[0] != path.shape[0] and path.shape[1] != 2:
+        if heatmap.shape[0] != shift.shape[0]:
             raise ValueError('Inconsitent size for the data.')
 
         # Find the index where to align every sequence
@@ -205,10 +211,169 @@ class StandardTimeNormalization(TemporalNormalization):
         heatmap_shifted = heatmap.copy()
         for idx_serie, heatmap_serie in enumerate(heatmap):
             # Define the shift to perform
-            shift = int(middle_idx - path[idx_serie, 1])
-            heatmap_shifted[idx_serie] = np.roll(heatmap_serie, shift)
+            shift_rel = int(middle_idx - shift[idx_serie])
+            heatmap_shifted[idx_serie] = np.roll(heatmap_serie, shift_rel)
 
         return heatmap_shifted
+
+    def _find_shift(self, heatmap, bins_heatmap, param_std, param_exp, param_alpha, param_max_iter, verbose=True):
+        """Find the shift through iterative shortest-path.
+
+        Parameters
+        ----------
+        heatmap : ndarray, shape (n_serie, nb_bins)
+            Heatmap from the DCE modality.
+
+        bins_heatmap : ndarray, shape (nb_bins, )
+            Associated bins with the heatmap.
+
+        param_std : float
+            Parameter for the Gaussian filter.
+
+        param_exp : float
+            Parameter to compute the exponential heatmap.
+
+        param_alpha : float
+            Parameter for vertices weight of the graph.
+
+        param_max_iter : int
+            Parameter for the max number of iteration to walk through
+            the graph.
+
+        Returns
+        -------
+        shift : ndarray, shape (n_serie, )
+            The vector of intensity from which each serie has to be shifted.
+
+        idx_shift : ndarray, shape (n_serie, )
+            Vector with the corresponding index in `bins_heatmap`.
+
+        """
+        # Smooth the heatmap using a Gaussian filter
+        heatmap_inv_exp = gaussian_filter1d(heatmap,
+                                            param_std, axis=1)
+        # Inverse the map such that we can take the shortest path
+        heatmap_inv_exp = 1. - (heatmap_inv_exp /
+                                np.ndarray.max(heatmap_inv_exp))
+        # Compute the exponential map to emplify the differences
+        heatmap_inv_exp = img_as_float(np.exp(param_exp *
+                                              heatmap_inv_exp))
+
+        if verbose:
+            print 'Heatmap built ...'
+
+        # Initialization of the output
+        shift = np.zeros(heatmap.shape[0], )
+
+        graph = self._build_graph(heatmap_inv_exp, param_alpha, verbose)
+
+        # Find the starting and ending point in the graph - the median is used
+        # The median can be estimated from the heatmap
+        # Compute the normalize cumulative sum of the first serie
+        cumsum_hist = np.cumsum(heatmap[0, :])
+        cumsum_hist /= cumsum_hist[-1]
+        # Find the median
+        idx_start = np.argmax(cumsum_hist > .5)
+
+        # Compute the normalize cumulative sum of the last serie
+        cumsum_hist = np.cumsum(heatmap[-1, :])
+        cumsum_hist /= cumsum_hist[-1]
+        # Find the median
+        idx_end = np.argmax(cumsum_hist > .5)
+
+        # Create the starting and ending tuple
+        start_tuple = (0, idx_start)
+        end_tuple = (heatmap.shape[0] - 1, idx_end)
+        start_end_tuple = (start_tuple, end_tuple)
+
+        # Compute the shortest path
+        method = 'shortest-path'
+        absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp, 
+                                                  start_end_tuple, 
+                                                  method, verbose)
+        # Keep only the uselful information of the shift
+        absolute_shift = np.ravel(absolute_shift[:, 1])
+
+        # do-while loop
+        middle_idx = 0
+        itr_loop = 1
+        while True:
+            if verbose:
+                print 'Iteration #{}'.format(itr_loop)
+            # Increment the shifting of the previous iteration
+            shift += (absolute_shift - middle_idx)
+            # Shift the heatmap accordingly
+            heatmap_inv_exp = self._shift_heatmap(heatmap_inv_exp,
+                                                  absolute_shift)
+            # Apply again the shortest path
+            graph = self._build_graph(heatmap_inv_exp, param_alpha, verbose)
+
+            # Create the starting and ending tuple
+            middle_idx = int(heatmap_inv_exp.shape[1] / 2.)
+            start_tuple = (0, middle_idx)
+            end_tuple = (heatmap.shape[0] - 1, middle_idx)
+            start_end_tuple = (start_tuple, end_tuple)
+
+            # Compute the shortest path
+            method = 'route-through-graph'
+            absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp, 
+                                                      start_end_tuple, 
+                                                      method, verbose)
+            # Keep only the uselful information of the shift
+            absolute_shift = np.ravel(absolute_shift[:, 1])
+
+            # Keep track of the iteration
+            itr_loop += 1
+            # Breaking condition - We don't move
+            if (np.sum(absolute_shift - middle_idx) == 0 or 
+                itr_loop > param_max_iter):
+                break
+
+        # Store the shift in the dictionary
+        # Take the intensity value, not the bin
+        return bins_heatmap[shift.astype(int)], shift.astype(int)
+
+    def _compute_rmse(self, heatmap, bins_heatmap, shift, idx_shift, verbose=True):
+        """Compute the root mean squared error from the shift estimator.
+
+        Parameters
+        ----------
+        heatmap : ndarray, shape (n_serie, nb_bins)
+            Heatmap from the DCE modality.
+
+        bins_heatmap : ndarray, shape (nb_bins, )
+            Associated bins with the heatmap.
+
+        shift : ndarray, shape (n_serie, )
+            The vector of intensity from which each serie has to be shifted.
+
+        idx_shift : ndarray, shape (n_serie, )
+            Vector with the corresponding index in `bins_heatmap`.
+
+        Returns
+        -------
+        rmse_estimator : ndarray, shape (n_serie, )
+            The vector of intensity from which each serie has to be shifted.
+
+        """
+        # Shift the original heatmap
+        heatmap = self._shift_heatmap(heatmap, idx_shift)
+        # Shift the bins accordingly
+        bins_heatmap_serie = repmat(bins_heatmap, heatmap.shape[0], 1)
+        bins_heatmap_serie = self._shift_heatmap(bins_heatmap_serie,
+                                                 idx_shift)
+
+        # Compute the RMSE for each serie
+        rmse_estimator = []
+        for idx_serie in range(heatmap.shape[0]):
+            # Compute sum i^2 p(i)
+            # + .5 since we consider the center of each bins
+            # The zero is the center of the histogram, shift the zero
+            i_array = (bins_heatmap_serie[idx_serie] - shift[idx_serie])
+            i2pi_array = (i_array ** 2) * heatmap[idx_serie, :]
+            rmse_estimator.append(np.sqrt(np.sum(i2pi_array)))
+
+        return rmse_estimator
 
     def fit(self, modality, ground_truth=None, cat=None, params='default', verbose=True):
         """Find the parameters needed to apply the normalization.
@@ -258,7 +423,7 @@ class StandardTimeNormalization(TemporalNormalization):
                                                    ground_truth=ground_truth,
                                                    cat=cat)
 
-                # Check the gaussian parameters argument
+        # Check the gaussian parameters argument
         if isinstance(params, basestring):
             if params == 'default':
                 # Give the default values for each parameter
@@ -298,79 +463,21 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
-        # Smooth the heatmap using a Gaussian filter
-        heatmap = gaussian_filter1d(heatmap, self.params_['std'], axis=1)
-        # Inverse the map such that we can take the shortest path
-        heatmap = 1. - (heatmap / np.ndarray.max(heatmap))
-        # Compute the exponential map to emplify the differences
-        heatmap = img_as_float(np.exp(self.params_['exp'] * heatmap))
+        
+        # Find the shift in the data
+        self.fit_params_['shift'], self.shift_idx_ = self._find_shift(heatmap,
+                                                                      bins_heatmap,
+                                                                      self.params_['std'],
+                                                                      self.params_['exp'],
+                                                                      self.params_['alpha'],
+                                                                      self.params_['max_iter'],
+                                                                      verbose)
 
-        if verbose:
-            print 'Heatmap built ...'
-
-        # Initialization of the output
-        self.shift_ = np.zeros(modality.n_serie_, )
-
-        graph = self._build_graph(heatmap, verbose)
-
-        # Find the starting and ending point in the graph - the median is used
-        # Get data from the first serie
-        data_serie = modality.data_[0, :, :, :]
-        # Compute the median from the given roi
-        median_start = np.median(data_serie[self.roi_data_].reshape(-1))
-        # Find the nearest index associated with this value
-        _, idx_start = find_nearest(bins_heatmap, median_start)
-
-        # Get data from the last serie
-        data_serie = modality.data_[-1, :, :, :]
-        # Compute the median from the given roi
-        median_end = np.median(data_serie[self.roi_data_].reshape(-1))
-        # Find the nearest index associated with this value
-        _, idx_end = find_nearest(bins_heatmap, median_end)
-
-        # Create the starting and ending tuple
-        start_tuple = (0, idx_start)
-        end_tuple = (modality.n_serie_ - 1, idx_end)
-        start_end_tuple = (start_tuple, end_tuple)
-
-        # Compute the shortest path
-        method = 'shortest-path'
-        absolute_shift = self._walk_through_graph(graph, heatmap, 
-                                                  start_end_tuple, 
-                                                  method, verbose)
-
-        # do-while loop
-        middle_idx = 0
-        itr_loop = 1
-        while True:
-            if verbose:
-                print 'Iteration #{}'.format(itr_loop)
-            # Increment the shifting of the previous iteration
-            self.shift_ += (absolute_shift[:, 1] - middle_idx)
-            # Shift the heatmap accordingly
-            heatmap = self._shift_heatmap(heatmap, absolute_shift)
-            # Apply again the shortest path
-            graph = self._build_graph(heatmap, verbose)
-
-            # Create the starting and ending tuple
-            middle_idx = int(heatmap.shape[1] / 2.)
-            start_tuple = (0, middle_idx)
-            end_tuple = (modality.n_serie_ - 1, middle_idx)
-            start_end_tuple = (start_tuple, end_tuple)
-
-            # Compute the shortest path
-            method = 'route-through-graph'
-            absolute_shift = self._walk_through_graph(graph, heatmap, 
-                                                      start_end_tuple, 
-                                                      method, verbose)
-            itr_loop += 1
-            # Breaking condition - We don't move
-            if (np.sum(absolute_shift[:, 1] - middle_idx) == 0 or 
-                itr_loop > self.params_['max_iter']):
-                break
-
-        # Store the shift in the dictionary
-        self.fit_params_['shift'] = self.shift_
+        # Compute the associated RMSE of the estimator found
+        self.rmse = self._compute_rmse(heatmap, bins_heatmap,
+                                       self.fit_params_['shift'],
+                                       self.shift_idx_,
+                                       verbose)
 
         # Fitting performed
         self.is_fitted_ = True
