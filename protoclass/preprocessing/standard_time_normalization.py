@@ -6,13 +6,14 @@ from numpy.matlib import repmat
 from scipy.ndimage.filters import gaussian_filter1d
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import shortest_path
+from scipy import optimize
 
 from skimage import img_as_float
 from skimage.graph import route_through_array
 
 from .temporal_normalization import TemporalNormalization
 
-from ..utils import find_nearest
+from ..utils import check_npy_filename
 
 
 class StandardTimeNormalization(TemporalNormalization):
@@ -33,7 +34,11 @@ class StandardTimeNormalization(TemporalNormalization):
     fit_params_ : dict of str : float
         There is the following keys:
 
-        - 'shift' is the shift found thorugh graph walking.
+        - 'shift_int' is the shift found using graph walking. It corresponds
+        to an intensity shift.
+        - 'shift_time' corresponds to the time shifting equivalent to a shift
+        of serie.
+        - 'scale-int' is a scaling factor for the intensity.
 
     """
 
@@ -41,6 +46,7 @@ class StandardTimeNormalization(TemporalNormalization):
         super(StandardTimeNormalization, self).__init__(base_modality)
         # Initialize the fitting boolean
         self.is_fitted_ = False
+        self.is_model_fitted = False
 
     @staticmethod
     def _build_graph(heatmap, param_alpha, verbose=True):
@@ -379,11 +385,37 @@ class StandardTimeNormalization(TemporalNormalization):
             i2pi_array = (i_array ** 2) * heatmap[idx_serie, :]
             rmse_estimator.append(np.sqrt(np.sum(i2pi_array)))
 
-        return rmse_estimator
+        return np.array(rmse_estimator)
 
-    def fit(self, modality, ground_truth=None, cat=None,
-            params='default', verbose=True):
-        """Find the parameters needed to apply the normalization.
+    def load_model(self, filename):
+        """Load a model used at the time to align the RMSE.
+
+        Parameters
+        ----------
+        filename : str
+            The path to npy file with the data of the model inside.
+
+        Returns
+        -------
+        self : object
+            Returns self.
+
+        """
+        # Check that the filename is ok
+        filename = check_npy_filename(filename)
+
+        # Load the model
+        self.model_ = np.load(filename)
+
+        # Store that we loaded the model
+        self.is_model_fitted = True
+
+        return self
+
+    def partial_fit_model(self, modality, ground_truth=None, cat=None,
+                          params='default', refit=False, verbose=True):
+        """Online fittinf of template model to drive the fitting of
+        one modality.
 
         Parameters
         ----------
@@ -414,6 +446,9 @@ class StandardTimeNormalization(TemporalNormalization):
             exponential; 'alpha' corresponds to the parameters to penalize
             vertical and horizontal weight in the graph; 'max_iter' is the
             maximum number of walks through the graph.
+
+        refit : bool, optional (default=False)
+            Either to refit the model or not.
 
         verbose : bool, optional (default=True)
             Whether to show the fitting process information.
@@ -465,6 +500,206 @@ class StandardTimeNormalization(TemporalNormalization):
             raise ValueError('The type of the object params does not fulfill'
                              ' any requirement.')
 
+        # Compute the heatmap
+        heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
+
+        # Find the shift in the data
+        shift, shift_idx = self._find_shift(heatmap,
+                                            bins_heatmap,
+                                            self.params_['std'],
+                                            self.params_['exp'],
+                                            self.params_['alpha'],
+                                            self.params_['max_iter'],
+                                            verbose)
+
+        # Compute the associated RMSE of the estimator found
+        rmse = self._compute_rmse(heatmap, bins_heatmap,
+                                  shift,
+                                  shift_idx,
+                                  verbose)
+
+        # First fitting or refit
+        if refit or getattr(self, 'model_', None) is None:
+            self.model_ = rmse
+            self.nb_partial_fit = 1.
+        # Online fitting
+        else:
+            self.nb_partial_fit += 1.
+            self.model_ = (self.model_ +
+                           (rmse - self.model_) / self.nb_partial_fit)
+
+        # Update the status of the fitting
+        self.is_model_fitted = True
+
+        return self    
+
+    @staticmethod
+    def _shift_serie(signal, tau):
+        """Shift a signal in time with recopy.
+
+        Parameters
+        ----------
+        signal : ndarray, shape (n_serie, )
+            The original signal to be shifted according the the tau value.
+
+        tau : int
+            Integer to roll the signal.
+
+        Returns
+        -------
+        signal_shifted : ndarray, shape (n_serie, )
+            The signal shifted.
+
+        """
+        # Force tau to be integer
+        tau = int(np.round(tau))
+        if tau > 0:
+            # Shift to the write with recopy of the first value
+            signal_shifted = np.zeros(signal.shape)
+            signal_shifted[tau::] = signal[0:-tau]
+            signal_shifted[:tau] = np.tile(signal[0], tau)
+
+            return signal_shifted
+        elif tau < 0:
+            # Shift to the left with recopy of the last value
+            signal_shifted = np.zeros(signal.shape)
+            signal_shifted[0:tau] = signal[-tau::]
+            signal_shifted[tau::] = np.tile(signal[-1], -tau)
+
+            return signal_shifted
+        else:
+            return signal
+
+    def _find_rmse_params(self, rmse):
+        """Find the set of parameters to re-aligned the rmse to the
+        previously fitted model.
+
+        Parameters
+        ----------
+        rmse : ndarray, shape (n_serie, )
+            The sigal which needs to be realigned.)
+
+        Returns
+        -------
+        params : dict of str : float
+            The set of parameters fitted. There is two parameters returned:
+            - `shift-time`: corresponds to the shift in time (i.e., serie);
+            - `scale-int`: corresponds to the scaling factor.
+
+        """
+        # Define the cost function with x the parameters to find
+        cost_func = lambda x: np.sum(self.model_ -
+                                     (x[1] * self._shift_serie(rmse,
+                                                               x[0]))) ** 2
+
+        # Initialize the parameters
+        # Initial shift in time - aligned both with the maximum of
+        # the derivative which corresponds to the middle of the maximum
+        # enhancement
+        init_shift_t = (np.argmax(np.diff(self.model_[0:15])) -
+                        np.argmax(np.diff(rmse[0:15])))
+        # Initial scale factor
+        # Ratio of the baseline with the peak of enhancement
+        init_alpha = ((self.model_[0] - np.max(self.model_[0:15])) / 
+                      (rmse[0] - np.max(rmse[0:15])))
+
+        # Fix the bounds for the optimization
+        bnds = ((-5, 5), (.2, 5.))
+        # Rund the optimization
+        solver = 'L-BFGS-B'
+        res = optimize.minimize(cost_func, x0=[init_shift_t, init_alpha],
+                                method=solver, bounds=bnds)
+
+        return {'shift-time': res.x[0], 'scale-int': res.x[1]}
+
+    def fit(self, modality, ground_truth=None, cat=None,
+            params='default', verbose=True):
+        """Find the parameters needed to apply the normalization.
+
+        Parameters
+        ----------
+        modality : object
+            Object inherated from TemporalModality.
+
+        ground-truth : object of type GTModality or None, optional
+            (default=None)
+            The ground-truth of GTModality. If None, the whole data will be
+            considered.
+
+        cat : str or None, optional (default=None)
+            String corresponding at the ground-truth of interest. Cannot be
+            None if ground-truth is not None.
+
+        params : str or dict of str: float, optional (default='default')
+            The initial estimation of the parameters:
+
+            - If 'default', the value following value will be affected:
+            {'std' : 50., 'exp' : 25., 'alpha' : .9, 'max_iter' : 5}
+            - If dict, a dictionary with the keys 'std', 'exp', 'alpha',
+            and 'max_iter' should be specified. The corresponding value of
+            these parameters should be float. They will be the initial value
+            during fitting.
+
+            'std' corresponds to the standard deviation when applying the
+            Gaussian filter; 'exp' corresponds to the factor in the
+            exponential; 'alpha' corresponds to the parameters to penalize
+            vertical and horizontal weight in the graph; 'max_iter' is the
+            maximum number of walks through the graph.
+
+        verbose : bool, optional (default=True)
+            Whether to show the fitting process information.
+
+        Returns
+        -------
+        self : object
+             Return self.
+
+        """
+        # Check that a model was fitted or loaded
+        if not self.is_model_fitted:
+            raise ValueError('A model needs to be either loaded or fitted.')
+
+        # By calling the parents function, self.roi_data_ will be affected
+        # and can be used in all cases.
+        super(StandardTimeNormalization, self).fit(modality=modality,
+                                                   ground_truth=ground_truth,
+                                                   cat=cat)
+
+        # Check the gaussian parameters argument
+        if isinstance(params, basestring):
+            if params == 'default':
+                # Give the default values for each parameter
+                self.params_ = {'std': 50., 'exp': 25.,
+                                'alpha': .9, 'max_iter': 5}
+            else:
+                raise ValueError('The string for the object params is'
+                                 ' unknown.')
+        elif isinstance(params, dict):
+            # Check that mu and sigma are inside the dictionary
+            valid_presets = ('std', 'exp', 'alpha', 'max_iter')
+            for val_param in valid_presets:
+                if val_param not in params.keys():
+                    raise ValueError('At least the parameter {} is not specify'
+                                     ' in the dictionary.'.format(val_param))
+            # For each key, check if this is a known parameters
+            self.params_ = {}
+            for k_param in params.keys():
+                if k_param in valid_presets:
+                    # The key is valid, build our dictionary
+                    if isinstance(params[k_param], float):
+                        self.params_[k_param] = params[k_param]
+                    else:
+                        raise ValueError('The parameter std, exp, alpha, or'
+                                         ' max_iter should be some float.')
+                else:
+                    raise ValueError('Unknown parameter inside the dictionary.'
+                                     ' `std`, `exp`, `alpha`, and `max_iter`'
+                                     ' are the only two solutions and need to'
+                                     ' be float.')
+        else:
+            raise ValueError('The type of the object params does not fulfill'
+                             ' any requirement.')
+
         # Initialize the parameter dictionary
         self.fit_params_ = {}
 
@@ -472,20 +707,25 @@ class StandardTimeNormalization(TemporalNormalization):
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
 
         # Find the shift in the data
-        self.fit_params_['shift'], \
-            self.shift_idx_ = self._find_shift(heatmap,
-                                               bins_heatmap,
-                                               self.params_['std'],
-                                               self.params_['exp'],
-                                               self.params_['alpha'],
-                                               self.params_['max_iter'],
-                                               verbose)
+        self.fit_params_['shift_int'], \
+            self.shift_int_idx_ = self._find_shift(heatmap,
+                                                   bins_heatmap,
+                                                   self.params_['std'],
+                                                   self.params_['exp'],
+                                                   self.params_['alpha'],
+                                                   self.params_['max_iter'],
+                                                   verbose)
 
         # Compute the associated RMSE of the estimator found
-        self.rmse = self._compute_rmse(heatmap, bins_heatmap,
-                                       self.fit_params_['shift'],
-                                       self.shift_idx_,
-                                       verbose)
+        rmse = self._compute_rmse(heatmap, bins_heatmap,
+                                  self.fit_params_['shift_int'],
+                                  self.shift_int_idx_,
+                                  verbose)
+
+        # The next fitting parameters will be found by aligning the RMSE on
+        # the model previously fitted
+        # Update the dictonary
+        self.fit_params_.update(self._find_rmse_params(rmse))
 
         # Fitting performed
         self.is_fitted_ = True
