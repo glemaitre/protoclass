@@ -8,6 +8,7 @@ from .temporal_modality import TemporalModality
 
 from ..utils import find_nearest
 
+
 class DCEModality(TemporalModality):
     """Class to handle DCE-MRI modality.
 
@@ -83,8 +84,8 @@ class DCEModality(TemporalModality):
 
         # Check if we have to auto compute the range of the histogram
         # Check that we have a proper list of bins
-        if ((nb_bins != 'auto') and
-            (len(nb_bins) != len(self.data_))):
+        if (nb_bins != 'auto' and
+                len(nb_bins) != len(self.data_)):
             raise ValueError('Provide a list of number of bins with the same'
                              ' size as the number of serie in the data.')
         elif nb_bins == 'auto':
@@ -149,9 +150,9 @@ class DCEModality(TemporalModality):
         max_series_list = []
 
         # Check that we have a proper list of bins
-        if ((nb_bins is not None) and
-            (nb_bins != 'auto') and
-            (len(nb_bins) != len(self.data_))):
+        if (nb_bins is not None and
+            nb_bins != 'auto' and
+                len(nb_bins) != len(self.data_)):
             raise ValueError('Provide a list of number of bins with the same'
                              ' size as the number of serie in the data.')
         # Get the list of number of bins if not specify
@@ -244,7 +245,9 @@ class DCEModality(TemporalModality):
 
         # Build the heatmap
         # Go through each serie and paste it inside the array
-        for idx_serie, (bin_serie, pdf_serie) in enumerate(zip(center_bins_list, pdf_list)):
+        for idx_serie, (bin_serie, pdf_serie) in enumerate(
+                zip(center_bins_list,
+                    pdf_list)):
             # We need to interpolate the histogram values
             min_value, min_idx = find_nearest(bins_heatmap,
                                               min_series[idx_serie])
@@ -254,13 +257,13 @@ class DCEModality(TemporalModality):
             # Interpolate the value using nearest neighbour
             f = interp1d(bin_serie, pdf_serie, kind='nearest',
                          bounds_error=False, fill_value=0.)
-            
+
             nb_bin = int((max_value - min_value) / np.min(ratio_bins))
             bin_serie_interpolated = np.linspace(min_value, max_value, nb_bin)
             pdf_serie_interpolated = f(bin_serie_interpolated)
 
             # Copy the data at the right position
-            heatmap[idx_serie, min_idx:min_idx + nb_bin] = pdf_serie_interpolated
+            heatmap[idx_serie, min_idx:min_idx+nb_bin] = pdf_serie_interpolated
 
         return heatmap, bins_heatmap
 
@@ -287,7 +290,6 @@ class DCEModality(TemporalModality):
         for data_serie in self.data_:
             self.nb_bins_.append(int(np.round(np.ndarray.max(data_serie) -
                                               np.ndarray.min(data_serie))))
-
 
         # Compute the information regarding the pdf of the DCE series
         self.update_histogram()

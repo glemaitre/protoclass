@@ -82,9 +82,9 @@ class DWIModality(MultisequenceModality):
         max_series_list = []
 
         # Check that we have a proper list of bins
-        if ((nb_bins is not None) and
-            (nb_bins != 'auto') and
-            (len(nb_bins) != len(self.data_))):
+        if (nb_bins is not None and
+            nb_bins != 'auto' and
+                len(nb_bins) != len(self.data_)):
             raise ValueError('Provide a list of number of bins with the same'
                              ' size as the number of serie in the data.')
         # Get the list of number of bins if not specify

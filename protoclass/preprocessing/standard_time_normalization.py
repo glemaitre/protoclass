@@ -14,6 +14,7 @@ from .temporal_normalization import TemporalNormalization
 
 from ..utils import find_nearest
 
+
 class StandardTimeNormalization(TemporalNormalization):
     """Standard normalization to normalize temporal modality.
 
@@ -69,7 +70,7 @@ class StandardTimeNormalization(TemporalNormalization):
             # Come back to the pixel index
             px_idx = np.unravel_index(y, heatmap.shape)
             if (px_idx[0] >= (heatmap.shape[0] - 1) or
-                px_idx[1] >= (heatmap.shape[1] - 1)):
+                    px_idx[1] >= (heatmap.shape[1] - 1)):
                 continue
             # Get the pixel value
             edge_val = heatmap[px_idx]
@@ -91,7 +92,9 @@ class StandardTimeNormalization(TemporalNormalization):
         return graph
 
     @staticmethod
-    def _walk_through_graph(graph, heatmap, start_end_vertices, method='shortest-path', verbose=True):
+    def _walk_through_graph(graph, heatmap,
+                            start_end_vertices, method='shortest-path',
+                            verbose=True):
         """Find path through the path with different a-priori.
 
         Parameters
@@ -158,7 +161,7 @@ class StandardTimeNormalization(TemporalNormalization):
             # Call the function from skimage
             indices, weight = route_through_array(heatmap,
                                                   start_tuple,
-                                                  end_tuple, 
+                                                  end_tuple,
                                                   geometric=True)
             path_list = np.array(indices)
         else:
@@ -216,7 +219,9 @@ class StandardTimeNormalization(TemporalNormalization):
 
         return heatmap_shifted
 
-    def _find_shift(self, heatmap, bins_heatmap, param_std, param_exp, param_alpha, param_max_iter, verbose=True):
+    def _find_shift(self, heatmap, bins_heatmap,
+                    param_std, param_exp, param_alpha, param_max_iter,
+                    verbose=True):
         """Find the shift through iterative shortest-path.
 
         Parameters
@@ -288,8 +293,8 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the shortest path
         method = 'shortest-path'
-        absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp, 
-                                                  start_end_tuple, 
+        absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp,
+                                                  start_end_tuple,
                                                   method, verbose)
         # Keep only the uselful information of the shift
         absolute_shift = np.ravel(absolute_shift[:, 1])
@@ -316,8 +321,8 @@ class StandardTimeNormalization(TemporalNormalization):
 
             # Compute the shortest path
             method = 'route-through-graph'
-            absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp, 
-                                                      start_end_tuple, 
+            absolute_shift = self._walk_through_graph(graph, heatmap_inv_exp,
+                                                      start_end_tuple,
                                                       method, verbose)
             # Keep only the uselful information of the shift
             absolute_shift = np.ravel(absolute_shift[:, 1])
@@ -325,15 +330,16 @@ class StandardTimeNormalization(TemporalNormalization):
             # Keep track of the iteration
             itr_loop += 1
             # Breaking condition - We don't move
-            if (np.sum(absolute_shift - middle_idx) == 0 or 
-                itr_loop > param_max_iter):
+            if (np.sum(absolute_shift - middle_idx) == 0 or
+                    itr_loop > param_max_iter):
                 break
 
         # Store the shift in the dictionary
         # Take the intensity value, not the bin
         return bins_heatmap[shift.astype(int)], shift.astype(int)
 
-    def _compute_rmse(self, heatmap, bins_heatmap, shift, idx_shift, verbose=True):
+    def _compute_rmse(self, heatmap, bins_heatmap,
+                      shift, idx_shift, verbose=True):
         """Compute the root mean squared error from the shift estimator.
 
         Parameters
@@ -375,7 +381,8 @@ class StandardTimeNormalization(TemporalNormalization):
 
         return rmse_estimator
 
-    def fit(self, modality, ground_truth=None, cat=None, params='default', verbose=True):
+    def fit(self, modality, ground_truth=None, cat=None,
+            params='default', verbose=True):
         """Find the parameters needed to apply the normalization.
 
         Parameters
@@ -397,12 +404,12 @@ class StandardTimeNormalization(TemporalNormalization):
 
             - If 'default', the value following value will be affected:
             {'std' : 50., 'exp' : 25., 'alpha' : .9, 'max_iter' : 5}
-            - If dict, a dictionary with the keys 'std', 'exp', 'alpha', 
+            - If dict, a dictionary with the keys 'std', 'exp', 'alpha',
             and 'max_iter' should be specified. The corresponding value of
             these parameters should be float. They will be the initial value
             during fitting.
 
-            'std' corresponds to the standard deviation when applying the 
+            'std' corresponds to the standard deviation when applying the
             Gaussian filter; 'exp' corresponds to the factor in the
             exponential; 'alpha' corresponds to the parameters to penalize
             vertical and horizontal weight in the graph; 'max_iter' is the
@@ -427,8 +434,8 @@ class StandardTimeNormalization(TemporalNormalization):
         if isinstance(params, basestring):
             if params == 'default':
                 # Give the default values for each parameter
-                self.params_ = {'std' : 50., 'exp' : 25.,
-                                'alpha' : .9, 'max_iter' : 5}
+                self.params_ = {'std': 50., 'exp': 25.,
+                                'alpha': .9, 'max_iter': 5}
             else:
                 raise ValueError('The string for the object params is'
                                  ' unknown.')
@@ -438,7 +445,7 @@ class StandardTimeNormalization(TemporalNormalization):
             for val_param in valid_presets:
                 if val_param not in params.keys():
                     raise ValueError('At least the parameter {} is not specify'
-                                      ' in the dictionary.'.format(val_param))
+                                     ' in the dictionary.'.format(val_param))
             # For each key, check if this is a known parameters
             self.params_ = {}
             for k_param in params.keys():
@@ -463,15 +470,16 @@ class StandardTimeNormalization(TemporalNormalization):
 
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
-        
+
         # Find the shift in the data
-        self.fit_params_['shift'], self.shift_idx_ = self._find_shift(heatmap,
-                                                                      bins_heatmap,
-                                                                      self.params_['std'],
-                                                                      self.params_['exp'],
-                                                                      self.params_['alpha'],
-                                                                      self.params_['max_iter'],
-                                                                      verbose)
+        self.fit_params_['shift'], \
+            self.shift_idx_ = self._find_shift(heatmap,
+                                               bins_heatmap,
+                                               self.params_['std'],
+                                               self.params_['exp'],
+                                               self.params_['alpha'],
+                                               self.params_['max_iter'],
+                                               verbose)
 
         # Compute the associated RMSE of the estimator found
         self.rmse = self._compute_rmse(heatmap, bins_heatmap,
@@ -519,4 +527,3 @@ class StandardTimeNormalization(TemporalNormalization):
         super(StandardTimeNormalization, self).denormalize(modality=modality)
 
         return self
-

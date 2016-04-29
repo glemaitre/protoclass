@@ -65,7 +65,7 @@ class GaussianNormalization(StandaloneNormalization):
             for val_param in valid_presets:
                 if val_param not in params.keys():
                     raise ValueError('At least the parameter {} is not specify'
-                                      ' in the dictionary.'.format(val_param))
+                                     ' in the dictionary.'.format(val_param))
             # For each key, check if this is a known parameters
             self.fit_params_ = {}
             for k_param in params.keys():
