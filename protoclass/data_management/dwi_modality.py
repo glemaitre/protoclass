@@ -82,19 +82,19 @@ class DWIModality(MultisequenceModality):
         max_series_list = []
 
         # Check that we have a proper list of bins
-        if (nb_bins is not None and
-            nb_bins != 'auto' and
-                len(nb_bins) != len(self.data_)):
-            raise ValueError('Provide a list of number of bins with the same'
-                             ' size as the number of serie in the data.')
-        # Get the list of number of bins if not specify
-        elif nb_bins is None:
-            nb_bins = self.nb_bins_
-        elif nb_bins == 'auto':
-            nb_bins = []
-            for data_serie in self.data_:
-                nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
-                                            np.ndarray.min(data_serie))))
+        if isinstance(nb_bins, basestring):
+            if nb_bins == 'auto':
+                nb_bins = []
+                for data_serie in self.data_:
+                    nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
+                                                np.ndarray.min(data_serie))))
+        else:
+            if nb_bins is not None and len(nb_bins) != len(self.data_):
+                raise ValueError('Provide a list of number of bins with the'
+                                 ' same size as the number of serie in the'
+                                 ' data.')
+            elif nb_bins is None:
+                nb_bins = self.nb_bins_
 
         for data_serie, bins in zip(self.data_, nb_bins):
             pdf_s, bin_s = np.histogram(data_serie,

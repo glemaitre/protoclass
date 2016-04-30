@@ -799,7 +799,10 @@ class StandardTimeNormalization(TemporalNormalization):
         # Apply the scaling factor
         modality.data_ *= self.fit_params_['scale-int']
 
-        return self
+        # Update the histogram
+        modality.update_histogram()
+
+        return modality
 
     def denormalize(self, modality):
         """Denormalize the given modality using the fitted parameters.
@@ -832,4 +835,7 @@ class StandardTimeNormalization(TemporalNormalization):
         # Apply the scaling factor
         modality.data_ /= self.fit_params_['scale-int']
 
-        return self
+        # Update the histogram
+        modality.update_histogram()
+
+        return modality

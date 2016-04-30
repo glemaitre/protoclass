@@ -73,10 +73,13 @@ class T2WModality(StandaloneModality):
 
         # Build the histogram corresponding to the current volume
         # Find how many bins do we need
-        if nb_bins is None:
+        if isinstance(nb_bins, basestring):
+            if nb_bins == 'auto':
+                nb_bins = int(np.round(self.max_ - self.min_))
+            else:
+                raise ValueError('Unknown parameters for `nb_bins.`')
+        elif nb_bins is None:
             nb_bins = self.nb_bins_
-        elif nb_bins == 'auto':
-            nb_bins = int(np.round(self.max_ - self.min_))
 
         self.pdf_, self.bin_ = np.histogram(self.data_,
                                             bins=nb_bins,
