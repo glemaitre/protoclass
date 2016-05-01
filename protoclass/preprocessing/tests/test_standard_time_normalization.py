@@ -41,18 +41,18 @@ def test_stn_bad_mod_fit():
     assert_raises(ValueError, dce_norm.fit, t2w_mod)
 
 
-def test_stn_right_fitting():
-    """ Test if the construction of the normalization object is correct. """
+# def test_stn_right_fitting():
+#     """ Test if the construction of the normalization object is correct. """
 
-    # Create the object and check that it contains the same modality
-    dce_norm = StandardTimeNormalization(DCEModality())
+#     # Create the object and check that it contains the same modality
+#     dce_norm = StandardTimeNormalization(DCEModality())
 
-    # Load the data with only a single serie
-    currdir = os.path.dirname(os.path.abspath(__file__))
-    path_data = os.path.join(currdir, 'data', 'dce')
-    # Create an object to handle the data
-    dce_mod = DCEModality()
-    dce_mod.read_data_from_path(path_data)
+#     # Load the data with only a single serie
+#     currdir = os.path.dirname(os.path.abspath(__file__))
+#     path_data = os.path.join(currdir, 'data', 'dce')
+#     # Create an object to handle the data
+#     dce_mod = DCEModality()
+#     dce_mod.read_data_from_path(path_data)
 
-    # Fit the modality
-    dce_norm.fit(dce_mod)
+#     # Fit the modality
+#     dce_norm.fit(dce_mod)
