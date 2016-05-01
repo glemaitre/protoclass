@@ -8,12 +8,12 @@
 
 set -e
 
-# # Get into a temp directory to run test from the installed scikit learn and
-# # check if we do not leave artifacts
-# mkdir -p $TEST_DIR
-# # We need the setup.cfg for the nose settings
-# cp setup.cfg $TEST_DIR
-# cd $TEST_DIR
+# Get into a temp directory to run test from the installed scikit learn and
+# check if we do not leave artifacts
+mkdir -p $TEST_DIR
+# We need the setup.cfg for the nose settings
+cp setup.cfg $TEST_DIR
+cd $TEST_DIR
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
@@ -21,13 +21,13 @@ python -c "import scipy; print('scipy %s' % scipy.__version__)"
 python -c "import multiprocessing as mp; print('%d CPUs' % mp.cpu_count())"
 
 if [[ "$COVERAGE" == "true" ]]; then
-   nosetests -s --with-coverage --with-timer --timer-top-n 20 protoclass
+   nosetests -v -s --with-coverage --cover-package=$MODULE $MODULE
 else
-   nosetests -s --with-timer --timer-top-n 20 protoclass
+   nosetests -v -s $MODULE
 fi
 
 # Is directory still empty ?
-# ls -ltra
+ls -ltra
 
 # # Test doc
 # cd $CACHED_BUILD_DIR/scikit-cycling
