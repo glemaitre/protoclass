@@ -203,3 +203,43 @@ def test_t2w_path_data_constructor():
     assert_array_equal(t2w_mod.pdf_, data)
     data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
     assert_array_equal(t2w_mod.data_, data)
+
+
+def test_t2w_histogram_wrong_nb_bins_param():
+    """Test if either an error is raised when the parameters for the `nb_bins`
+    is unknown."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality(path_data)
+
+    t2w_mod.read_data_from_path()
+
+    # Update the histogram with the unknown parameters
+    assert_raises(ValueError, t2w_mod.update_histogram, nb_bins='rnd')
+
+
+def test_t2w_update_histo_force_bins():
+    """Test to check the routine to update the histogram with a given number
+    of bins."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality(path_data)
+
+    t2w_mod.read_data_from_path()
+
+    # Recompute the number of histogram with a given number of bins
+    t2w_mod.update_histogram(nb_bins=10)
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_t2w_data_forced_bin.npy'))
+    assert_array_equal(t2w_mod.bin_, data)
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_t2w_data_forced_bin.npy'))
+    assert_array_equal(t2w_mod.pdf_, data)
