@@ -1,5 +1,7 @@
 """Standard time normalization to normalize temporal modality."""
 
+import os
+
 import numpy as np
 from numpy.matlib import repmat
 
@@ -411,6 +413,32 @@ class StandardTimeNormalization(TemporalNormalization):
         self.is_model_fitted = True
 
         return self
+
+    def save_model(self, filename):
+        """Store the model into an npy file.
+
+        Parameters
+        ----------
+        filename : str
+            The path where to store the model.
+
+        Returns
+        -------
+        None
+
+        """
+        # Check that the file is an npy file
+        if not filename.endswith('.npy'):
+            raise ValueError('The file provided needs to be of `npy`'
+                             ' extension.')
+
+        dir_storage = os.path.dirname(filename)
+        if not os.path.exists(dir_storage):
+            os.makedirs(dir_storage)
+
+        np.save(filename, self.model_)
+
+        return None
 
     def partial_fit_model(self, modality, ground_truth=None, cat=None,
                           params='default', refit=False, verbose=True):
