@@ -38,9 +38,6 @@ class GaussianNormalization(StandaloneNormalization):
         - 'mu' is the fitted mean.
         - 'sigma' is the standard deviation.
 
-        The precision of the parameters is the unit to avoid any precision
-        problem during normalization and denormalization.
-
     is_fitted_ : bool
         Boolean to know if the `fit` function has been already called.
 
@@ -68,7 +65,7 @@ class GaussianNormalization(StandaloneNormalization):
             for val_param in valid_presets:
                 if val_param not in params.keys():
                     raise ValueError('At least the parameter {} is not specify'
-                                      ' in the dictionary.'.format(val_param))
+                                     ' in the dictionary.'.format(val_param))
             # For each key, check if this is a known parameters
             self.fit_params_ = {}
             for k_param in params.keys():
@@ -208,7 +205,7 @@ class GaussianNormalization(StandaloneNormalization):
 
         # Check that the parameters have been fitted
         if not self.is_fitted_:
-            raise ValueError('Fir the parameters previous to normalize'
+            raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
         # Normalize the data of the modality
@@ -238,7 +235,7 @@ class GaussianNormalization(StandaloneNormalization):
 
         # Check that the parameters have been fitted
         if not self.is_fitted_:
-            raise ValueError('Fir the parameters previous to normalize'
+            raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
         # Normalize the data of the modality
