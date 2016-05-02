@@ -491,4 +491,147 @@ def test_update_histogram_wrong_bins():
     assert_raises(ValueError, dce_mod.update_histogram, nb_bins=nb_bins)
 
 
+def test_get_pdf_nb_bins_str_unknown():
+    """ Test either if an error is raised when the string for `nb_bins`
+    is unknown."""
 
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Pass an unknown string for `nb_bins`
+    assert_raises(ValueError, dce_mod.get_pdf_list,
+                  roi_data=None, nb_bins='rnd')
+
+
+def test_get_pdf_nb_bins_wrong_type():
+    """ Test either if an error is raised when an unknown parameter type
+    is passed."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Pass a single integer which is an unknown type
+    assert_raises(ValueError, dce_mod.get_pdf_list, roi_data=None, nb_bins=10)
+
+
+def test_update_histogram_wrong_string():
+    """Test either if an error is raised when an unknown string is provided
+    for the arguments `nb_bins`."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Get the pdf with the wrong number of series in nb_bins
+    # There is only two series
+    assert_raises(ValueError, dce_mod.update_histogram, nb_bins='rnd')
+
+
+def test_update_histogram_wrong_bins_type():
+    """Test either if an error is raised with an inconsistent type of data
+    in a list."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Get the pdf with the wrong number of series in nb_bins
+    # There is only two series
+    nb_bins = [100, 100, 'a']
+    assert_raises(ValueError, dce_mod.update_histogram, nb_bins=nb_bins)
+
+
+def test_update_histogram_wrong_bins_type_2():
+    """Test either if an error is raised with an inconsistent type of data
+    in a list."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Get the pdf with the wrong number of series in nb_bins
+    # There is only two series
+    nb_bins = [100, 'a']
+    assert_raises(ValueError, dce_mod.update_histogram, nb_bins=nb_bins)
+
+
+def test_update_histogram_wrong_instance():
+    """Test either if an error is raised with an type for `nb_bins`
+    argument."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Get the pdf with the wrong number of series in nb_bins
+    # There is only two series
+    assert_raises(ValueError, dce_mod.update_histogram, nb_bins=10)
+
+
+def test_update_histogram_fix_bins():
+    """ Test that the function properly update the value of the histogram
+    and fixing the number of bins. """
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    dce_mod.read_data_from_path(path_data)
+
+    # Change something in the data to check that the computation
+    # is working
+    dce_mod.data_[0, 20:40, :, :] = 1000.
+    nb_bins = [100, 100]
+    dce_mod.update_histogram(nb_bins=nb_bins)
+
+    # We need to check that the minimum and maximum were proprely computed
+    assert_equal(dce_mod.min_series_, 0.)
+    assert_equal(dce_mod.max_series_, 1000.)
+
+    # Check that bin is what we expect
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_dce_data_update_100_bins.npy'))
+    # Check that each array are the same
+    for exp, gt in zip(dce_mod.bin_series_, data):
+        assert_array_equal(exp, gt)
+
+    # Check that pdf is what we expect
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_dce_data_update_100_bins.npy'))
+    # Check that each array are the same
+    for exp, gt in zip(dce_mod.pdf_series_, data):
+        assert_array_equal(exp, gt)

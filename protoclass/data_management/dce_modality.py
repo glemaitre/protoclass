@@ -62,11 +62,11 @@ class DCEModality(TemporalModality):
             Indices of elements to consider while computing the histogram.
             The ROI is a 3D volume which will be used for each time serie.
 
-        nb_bins : int, str or None, optional (default=None)
+        nb_bins : list of int or str, optional (default='auto')
             The numbers of bins to use to compute the histogram.
             The possibilities are:
             - If 'auto', the number of bins is found at fitting time.
-            - Otherwise, an integer needs to be given.
+            - Otherwise, a list of integer needs to be given.
 
         Returns
         -------
@@ -96,9 +96,17 @@ class DCEModality(TemporalModality):
                         nb_bins.append(int(np.round(
                             np.ndarray.max(data_serie[roi_data]) -
                             np.ndarray.min(data_serie[roi_data]))))
-        elif len(nb_bins) != len(self.data_):
-            raise ValueError('Provide a list of number of bins with the same'
-                             ' size as the number of serie in the data.')
+            else:
+                raise ValueError('Wrong string argument to specify the'
+                                 ' number of bins.')
+        elif isinstance(nb_bins, list):
+            if (len(nb_bins) != len(self.data_) or
+                not all(isinstance(x, int) for x in nb_bins)):
+                    raise ValueError('Provide a list of number of bins with'
+                                     ' the same size as the number of serie in'
+                                     ' the data.')
+        else:
+            raise ValueError('Unknown arguments for `nb_bins`.')
 
         pdf_list = []
         bin_list = []
@@ -122,12 +130,12 @@ class DCEModality(TemporalModality):
 
         Parameters
         ----------
-        nb_bins : int, str, or None, optional (default=None)
+        nb_bins : list of int, str, or None, optional (default=None)
             The numbers of bins to use to compute the histogram.
             The possibilities are:
             - If None, the number of bins found at reading will be used.
             - If 'auto', the number of bins is found at fitting time.
-            - Otherwise, an integer needs to be given.
+            - Otherwise, a list of integer needs to be given.
 
         Returns
         -------
@@ -157,13 +165,18 @@ class DCEModality(TemporalModality):
                 for data_serie in self.data_:
                     nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
                                                 np.ndarray.min(data_serie))))
+            else:
+                raise ValueError('Unknown string for `nb_bins`.')
+        elif isinstance(nb_bins, list):
+              if (len(nb_bins) != len(self.data_) or
+                  not all(isinstance(x, int) for x in nb_bins)):
+                      raise ValueError('Provide a list of integer of bins'
+                                       ' with the same size as the number'
+                                       ' of serie in the data.')
+        elif nb_bins is None:
+            nb_bins = self.nb_bins_
         else:
-            if nb_bins is not None and len(nb_bins) != len(self.data_):
-                raise ValueError('Provide a list of number of bins with the'
-                                 ' same size as the number of serie in the'
-                                 ' data.')
-            elif nb_bins is None:
-                nb_bins = self.nb_bins_
+            raise ValueError('Unknown arguments for `nb_bins`.')
 
         for data_serie, bins in zip(self.data_, nb_bins):
             pdf_s, bin_s = np.histogram(data_serie,
@@ -218,7 +231,8 @@ class DCEModality(TemporalModality):
             nb_bins = self.nb_bins_
 
         # Compute the list of pdfs
-        pdf_list, bins_list = self.get_pdf_list(roi_data, nb_bins)
+        pdf_list, bins_list = self.get_pdf_list(roi_data=roi_data,
+                                                nb_bins=nb_bins)
         # We will take the center for each bins
         center_bins_list = []
         for bins_serie in bins_list:
