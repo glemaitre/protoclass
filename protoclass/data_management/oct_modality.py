@@ -24,7 +24,7 @@ class OCTModality(StandaloneModality):
 
     data_ : array-like, shape (Y, Z, X)
         The different volume of the SD-OCT volume. The data are saved in
-        Y, Z, X ordered.
+        Y, Z, X ordered. Generally, the data are coded on 8 bits.
 
     pdf_ : list, length (n_serie)
         List of the PDF for each serie.
@@ -59,7 +59,6 @@ class OCTModality(StandaloneModality):
             The numbers of bins to use to compute the histogram.
             The possibilities are:
             - If None, the number of bins found at reading will be used.
-            - If 'auto', the number of bins is found at fitting time.
             - Otherwise, an integer needs to be given.
 
         Returns
@@ -84,12 +83,7 @@ class OCTModality(StandaloneModality):
 
         # Build the histogram corresponding to the current volume
         # Find how many bins do we need
-        if isinstance(nb_bins, basestring):
-            if nb_bins == 'auto':
-                nb_bins = int(np.round(self.max_ - self.min_))
-            else:
-                raise ValueError('Unknown parameters for `nb_bins.`')
-        elif nb_bins is None:
+        if nb_bins is None:
             nb_bins = self.nb_bins_
         elif isinstance(nb_bins, int):
             pass
@@ -140,16 +134,15 @@ class OCTModality(StandaloneModality):
         # Data are stored as (Y, Z, X)
         vol_oct = np.fromfile(self.path_data_, 
                               dtype=dtype, sep="").reshape(sz_data)
+        vol_oct = img_as_float(vol_oct)
         # However there is a need to flip up down along Z
         self.data_ = np.zeros(vol_oct.shape)
         for idx_z, im_oct in enumerate(vol_oct):
             self.data_[idx_z] = np.flipud(im_oct)    
         
         # Compute the information regarding the OCT images
-        # Set the number of bins that will be later used to compute
-        # the histogram
-        self.nb_bins_ = int(np.round(np.ndarray.max(self.data_) -
-                                     np.ndarray.min(self.data_)))
+        if dtype == 'uint8':
+            self.nb_bins_ = 256
 
         # Compute the information regarding the OCT images
         self.update_histogram()

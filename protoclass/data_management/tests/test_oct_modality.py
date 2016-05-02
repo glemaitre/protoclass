@@ -7,10 +7,13 @@ from numpy.testing import assert_raises
 from numpy.testing import assert_equal
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_warns
+from numpy.testing import assert_almost_equal
 
 from nose.tools import assert_true
 
 from protoclass.data_management import OCTModality
+
+PRECISION_DECIMAL = 2
 
 
 def test_path_list_no_dir():
@@ -123,12 +126,12 @@ def test_update_histogram():
 
     # Change something in the data to check that the computation
     # is working
-    oct_mod.data_[:, :, 20:40] = 1050.
-    oct_mod.update_histogram('auto')
+    oct_mod.data_[:, :, 20:40] = 1.
+    oct_mod.update_histogram()
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(oct_mod.min_, 0.)
-    assert_equal(oct_mod.max_, 1050.)
+    assert_equal(oct_mod.max_, 1.)
 
     # Check the pdf and bins
     data = np.load(os.path.join(currdir, 'data', 'bin_oct_data_update.npy'))
@@ -165,7 +168,7 @@ def test_update_histogram_wrong_string_nb_bins():
 
     # Change something in the data to check that the computation
     # is working
-    oct_mod.data_[:, :, 20:40] = 1050.
+    oct_mod.data_[:, :, 20:40] = 1.
     assert_raises(ValueError, oct_mod.update_histogram, 'rnd')
 
 
@@ -199,7 +202,7 @@ def test_update_histogram_wrong_type_nb_bins():
 
     # Change something in the data to check that the computation
     # is working
-    oct_mod.data_[:, :, 20:40] = 1050.
+    oct_mod.data_[:, :, 20:40] = 1.
     assert_raises(ValueError, oct_mod.update_histogram, 2.5)
 
 
@@ -218,12 +221,12 @@ def test_update_histogram_fix_nb_bins():
 
     # Change something in the data to check that the computation
     # is working
-    oct_mod.data_[:, :, 20:40] = 1050.
+    oct_mod.data_[:, :, 20:40] = 1.
     oct_mod.update_histogram(nb_bins=100)
 
     # We need to check that the minimum and maximum were proprely computed
     assert_equal(oct_mod.min_, 0.)
-    assert_equal(oct_mod.max_, 1050.)
+    assert_equal(oct_mod.max_, 1.)
 
     # Check the pdf and bins
     data = np.load(os.path.join(currdir, 'data',
