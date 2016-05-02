@@ -302,3 +302,83 @@ def test_path_data_list_1_serie():
 
     # Check that an error is raised due to 2 series in dwi
     assert_raises(ValueError, dwi_mod.read_data_from_path)
+
+
+def test_update_histogram_wrong_nb_bins():
+    """Test either if an error is raised when the wrong arguments is passed."""
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dwi')
+    # Create an object to handle the data
+    dwi_mod = DWIModality()
+
+    dwi_mod.read_data_from_path(path_data)
+
+    # Change something in the data to check that the computation
+    # is working
+    dwi_mod.data_[0, 20:40, :, :] = 2000.
+    assert_raises(ValueError, dwi_mod.update_histogram, 'rnd')
+
+
+def test_update_histogram_wrong_list_bins():
+    """Test either if an error is raised when the list of number of bins
+    is not consistent."""
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dwi')
+    # Create an object to handle the data
+    dwi_mod = DWIModality()
+
+    dwi_mod.read_data_from_path(path_data)
+
+    # Change something in the data to check that the computation
+    # is working
+    dwi_mod.data_[0, 20:40, :, :] = 2000.
+
+    # There is two series, let's give a list with three elements
+    list_bins = [100, 100, 100]
+    assert_raises(ValueError, dwi_mod.update_histogram, nb_bins=list_bins)
+
+
+def test_update_histogram_wrong_type_list():
+    """Test either if an error is raised when the type in the list are
+    not consistent."""
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dwi')
+    # Create an object to handle the data
+    dwi_mod = DWIModality()
+
+    dwi_mod.read_data_from_path(path_data)
+
+    # Change something in the data to check that the computation
+    # is working
+    dwi_mod.data_[0, 20:40, :, :] = 2000.
+
+    # There is two series, let's give a list with three elements
+    list_bins = [100, 100, 'a']
+    assert_raises(ValueError, dwi_mod.update_histogram, nb_bins=list_bins)
+
+
+def test_update_histogram_unkown_nb_bins():
+    """Test either if an error is raised when the arguments `nb_bins`
+    is unknown."""
+
+    # Load the data and then call the function independently
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dwi')
+    # Create an object to handle the data
+    dwi_mod = DWIModality()
+
+    dwi_mod.read_data_from_path(path_data)
+
+    # Change something in the data to check that the computation
+    # is working
+    dwi_mod.data_[0, 20:40, :, :] = 2000.
+
+    # There is two series, let's give a list with three elements
+    assert_raises(ValueError, dwi_mod.update_histogram, nb_bins=10)
+

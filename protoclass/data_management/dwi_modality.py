@@ -53,12 +53,12 @@ class DWIModality(MultisequenceModality):
 
         Parameters
         ----------
-        nb_bins : int, str, or None, optional (default=None)
+        nb_bins : list of int, str, or None, optional (default=None)
             The numbers of bins to use to compute the histogram.
             The possibilities are:
             - If None, the number of bins found at reading will be used.
             - If 'auto', the number of bins is found at fitting time.
-            - Otherwise, an integer needs to be given.
+            - Otherwise, a list of integer needs to be given.
 
         Returns
         -------
@@ -88,13 +88,18 @@ class DWIModality(MultisequenceModality):
                 for data_serie in self.data_:
                     nb_bins.append(int(np.round(np.ndarray.max(data_serie) -
                                                 np.ndarray.min(data_serie))))
-        else:
-            if nb_bins is not None and len(nb_bins) != len(self.data_):
-                raise ValueError('Provide a list of number of bins with the'
+            else:
+                raise ValueError('Unknown arguments for `nb_bins`.')
+        elif (isinstance(nb_bins, list) and
+              (len(nb_bins) != len(self.data_) or
+               not all(isinstance(x, int) for x in nb_bins))):
+                raise ValueError('Provide a list of integer of bins with the'
                                  ' same size as the number of serie in the'
                                  ' data.')
-            elif nb_bins is None:
-                nb_bins = self.nb_bins_
+        elif nb_bins is None:
+            nb_bins = self.nb_bins_
+        else:
+            raise ValueError('Unknown arguments for `nb_bins`.')
 
         for data_serie, bins in zip(self.data_, nb_bins):
             pdf_s, bin_s = np.histogram(data_serie,
