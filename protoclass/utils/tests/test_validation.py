@@ -1,4 +1,4 @@
-""" Test different validation methods. """
+"""Test different validation methods."""
 
 import numpy as np
 import os
@@ -9,6 +9,7 @@ from numpy.testing import assert_raises
 from protoclass.utils.validation import check_path_data
 from protoclass.utils.validation import check_modality
 from protoclass.utils.validation import check_img_filename
+from protoclass.utils.validation import check_npy_filename
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
@@ -107,3 +108,34 @@ def test_check_img_filename():
     filename = os.path.join(currdir, 'data', 'README.img')
 
     assert_equal(check_img_filename(filename), filename)
+
+
+def test_check_img_filename_wrong_type():
+    """ Test if an error is raised when the type is wrong. """
+    assert_raises(ValueError, check_img_filename, 1)
+
+
+def test_check_npy_filename_no_file():
+    """ Test if an error is raised when the file does not exist. """
+    assert_raises(ValueError, check_npy_filename, 'random.rnd')
+
+
+def test_check_npy_filename_not_npy():
+    """ Test if an error is raised when the file is not of npy extension. """
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data', 'path_list_data',
+                            's_2', 'README.md')
+    assert_raises(ValueError, check_npy_filename, filename)
+
+
+def test_check_npy_filename():
+    """ Test the routine to check if the file is of type npy. """
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(currdir, 'data', 'README.npy')
+
+    assert_equal(check_npy_filename(filename), filename)
+
+
+def test_check_npy_filename_wrong_type():
+    """ Test if an error is raised when the type is wrong. """
+    assert_raises(ValueError, check_npy_filename, 1)
