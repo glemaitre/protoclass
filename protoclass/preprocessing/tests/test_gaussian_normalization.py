@@ -2,6 +2,8 @@
 
 import os
 
+import numpy as np
+
 from numpy.testing import assert_raises
 from numpy.testing import assert_equal
 from numpy.testing import assert_warns
@@ -397,11 +399,65 @@ def test_gn_normalize():
     assert_array_almost_equal(t2w_mod.data_, (data_copy - 250.19) / 65.98,
                               decimal=DECIMAL_PRECISON)
 
-    # Check how to check the denormalization
-    # # Denormalize the data
-    # t2w_mod = gaussian_norm.denormalize(t2w_mod)
+    # Denormalize the data
+    t2w_mod = gaussian_norm.denormalize(t2w_mod)
 
-    # # Check that the data are equal to the original data
-    # assert_array_equal(t2w_mod.data_, data_copy)
-    # assert_array_equal(t2w_mod.pdf_, pdf_copy)
+    # Check that the data are equal to the original data
+    data = np.load(os.path.join(currdir, 'data', 'data_denormalize.npy'))
+    assert_array_equal(t2w_mod.data_, data)
+    data = np.load(os.path.join(currdir, 'data', 'pdf_denormalize.npy'))
+    assert_array_equal(t2w_mod.pdf_, data)
 
+
+def test_normalize_wt_fitting():
+    """Test either an error is raised if the data are not fitted first."""
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Store the data before the normalization
+    pdf_copy = t2w_mod.pdf_.copy()
+    data_copy = t2w_mod.data_.copy()
+
+    # Normalize the data
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.normalize, t2w_mod)
+
+
+def test_denormalize_wt_fitting():
+    """Test either an error is raised if the data are not fitted first."""
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Store the data before the normalization
+    pdf_copy = t2w_mod.pdf_.copy()
+    data_copy = t2w_mod.data_.copy()
+
+    # Normalize the data
+    gaussian_norm = GaussianNormalization(T2WModality())
+    assert_raises(ValueError, gaussian_norm.denormalize, t2w_mod)
