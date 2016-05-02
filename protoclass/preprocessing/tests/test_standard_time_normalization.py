@@ -51,3 +51,12 @@ def test_build_graph():
 
     # Read the data
     dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Build a heatmap from the dce data
+    heatmap, bins_heatmap = dce_mod.build_heatmap()
