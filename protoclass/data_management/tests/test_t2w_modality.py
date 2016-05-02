@@ -158,7 +158,7 @@ def test_update_histogram_wt_data():
     assert_raises(ValueError, t2w_mod.update_histogram)
 
 
-def test_dce_path_data_warning():
+def test_t2w_path_data_warning():
     """ Test either if a warning is raised if the path will be overriden. """
 
     # Load the data with only a single serie
