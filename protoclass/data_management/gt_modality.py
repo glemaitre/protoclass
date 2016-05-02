@@ -188,3 +188,44 @@ class GTModality(MultisequenceModality):
             self.cat_gt_ = cat_gt
 
         return self
+
+    def extract_gt_data(self, label, output_type='index'):
+        """Extract data corresponding to a given label.
+
+        Parameters
+        ----------
+        label : str
+            Label of the ground-truth to extract.
+
+        output_type : str, optional (default='index')
+            Type of the desired output. The choices are.
+
+            - If 'index', the index corresponding to the positive class will
+            be returned.
+            - If 'data', the full ground-truth data will be returned.
+
+        Returns
+        -------
+        output : ndarray
+            The output data. Depends of the arguments `output_type`
+
+        """
+        # Check that data have been read
+        if not self.is_read():
+            raise ValueError('Read the data before to extract them.')
+
+        # Check that the label was part of the category given at opening
+        if not any([label == x for x in self.cat_gt_]):
+            raise ValueError('The provided label was not part of the category'
+                             ' at the opening time.')
+
+        # Get the index corresponding to the ground-truth
+        idx_label = self.cat_gt_.index(label)
+
+        # Return the data corresponding to the ground-truth
+        if output_type == 'index':
+            return np.nonzero(self.data_[idx_label, :, :, :])
+        elif output_type == 'data':
+            return self.data_[idx_label, :, :, :]
+        else:
+            raise ValueError('Invalid output descriptor.')
