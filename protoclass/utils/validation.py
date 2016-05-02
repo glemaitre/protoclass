@@ -55,6 +55,7 @@ def check_modality(modality, template_modality):
     Returns
     -------
     None
+
     """
 
     # Check that the two modality classes are coherent
@@ -69,7 +70,7 @@ def check_modality(modality, template_modality):
 
 
 def check_img_filename(filename):
-    """ Method to check that the filename is an `img` file.
+    """Method to check that the filename is an `img` file.
 
     Parameters
     ----------
@@ -79,19 +80,24 @@ def check_img_filename(filename):
     Returns
     -------
         The filename checked.
+
     """
-    # Check that filename point to a file
-    if os.path.isfile(filename):
-        if filename.endswith('.img'):
-            return filename
+    # Check that filename is of type basetring
+    if isinstance(filename, basestring):
+        # Check that filename point to a file
+        if os.path.isfile(filename):
+            if filename.endswith('.img'):
+                return filename
+            else:
+                raise ValueError('The file needs to be with an img extension.')
         else:
-            raise ValueError('The file needs to be with an img extension.')
+            raise ValueError('The filename provided does not point to a file.')
     else:
-        raise ValueError('The filename provided does not point to a file.')
+        raise ValueError('Wrong type for filename variable.')
 
 
 def check_npy_filename(filename):
-    """ Method to check that the filename is an `npy` file.
+    """Method to check that the filename is an `npy` file.
 
     Parameters
     ----------
@@ -101,12 +107,17 @@ def check_npy_filename(filename):
     Returns
     -------
         The filename checked.
+
     """
-    # Check that filename point to a file
-    if os.path.isfile(filename):
-        if filename.endswith('.npy'):
-            return filename
+    # Checkt that filename is of type string
+    if isinstance(filename, basestring):
+        # Check that filename point to a file
+        if os.path.isfile(filename):
+            if filename.endswith('.npy'):
+                return filename
+            else:
+                raise ValueError('The file needs to be with an npy extension.')
         else:
-            raise ValueError('The file needs to be with an npy extension.')
+            raise ValueError('The filename provided does not point to a file.')
     else:
-        raise ValueError('The filename provided does not point to a file.')
+        raise ValueError('Wrong type for filename variable.')

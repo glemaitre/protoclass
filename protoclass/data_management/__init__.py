@@ -13,6 +13,8 @@ from .t2w_modality import T2WModality
 from .dwi_modality import DWIModality
 from .gt_modality import GTModality
 
+from .oct_modality import OCTModality
+
 __all__ = ['BaseModality',
            'StandaloneModality',
            'TemporalModality',
@@ -20,4 +22,5 @@ __all__ = ['BaseModality',
            'DCEModality',
            'T2WModality',
            'DWIModality',
-           'GTModality']
+           'GTModality',
+           'OCTModality']
