@@ -73,7 +73,7 @@ class StandardTimeNormalization(TemporalNormalization):
         """
 
         # We can build the graph associated with the heatmap
-        graph = np.empty((heatmap.size, heatmap.size), dtype=float)
+        graph = np.zeros((heatmap.size, heatmap.size), dtype=float)
         for y in np.arange(graph.shape[0]):
             # Come back to the pixel index
             px_idx = np.unravel_index(y, heatmap.shape)
