@@ -40,6 +40,7 @@ def test_stn_bad_mod_fit():
     # Fit and raise the error
     assert_raises(ValueError, dce_norm.fit, t2w_mod)
 
+
 def test_build_graph():
     """Test the method to build a graph from the heatmap."""
 
@@ -59,4 +60,13 @@ def test_build_graph():
     gt_mod.read_data_from_path(label_gt, path_gt)
 
     # Build a heatmap from the dce data
-    heatmap, bins_heatmap = dce_mod.build_heatmap()
+    # Reduce the number of bins to enforce low memory consumption
+    nb_bins = [100] * dce_mod.n_serie_
+    heatmap, bins_heatmap = dce_mod.build_heatmap(gt_mod.extract_gt_data(
+        label_gt[0]), nb_bins=nb_bins)
+
+    # Build the graph
+    graph = StandardTimeNormalization._build_graph(heatmap, .99)
+
+    data = np.load(os.path.join(currdir, 'data', 'graph.npy'))
+    assert_array_equal(graph.todense(), data)
