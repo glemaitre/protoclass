@@ -65,26 +65,18 @@ class TemporalNormalization(BaseNormalization):
             raise ValueError('The ground-truth should be an object of'
                              ' class GTModality.')
 
-        # Check that the category given is part of the ground-truth
-        if cat not in ground_truth.cat_gt_:
-            raise ValueError('The ground-truth category required has not been'
-                             ' loaded during the instance of the'
-                             ' GTModality object.')
-        else:
-            # Extract the indexes of interest to be returned
-            idx_gt = ground_truth.cat_gt_.index(cat)
-
         # Check that the size of the ground-truth and the modality
         # are consistant
         # In this case check only the last three dimension
-        if (np.size(modality.data_, 1),
-            np.size(modality.data_, 2),
-            np.size(modality.data_, 3)) != ground_truth.data_[idx_gt, :, :, :].shape:
-            raise ValueError('The ground-truth does not correspond to the'
-                             ' given modality volume.')
+        if ((np.size(modality.data_, 1),
+             np.size(modality.data_, 2),
+             np.size(modality.data_, 3)) !=
+            ground_truth.extract_gt_data(cat, 'data').shape):
+                raise ValueError('The ground-truth does not correspond to the'
+                                 ' given modality volume.')
 
         # Find the element which are not zero
-        return np.nonzero(ground_truth.data_[idx_gt, :, :, :])
+        return ground_truth.extract_gt_data(cat, 'index')
 
     @abstractmethod
     def fit(self, modality, ground_truth=None, cat=None):
