@@ -215,7 +215,7 @@ class GTModality(MultisequenceModality):
             raise ValueError('Read the data before to extract them.')
 
         # Check that the label was part of the category given at opening
-        if not any([label == x for x in self.cat_gt_]):
+        if label not in self.cat_gt_:
             raise ValueError('The provided label was not part of the category'
                              ' at the opening time.')
 
