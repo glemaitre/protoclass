@@ -59,18 +59,18 @@ protoclass.preprocessing.normalisation module
     :undoc-members:
     :show-inheritance:
 
-protoclass.preprocessing.short_path_normalization module
---------------------------------------------------------
-
-.. automodule:: protoclass.preprocessing.short_path_normalization
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 protoclass.preprocessing.standalone_normalization module
 --------------------------------------------------------
 
 .. automodule:: protoclass.preprocessing.standalone_normalization
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+protoclass.preprocessing.standard_time_normalization module
+-----------------------------------------------------------
+
+.. automodule:: protoclass.preprocessing.standard_time_normalization
     :members:
     :undoc-members:
     :show-inheritance:

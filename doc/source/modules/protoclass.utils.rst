@@ -4,6 +4,14 @@ protoclass.utils package
 Submodules
 ----------
 
+protoclass.utils.array_helper module
+------------------------------------
+
+.. automodule:: protoclass.utils.array_helper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 protoclass.utils.export module
 ------------------------------
 

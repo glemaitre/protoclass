@@ -51,6 +51,14 @@ protoclass.data_management.multisequence_modality module
     :undoc-members:
     :show-inheritance:
 
+protoclass.data_management.oct_modality module
+----------------------------------------------
+
+.. automodule:: protoclass.data_management.oct_modality
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 protoclass.data_management.standalone_modality module
 -----------------------------------------------------
 
