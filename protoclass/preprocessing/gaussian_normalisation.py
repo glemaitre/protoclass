@@ -67,7 +67,6 @@ class GaussianNormalization(StandaloneNormalization):
                     raise ValueError('At least the parameter {} is not specify'
                                      ' in the dictionary.'.format(val_param))
             # For each key, check if this is a known parameters
-            self.fit_params_ = {}
             for k_param in params.keys():
                 if k_param in valid_presets:
                     # The key is valid, build our dictionary
@@ -97,7 +96,7 @@ class GaussianNormalization(StandaloneNormalization):
         mu : float
             Mean of the Gaussian model.
 
-        std : float
+        sigma : float
             Standard deviation of the model.
 
         Returns
@@ -181,8 +180,9 @@ class GaussianNormalization(StandaloneNormalization):
                             p0=(mu, sigma))
 
         # Assign the value after convergence
-        self.mu_ = np.around(popt[0], decimals=2)
-        self.sigma_ = np.around(popt[1], decimals=2)
+        self.fit_params_ = {}
+        self.fit_params_['mu'] = np.around(popt[0], decimals=2)
+        self.fit_params_['sigma'] = np.around(popt[1], decimals=2)
         self.is_fitted_ = True
 
         return self
@@ -209,8 +209,8 @@ class GaussianNormalization(StandaloneNormalization):
                              ' the data.')
 
         # Normalize the data of the modality
-        modality.data_ -= self.mu_
-        modality.data_ /= self.sigma_
+        modality.data_ -= self.fit_params_['mu']
+        modality.data_ /= self.fit_params_['sigma']
 
         # Update the histogram associated to the data
         modality.update_histogram()
@@ -239,8 +239,8 @@ class GaussianNormalization(StandaloneNormalization):
                              ' the data.')
 
         # Normalize the data of the modality
-        modality.data_ *= self.sigma_
-        modality.data_ += self.mu_
+        modality.data_ *= self.fit_params_['sigma']
+        modality.data_ += self.fit_params_['mu']
 
         # Update the histogram associated to the data
         modality.update_histogram()
