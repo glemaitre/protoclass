@@ -9,7 +9,7 @@ from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_allclose
 from numpy.testing import assert_raises
 
-from testfixtures import Comparison
+from nose.tools import assert_true
 
 from skimage import img_as_float
 from scipy.ndimage.filters import gaussian_filter1d
@@ -225,3 +225,308 @@ def test_shift_heatmap():
 
     data = np.load(os.path.join(currdir, 'data', 'heatmap_shifted.npy'))
     assert_array_equal(heatmap_shifted, data)
+
+
+def test_partial_fit_model_wrong_params_type():
+    """Test either if an error is raised when the parameters do not have
+    the right types."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                 ground_truth=gt_mod, cat=label_gt[0], params=1)
+
+
+def test_partial_fit_model_wrong_string():
+    """Test either if an error is raised when the string is unknown."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                  ground_truth=gt_mod, cat=label_gt[0], params='rnd')
+
+
+def test_partial_fit_model_dict_missing_params():
+    """Test either if an error is raised when a parameters is missing
+    in the dictionary."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    params = {'std': 50}
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                  ground_truth=gt_mod, cat=label_gt[0], params=params)
+
+
+def test_partial_fit_model_dict_wrong_params():
+    """Test either if an error is raised when a parameters is wrong
+    in the dictionary."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    params = {'std': 50., 'exp': 25., 'alpha': .9, 'max_iter': 5, 'rnd': 50}
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                  ground_truth=gt_mod, cat=label_gt[0], params=params)
+
+
+def test_partial_fit_model_dict_wrong_type():
+    """Test either if an error is raised when a parameters is a wrong
+     type in the dictionary."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    params = {'std': 50., 'exp': 25., 'alpha': .9, 'max_iter': 5.}
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                  ground_truth=gt_mod, cat=label_gt[0], params=params)
+
+    params = {'std': 50., 'exp': 25, 'alpha': .9, 'max_iter': 5}
+    assert_raises(ValueError, stn.partial_fit_model, dce_mod,
+                  ground_truth=gt_mod, cat=label_gt[0], params=params)
+
+
+def test_partial_fit_model():
+    """Test the routine to fit the model."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+
+    # Check the model computed
+    model_gt = np.array([22.26479174, 22.51070962, 24.66027277, 23.43488237,
+                         23.75601817, 22.56173871, 26.86244505, 45.06227804,
+                         62.34273874, 71.35327656])
+    assert_array_almost_equal(stn.model_, model_gt, decimal=PRECISION_DECIMAL)
+    assert_true(stn.is_model_fitted_)
+
+
+def test_partial_fit_model_2():
+    """Test the routine to fit two models."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+
+    # Check the model computed
+    model_gt = np.array([22.26479174, 22.51070962, 24.66027277, 23.43488237,
+                         23.75601817, 22.56173871, 26.86244505, 45.06227804,
+                         62.34273874, 71.35327656])
+    assert_array_almost_equal(stn.model_, model_gt, decimal=PRECISION_DECIMAL)
+    assert_true(stn.is_model_fitted_)
+
+
+def test_save_model_not_fitted():
+    """Test either if an error is raised if the model is not fitted and
+    requested to be stored."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    assert_raises(ValueError, stn.save_model, os.path.join(currdir, 'data',
+                                                           'model.npy'))
+
+def test_save_model_wrong_ext():
+    """Test either if an error is raised if the filename as a wrong
+    extension while storing the model."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+
+    # Try to store the file not with an npy file
+    assert_raises(ValueError, stn.save_model, os.path.join(currdir, 'data',
+                                                           'model.rnd'))
+
+def test_save_load_model():
+    """Test the routine to store and load the model."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+
+    # Store the file
+    filename = os.path.join(currdir, 'data', 'model.npy')
+    stn.save_model(filename)
+
+    # Load the model in another object
+    stn2 = StandardTimeNormalization(dce_mod)
+    stn2.load_model(filename)
+
+    # Check the different variable
+    model_gt = np.array([22.26479174, 22.51070962, 24.66027277, 23.43488237,
+                         23.75601817, 22.56173871, 26.86244505, 45.06227804,
+                         62.34273874, 71.35327656])
+    assert_array_almost_equal(stn.model_, model_gt, decimal=PRECISION_DECIMAL)
+    assert_true(stn.is_model_fitted_)
+
+
+def test_fit_model():
+    """Test the routine to fit the parameters."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 'full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    # Read the data
+    dce_mod.read_data_from_path(path_data)
+
+    # Load the GT data
+    path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+    label_gt = ['prostate']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(label_gt, path_gt)
+
+    # Create the object to make the normalization
+    stn = StandardTimeNormalization(dce_mod)
+    stn.partial_fit_model(dce_mod, gt_mod, label_gt[0])
+    stn.fit(dce_mod, gt_mod, label_gt[0])
