@@ -73,7 +73,7 @@ class StandaloneNormalization(BaseNormalization):
         # Check that the size of the ground-truth and the modality
         # are consistant
         if (modality.data_.shape !=
-            ground_truth.extract_gt_data(cat, 'data').shape):
+                ground_truth.extract_gt_data(cat, 'data').shape):
             raise ValueError('The ground-truth does not correspond to the'
                              ' given modality volume.')
 

@@ -111,14 +111,14 @@ def test_walk_through_graph_shortest_path():
     graph = StandardTimeNormalization._build_graph(heatmap_inv_exp, .99)
 
     start_end_tuple = ((0, 6), (3, 6))
-    
+
     # Call the algorithm to walk through the graph
     path = StandardTimeNormalization._walk_through_graph(graph,
                                                          heatmap_inv_exp,
                                                          start_end_tuple,
                                                          'shortest-path')
 
-    gt_path = np.array([[0, 6],[1, 6],[2, 6],[3, 6]])
+    gt_path = np.array([[0, 6], [1, 6], [2, 6], [3, 6]])
     assert_array_equal(path, gt_path)
 
 
@@ -151,14 +151,14 @@ def test_walk_through_graph_route_through():
     graph = StandardTimeNormalization._build_graph(heatmap_inv_exp, .99)
 
     start_end_tuple = ((0, 131), (3, 135))
-    
+
     # Call the algorithm to walk through the graph
     path = StandardTimeNormalization._walk_through_graph(graph,
                                                          heatmap_inv_exp,
                                                          start_end_tuple,
                                                          'route-through-graph')
 
-    gt_path = np.array([[0, 131],[1, 132],[2, 134],[3, 135]])
+    gt_path = np.array([[0, 131], [1, 132], [2, 134], [3, 135]])
     assert_array_equal(path, gt_path)
 
 
@@ -251,7 +251,7 @@ def test_partial_fit_model_wrong_params_type():
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
     assert_raises(ValueError, stn.partial_fit_model, dce_mod,
-                 ground_truth=gt_mod, cat=label_gt[0], params=1)
+                  ground_truth=gt_mod, cat=label_gt[0], params=1)
 
 
 def test_partial_fit_model_wrong_string():
@@ -445,6 +445,7 @@ def test_save_model_not_fitted():
     assert_raises(ValueError, stn.save_model, os.path.join(currdir, 'data',
                                                            'model.npy'))
 
+
 def test_save_model_wrong_ext():
     """Test either if an error is raised if the filename as a wrong
     extension while storing the model."""
@@ -471,6 +472,7 @@ def test_save_model_wrong_ext():
     # Try to store the file not with an npy file
     assert_raises(ValueError, stn.save_model, os.path.join(currdir, 'data',
                                                            'model.rnd'))
+
 
 def test_save_load_model():
     """Test the routine to store and load the model."""
@@ -523,7 +525,6 @@ def test_shift_serie():
     # Check the signal
     assert_array_equal(signal_shift, signal)
 
-
     # Create a shift of 2
     shift = 2
     signal_shift = StandardTimeNormalization._shift_serie(signal, shift)
@@ -561,7 +562,7 @@ def test_fit():
 
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
-    
+
     # Create a synthetic model to fit on
     stn.model_ = np.array([30., 30., 32., 31., 31., 30., 35., 55., 70., 80.])
     stn.is_model_fitted_ = True
@@ -598,7 +599,7 @@ def test_normalize_denormalize():
 
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
-    
+
     # Simulate that we fitted the data
     stn.model_ = np.array([30., 30., 32., 31., 31., 30., 35., 55., 70., 80.])
     stn.is_model_fitted_ = True
@@ -647,7 +648,7 @@ def test_normalize_denormalize_2():
 
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
-    
+
     # Simulate that we fitted the data
     stn.model_ = np.array([30., 30., 32., 31., 31., 30., 35., 55., 70., 80.])
     stn.is_model_fitted_ = True
@@ -696,7 +697,7 @@ def test_normalize_denormalize_3():
 
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
-    
+
     # Simulate that we fitted the data
     stn.model_ = np.array([30., 30., 32., 31., 31., 30., 35., 55., 70., 80.])
     stn.is_model_fitted_ = True
@@ -818,11 +819,11 @@ def test_fit_not_read_mod_gt():
     path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
     label_gt = ['prostate']
     gt_mod = GTModality()
-    
+
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
     assert_raises(ValueError, stn.partial_fit_model, dce_mod,
-                 gt_mod, label_gt[0])
+                  gt_mod, label_gt[0])
 
 
 def test_fit_wrong_gt_size():
@@ -867,7 +868,7 @@ def test_fit_not_read_mod():
 
     # Read the ground-truth
     gt_mod.read_data_from_path(label_gt, path_gt)
-    
+
     # Create the object to make the normalization
     stn = StandardTimeNormalization(dce_mod)
     assert_raises(ValueError, stn.partial_fit_model, dce_mod,

@@ -129,6 +129,7 @@ def test_read_gt_data_path_list():
     assert_array_equal(gt_mod.data_, data)
     assert_equal(gt_mod.n_serie_, 4)
 
+
 def test_read_gt_data_path_list_constructor():
     """ Test if we can read gt series. """
 

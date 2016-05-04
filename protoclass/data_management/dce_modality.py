@@ -101,10 +101,10 @@ class DCEModality(TemporalModality):
                                  ' number of bins.')
         elif isinstance(nb_bins, list):
             if (len(nb_bins) != len(self.data_) or
-                not all(isinstance(x, int) for x in nb_bins)):
-                    raise ValueError('Provide a list of number of bins with'
-                                     ' the same size as the number of serie in'
-                                     ' the data.')
+                    not all(isinstance(x, int) for x in nb_bins)):
+                raise ValueError('Provide a list of number of bins with'
+                                 ' the same size as the number of serie in'
+                                 ' the data.')
         else:
             raise ValueError('Unknown arguments for `nb_bins`.')
 
@@ -168,11 +168,11 @@ class DCEModality(TemporalModality):
             else:
                 raise ValueError('Unknown string for `nb_bins`.')
         elif isinstance(nb_bins, list):
-              if (len(nb_bins) != len(self.data_) or
-                  not all(isinstance(x, int) for x in nb_bins)):
-                      raise ValueError('Provide a list of integer of bins'
-                                       ' with the same size as the number'
-                                       ' of serie in the data.')
+            if (len(nb_bins) != len(self.data_) or
+                    not all(isinstance(x, int) for x in nb_bins)):
+                raise ValueError('Provide a list of integer of bins'
+                                 ' with the same size as the number'
+                                 ' of serie in the data.')
         elif nb_bins is None:
             nb_bins = self.nb_bins_
         else:

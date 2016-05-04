@@ -19,6 +19,7 @@ from protoclass.preprocessing import GaussianNormalization
 
 DECIMAL_PRECISON = 1
 
+
 def test_gn_init_wrong_base_modality():
     """ Test either if an error is raised when a wrong base modality
     is given. """
@@ -313,6 +314,7 @@ def test_gn_fit_wt_gt():
     assert_almost_equal(gaussian_norm.fit_params_['sigma'], 11.35,
                         decimal=DECIMAL_PRECISON)
 
+
 def test_gn_fit_auto():
     """ Test the fitting routine with auto parameters. """
 
@@ -339,6 +341,7 @@ def test_gn_fit_auto():
     assert_almost_equal(gaussian_norm.fit_params_['sigma'], 74.31,
                         decimal=DECIMAL_PRECISON)
 
+
 def test_gn_fit_fix_mu_sigma():
     """ Test the fitting routine with fixed mean and std. """
 
@@ -358,7 +361,7 @@ def test_gn_fit_fix_mu_sigma():
     gt_mod = GTModality()
     gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
 
-    params = {'mu' : 200., 'sigma': 70.}
+    params = {'mu': 200., 'sigma': 70.}
     gaussian_norm = GaussianNormalization(T2WModality(), params=params)
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
     assert_almost_equal(gaussian_norm.fit_params_['mu'], 246.43,

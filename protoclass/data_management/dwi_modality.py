@@ -92,10 +92,10 @@ class DWIModality(MultisequenceModality):
                 raise ValueError('Unknown arguments for `nb_bins`.')
         elif isinstance(nb_bins, list):
             if (len(nb_bins) != len(self.data_) or
-                not all(isinstance(x, int) for x in nb_bins)):
-                    raise ValueError('Provide a list of integer of bins'
-                                     ' with the same size as the number'
-                                     ' of serie in the data.')
+                    not all(isinstance(x, int) for x in nb_bins)):
+                raise ValueError('Provide a list of integer of bins'
+                                 ' with the same size as the number'
+                                 ' of serie in the data.')
         elif nb_bins is None:
             nb_bins = self.nb_bins_
         else:

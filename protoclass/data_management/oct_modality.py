@@ -90,7 +90,6 @@ class OCTModality(StandaloneModality):
         else:
             raise ValueError('Unknown type for parameters nb_bins.')
 
-
         # Build the histogram corresponding to the current volume
         self.pdf_, self.bin_ = np.histogram(self.data_,
                                             bins=nb_bins,
@@ -132,14 +131,14 @@ class OCTModality(StandaloneModality):
                              ' the data.')
 
         # Data are stored as (Y, Z, X)
-        vol_oct = np.fromfile(self.path_data_, 
+        vol_oct = np.fromfile(self.path_data_,
                               dtype=dtype, sep="").reshape(sz_data)
         vol_oct = img_as_float(vol_oct)
         # However there is a need to flip up down along Z
         self.data_ = np.zeros(vol_oct.shape)
         for idx_z, im_oct in enumerate(vol_oct):
             self.data_[idx_z] = np.flipud(im_oct)    
-        
+
         # Compute the information regarding the OCT images
         if dtype == 'uint8':
             self.nb_bins_ = 256

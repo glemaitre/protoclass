@@ -76,9 +76,9 @@ class TemporalNormalization(BaseNormalization):
         if ((np.size(modality.data_, 1),
              np.size(modality.data_, 2),
              np.size(modality.data_, 3)) !=
-            ground_truth.extract_gt_data(cat, 'data').shape):
-                raise ValueError('The ground-truth does not correspond to the'
-                                 ' given modality volume.')
+                ground_truth.extract_gt_data(cat, 'data').shape):
+            raise ValueError('The ground-truth does not correspond to the'
+                             ' given modality volume.')
 
         # Find the element which are not zero
         return ground_truth.extract_gt_data(cat, 'index')

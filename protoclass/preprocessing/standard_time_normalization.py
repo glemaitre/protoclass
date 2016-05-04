@@ -451,7 +451,7 @@ class StandardTimeNormalization(TemporalNormalization):
         return None
 
     def _validate_params(self, params):
-        """Validate the list of parameters. 
+        """Validate the list of parameters.
 
         Parameters
         ----------
@@ -499,10 +499,10 @@ class StandardTimeNormalization(TemporalNormalization):
             for k_param in params.keys():
                 if k_param in param_float or k_param in param_int:
                     # The key is valid, build our dictionary
-                    if (k_param in param_float and 
+                    if (k_param in param_float and
                             isinstance(params[k_param], float)):
                         self.params_[k_param] = params[k_param]
-                    elif (k_param in param_int and 
+                    elif (k_param in param_int and
                             isinstance(params[k_param], int)):
                         self.params_[k_param] = params[k_param]
                     else:
@@ -516,7 +516,6 @@ class StandardTimeNormalization(TemporalNormalization):
                              ' any requirement.')
 
         return None
-
 
     def partial_fit_model(self, modality, ground_truth=None, cat=None,
                           params='default', refit=False, verbose=True):
@@ -604,7 +603,7 @@ class StandardTimeNormalization(TemporalNormalization):
         # Update the status of the fitting
         self.is_model_fitted_ = True
 
-        return self    
+        return self
 
     @staticmethod
     def _shift_serie(signal, tau):
@@ -661,9 +660,9 @@ class StandardTimeNormalization(TemporalNormalization):
 
         """
         # Define the cost function with x the parameters to find
-        cost_func = lambda x: np.sum(self.model_ -
-                                     (x[1] * self._shift_serie(rmse,
-                                                               x[0]))) ** 2
+        def cost_func(x):
+            return np.sum(self.model_ -
+                          (x[1] * self._shift_serie(rmse, x[0]))) ** 2
 
         # Initialize the parameters
         # Initial shift in time - aligned both with the maximum of
@@ -673,7 +672,7 @@ class StandardTimeNormalization(TemporalNormalization):
                         np.argmax(np.diff(rmse[0:15])))
         # Initial scale factor
         # Ratio of the baseline with the peak of enhancement
-        init_alpha = ((self.model_[0] - np.max(self.model_[0:15])) / 
+        init_alpha = ((self.model_[0] - np.max(self.model_[0:15])) /
                       (rmse[0] - np.max(rmse[0:15])))
 
         # Fix the bounds for the optimization
