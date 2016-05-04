@@ -42,13 +42,19 @@ class StandardTimeNormalization(TemporalNormalization):
         of serie.
         - 'scale-int' is a scaling factor for the intensity.
 
+    is_fitted_ : bool
+        True if the fitting parameters have been infered
+
+    is_model_fitted_ : bool
+        True if the model has beeen fitted.
+
     """
 
     def __init__(self, base_modality):
         super(StandardTimeNormalization, self).__init__(base_modality)
         # Initialize the fitting boolean
         self.is_fitted_ = False
-        self.is_model_fitted = False
+        self.is_model_fitted_ = False
 
     @staticmethod
     def _build_graph(heatmap, param_alpha, verbose=True):
@@ -73,7 +79,7 @@ class StandardTimeNormalization(TemporalNormalization):
         """
 
         # We can build the graph associated with the heatmap
-        graph = np.empty((heatmap.size, heatmap.size), dtype=float)
+        graph = np.zeros((heatmap.size, heatmap.size), dtype=float)
         for y in np.arange(graph.shape[0]):
             # Come back to the pixel index
             px_idx = np.unravel_index(y, heatmap.shape)
@@ -410,7 +416,7 @@ class StandardTimeNormalization(TemporalNormalization):
         self.model_ = np.load(filename)
 
         # Store that we loaded the model
-        self.is_model_fitted = True
+        self.is_model_fitted_ = True
 
         return self
 
@@ -427,6 +433,10 @@ class StandardTimeNormalization(TemporalNormalization):
         None
 
         """
+        # Check that the model has been fitted
+        if not self.is_model_fitted_:
+            raise ValueError('Fit a model before to save it.')
+
         # Check that the file is an npy file
         if not filename.endswith('.npy'):
             raise ValueError('The file provided needs to be of `npy`'
@@ -439,6 +449,74 @@ class StandardTimeNormalization(TemporalNormalization):
         np.save(filename, self.model_)
 
         return None
+
+    def _validate_params(self, params):
+        """Validate the list of parameters. 
+
+        Parameters
+        ----------
+        params : str or dict of str: float, optional (default='default')
+            The initial estimation of the parameters:
+
+            - If 'default', the value following value will be affected:
+            {'std' : 50., 'exp' : 25., 'alpha' : .9, 'max_iter' : 5}
+            - If dict, a dictionary with the keys 'std', 'exp', 'alpha',
+            and 'max_iter' should be specified. The corresponding value of
+            these parameters should be float. They will be the initial value
+            during fitting.
+
+            'std' corresponds to the standard deviation when applying the
+            Gaussian filter; 'exp' corresponds to the factor in the
+            exponential; 'alpha' corresponds to the parameters to penalize
+            vertical and horizontal weight in the graph; 'max_iter' is the
+            maximum number of walks through the graph.
+
+        Returns
+        -------
+        None
+
+        """
+        # Check the gaussian parameters argument
+        if isinstance(params, basestring):
+            if params == 'default':
+                # Give the default values for each parameter
+                self.params_ = {'std': 50., 'exp': 25.,
+                                'alpha': .9, 'max_iter': 5}
+            else:
+                raise ValueError('The string for the object params is'
+                                 ' unknown.')
+        elif isinstance(params, dict):
+            # Check that mu and sigma are inside the dictionary
+            valid_presets = ('std', 'exp', 'alpha', 'max_iter')
+            for val_param in valid_presets:
+                if val_param not in params.keys():
+                    raise ValueError('At least the parameter {} is not specify'
+                                     ' in the dictionary.'.format(val_param))
+            # For each key, check if this is a known parameters
+            self.params_ = {}
+            param_float = ('std', 'exp', 'alpha')
+            param_int = ('max_iter')
+            for k_param in params.keys():
+                if k_param in param_float or k_param in param_int:
+                    # The key is valid, build our dictionary
+                    if (k_param in param_float and 
+                            isinstance(params[k_param], float)):
+                        self.params_[k_param] = params[k_param]
+                    elif (k_param in param_int and 
+                            isinstance(params[k_param], int)):
+                        self.params_[k_param] = params[k_param]
+                    else:
+                        raise ValueError('Wrong type. Check the parameter {}'
+                                         ' type.'.format(k_param))
+                else:
+                    raise ValueError('Unknown parameter inside the dictionary.'
+                                     ' `std`, `exp`, `alpha`, and `max_iter`.')
+        else:
+            raise ValueError('The type of the object params does not fulfill'
+                             ' any requirement.')
+
+        return None
+
 
     def partial_fit_model(self, modality, ground_truth=None, cat=None,
                           params='default', refit=False, verbose=True):
@@ -493,40 +571,7 @@ class StandardTimeNormalization(TemporalNormalization):
                                                    ground_truth=ground_truth,
                                                    cat=cat)
 
-        # Check the gaussian parameters argument
-        if isinstance(params, basestring):
-            if params == 'default':
-                # Give the default values for each parameter
-                self.params_ = {'std': 50., 'exp': 25.,
-                                'alpha': .9, 'max_iter': 5}
-            else:
-                raise ValueError('The string for the object params is'
-                                 ' unknown.')
-        elif isinstance(params, dict):
-            # Check that mu and sigma are inside the dictionary
-            valid_presets = ('std', 'exp', 'alpha', 'max_iter')
-            for val_param in valid_presets:
-                if val_param not in params.keys():
-                    raise ValueError('At least the parameter {} is not specify'
-                                     ' in the dictionary.'.format(val_param))
-            # For each key, check if this is a known parameters
-            self.params_ = {}
-            for k_param in params.keys():
-                if k_param in valid_presets:
-                    # The key is valid, build our dictionary
-                    if isinstance(params[k_param], float):
-                        self.params_[k_param] = params[k_param]
-                    else:
-                        raise ValueError('The parameter std, exp, alpha, or'
-                                         ' max_iter should be some float.')
-                else:
-                    raise ValueError('Unknown parameter inside the dictionary.'
-                                     ' `std`, `exp`, `alpha`, and `max_iter`'
-                                     ' are the only two solutions and need to'
-                                     ' be float.')
-        else:
-            raise ValueError('The type of the object params does not fulfill'
-                             ' any requirement.')
+        self._validate_params(params)
 
         # Compute the heatmap
         heatmap, bins_heatmap = modality.build_heatmap(self.roi_data_)
@@ -557,7 +602,7 @@ class StandardTimeNormalization(TemporalNormalization):
                            (rmse - self.model_) / self.nb_partial_fit)
 
         # Update the status of the fitting
-        self.is_model_fitted = True
+        self.is_model_fitted_ = True
 
         return self    
 
@@ -595,7 +640,7 @@ class StandardTimeNormalization(TemporalNormalization):
             signal_shifted[tau::] = np.tile(signal[-1], -tau)
 
             return signal_shifted
-        else:
+        elif tau == 0:
             return signal
 
     def _find_rmse_params(self, rmse):
@@ -684,7 +729,7 @@ class StandardTimeNormalization(TemporalNormalization):
 
         """
         # Check that a model was fitted or loaded
-        if not self.is_model_fitted:
+        if not self.is_model_fitted_:
             raise ValueError('A model needs to be either loaded or fitted.')
 
         # By calling the parents function, self.roi_data_ will be affected
@@ -693,40 +738,7 @@ class StandardTimeNormalization(TemporalNormalization):
                                                    ground_truth=ground_truth,
                                                    cat=cat)
 
-        # Check the gaussian parameters argument
-        if isinstance(params, basestring):
-            if params == 'default':
-                # Give the default values for each parameter
-                self.params_ = {'std': 50., 'exp': 25.,
-                                'alpha': .9, 'max_iter': 5}
-            else:
-                raise ValueError('The string for the object params is'
-                                 ' unknown.')
-        elif isinstance(params, dict):
-            # Check that mu and sigma are inside the dictionary
-            valid_presets = ('std', 'exp', 'alpha', 'max_iter')
-            for val_param in valid_presets:
-                if val_param not in params.keys():
-                    raise ValueError('At least the parameter {} is not specify'
-                                     ' in the dictionary.'.format(val_param))
-            # For each key, check if this is a known parameters
-            self.params_ = {}
-            for k_param in params.keys():
-                if k_param in valid_presets:
-                    # The key is valid, build our dictionary
-                    if isinstance(params[k_param], float):
-                        self.params_[k_param] = params[k_param]
-                    else:
-                        raise ValueError('The parameter std, exp, alpha, or'
-                                         ' max_iter should be some float.')
-                else:
-                    raise ValueError('Unknown parameter inside the dictionary.'
-                                     ' `std`, `exp`, `alpha`, and `max_iter`'
-                                     ' are the only two solutions and need to'
-                                     ' be float.')
-        else:
-            raise ValueError('The type of the object params does not fulfill'
-                             ' any requirement.')
+        self._validate_params(params)
 
         # Initialize the parameter dictionary
         self.fit_params_ = {}
@@ -777,7 +789,7 @@ class StandardTimeNormalization(TemporalNormalization):
             The shifted data.
 
         """
-        # Forece tau to be an integer
+        # Force tau to be an integer
         tau = int(tau)
         # Allocate the ouptut
         data_shifted = np.zeros(data.shape)
@@ -793,7 +805,7 @@ class StandardTimeNormalization(TemporalNormalization):
             data_shifted[:, tau::] = np.tile(data[:, -1:], (1, -tau))
 
             return data_shifted
-        else:
+        elif tau == 0:
             return data
 
     def normalize(self, modality):
@@ -848,20 +860,20 @@ class StandardTimeNormalization(TemporalNormalization):
         """
         super(StandardTimeNormalization, self).denormalize(modality=modality)
 
-                # Check that the parameters have been fitted
+        # Check that the parameters have been fitted
         if not self.is_fitted_:
             raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
-        # Apply the intensity shift first
-        for idx_serie in range(modality.n_serie_):
-            modality.data_[idx_serie, :, :, :] += self.fit_params_['shift-int'][idx_serie]
+        # Apply the scaling factor
+        modality.data_ /= self.fit_params_['scale-int']
 
         # Apply the time shifting
         modality.data_ = self._shift_time_data(modality.data_,
                                                -self.fit_params_['shift-time'])
-        # Apply the scaling factor
-        modality.data_ /= self.fit_params_['scale-int']
+        # Apply the intensity shift first
+        for idx_serie in range(modality.n_serie_):
+            modality.data_[idx_serie, :, :, :] += self.fit_params_['shift-int'][idx_serie]
 
         # Update the histogram
         modality.update_histogram()

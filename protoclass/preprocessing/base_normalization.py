@@ -14,7 +14,7 @@ class BaseNormalization(object):
     @abstractmethod
     def __init__(self):
         """Constructor """
-        pass
+        self.fit_params_ = {}
 
     @abstractmethod
     def _validate_modality(self):
