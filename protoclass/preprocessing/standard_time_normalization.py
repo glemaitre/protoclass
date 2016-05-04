@@ -640,7 +640,7 @@ class StandardTimeNormalization(TemporalNormalization):
             signal_shifted[tau::] = np.tile(signal[-1], -tau)
 
             return signal_shifted
-        else:
+        elif tau == 0:
             return signal
 
     def _find_rmse_params(self, rmse):
@@ -805,7 +805,7 @@ class StandardTimeNormalization(TemporalNormalization):
             data_shifted[:, tau::] = np.tile(data[:, -1:], (1, -tau))
 
             return data_shifted
-        else:
+        elif tau == 0:
             return data
 
     def normalize(self, modality):
@@ -860,20 +860,20 @@ class StandardTimeNormalization(TemporalNormalization):
         """
         super(StandardTimeNormalization, self).denormalize(modality=modality)
 
-                # Check that the parameters have been fitted
+        # Check that the parameters have been fitted
         if not self.is_fitted_:
             raise ValueError('Fit the parameters previous to normalize'
                              ' the data.')
 
-        # Apply the intensity shift first
-        for idx_serie in range(modality.n_serie_):
-            modality.data_[idx_serie, :, :, :] += self.fit_params_['shift-int'][idx_serie]
+        # Apply the scaling factor
+        modality.data_ /= self.fit_params_['scale-int']
 
         # Apply the time shifting
         modality.data_ = self._shift_time_data(modality.data_,
                                                -self.fit_params_['shift-time'])
-        # Apply the scaling factor
-        modality.data_ /= self.fit_params_['scale-int']
+        # Apply the intensity shift first
+        for idx_serie in range(modality.n_serie_):
+            modality.data_[idx_serie, :, :, :] += self.fit_params_['shift-int'][idx_serie]
 
         # Update the histogram
         modality.update_histogram()

@@ -64,6 +64,12 @@ class StandaloneNormalization(BaseNormalization):
             raise ValueError('The ground-truth should be an object of'
                              ' class GTModality.')
 
+        # Check that the data were read during the creation of the
+        # ground-truth modality
+        if not ground_truth.is_read():
+            raise ValueError('No data have been read during the'
+                             'construction of the GT modality object.')
+
         # Check that the size of the ground-truth and the modality
         # are consistant
         if (modality.data_.shape !=
@@ -118,12 +124,6 @@ class StandaloneNormalization(BaseNormalization):
                              ' which you want to extract the information needs'
                              ' to be specified.')
         else:
-            # Check that the data were read during the creation of the
-            # ground-truth modality
-            if not ground_truth.is_read():
-                raise ValueError('No data have been read during the'
-                                 'construction of the GT modality object.')
-
             self.roi_data_ = self._validate_modality_gt(modality,
                                                         ground_truth,
                                                         cat)
