@@ -1,6 +1,5 @@
 """Test different validation methods."""
 
-import numpy as np
 import os
 
 from numpy.testing import assert_equal
@@ -13,7 +12,6 @@ from protoclass.utils.validation import check_npy_filename
 
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
-from protoclass.data_management import GTModality
 
 
 def test_check_path_data_str_exist():

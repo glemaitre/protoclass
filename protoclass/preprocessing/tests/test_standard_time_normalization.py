@@ -7,14 +7,12 @@ from numpy.testing import assert_equal
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_array_almost_equal
-from numpy.testing import assert_allclose
 from numpy.testing import assert_raises
 from numpy.testing import assert_warns
 
 from nose.tools import assert_true
 
 from skimage import img_as_float
-from scipy.ndimage.filters import gaussian_filter1d
 
 from protoclass.preprocessing import StandardTimeNormalization
 

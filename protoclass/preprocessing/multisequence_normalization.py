@@ -3,7 +3,7 @@
 from abc import ABCMeta, abstractmethod
 
 from .base_normalization import BaseNormalization
-from ..data_management import MultisequenceModality
+# from ..data_management import MultisequenceModality
 
 
 class MultisequenceNormalization(BaseNormalization):
