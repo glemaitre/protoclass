@@ -464,3 +464,41 @@ def test_denormalize_wt_fitting():
     # Normalize the data
     gaussian_norm = GaussianNormalization(T2WModality())
     assert_raises(ValueError, gaussian_norm.denormalize, t2w_mod)
+
+
+def test_gn_save_load():
+    """ Test the save and load function. """
+
+    # Create a T2WModality object
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data_t2w = os.path.join(currdir, 'data', 't2w')
+    t2w_mod = T2WModality(path_data_t2w)
+    t2w_mod.read_data_from_path()
+
+    # Create the GTModality object
+    path_data_gt = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_gt_list = [os.path.join(path_data_gt, 'prostate'),
+                         os.path.join(path_data_gt, 'pz'),
+                         os.path.join(path_data_gt, 'cg'),
+                         os.path.join(path_data_gt, 'cap')]
+    label_gt = ['prostate', 'pz', 'cg', 'cap']
+    gt_mod = GTModality()
+    gt_mod.read_data_from_path(cat_gt=label_gt, path_data=path_data_gt_list)
+
+    # Normalize the data
+    gaussian_norm = GaussianNormalization(T2WModality())
+    gaussian_norm.fit(t2w_mod, gt_mod, 'prostate')
+
+    # Store the normalization object
+    filename = os.path.join(currdir, 'data', 'gn_obj.p')
+    gaussian_norm.save_to_pickles(filename)
+
+    # Load the object
+    gn_2 = GaussianNormalization.load_from_pickles(filename)
+
+    # Check that the different variables are the same
+    assert_equal(type(gn_2.base_modality_), type(gaussian_norm.base_modality_))
+    assert_equal(gn_2.fit_params_['mu'], gaussian_norm.fit_params_['mu'])
+    assert_equal(gn_2.fit_params_['sigma'], gaussian_norm.fit_params_['sigma'])
+    assert_equal(gn_2.is_fitted_, gaussian_norm.is_fitted_)
+    assert_array_equal(gn_2.roi_data_, gaussian_norm.roi_data_)
