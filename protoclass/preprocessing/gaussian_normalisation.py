@@ -41,7 +41,7 @@ class GaussianNormalization(StandaloneNormalization):
     is_fitted_ : bool
         Boolean to know if the `fit` function has been already called.
 
-    roi_data_ : ndarray, shape ()
+    roi_data_ : ndarray, shape flexible
         Corresponds to the index to consider in order to fit the data.
 
     """
