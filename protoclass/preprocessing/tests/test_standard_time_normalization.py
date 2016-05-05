@@ -102,7 +102,7 @@ def test_walk_through_graph_shortest_path():
     # Reduce the number of bins to enforce low memory consumption
     nb_bins = [10] * dce_mod.n_serie_
     heatmap, bins_heatmap = dce_mod.build_heatmap(gt_mod.extract_gt_data(
-        label_gt[0]),  nb_bins=nb_bins)
+        label_gt[0]), nb_bins=nb_bins)
 
     # Build the graph by taking the inverse exponential of the heatmap
     heatmap_inv_exp = np.exp(img_as_float(1. - (heatmap / np.max(heatmap))))
@@ -142,7 +142,7 @@ def test_walk_through_graph_route_through():
     # Reduce the number of bins to enforce low memory consumption
     nb_bins = [100] * dce_mod.n_serie_
     heatmap, bins_heatmap = dce_mod.build_heatmap(gt_mod.extract_gt_data(
-        label_gt[0]),  nb_bins=nb_bins)
+        label_gt[0]), nb_bins=nb_bins)
 
     # Build the graph by taking the inverse exponential of the heatmap
     heatmap_inv_exp = np.exp(img_as_float(1. - (heatmap / np.max(heatmap))))
@@ -182,7 +182,7 @@ def test_shift_heatmap_wrong_shift():
     # Reduce the number of bins to enforce low memory consumption
     nb_bins = [100] * dce_mod.n_serie_
     heatmap, bins_heatmap = dce_mod.build_heatmap(gt_mod.extract_gt_data(
-        label_gt[0]),  nb_bins=nb_bins)
+        label_gt[0]), nb_bins=nb_bins)
 
     # Create a list of shift which do not have the same number of entries
     # than the heatmap - There is 4 series, let's create only 2
@@ -214,7 +214,7 @@ def test_shift_heatmap():
     # Reduce the number of bins to enforce low memory consumption
     nb_bins = [100] * dce_mod.n_serie_
     heatmap, bins_heatmap = dce_mod.build_heatmap(gt_mod.extract_gt_data(
-        label_gt[0]),  nb_bins=nb_bins)
+        label_gt[0]), nb_bins=nb_bins)
 
     # Create a list of shift which do not have the same number of entries
     # than the heatmap - There is 4 series, let's create only 2
@@ -936,3 +936,50 @@ def test_partial_fit_without_gt():
                      93.79, 98.52, 101.79, 103.56])
     assert_array_almost_equal(stn.model_, data, decimal=PRECISION_DECIMAL)
     assert_true(stn.is_model_fitted_)
+
+
+# This test is commented since that it take more than 3 GB of memory
+# It is already tested with Gaussian normalization
+# def test_save_load():
+#     """Test the save and load routine."""
+
+#     # Load the data with only a single serie
+#     currdir = os.path.dirname(os.path.abspath(__file__))
+#     path_data = os.path.join(currdir, 'data', 'full_dce')
+#     # Create an object to handle the data
+#     dce_mod = DCEModality()
+
+#     # Read the data
+#     dce_mod.read_data_from_path(path_data)
+
+#     # Load the GT data
+#     path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
+#     label_gt = ['prostate']
+#     gt_mod = GTModality()
+#     gt_mod.read_data_from_path(label_gt, path_gt)
+
+#     # Create the object to make the normalization
+#     stn = StandardTimeNormalization(dce_mod)
+
+#     # Create a synthetic model to fit on
+#     stn.model_ = np.array([30., 30., 32., 31., 31., 30., 35., 55., 70., 80.])
+#     stn.is_model_fitted_ = True
+
+#     # Fit the parameters on the model
+#     stn.fit(dce_mod, gt_mod, label_gt[0])
+
+#     # Store the normalization object
+#     filename = os.path.join(currdir, 'data', 'stn_obj.p')
+#     stn.save_to_pickles(filename)
+
+#     # Load the object
+#     stn_2 = StandardTimeNormalization.load_from_pickles(filename)
+
+#     # Check that the different variables are the same
+#     assert_equal(type(stn_2.base_modality_), type(stn.base_modality_))
+#     assert_equal(stn_2.fit_params_['shift-int'], stn.fit_params_['shift-int'])
+#     assert_equal(stn_2.fit_params_['shift-time'],
+#                  stn.fit_params_['shift-time'])
+#     assert_equal(stn_2.fit_params_['scale-int'], stn.fit_params_['scale-int'])
+#     assert_equal(stn_2.is_fitted_, stn.is_fitted_)
+#     assert_array_equal(stn_2.roi_data_, stn.roi_data_)

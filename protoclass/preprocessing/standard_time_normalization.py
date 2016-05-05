@@ -48,6 +48,9 @@ class StandardTimeNormalization(TemporalNormalization):
     is_model_fitted_ : bool
         True if the model has beeen fitted.
 
+    roi_data_ : ndarray, shape flexible
+        Corresponds to the index to consider in order to fit the data.
+
     """
 
     def __init__(self, base_modality):

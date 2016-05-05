@@ -8,6 +8,8 @@ from .validation import check_path_data
 from .validation import check_modality
 from .validation import check_img_filename
 from .validation import check_npy_filename
+from .validation import check_filename_pickle_load
+from .validation import check_filename_pickle_save
 
 from .export import make_table
 
@@ -16,4 +18,6 @@ __all__ = ['find_nearest',
            'check_modality',
            'check_img_filename',
            'check_npy_filename',
+           'check_filename_pickle_load',
+           'check_filename_pickle_save',
            'make_table']
