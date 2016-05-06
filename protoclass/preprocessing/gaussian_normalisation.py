@@ -108,28 +108,6 @@ class GaussianNormalization(StandaloneNormalization):
 
         return norm.pdf(x, mu, sigma)
 
-    def _compute_histogram(self, X):
-        """Function allowing to compute the histogram from the data.
-
-        Parameters
-        ----------
-        X : ndarray, shape (n_samples, )
-            The data of interest from which we want to estimate the PDF.
-
-        Returns
-        -------
-        pdf : ndarray, shape (n_samples, )
-            The PDF associated with the data of interest define by the ROI.
-
-        bins : ndarray, shape (n_samples + 1, )
-            The bins associated with the PDF.
-
-        """
-        # Compute the histogram from the data of insterest
-        pdf, bins = np.histogram(X, bins=np.max(X) - np.min(X), density=True)
-
-        return (pdf, bins)
-
     def fit(self, modality, ground_truth=None, cat=None):
         """Method to find the parameters needed to apply the normalization.
 
@@ -171,7 +149,7 @@ class GaussianNormalization(StandaloneNormalization):
                              ' went wrong.')
 
         # Compute the histogram that need to be fitted
-        pdf, bins = self._compute_histogram(modality.data_[self.roi_data_])
+        pdf, bins = modality.get_pdf(self.roi_data_, None)
         # Compute the bins centers
         bincenters = 0.5*(bins[1:]+bins[:-1])
 

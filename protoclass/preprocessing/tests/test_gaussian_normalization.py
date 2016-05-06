@@ -336,7 +336,7 @@ def test_gn_fit_auto():
 
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.fit_params_['mu'], 246.43,
+    assert_almost_equal(gaussian_norm.fit_params_['mu'], 245.90,
                         decimal=DECIMAL_PRECISON)
     assert_almost_equal(gaussian_norm.fit_params_['sigma'], 74.31,
                         decimal=DECIMAL_PRECISON)
@@ -364,7 +364,7 @@ def test_gn_fit_fix_mu_sigma():
     params = {'mu': 200., 'sigma': 70.}
     gaussian_norm = GaussianNormalization(T2WModality(), params=params)
     gaussian_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(gaussian_norm.fit_params_['mu'], 246.43,
+    assert_almost_equal(gaussian_norm.fit_params_['mu'], 245.90,
                         decimal=DECIMAL_PRECISON)
     assert_almost_equal(gaussian_norm.fit_params_['sigma'], 74.31,
                         decimal=DECIMAL_PRECISON)
@@ -400,7 +400,7 @@ def test_gn_normalize():
     t2w_mod = gaussian_norm.normalize(t2w_mod)
 
     # Check that the data are equal to what they should be
-    assert_array_almost_equal(t2w_mod.data_, (data_copy - 246.43) / 74.31,
+    assert_array_almost_equal(t2w_mod.data_, (data_copy - 245.90) / 74.31,
                               decimal=DECIMAL_PRECISON)
 
     # Denormalize the data
