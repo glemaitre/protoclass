@@ -73,7 +73,7 @@ class DCEModality(TemporalModality):
         pdf_list : list of ndarray, length (n_serie)
             List of the pdf with the associated series.
 
-        bin_list : list of ndarray, length (n_series)
+        bin_list : list of ndarray, length (n_series + 1)
             List of the bins associated with the list of pdf.
 
         """

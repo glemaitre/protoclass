@@ -11,6 +11,7 @@ from numpy.testing import assert_warns
 from nose.tools import assert_true
 
 from protoclass.data_management import T2WModality
+from protoclass.data_management import GTModality
 
 
 def test_path_list_no_dir():
@@ -243,3 +244,151 @@ def test_t2w_update_histo_force_bins():
     data = np.load(os.path.join(currdir, 'data',
                                 'pdf_t2w_data_forced_bin.npy'))
     assert_array_equal(t2w_mod.pdf_, data)
+
+
+def test_get_pdf_no_data():
+    """Test either if an error is raised when a pdf is asked with not
+    data opened."""
+
+    # Create the object
+    t2w_mod = T2WModality()
+    assert_raises(ValueError, t2w_mod.get_pdf)
+
+
+def test_get_pdf_wrong_string():
+    """Test either if an error is raised when the string is unknown."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    # Compute the hisogram with a wrong argument as string
+    assert_raises(t2w_mod.get_pdf, nb_bins='rnd')
+
+
+def test_get_pdf_wrong_type():
+    """Test either if an error is raised when the type is unknown."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    # Compute the hisogram with a wrong argument as string
+    assert_raises(t2w_mod.get_pdf, nb_bins=[100, 100])
+
+
+def test_get_pdf_auto():
+    """Test the routine with the automatic number of bins"""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    # Compute the hisogram with a wrong argument as string
+    pdf_data, bin_data = t2w_mod.get_pdf()
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_t2w_get_pdf_auto.npy'))
+    assert_array_equal(bin_data, data)
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_t2w_get_pdf_auto.npy'))
+    assert_array_equal(pdf_data, data)
+
+
+def test_get_pdf_none():
+    """Test the routine using the inital number of bins."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    # Compute the hisogram with a wrong argument as string
+    pdf_data, bin_data = t2w_mod.get_pdf(nb_bins=None)
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_t2w_get_pdf_none.npy'))
+    assert_array_equal(bin_data, data)
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_t2w_get_pdf_none.npy'))
+    assert_array_equal(pdf_data, data)
+
+
+def test_get_pdf_int():
+    """Test the routine using a given number of bins."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    # Compute the hisogram with a wrong argument as string
+    pdf_data, bin_data = t2w_mod.get_pdf(nb_bins=100)
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_t2w_get_pdf_int.npy'))
+    assert_array_equal(bin_data, data)
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_t2w_get_pdf_int.npy'))
+    assert_array_equal(pdf_data, data)
+
+
+def test_get_pdf_roi():
+    """Test the routine to get pdf and bins with a given roi."""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data', 't2w')
+    # Create an object to handle the data
+    t2w_mod = T2WModality()
+
+    t2w_mod.read_data_from_path(path_data)
+
+    path_data = os.path.join(currdir, 'data', 'gt_folders')
+    path_data_list = [os.path.join(path_data, 'prostate'),
+                      os.path.join(path_data, 'cg'),
+                      os.path.join(path_data, 'pz'),
+                      os.path.join(path_data, 'cap')]
+    # Give the list for the ground_truth
+    label = ['prostate', 'cg', 'pz', 'cap']
+    # Create an object to handle the data
+    gt_mod = GTModality()
+
+    # Read the data
+    gt_mod.read_data_from_path(label, path_data=path_data_list)
+
+    # Extract the prostate indexes
+    label_extr = 'prostate'
+    data_prostate = gt_mod.extract_gt_data(label_extr, 'index')
+
+    # Compute the hisogram with a wrong argument as string
+    pdf_data, bin_data = t2w_mod.get_pdf(roi_data=data_prostate)
+
+    # Check that the data correspond to the one save inside the the test
+    data = np.load(os.path.join(currdir, 'data',
+                                'bin_t2w_get_pdf_roi.npy'))
+    assert_array_equal(bin_data, data)
+    data = np.load(os.path.join(currdir, 'data',
+                                'pdf_t2w_get_pdf_roi.npy'))
+    assert_array_equal(pdf_data, data)

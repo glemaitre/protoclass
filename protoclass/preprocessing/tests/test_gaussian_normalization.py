@@ -396,6 +396,7 @@ def test_gn_normalize():
     # Normalize the data
     gaussian_norm = GaussianNormalization(T2WModality())
     gaussian_norm.fit(t2w_mod, gt_mod, 'prostate')
+
     t2w_mod = gaussian_norm.normalize(t2w_mod)
 
     # Check that the data are equal to what they should be

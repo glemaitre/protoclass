@@ -39,6 +39,62 @@ class T2WModality(StandaloneModality):
     def __init__(self, path_data=None):
         super(T2WModality, self).__init__(path_data=path_data)
 
+    def get_pdf(self, roi_data=None, nb_bins='auto'):
+        """ Extract the a list of pdf related with the data.
+
+        Parameters
+        ----------
+        roi_data : tuple
+            Indices of elements to consider while computing the histogram.
+            The ROI is a 3D volume which will be used for each time serie.
+
+        nb_bins : list of int or str, optional (default='auto')
+            The numbers of bins to use to compute the histogram.
+            The possibilities are:
+            - If 'auto', the number of bins is found at fitting time.
+            - If None, the number of bins used is the one at the last
+            call of update histogram.
+            - Otherwise, a list of integer needs to be given.
+
+        Returns
+        -------
+        pdf_data : ndarray, length (n_serie)
+            List of the pdf with the associated series.
+
+        bin_data : list of ndarray, length (n_series + 1)
+            List of the bins associated with the list of pdf.
+
+        """
+        # Check that the data have been read
+        if self.data_ is None:
+            raise ValueError('You need to load the data first. Refer to the'
+                             ' function read_data_from_path().')
+
+        # Build the histogram corresponding to the current volume
+        # Find how many bins do we need
+        if isinstance(nb_bins, basestring):
+            if nb_bins == 'auto':
+                nb_bins = int(np.round(self.max_ - self.min_))
+            else:
+                raise ValueError('Unknown parameters for `nb_bins.`')
+        elif isinstance(nb_bins, int):
+            pass
+        elif nb_bins is None:
+            nb_bins = self.nb_bins_
+        else:
+            raise ValueError('Unknown type for the parameters `nb_bins`.')
+
+        if roi_data is None:
+            pdf_data, bin_data = np.histogram(self.data_,
+                                              bins=nb_bins,
+                                              density=True)
+        else:
+            pdf_data, bin_data = np.histogram(self.data_[roi_data],
+                                              bins=nb_bins,
+                                              density=True)
+
+        return pdf_data, bin_data
+
     def update_histogram(self, nb_bins=None):
         """Update the PDF and the first-order statistics.
 
