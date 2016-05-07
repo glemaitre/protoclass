@@ -11,10 +11,13 @@ from .multisequence_normalization import MultisequenceNormalization
 
 from .standard_time_normalization import StandardTimeNormalization
 from .gaussian_normalisation import GaussianNormalization
+from .rician_normalisation import RicianNormalization
+
 
 __all__ = ['BaseNormalization',
            'StandaloneNormalization',
            'TemporalNormalization',
            'MultisequenceNormalization',
            'StandardTimeNormalization',
-           'GaussianNormalization']
+           'GaussianNormalization',
+           'RicianNormalization']
