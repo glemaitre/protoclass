@@ -411,20 +411,25 @@ def test_rn_normalize():
     plt.figure()
     pdf, bins = t2w_mod.get_pdf(gt_mod.extract_gt_data('prostate'))
     center = (bins[:-1] + bins[1:]) / 2.
+    max_int = center[-1]
     plt.bar(center, pdf, align='center')
-    print rician_norm.fit_params_['b']
-    print rician_norm.fit_params_['off']
-    print rician_norm.fit_params_['sigma']
-    print rice.pdf(center,
-                   rician_norm.fit_params_['b'],
-                   rician_norm.fit_params_['off'],
-                   rician_norm.fit_params_['sigma'])
-    print center.shape
-    plt.plot(center, rice.pdf(center,
-                              rician_norm.fit_params_['b'],
-                              rician_norm.fit_params_['off'],
-                              rician_norm.fit_params_['sigma']))
+    plt.plot(center, 1.20181837e-03 * rice.pdf(center / max_int,
+                                               rician_norm.fit_params_['b'] / max_int,
+                                               rician_norm.fit_params_['off'] / max_int,
+                                               rician_norm.fit_params_['sigma'] / max_int))
     plt.savefig('histogram.png')
+
+    print (rice.std(rician_norm.fit_params_['b'] / max_int,
+                    rician_norm.fit_params_['off'] / max_int,
+                    rician_norm.fit_params_['sigma'] / max_int) *
+           max_int)
+
+    print (rice.mean(rician_norm.fit_params_['b'] / max_int,
+                     rician_norm.fit_params_['off'] / max_int,
+                     rician_norm.fit_params_['sigma'] / max_int) *
+           max_int)
+
+
 
     t2w_mod = rician_norm.normalize(t2w_mod)
 
