@@ -28,7 +28,6 @@ class EnhancementSignalExtraction(TemporalExtraction):
     def __init__(self, base_modality):
         super(EnhancementSignalExtraction, self).__init__(base_modality)
 
-
     def fit(self, modality, ground_truth=None, cat=None):
         """Find the parameters needed to apply the extraction.
 
@@ -81,8 +80,7 @@ class EnhancementSignalExtraction(TemporalExtraction):
 
         """
         super(EnhancementSignalExtraction, self).transform(modality=modality,
-                                                           ground_truth=\
-                                                           ground_truth,
+                                                           ground_truth=ground_truth,
                                                            cat=cat)
 
         # Convert the roi to a numpy array
