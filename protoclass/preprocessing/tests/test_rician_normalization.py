@@ -1,4 +1,4 @@
-""" Test the Rician normalization. """
+"""Test the Rician normalization."""
 
 import os
 
@@ -17,7 +17,7 @@ from protoclass.data_management import GTModality
 
 from protoclass.preprocessing import RicianNormalization
 
-DECIMAL_PRECISON = 1
+DECIMAL_PRECISON = 5
 
 
 def test_rn_init_wrong_base_modality():
@@ -144,11 +144,11 @@ def test_rn_fit_no_gt_1_cat():
 
     # Call the fitting before to have read the data
     assert_warns(UserWarning, rician_norm.fit, t2w_mod, None, 'prostate')
-    assert_almost_equal(rician_norm.fit_params_['b'], 162.71,
+    assert_almost_equal(rician_norm.fit_params_['b'], 0.17064341621605977,
                         decimal=DECIMAL_PRECISON)
     assert_almost_equal(rician_norm.fit_params_['off'], 0.0,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['sigma'], 148.84,
+    assert_almost_equal(rician_norm.fit_params_['sigma'], 0.15609648503515802,
                         decimal=DECIMAL_PRECISON)
 
 
@@ -311,11 +311,11 @@ def test_rn_fit_wt_gt():
 
     rician_norm = RicianNormalization(T2WModality())
     rician_norm.fit(t2w_mod)
-    assert_almost_equal(rician_norm.fit_params_['b'], 162.71,
+    assert_almost_equal(rician_norm.fit_params_['b'], 0.17064341621605977,
                         decimal=DECIMAL_PRECISON)
     assert_almost_equal(rician_norm.fit_params_['off'], 0.0,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['sigma'], 148.84,
+    assert_almost_equal(rician_norm.fit_params_['sigma'], 0.15609648503515802,
                         decimal=DECIMAL_PRECISON)
 
 
@@ -340,15 +340,16 @@ def test_rn_fit_auto():
 
     rician_norm = RicianNormalization(T2WModality())
     rician_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(rician_norm.fit_params_['b'], 259.37,
+    assert_almost_equal(rician_norm.fit_params_['b'], 1.4463929678319398,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['off'], 7.00,
+    assert_almost_equal(rician_norm.fit_params_['off'], 0.12668917318976813,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['sigma'], 83.45,
+    assert_almost_equal(rician_norm.fit_params_['sigma'], 0.10331905081688209,
                         decimal=DECIMAL_PRECISON)
 
+
 def test_rn_fit_fix_params():
-    """ Test the fitting routine with fixed mean and std. """
+    """ Test the fitting routine with fixed parameters. """
 
     # Create a T2WModality object
     currdir = os.path.dirname(os.path.abspath(__file__))
@@ -369,12 +370,13 @@ def test_rn_fit_fix_params():
     params = {'b': 200., 'off': 7., 'sigma': 80.}
     rician_norm = RicianNormalization(T2WModality(), params=params)
     rician_norm.fit(t2w_mod, gt_mod, label_gt[0])
-    assert_almost_equal(rician_norm.fit_params_['b'], 200.,
+    assert_almost_equal(rician_norm.fit_params_['b'], 1.4463929678319398,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['off'], 7.00,
+    assert_almost_equal(rician_norm.fit_params_['off'], 0.12668917318976813,
                         decimal=DECIMAL_PRECISON)
-    assert_almost_equal(rician_norm.fit_params_['sigma'], 80.00,
+    assert_almost_equal(rician_norm.fit_params_['sigma'], 0.10331905081688209,
                         decimal=DECIMAL_PRECISON)
+
 
 def test_rn_normalize():
     """ Test the normalize function. """
@@ -403,47 +405,21 @@ def test_rn_normalize():
     rician_norm = RicianNormalization(T2WModality())
     rician_norm.fit(t2w_mod, gt_mod, 'prostate')
 
-    import matplotlib as mpl
-    mpl.use('Agg')
-    import matplotlib.pyplot as plt
-    from scipy.stats import rice
-
-    plt.figure()
-    pdf, bins = t2w_mod.get_pdf(gt_mod.extract_gt_data('prostate'))
-    center = (bins[:-1] + bins[1:]) / 2.
-    max_int = center[-1]
-    plt.bar(center, pdf, align='center')
-    plt.plot(center, 1.20181837e-03 * rice.pdf(center / max_int,
-                                               rician_norm.fit_params_['b'] / max_int,
-                                               rician_norm.fit_params_['off'] / max_int,
-                                               rician_norm.fit_params_['sigma'] / max_int))
-    plt.savefig('histogram.png')
-
-    print (rice.std(rician_norm.fit_params_['b'] / max_int,
-                    rician_norm.fit_params_['off'] / max_int,
-                    rician_norm.fit_params_['sigma'] / max_int) *
-           max_int)
-
-    print (rice.mean(rician_norm.fit_params_['b'] / max_int,
-                     rician_norm.fit_params_['off'] / max_int,
-                     rician_norm.fit_params_['sigma'] / max_int) *
-           max_int)
-
-
-
     t2w_mod = rician_norm.normalize(t2w_mod)
 
     # Check that the data are equal to what they should be
-    assert_array_almost_equal(t2w_mod.data_, (data_copy - 245.90) / 74.31,
+    assert_array_almost_equal(t2w_mod.data_,
+                              (data_copy - 253.284554765) / 70.2569459323,
                               decimal=DECIMAL_PRECISON)
 
     # Denormalize the data
     t2w_mod = rician_norm.denormalize(t2w_mod)
 
     # Check that the data are equal to the original data
-    data = np.load(os.path.join(currdir, 'data', 'data_denormalize.npy'))
+    data = np.load(os.path.join(currdir, 'data',
+                                'data_rician_denormalize.npy'))
     assert_array_equal(t2w_mod.data_, data)
-    data = np.load(os.path.join(currdir, 'data', 'pdf_denormalize.npy'))
+    data = np.load(os.path.join(currdir, 'data', 'pdf_rician_denormalize.npy'))
     assert_array_equal(t2w_mod.pdf_, data)
 
 

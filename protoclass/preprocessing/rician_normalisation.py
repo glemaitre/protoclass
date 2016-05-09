@@ -1,5 +1,7 @@
 """Rician normalization to normalize standalone modality."""
 
+import warnings
+
 import numpy as np
 
 from scipy.stats import norm
@@ -154,8 +156,6 @@ class RicianNormalization(StandaloneNormalization):
             b = np.ndarray.mean(modality.data_[self.roi_data_])
             off = np.ndarray.min(modality.data_[self.roi_data_])
             sigma = np.ndarray.std(modality.data_[self.roi_data_])
-            scale = (np.ndarray.max(modality.data_[self.roi_data_]) /
-                     norm.pdf(b, b, sigma))
         elif self.params == 'fixed':
             b = self.fit_params_['b']
             off = self.fit_params_['off']
@@ -166,32 +166,41 @@ class RicianNormalization(StandaloneNormalization):
             raise ValueError('The value of self.params is unknown. Something'
                              ' went wrong.')
 
+        # Compute parameters which will use during the optimization
+        scale = (np.ndarray.max(modality.data_[self.roi_data_]) /
+                 norm.pdf(b, b, sigma))
+
         # Compute the histogram that need to be fitted
         pdf, bins = modality.get_pdf(self.roi_data_, None)
         # Compute the bins centers
         bincenters = 0.5*(bins[1:]+bins[:-1])
 
-        # Normalize the data between 0 and 1 to use the rice model
-        self.max_int_ = bincenters[-1]
-        bincenters /= self.max_int_
+        # Using the Rice distribution, there is a need to be in the range [0-1]
+        # Normalize the data range and the parameters
+        self.max_int = bincenters[-1]
+        bincenters /= self.max_int
 
         # Normalize the paramters
-        b /= self.max_int_
-        off /= self.max_int_
-        sigma /= self.max_int_
+        b /= self.max_int
+        off /= self.max_int
+        sigma /= self.max_int
 
         # Fit the histogram using the model defined previously
-        popt, _ = curve_fit(self._model_fit, bincenters, pdf,
-                            p0=(b, off, sigma, scale))
+        try:
+            popt, _ = curve_fit(self._model_fit, bincenters, pdf,
+                                p0=(b, off, sigma, scale))
+        except RuntimeError:
+            warnings.warn('Optimal parameters not found!!! The original guess'
+                          ' are kept but you should check that you data follow'
+                          ' a Rice distribution.')
+            popt = [b, off, sigma]
 
         # Assign the value after convergence
         self.fit_params_ = {}
-        self.fit_params_['b'] = (np.around(popt[0], decimals=2) *
-                                 self.max_int_)
-        self.fit_params_['off'] = (np.around(popt[1], decimals=2) *
-                                   self.max_int_)
-        self.fit_params_['sigma'] = (np.around(popt[2], decimals=2) *
-                                     self.max_int_)
+        self.fit_params_['b'] = popt[0]
+        self.fit_params_['off'] = popt[1]
+        self.fit_params_['sigma'] = popt[2]
+
         self.is_fitted_ = True
 
         return self
@@ -218,13 +227,13 @@ class RicianNormalization(StandaloneNormalization):
                              ' the data.')
 
         # Normalize the data of the modality
-        modality.data_ -= rice.mean(self.fit_params_['b'] / self.max_int_,
-                                    self.fit_params_['off'] / self.max_int_,
-                                    self.fit_params_['sigma'] / self.max_int_)
+        modality.data_ -= rice.mean(self.fit_params_['b'],
+                                    self.fit_params_['off'],
+                                    self.fit_params_['sigma']) * self.max_int
 
-        modality.data_ /= rice.std(self.fit_params_['b'] / self.max_int_,
-                                   self.fit_params_['off'] / self.max_int_,
-                                   self.fit_params_['sigma'] / self.max_int_)
+        modality.data_ /= rice.std(self.fit_params_['b'],
+                                   self.fit_params_['off'],
+                                   self.fit_params_['sigma']) * self.max_int
 
         # Update the histogram associated to the data
         modality.update_histogram()
@@ -253,13 +262,13 @@ class RicianNormalization(StandaloneNormalization):
                              ' the data.')
 
         # Normalize the data of the modality
-        modality.data_ *= rice.std(self.fit_params_['b'] / self.max_int_,
-                                   self.fit_params_['off'] / self.max_int_,
-                                   self.fit_params_['sigma'] / self.max_int_)
+        modality.data_ *= rice.std(self.fit_params_['b'],
+                                   self.fit_params_['off'],
+                                   self.fit_params_['sigma']) * self.max_int
 
-        modality.data_ += rice.mean(self.fit_params_['b'] / self.max_int_,
-                                    self.fit_params_['off'] / self.max_int_,
-                                    self.fit_params_['sigma'] / self.max_int_)
+        modality.data_ += rice.mean(self.fit_params_['b'],
+                                    self.fit_params_['off'],
+                                    self.fit_params_['sigma']) * self.max_int
 
         # Update the histogram associated to the data
         modality.update_histogram()
