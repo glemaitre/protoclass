@@ -36,7 +36,7 @@ class BaseNormalization(object):
         raise NotImplementedError
 
     @abstractmethod
-    def fit(self, modality):
+    def fit(self, modality, ground_truth=None, cat=None):
         """Method to find the parameters needed to apply the
         normalization."""
         raise NotImplementedError
