@@ -255,6 +255,8 @@ def test_check_modality_gt_mod_not_read():
     # Create an object to handle the data
     t2w_mod = T2WModality()
 
+    print t2w_mod.is_read()
+
     # Load the GT data
     path_gt = [os.path.join(currdir, 'data', 'gt_folders', 'prostate')]
     label_gt = ['prostate']
@@ -272,7 +274,6 @@ def test_check_modality_gt_not_read():
     path_data = os.path.join(currdir, 'data', 't2w')
     # Create an object to handle the data
     t2w_mod = T2WModality()
-    t2w_mod.read_data_from_path(path_data)
 
     # Load the GT data
     path_gt = [os.path.join(currdir, 'data', 'full_gt', 'prostate')]
@@ -283,8 +284,9 @@ def test_check_modality_gt_not_read():
     assert_raises(ValueError, check_modality_gt, t2w_mod, gt_mod, label_gt[0])
 
 
-def test_check_modality_gt_mod_not_read():
-    """Test if an error is raised when the modality is not read."""
+def test_check_modality_gt():
+    """Test the routine to check the consistency of the modality and
+    the ground-truth."""
 
     # Try to fit an object with another modality
     currdir = os.path.dirname(os.path.abspath(__file__))
