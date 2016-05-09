@@ -16,6 +16,7 @@ class BaseExtraction(object):
     @abstractmethod
     def __init__(self):
         """Constructor"""
+        pass
 
     @abstractmethod
     def _validate_modality(self):
@@ -30,11 +31,11 @@ class BaseExtraction(object):
         raise NotImplementedError
 
     @abstractmethod
-    def fit(self, modality):
+    def fit(self, modality, ground_truth=None, cat=None):
         """Find parameters for later transformation."""
         raise NotImplementedError
 
     @abstractmethod
-    def transform(self, modality):
+    def transform(self, modality, ground_truth=None, cat=None):
         """Extract the data from the given modality."""
         raise NotImplementedError
