@@ -3,7 +3,6 @@
 import os
 import numpy as np
 
-
 def check_path_data(path_data):
     """Check if the path data exist.
 
@@ -125,14 +124,17 @@ def check_npy_filename(filename):
 
 def check_filename_pickle_load(filename):
     """Method to check if the filename corresponds to a pickle file.
+
     Parameters
     ----------
     filename : str
         The pickle file to check.
+
     Returns
     -------
     filename : str
         The checked filename.
+
     """
 
     # Check that filename is of string type
@@ -152,14 +154,17 @@ def check_filename_pickle_load(filename):
 
 def check_filename_pickle_save(filename):
     """Function to check the extension of the pickle file.
+
     Parameters
     ----------
     filename : str
         The filename which needs to be checked.
+
     Returns
     -------
     filename : str
         The filename which has been checked.
+
     """
     # Check that the filename is a string
     if isinstance(filename, basestring):
@@ -170,3 +175,81 @@ def check_filename_pickle_save(filename):
             raise ValueError('The filename should have a `.p` extension.')
     else:
         raise ValueError('The filename needs to be of type string.')
+
+
+def check_modality_inherit(child_modality, parent_modality):
+    """Check if a modality inherit from another one.
+
+    Parameters
+    ----------
+    child_modality : object
+        The child object.
+
+    parent_modality_info : classinfo
+        The class info of the parent modality.
+
+    Returns
+    -------
+    child_modality : object
+        If no error raise, return the child_object.
+
+    """
+
+    if not issubclass(type(child_modality), parent_modality):
+        raise ValueError('The base modality provided in the constructor is'
+                         ' not a TemporalModality.')
+    else:
+        return child_modality
+
+
+def check_modality_gt(modality, ground_truth, cat):
+    """Check the consistency of the modality with the ground-truth.
+
+    Parameters
+    ----------
+    modality : object
+        The modality object of interest.
+
+    ground-truth : object of type GTModality
+        The ground-truth of GTModality.
+
+    cat : str
+        String corresponding at the ground-truth of interest.
+
+    Returns
+    -------
+    roi_data : ndarray, shape (non_zero_samples, 3)
+        Corresponds to the indexes of the data of insterest
+        extracted from the ground-truth.
+
+    """
+
+    from ..data_management import GTModality
+
+    # Check that the ground-truth is from GTModality
+    if not isinstance(ground_truth, GTModality):
+        raise ValueError('The ground-truth should be an object of'
+                         ' class GTModality.')
+
+    # Check that the ground truth has been read
+    if not ground_truth.is_read():
+        raise ValueError('No data have been read during the'
+                         'construction of the GT modality object.')
+
+    # Check that the ground truth has been read
+    if not modality.is_read():
+        raise ValueError('No data have been read during the'
+                         'construction of the modality object.')
+
+    # Check that the size of the ground-truth and the modality
+    # are consistant
+    # In this case check only the last three dimension
+    if ((np.size(modality.data_, -3),
+         np.size(modality.data_, -2),
+         np.size(modality.data_, -1)) !=
+            ground_truth.extract_gt_data(cat, 'data').shape):
+        raise ValueError('The ground-truth does not correspond to the'
+                         ' given modality volume.')
+
+    # Find the element which are not zero
+    return ground_truth.extract_gt_data(cat, 'index')

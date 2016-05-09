@@ -12,6 +12,8 @@ from ..data_management import GTModality
 from .base_extraction import BaseExtraction
 
 from ..utils.validation import check_modality
+from ..utils.validation import check_modality_inherit
+from ..utils.validation import check_modality_gt
 
 
 class TemporalExtraction(BaseExtraction):
@@ -27,64 +29,8 @@ class TemporalExtraction(BaseExtraction):
     def __init__(self, base_modality):
         """Constructor"""
         super(TemporalExtraction, self).__init__()
-        self.base_modality = base_modality
-        self._validate_modality()
-
-    def _validate_modality(self):
-        """Check if the provided modality is of interest with the type of
-        normalization."""
-
-        # Check that the base modality is a subclass of TemporalModality
-        if not issubclass(type(self.base_modality), TemporalModality):
-            raise ValueError('The base modality provided in the constructor is'
-                             ' not a TemporalModality.')
-        else:
-            self.base_modality_ = self.base_modality
-
-    def _validate_modality_gt(self, modality, ground_truth, cat):
-        """Check the consistency of the modality with the ground-truth.
-
-        Parameters
-        ----------
-        modality : object
-            The modality object of interest.
-
-        ground-truth : object of type GTModality
-            The ground-truth of GTModality.
-
-        cat : str
-            String corresponding at the ground-truth of interest.
-
-        Returns
-        -------
-        roi_data : ndarray, shape (non_zero_samples, 3)
-            Corresponds to the indexes of the data of insterest
-            extracted from the ground-truth.
-
-        """
-
-        # Check that the ground-truth is from GTModality
-        if not isinstance(ground_truth, GTModality):
-            raise ValueError('The ground-truth should be an object of'
-                             ' class GTModality.')
-
-        # Check that the ground truth has been read
-        if not ground_truth.is_read():
-            raise ValueError('No data have been read during the'
-                             'construction of the GT modality object.')
-
-        # Check that the size of the ground-truth and the modality
-        # are consistant
-        # In this case check only the last three dimension
-        if ((np.size(modality.data_, 1),
-             np.size(modality.data_, 2),
-             np.size(modality.data_, 3)) !=
-                ground_truth.extract_gt_data(cat, 'data').shape):
-            raise ValueError('The ground-truth does not correspond to the'
-                             ' given modality volume.')
-
-        # Find the element which are not zero
-        return ground_truth.extract_gt_data(cat, 'index')
+        self.base_modality_ = check_modality_inherit(base_modality,
+                                                     TemporalModality)
 
     def _validate_gt_cat(self, modality, ground_truth, cat):
         """Set-up the roi to use for this object.
@@ -124,9 +70,9 @@ class TemporalExtraction(BaseExtraction):
                              ' which you want to extract the information needs'
                              ' to be specified.')
         else:
-            self.roi_data_ = self._validate_modality_gt(modality,
-                                                        ground_truth,
-                                                        cat)
+            self.roi_data_ = check_modality_gt(modality,
+                                               ground_truth,
+                                               cat)
 
         return None
 

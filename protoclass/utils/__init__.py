@@ -10,6 +10,8 @@ from .validation import check_img_filename
 from .validation import check_npy_filename
 from .validation import check_filename_pickle_load
 from .validation import check_filename_pickle_save
+from .validation import check_modality_inherit
+from .validation import check_modality_gt
 
 from .export import make_table
 
@@ -20,4 +22,6 @@ __all__ = ['find_nearest',
            'check_npy_filename',
            'check_filename_pickle_load',
            'check_filename_pickle_save',
+           'check_modality_inherit',
+           'check_modality_gt',
            'make_table']

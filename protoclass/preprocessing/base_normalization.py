@@ -24,18 +24,6 @@ class BaseNormalization(object):
         self.fit_params_ = {}
 
     @abstractmethod
-    def _validate_modality(self):
-        """Check if the provided modality is of interest with the type of
-        normalization."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def _validate_modality_gt(self, modality, ground_truth, cat):
-        """Method to check the consistency of the modality with the
-        ground-truth."""
-        raise NotImplementedError
-
-    @abstractmethod
     def fit(self, modality, ground_truth=None, cat=None):
         """Method to find the parameters needed to apply the
         normalization."""
