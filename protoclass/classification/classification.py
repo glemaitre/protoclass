@@ -53,6 +53,13 @@ def Classify(training_data, training_label, testing_data, testing_label, classif
     ### BALANCE THE DATA IF NEEDED
     #########################################################################
 
+    # Convert the label to list since that we want to use some python
+    # core library
+    if isinstance(training_label, np.ndarray):
+        training_label = list(np.ravel(training_label))
+    if isinstance(testing_label, np.ndarray):
+        testing_label = list(np.ravel(testing_label))
+
     # Define the ration to use in case that we want to balance the data
     count_label = Counter(training_label)
     count_min_class = float(count_label[min(count_label, key=count_label.get)])
