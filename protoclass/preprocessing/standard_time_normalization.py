@@ -797,14 +797,14 @@ class StandardTimeNormalization(TemporalNormalization):
         data_shifted = np.zeros(data.shape)
         if tau > 0:
             # We need to shift the serie to positive time
-            data_shifted[:, tau::] = data[:, 0:-tau]
-            data_shifted[:, 0:tau] = np.tile(data[:, 0:1], (1, tau))
+            data_shifted[tau::, :] = data[0:-tau, :]
+            data_shifted[0:tau, :] = np.tile(data[0:1, :], (tau, 1, 1, 1))
 
             return data_shifted
         elif tau < 0:
             # We need to shift the serie to negative time
-            data_shifted[:, 0:tau] = data[:, -tau::]
-            data_shifted[:, tau::] = np.tile(data[:, -1:], (1, -tau))
+            data_shifted[0:tau, :] = data[-tau::, :]
+            data_shifted[tau::, :] = np.tile(data[-1:, :], (-tau, 1, 1, 1))
 
             return data_shifted
         elif tau == 0:
