@@ -16,6 +16,3 @@
 [submodule "third-party/pyFFTW"]
 	path = third-party/pyFFTW
 	url = https://github.com/glemaitre/pyFFTW.git
-[submodule "third-party/pydicom"]
-	path = third-party/pydicom
-	url = https://github.com/glemaitre/pydicom.git
