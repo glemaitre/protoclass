@@ -65,6 +65,9 @@ python setup.py install
 # Install scikit-learn
 cd $TRAVIS_BUILD_DIR/third-party/scikit-learn
 python setup.py install
+# Install pydicom
+cd $TRAVIS_BUILD_DIR/third-party/pydicom
+python setup.py install
 
 cd $TRAVIS_BUILD_DIR
 python setup.py develop
