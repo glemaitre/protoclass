@@ -1,8 +1,13 @@
 """T2W modality class."""
 
+import warnings
+
 import numpy as np
+import SimpleITK as sitk
 
 from .standalone_modality import StandaloneModality
+
+from ..utils.validation import check_path_data
 
 
 class T2WModality(StandaloneModality):
@@ -18,9 +23,14 @@ class T2WModality(StandaloneModality):
     path_data_ : string
         Location of the data.
 
-    data_ : array-like, shape (Y, X, Z)
+    data_ : ndarray, shape (Y, X, Z)
         The different volume of the T2W volume. The data are saved in
         Y, X, Z ordered.
+
+    metadata_ : dict
+        Dictionnary which contain the MRI sequence information. Note that the
+        information are given in the original ordering (X, Y, Z), which is
+        different from the organisation of `data_` which is (Y, X, Z).
 
     pdf_ : list, length (n_serie)
         List of the PDF for each serie.
@@ -144,13 +154,12 @@ class T2WModality(StandaloneModality):
         return self
 
     def read_data_from_path(self, path_data=None):
-        """Function to read T2W images which correspond to a 3D volume.
+        """Read T2W images which represent a single 3D volume.
 
         Parameters
         ----------
         path_data : str or None, optional (default=None)
-            Path to the temporal data. It will overrides the path given
-            in the constructor.
+            Path to the standalone modality data.
 
         Returns
         -------
@@ -158,8 +167,51 @@ class T2WModality(StandaloneModality):
            Returns self.
 
         """
-        # Called the parent function to read the data
-        super(T2WModality, self).read_data_from_path(path_data=path_data)
+        # Check the consistency of the path data
+        if self.path_data_ is not None and path_data is not None:
+            # We will overide the path and raise a warning
+            warnings.warn('The data path will be overriden using the path'
+                          ' given in the function.')
+            self.path_data_ = check_path_data(path_data)
+        elif self.path_data_ is None and path_data is not None:
+            self.path_data_ = check_path_data(path_data)
+        elif self.path_data_ is None and path_data is None:
+            raise ValueError('You need to give a path_data from where to read'
+                             ' the data.')
+        # Create a reader object
+        reader = sitk.ImageSeriesReader()
+
+        # Find the different series present inside the folder
+        series = np.array(reader.GetGDCMSeriesIDs(self.path_data_))
+
+        # Check that you have more than one serie
+        if len(series) > 1:
+            raise ValueError('The number of series should not be larger than'
+                             ' 1 with standalone modality.')
+
+        # The data can be read
+        dicom_names_serie = reader.GetGDCMSeriesFileNames(self.path_data_)
+        # Set the list of files to read the volume
+        reader.SetFileNames(dicom_names_serie)
+
+        # Read the data for the current volume
+        vol = reader.Execute()
+
+        # Get a numpy volume
+        vol_numpy = sitk.GetArrayFromImage(vol)
+
+        # The Matlab convention is (Y, X, Z)
+        # The Numpy convention is (Z, Y, X)
+        # We have to swap these axis
+        # Swap Z and X
+        vol_numpy = np.swapaxes(vol_numpy, 0, 2)
+        vol_numpy = np.swapaxes(vol_numpy, 0, 1)
+
+        # Convert the volume to float
+        vol_numpy = vol_numpy.astype(np.float64)
+
+        # We can create a numpy array
+        self.data_ = vol_numpy
 
         # Compute the information regarding the T2W images
         # Set the number of bins that will be later used to compute
@@ -167,5 +219,20 @@ class T2WModality(StandaloneModality):
         self.nb_bins_ = int(np.round(np.ndarray.max(self.data_) -
                                      np.ndarray.min(self.data_)))
         self.update_histogram()
+
+        # Store the DICOM metadata
+        self.metadata_ = {}
+        # Get the information that have been created by SimpleITK
+        # Information about data reconstruction
+        self.metadata_['size'] = vol.GetSize()
+        self.metadata_['origin'] = vol.GetOrigin()
+        self.metadata_['direction'] = vol.GetDirection()
+        self.metadata_['spacing'] = vol.GetSpacing()
+        # Information about the MRI sequence
+        # Read the first image for the sequence
+        im = sitk.ReadImage(dicom_names_serie[0])
+        self.metadata_['TR'] = float(im.GetMetaData('0018|0080'))
+        self.metadata_['TE'] = float(im.GetMetaData('0018|0081'))
+        self.metadata_['flip-angle'] = float(im.GetMetaData('0018|1314'))
 
         return self

@@ -124,6 +124,19 @@ def test_read_dwi_data():
     for exp, gt in zip(dwi_mod.pdf_series_, data):
         assert_array_equal(exp, gt)
 
+    # Check the value present in the dictionary
+    assert_equal(dwi_mod.metadata_['size'], (256, 256, 5))
+    assert_equal(dwi_mod.metadata_['origin'], (-153.91600036621094,
+                                               -199.2969970703125,
+                                               6.205989837646484))
+    assert_equal(dwi_mod.metadata_['direction'], (1.0, 0.0, 0.0, 0.0,
+                                                  1.0, 0.0, 0.0, 0.0, 1.0))
+    assert_equal(dwi_mod.metadata_['spacing'], (1.4063, 1.4063,
+                                                5.0000104904174805))
+    assert_equal(dwi_mod.metadata_['TR'], 13900.0)
+    assert_equal(dwi_mod.metadata_['TE'], 93.7)
+    assert_equal(dwi_mod.metadata_['flip-angle'], 90.0)
+
 
 def test_update_histogram():
     """ Test that the function properly update the value of the histogram. """

@@ -124,6 +124,28 @@ def test_read_dce_data():
     for exp, gt in zip(dce_mod.pdf_series_, data):
         assert_array_equal(exp, gt)
 
+    # Check the value present in the dictionary
+    assert_equal(dce_mod.metadata_['size'], (448, 368, 5))
+    assert_equal(dce_mod.metadata_['origin'], (-139.197998046875,
+                                               -125.99199676513672,
+                                               -6.814799785614014))
+    assert_equal(dce_mod.metadata_['direction'], (0.9999267096574318,
+                                                  -1.3680395668288353e-08,
+                                                  -0.012106829215863141,
+                                                  0.0016226550415489812,
+                                                  0.9909776862500729,
+                                                  0.13401713452043554,
+                                                  0.011997595770753412,
+                                                  -0.1340269575662008,
+                                                  0.9909050571781686))
+    assert_equal(dce_mod.metadata_['spacing'], (0.67633926868439,
+                                                0.67633926868439,
+                                                1.249927043914795))
+    assert_equal(dce_mod.metadata_['TR'], 2350.0)
+    assert_equal(dce_mod.metadata_['TE'], 101.0)
+    assert_equal(dce_mod.metadata_['flip-angle'], 140.0)
+    assert_array_equal(dce_mod.time_info_, np.array([0., 0.]))
+
 
 def test_update_histogram():
     """ Test that the function properly update the value of the histogram. """

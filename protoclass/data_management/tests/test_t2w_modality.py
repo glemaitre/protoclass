@@ -118,6 +118,27 @@ def test_read_t2w_data():
     data = np.load(os.path.join(currdir, 'data', 'data_t2w_data.npy'))
     assert_array_equal(t2w_mod.data_, data)
 
+    # Check the value present in the dictionary
+    assert_equal(t2w_mod.metadata_['size'], (448, 360, 5))
+    assert_equal(t2w_mod.metadata_['origin'], (-148.0189971923828,
+                                               -127.08599853515625,
+                                               10.373299598693848))
+    assert_equal(t2w_mod.metadata_['direction'], (0.9989835465775704,
+                                                  3.0454650998962274e-08,
+                                                  -0.045076309379744495,
+                                                  0.008138104464296886,
+                                                  0.983567408904165,
+                                                  0.18035776500410378,
+                                                  0.04433559431233058,
+                                                  -0.18054127545120094,
+                                                  0.9825676581973509))
+    assert_equal(t2w_mod.metadata_['spacing'], (0.67633926868439,
+                                                0.67633926868439,
+                                                1.249894142150879))
+    assert_equal(t2w_mod.metadata_['TR'], 3500.0)
+    assert_equal(t2w_mod.metadata_['TE'], 131.0)
+    assert_equal(t2w_mod.metadata_['flip-angle'], 140.0)
+
 
 def test_update_histogram():
     """ Test that the function properly update the value of the histogram. """
