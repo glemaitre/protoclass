@@ -12,22 +12,23 @@ from random import sample
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 
-from unbalanced_dataset import OverSampler
-from unbalanced_dataset import SMOTE
+from unbalanced_dataset.over_sampling import RandomOverSampler
+from unbalanced_dataset.over_sampling import SMOTE
 
-from unbalanced_dataset import UnderSampler
-from unbalanced_dataset import TomekLinks
-from unbalanced_dataset import ClusterCentroids
-from unbalanced_dataset import NearMiss
-from unbalanced_dataset import CondensedNearestNeighbour
-from unbalanced_dataset import OneSidedSelection
-from unbalanced_dataset import NeighbourhoodCleaningRule
+from unbalanced_dataset.under_sampling import RandomUnderSampler
+from unbalanced_dataset.under_sampling import TomekLinks
+from unbalanced_dataset.under_sampling import ClusterCentroids
+from unbalanced_dataset.under_sampling import NearMiss
+from unbalanced_dataset.under_sampling import CondensedNearestNeighbour
+from unbalanced_dataset.under_sampling import OneSidedSelection
+from unbalanced_dataset.under_sampling import NeighbourhoodCleaningRule
+from unbalanced_dataset.under_sampling import EditedNearestNeighbours
 
-from unbalanced_dataset import EasyEnsemble
-from unbalanced_dataset import BalanceCascade
+from unbalanced_dataset.ensemble import EasyEnsemble
+from unbalanced_dataset.ensemble import BalanceCascade
 
-from unbalanced_dataset import SMOTEENN
-from unbalanced_dataset import SMOTETomek 
+from unbalanced_dataset.combine import SMOTEENN
+from unbalanced_dataset.combine import SMOTETomek 
 
 roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
 
@@ -54,23 +55,17 @@ def Classify(training_data, training_label, testing_data, testing_label,
     ### BALANCE THE DATA IF NEEDED
     #########################################################################
 
-    # Define the ration to use in case that we want to balance the data
-    count_label = Counter(training_label)
-    count_min_class = float(count_label[min(count_label, key=count_label.get)])
-    count_max_class = float(count_label[max(count_label, key=count_label.get)])
-    ratio_oversampling = (count_max_class - count_min_class) / count_min_class
-
     # Over-sampling
     if balancing_criterion == 'random-over-sampling':
-        os = OverSampler(ratio=ratio_oversampling)
-        training_data, training_label = os.fit_transform(training_data,
+        ros = RandomOverSampler()
+        training_data, training_label = ros.fit_transform(training_data,
                                                          training_label)
     elif balancing_criterion == 'smote':
         k_smote = kwargs.pop('k_smote', 5)
         m_smote = kwargs.pop('m_smote', 10)
         out_step_smote = kwargs.pop('out_step_smote', 0.5)
         kind_smote = kwargs.pop('kind_smote', 'regular')
-        sm = SMOTE(ratio=ratio_oversampling, k=k_smote, m=m_smote,
+        sm = SMOTE(k=k_smote, m=m_smote,
                    out_step=out_step_smote, kind=kind_smote)
         training_data, training_label = sm.fit_transform(training_data,
                                                          training_label)
@@ -78,8 +73,8 @@ def Classify(training_data, training_label, testing_data, testing_label,
     # Under-sampling
     elif balancing_criterion == 'random-under-sampling':
         replacement = kwargs.pop('replacement', True)
-        us = UnderSampler(replacement=replacement)
-        training_data, training_label = us.fit_transform(training_data,
+        rus = RandomUnderSampler(replacement=replacement)
+        training_data, training_label = rus.fit_transform(training_data,
                                                          training_label)
     elif balancing_criterion == 'tomek-links':
         tl = TomekLinks()
@@ -118,6 +113,13 @@ def Classify(training_data, training_label, testing_data, testing_label,
         ncr = NeighbourhoodCleaningRule(size_ngh=size_ngh)
         training_data, training_label = ncr.fit_transform(training_data,
                                                           training_label)
+    elif balancing_criterion == 'enn':
+        size_ngh = kwargs.pop('size_ngh', 3)
+        # Add some option to extract NN kwargs
+        enn = EditedNearestNeighbours(size_ngh=size_ngh)
+        training_data, training_label = enn.fit_transform(training_data,
+                                                          training_label)
+
 
     # Ensemble-sampling
     elif balancing_criterion == 'easy-ensemble':
@@ -140,12 +142,12 @@ def Classify(training_data, training_label, testing_data, testing_label,
     elif balancing_criterion == 'smote-enn':
         k_smote = kwargs.pop('k_smote', 5)
         size_ngh = kwargs.pop('size_ngh', 3)
-        sme = SMOTEENN(ratio=ratio_oversampling, k=k_smote, size_ngh=size_ngh)
+        sme = SMOTEENN(k=k_smote, size_ngh=size_ngh)
         training_data, training_label = sme.fit_transform(training_data,
                                                           training_label)
     elif balancing_criterion == 'smote-tomek':
         k_smote = kwargs.pop('k_smote', 5)
-        smt = SMOTEENN(ratio=ratio_oversampling, k=k_smote)
+        smt = SMOTEENN(k=k_smote)
         training_data, training_label = smt.fit_transform(training_data,
                                                           training_label)
 
