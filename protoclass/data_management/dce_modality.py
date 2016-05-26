@@ -9,6 +9,11 @@ from datetime import datetime
 
 from scipy.interpolate import interp1d
 
+from skimage.measure import label
+from skimage.measure import regionprops
+
+from sklearn.cluster import KMeans
+
 from .temporal_modality import TemporalModality
 
 from ..utils import find_nearest
@@ -523,3 +528,127 @@ class DCEModality(TemporalModality):
         self.update_histogram()
 
         return self
+
+    def compute_aif(self, n_clusters=6, eccentricity=.5, diameter=(10., 20.),
+                    area=(100., 400.), estimator='median'):
+        """Determine the AIF by segmenting the aorta in the kinetic sequence.
+
+        Parameters
+        ----------
+        n_clusters : int, optional (default=6)
+            The number of clusters to use to make the detection of the zone
+            of interest to later segment the aorta or veins.
+
+        eccentricity : float, optional (default=.5)
+            The eccentricity is the ratio of the focal distance
+            (distance between focal points) over the major axis length. The
+            value is in the interval [0, 1). When it is 0, the ellipse becomes
+            a circle. Greater is more permissive and find more regions of
+            interest.
+
+        diameter : tuple of float, optional (default=(10., 20.))
+            Tuple of the minimum and maximum value of the diameters of the
+            region. The region having a diameter included in this interval
+            will be kept as potential region.
+
+        area : tuple of float, optional (default=(100., 400.))
+            Tuple of the minimum and maximum area in between which the region
+            of interest will be kept.
+
+        estimator : str, optional (default='median')
+            The estimator used to estimate the AIF from the segmented region.
+            Can be the following: 'median' and 'mean'
+
+        Returns
+        -------
+        aif : ndarray, shape (n_series, )
+            The estimated AIF signal.
+
+        """
+        # Check that the data have been read
+        if self.data_ is None:
+            raise RuntimeError('Read the data first.')
+
+        # Get the size of the volume
+        sz_vol = self.metadata_['size']
+
+        # For each slice
+        signal_aif = np.empty((0, 40), dtype=float)
+        for idx_sl in range(sz_vol[2]):
+
+            # Crop the upper part of the image
+            org_im = self.data_[:, 50:(sz_vol[1] / 2), :, idx_sl]
+
+            # Reshape the data to make some clustring later on
+            sz_croped_im = org_im.shape
+            data = np.reshape(org_im, (sz_croped_im[0],
+                                       sz_croped_im[1] *
+                                       sz_croped_im[2])).T
+
+            # Make a k-means filtering
+            km = KMeans(n_clusters=n_clusters,
+                        n_jobs=-1)
+            # Fit and predict the data
+            data_label = km.fit_predict(data)
+
+            # Skip to the next iteration if we did not find any candidate
+            if np.unique(data_label).size < 2:
+                continue
+
+            # Find the cluster with the highest enhancement - it will
+            # correspond to blood
+            cl_perc = []
+            for cl in np.unique(data_label):
+
+                # Compute the maximum enhancement of the current cluster
+                # and find the 90 percentile
+                perc = np.percentile(np.max(data[data_label == cl],
+                                            axis=1), 90)
+                cl_perc.append(perc)
+
+            # Select only the cluster of interest
+            cl_aorta = np.argmax(cl_perc)
+            bin_im = np.reshape([data_label == cl_aorta], (sz_croped_im[1],
+                                                           sz_croped_im[2]))
+            # Transform the binary image into a labelled image
+            label_im = label(bin_im.astype(int))
+
+            # Compute the property for each region labelled
+            regions = regionprops(label_im)
+
+            # Remove the regions in the image which do not follow the
+            # specificity imposed
+            for idx_reg, reg in enumerate(regions):
+
+                # Check the eccentricity
+                if reg.eccentricity > eccentricity:
+                    label_im[np.nonzero(label_im == idx_reg + 1)] = 0
+                    continue
+
+                # Check the diameter
+                if (reg.equivalent_diameter < diameter[0] or
+                        reg.equivalent_diameter > diameter[1]):
+                    label_im[np.nonzero(label_im == idx_reg + 1)] = 0
+                    continue
+
+                # Check the area
+                if reg.area < area[0] or reg.area > area[1]:
+                    label_im[np.nonzero(label_im == idx_reg + 1)] = 0
+                    continue
+
+            # Store the signal that will be used to estimated the AIF
+            if np.count_nonzero(label_im) > 0:
+                signal_aif = np.vstack((signal_aif,
+                                        org_im[:,
+                                               np.nonzero(label_im)[0],
+                                               np.nonzero(label_im)[1]].T))
+
+        # Get the final estimate
+        if estimator == 'median':
+            aif = np.median(signal_aif, axis=0)
+        elif estimator == 'mean':
+            aif = np.mean(signal_aif, axis=0)
+        else:
+            raise ValueError('Unknown string for the parameter estimator.')
+
+        return aif

@@ -657,3 +657,19 @@ def test_update_histogram_fix_bins():
     # Check that each array are the same
     for exp, gt in zip(dce_mod.pdf_series_, data):
         assert_array_equal(exp, gt)
+
+
+def test_dce_compute_aif():
+    """Test the function compute the AIF"""
+
+    # Load the data with only a single serie
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir, 'data/full_dce')
+
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+
+    dce_mod.read_data_from_path(path_data)
+
+    # Compute the AIF
+    print dce_mod.compute_aif()
