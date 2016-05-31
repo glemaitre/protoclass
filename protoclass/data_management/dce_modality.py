@@ -573,7 +573,7 @@ class DCEModality(TemporalModality):
         sz_vol = self.metadata_['size']
 
         # For each slice
-        signal_aif = np.empty((0, 40), dtype=float)
+        signal_aif = np.empty((0, self.n_serie_), dtype=float)
         for idx_sl in range(sz_vol[2]):
 
             # Crop the upper part of the image
