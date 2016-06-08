@@ -79,9 +79,10 @@ class EnhancementSignalExtraction(TemporalExtraction):
              is equal to the number of positive label in the ground-truth.
 
         """
-        super(EnhancementSignalExtraction, self).transform(modality=modality,
-                                                           ground_truth=ground_truth,
-                                                           cat=cat)
+        super(EnhancementSignalExtraction, self).transform(
+            modality=modality,
+            ground_truth=ground_truth,
+            cat=cat)
 
         # Convert the roi to a numpy array
         roi_data = np.array(self.roi_data_)
