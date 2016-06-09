@@ -792,7 +792,8 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             data = np.zeros((len(pp), len(param_kwd)))
 
             for idx_key, key in enumerate(param_kwd):
-                data[:, idx_key] = np.ravel(pp[i][key] for i in range(len(pp)))
+                data[:, idx_key] = np.ravel([pp[i][key]
+                                             for i in range(len(pp))])
 
         elif kind == 'regular':
             # Define default parameter
@@ -822,6 +823,7 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             data = np.zeros((len(pp), len(param_kwd)))
 
             for idx_key, key in enumerate(param_kwd):
-                data[:, idx_key] = np.ravel(pp[i][key] for i in range(len(pp)))
+                data[:, idx_key] = np.ravel([pp[i][key]
+                                             for i in range(len(pp))])
 
         return data
