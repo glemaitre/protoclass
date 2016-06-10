@@ -8,6 +8,7 @@ from .base_extraction import BaseExtraction
 from .temporal_extraction import TemporalExtraction
 
 from .enhancement_signal_extraction import EnhancementSignalExtraction
+from .tofts_quantification_extraction import ToftsQuantificationExtraction
 
 from .codebook import CodeBook
 
@@ -23,6 +24,7 @@ from .sampling import SamplingVolumeFromGT
 __all__ = ['BaseExtraction',
            'TemporalExtraction',
            'EnhancementSignalExtraction',
+           'ToftsQuantificationExtraction',
            'CodeBook',
            'HaralickProcessing',
            'LBPMapExtraction',

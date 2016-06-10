@@ -254,7 +254,8 @@ class ToftsQuantificationExtraction(TemporalExtraction):
 
     """
 
-    def __init__(self, base_modality, T10, r1, hematocrit=0.42):
+    def __init__(self, base_modality, T10, r1, hematocrit=0.42,
+                 random_state=None):
         super(ToftsQuantificationExtraction, self).__init__(base_modality)
 
         self.T10_ = T10
@@ -264,11 +265,14 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         self.flip_angle_ = None
         self.cb_t_ = None
         self.cp_t_ = None
+        self.ct_t_ = None
+        self.random_state = random_state
 
     @staticmethod
     def compute_aif(dce_modality, n_clusters=6, eccentricity=.5,
                     diameter=(10., 20.), area=(100., 400.),
-                    thres_sel=0.9, estimator='median'):
+                    thres_sel=0.9, estimator='median',
+                    random_state=None):
         """Determine the AIF by segmenting the aorta in the kinetic sequence.
 
         Parameters
@@ -305,6 +309,11 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             The estimator used to estimate the AIF from the segmented region.
             Can be the following: 'median', 'max', and 'mean'
 
+        random_state : integer or numpy.RandomState, optional (default=None)
+            The generator used to initialize the centers. If an integer is
+            given, it fixes the seed. Defaults to the global numpy random
+            number generator.
+
         Returns
         -------
         aif : ndarray, shape (n_series, )
@@ -338,6 +347,11 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         if dce_modality.data_ is None:
             raise RuntimeError('Read the data first.')
 
+        # Check the type of estimator
+        choice_est = ('median', 'mean', 'max')
+        if estimator not in choice_est:
+            raise ValueError('Wrong type of estimator choosen')
+
         # Get the size of the volume
         sz_vol = dce_modality.metadata_['size']
 
@@ -356,7 +370,8 @@ class ToftsQuantificationExtraction(TemporalExtraction):
 
             # Make a k-means filtering
             km = KMeans(n_clusters=n_clusters,
-                        n_jobs=-1)
+                        n_jobs=-1,
+                        random_state=random_state)
             # Fit and predict the data
             data_label = km.fit_predict(data)
 
@@ -440,8 +455,6 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             aif = np.mean(signal_aif, axis=0)
         elif estimator == 'max':
             aif = np.max(signal_aif, axis=0)
-        else:
-            raise ValueError('Unknown string for the parameter estimator.')
 
         return aif
 
@@ -485,7 +498,7 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         # We need to find when the enhancement of the curve will start
         # For that matter, let's start by computing the AIF t0 have all the
         # parmeters
-        aif_signal = self.compute_aif(modality)
+        aif_signal = self.compute_aif(modality, random_state=self.random_state)
 
         # Find the index to consider for the pre-contrast
         # - Find the index corresponfing to the maximum of the first derivative
@@ -538,6 +551,10 @@ class ToftsQuantificationExtraction(TemporalExtraction):
            enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.
 
         """
+        # Check that the fitting was performed
+        if self.TR_ is None:
+            raise RuntimeError('You should fit the data before to try any'
+                               ' conversion.')
 
         # Compute the relaxation
         R10 = 1. / self.T10_
@@ -584,6 +601,11 @@ class ToftsQuantificationExtraction(TemporalExtraction):
            enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.
 
         """
+        # Check that the fitting was performed
+        if self.TR_ is None:
+            raise RuntimeError('You should fit the data before to try any'
+                               ' conversion.')
+
 
         # Compute the relative enhancement post-contrast / pre-contrast
         s_rel = signal / s_pre_contrast
@@ -679,7 +701,7 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         return cb_t
 
     def transform(self, modality, ground_truth=None, cat=None,
-                  kind='extended', parallel='True'):
+                  kind='extended'):
         """Extract the data from the given modality.
 
         Parameters
@@ -716,14 +738,14 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             ground_truth=ground_truth,
             cat=cat)
 
-        # Check that the data have been fitted
-        if self.cp_t_ is None:
-            raise RuntimeError('Fit the data previous to transform them.')
-
         # Check the parameter kind
         param_kind = ('regular', 'extended')
         if kind not in param_kind:
             raise ValueError('Unknown parameter for kind.')
+
+        # Check that the data have been fitted
+        if self.cp_t_ is None:
+            raise RuntimeError('Fit the data previous to transform them.')
 
         # Organise that data such that we will compute the Toft's parameter
         # for each entry
@@ -768,22 +790,13 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             # Define default parameter
             coef0 = [0.01, 0.01, 0.01]
 
-            if parallel:
-                # Perform the fitting in parallel
-                pp = Parallel(n_jobs=-1)(delayed(_fit_extended_tofts)(
-                    modality.time_info_,
-                    curve,
-                    self.cp_t_,
-                    coef0)
-                                         for curve in self.ct_t_)
-            else:
-                pp = []
-                for idx_curve, curve in enumerate(self.ct_t_):
-                    print 'Curve fitted: {}/{}'.format(idx_curve + 1, n_sample)
-                    pp.append(_fit_extended_tofts(modality.time_info_,
-                                                  curve,
-                                                  self.cp_t_,
-                                                  coef0))
+            # Perform the fitting in parallel
+            pp = Parallel(n_jobs=-1)(delayed(_fit_extended_tofts)(
+                modality.time_info_,
+                curve,
+                self.cp_t_,
+                coef0)
+                                     for curve in self.ct_t_)
 
             # Convert the output to an numpy array
             param_kwd = ('Ktrans', 've', 'vp')
@@ -799,22 +812,13 @@ class ToftsQuantificationExtraction(TemporalExtraction):
             # Define default parameter
             coef0 = [0.01, 0.01]
 
-            if parallel:
-                # Perform the fitting in parallel
-                pp = Parallel(n_jobs=-1)(delayed(_fit_regular_tofts)(
-                    modality.time_info_,
-                    curve,
-                    self.cp_t_,
-                    coef0)
-                                         for curve in self.ct_t_)
-            else:
-                pp = []
-                for idx_curve, curve in enumerate(self.ct_t_):
-                    print 'Curve fitted: {}/{}'.format(idx_curve + 1, n_sample)
-                    pp.append(_fit_regular_tofts(modality.time_info_,
-                                                 curve,
-                                                 self.cp_t_,
-                                                 coef0))
+            # Perform the fitting in parallel
+            pp = Parallel(n_jobs=-1)(delayed(_fit_regular_tofts)(
+                modality.time_info_,
+                curve,
+                self.cp_t_,
+                coef0)
+                                     for curve in self.ct_t_)
 
             # Convert the output to an numpy array
             param_kwd = ('Ktrans', 've')

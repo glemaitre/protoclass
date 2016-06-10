@@ -2,9 +2,12 @@
 
 import os
 
+import numpy as np
+
 from numpy.testing import assert_raises
 from numpy.testing import assert_equal
 from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_warns
 
 from protoclass.extraction import EnhancementSignalExtraction
@@ -12,6 +15,8 @@ from protoclass.extraction import EnhancementSignalExtraction
 from protoclass.data_management import DCEModality
 from protoclass.data_management import T2WModality
 from protoclass.data_management import GTModality
+
+DECIMAL_PRECISION = 5
 
 
 def test_ese_bad_mod():
@@ -240,3 +245,28 @@ def test_ese_not_read_mod_transform():
 
     # Fit and raise the error
     assert_raises(ValueError, dce_ese.transform, dce_mod)
+
+
+def test_ese_tranform():
+    """Test the transform function."""
+    # Try to fit an object with another modality
+    currdir = os.path.dirname(os.path.abspath(__file__))
+    path_data = os.path.join(currdir,
+                             '../../preprocessing/tests/data/full_dce')
+    # Create an object to handle the data
+    dce_mod = DCEModality()
+    dce_mod.read_data_from_path(path_data)
+    # Create the gt data
+    gt_mod = GTModality()
+    gt_cat = ['prostate']
+    path_data = [os.path.join(
+        currdir,
+        '../../preprocessing/tests/data/full_gt/prostate')]
+    gt_mod.read_data_from_path(gt_cat, path_data)
+
+    # Create the object for the Tofts extraction
+    ese = EnhancementSignalExtraction(DCEModality())
+    data = ese.transform(dce_mod, gt_mod, gt_cat[0])
+
+    data_gt = np.load(os.path.join(currdir, 'data/ese_reg_data.npy'))
+    assert_array_almost_equal(data, data_gt, decimal=DECIMAL_PRECISION)
