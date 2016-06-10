@@ -36,6 +36,8 @@ env:
 
 before_install:
   - git submodule update --init --recursive
-install: source build_tools/travis/install.sh
+install:
+  - travis_wait 30
+  - source build_tools/travis/install.sh
 script: bash build_tools/travis/test_script.sh
 after_success: source build_tools/travis/after_success.sh
