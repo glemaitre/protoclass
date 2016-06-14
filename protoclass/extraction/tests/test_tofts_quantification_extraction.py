@@ -362,10 +362,10 @@ def test_qte_transform_no_fit():
     dce_mod.read_data_from_path(path_data)
     # Create the gt data
     gt_mod = GTModality()
-    gt_cat = ['prostate']
+    gt_cat = ['cap']
     path_data = [os.path.join(
         currdir,
-        '../../preprocessing/tests/data/full_gt/prostate')]
+        '../../preprocessing/tests/data/full_gt/cap')]
     gt_mod.read_data_from_path(gt_cat, path_data)
 
     # Create the object for the Tofts extraction
@@ -387,10 +387,10 @@ def test_qte_transform_extended():
     dce_mod.read_data_from_path(path_data)
     # Create the gt data
     gt_mod = GTModality()
-    gt_cat = ['prostate']
+    gt_cat = ['cap']
     path_data = [os.path.join(
         currdir,
-        '../../preprocessing/tests/data/full_gt/prostate')]
+        '../../preprocessing/tests/data/full_gt/cap')]
     gt_mod.read_data_from_path(gt_cat, path_data)
 
     # Create the object for the Tofts extraction
@@ -415,10 +415,10 @@ def test_qte_transform_regular():
     dce_mod.read_data_from_path(path_data)
     # Create the gt data
     gt_mod = GTModality()
-    gt_cat = ['prostate']
+    gt_cat = ['cap']
     path_data = [os.path.join(
         currdir,
-        '../../preprocessing/tests/data/full_gt/prostate')]
+        '../../preprocessing/tests/data/full_gt/cap')]
     gt_mod.read_data_from_path(gt_cat, path_data)
 
     # Create the object for the Tofts extraction
