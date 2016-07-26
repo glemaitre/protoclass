@@ -12,23 +12,23 @@ from random import sample
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 
-from unbalanced_dataset.over_sampling import RandomOverSampler
-from unbalanced_dataset.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.over_sampling import SMOTE
 
-from unbalanced_dataset.under_sampling import RandomUnderSampler
-from unbalanced_dataset.under_sampling import TomekLinks
-from unbalanced_dataset.under_sampling import ClusterCentroids
-from unbalanced_dataset.under_sampling import NearMiss
-from unbalanced_dataset.under_sampling import CondensedNearestNeighbour
-from unbalanced_dataset.under_sampling import OneSidedSelection
-from unbalanced_dataset.under_sampling import NeighbourhoodCleaningRule
-from unbalanced_dataset.under_sampling import EditedNearestNeighbours
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import TomekLinks
+from imblearn.under_sampling import ClusterCentroids
+from imblearn.under_sampling import NearMiss
+from imblearn.under_sampling import CondensedNearestNeighbour
+from imblearn.under_sampling import OneSidedSelection
+from imblearn.under_sampling import NeighbourhoodCleaningRule
+from imblearn.under_sampling import EditedNearestNeighbours
 
-from unbalanced_dataset.ensemble import EasyEnsemble
-from unbalanced_dataset.ensemble import BalanceCascade
+from imblearn.ensemble import EasyEnsemble
+from imblearn.ensemble import BalanceCascade
 
-from unbalanced_dataset.combine import SMOTEENN
-from unbalanced_dataset.combine import SMOTETomek 
+from imblearn.combine import SMOTEENN
+from imblearn.combine import SMOTETomek 
 
 roc_auc = namedtuple('roc_auc', ['fpr', 'tpr', 'thresh', 'auc'])
 
