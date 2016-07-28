@@ -1,24 +1,22 @@
-"""Enhancement signal extraction from temporal modality."""
+"""Intensity signal extraction from standalone modality."""
 
-import numpy as np
-
-from .temporal_extraction import TemporalExtraction
+from .standalone_extraction import StandaloneExtraction
 
 
-class EnhancementSignalExtraction(TemporalExtraction):
-    """Enhancement signal extraction from temporal modality.
+class IntensitySignalExtraction(StandaloneExtraction):
+    """Intensity signal extraction from standalone modality.
 
     Parameters
     ----------
      base_modality : object
         The base modality on which the normalization will be applied. The base
-        modality should inherate from TemporalModality class.
+        modality should inherate from StandaloneModality class.
 
     Attributes
     ----------
     base_modality_ : object
         The base modality on which the normalization will be applied. The base
-        modality should inherate from TemporalModality class.
+        modality should inherate from StandaloneModality class.
 
     roi_data_ : ndarray, shape flexible
         Corresponds to the index to consider in order to fit the data.
@@ -26,7 +24,7 @@ class EnhancementSignalExtraction(TemporalExtraction):
     """
 
     def __init__(self, base_modality):
-        super(EnhancementSignalExtraction, self).__init__(base_modality)
+        super(IntensitySignalExtraction, self).__init__(base_modality)
 
     def fit(self, modality, ground_truth=None, cat=None):
         """Find the parameters needed to apply the extraction.
@@ -50,9 +48,9 @@ class EnhancementSignalExtraction(TemporalExtraction):
              Return self.
 
         """
-        super(EnhancementSignalExtraction, self).fit(modality=modality,
-                                                     ground_truth=ground_truth,
-                                                     cat=cat)
+        super(IntensitySignalExtraction, self).fit(modality=modality,
+                                                   ground_truth=ground_truth,
+                                                   cat=cat)
 
         raise NotImplementedError
 
@@ -61,7 +59,7 @@ class EnhancementSignalExtraction(TemporalExtraction):
 
         Parameters
         ----------
-        modality : object of type TemporalModality
+        modality : object of type StandaloneModality
             The modality object of interest.
 
         ground-truth : object of type GTModality or None
@@ -79,31 +77,9 @@ class EnhancementSignalExtraction(TemporalExtraction):
              is equal to the number of positive label in the ground-truth.
 
         """
-        super(EnhancementSignalExtraction, self).transform(
+        super(IntensitySignalExtraction, self).transform(
             modality=modality,
             ground_truth=ground_truth,
             cat=cat)
 
-        # Convert the roi to a numpy array
-        roi_data = np.array(self.roi_data_)
-
-        # Check the number of samples which will be extracted
-        n_sample = roi_data.shape[1]
-        # Check the number of dimension
-        n_dimension = modality.n_serie_
-
-        # Allocate the array
-        data = np.empty((n_sample, n_dimension))
-
-        # Copy the data at the right place
-        for idx_sample in range(n_sample):
-            # Get the coordinate of the point to consider
-            coord = roi_data[:, idx_sample]
-
-            # Extract the data
-            data[idx_sample, :] = modality.data_[:,
-                                                 coord[0],
-                                                 coord[1],
-                                                 coord[2]]
-
-        return data
+        return modality.data_[self.roi_data_]

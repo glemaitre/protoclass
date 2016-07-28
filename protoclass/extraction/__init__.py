@@ -6,9 +6,12 @@ will be used during classification.
 from .base_extraction import BaseExtraction
 
 from .temporal_extraction import TemporalExtraction
+from .standalone_extraction import StandaloneExtraction
 
 from .enhancement_signal_extraction import EnhancementSignalExtraction
 from .tofts_quantification_extraction import ToftsQuantificationExtraction
+
+from .intensity_signal_extraction import IntensitySignalExtraction
 
 from .codebook import CodeBook
 
@@ -23,8 +26,10 @@ from .sampling import SamplingVolumeFromGT
 
 __all__ = ['BaseExtraction',
            'TemporalExtraction',
+           'StandaloneExtraction',
            'EnhancementSignalExtraction',
            'ToftsQuantificationExtraction',
+           'IntensitySignalExtraction',
            'CodeBook',
            'HaralickProcessing',
            'LBPMapExtraction',
