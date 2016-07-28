@@ -36,6 +36,8 @@ pip install nose-timer
 conda install --yes cython scikit-image
 conda install --yes -c https://conda.anaconda.org/simpleitk SimpleITK
 conda install --yes libgfortran
+conda install --yes scikit-learn
+conda install --yes -c glemaitre imbalanced-learn=0.1.3
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
@@ -47,9 +49,6 @@ python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
 
-# Install Unbalanced-dataset
-cd $TRAVIS_BUILD_DIR/third-party/UnbalancedDataset
-python setup.py install
 # Install pyFFTW
 cd $TRAVIS_BUILD_DIR/third-party/pyFFTW
 python setup.py install
@@ -61,9 +60,6 @@ cd $TRAVIS_BUILD_DIR/third-party/mahotas
 python setup.py install
 # Install pyksvd
 cd $TRAVIS_BUILD_DIR/third-party/pyksvd
-python setup.py install
-# Install scikit-learn
-cd $TRAVIS_BUILD_DIR/third-party/scikit-learn
 python setup.py install
 
 cd $TRAVIS_BUILD_DIR
