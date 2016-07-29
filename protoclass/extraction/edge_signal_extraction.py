@@ -4,13 +4,23 @@ import numpy as np
 
 from scipy.ndimage.filters import generic_gradient_magnitude
 from scipy.ndimage.filters import generic_laplace
+from scipy.ndimage.filters import convolve
 from scipy.ndimage.filters import prewitt
 from scipy.ndimage.filters import sobel
 
 from .standalone_extraction import StandaloneExtraction
 
-FILTER = ('sobel', 'prewitt')
+FILTER = ('sobel', 'prewitt', 'kirsch')
 DERIVATIVE = ('1st', '2nd')
+KIRSCH_FILTERS = (np.array([[5, 5, 5], [-3, 0, -3], [-3, -3, -3]]),
+                  np.array([[5, 5, -3], [5, 0, -3], [-3, -3, -3]]),
+                  np.array([[5, -3, -3], [5, 0, -3], [5, -3, -3]]),
+                  np.array([[-3, -3, -3], [5, 0, -3], [5, 5, -3]]),
+                  np.array([[-3, -3, -3], [-3, 0, -3], [5, 5, 5]]),
+                  np.array([[-3, -3, -3], [-3, 0, 5], [-3, 5, 5]]),
+                  np.array([[-3, -3, 5], [-3, 0, 5], [-3, -3, 5]]),
+                  np.array([[-3, 5, 5], [-3, 0, 5], [-3, -3, -3]]))
+
 
 class EdgeSignalExtraction(StandaloneExtraction):
     """Edge signal extraction from standalone modality.
@@ -22,7 +32,7 @@ class EdgeSignalExtraction(StandaloneExtraction):
         modality should inherate from StandaloneModality class.
 
     edge_detector : str, optional (default='sobel')
-        Name of the filter to apply. Can be 'sobel', 'prewitt'.
+        Name of the filter to apply. Can be 'sobel', 'prewitt', 'kirsch'.
 
     n_derivative : str, optional (default='1st')
         Which level of derivative to compute. Can be '1st', '2nd'.
@@ -86,12 +96,47 @@ class EdgeSignalExtraction(StandaloneExtraction):
                 self.data_ = generic_gradient_magnitude(modality.data_, sobel)
             else:
                 self.data_ = generic_laplace(modality.data_, sobel)
-        if self.edge_detector == 'prewitt':
+        elif self.edge_detector == 'prewitt':
             if self.n_derivative == '1st':
                 self.data_ = generic_gradient_magnitude(modality.data_,
                                                         prewitt)
             else:
                 self.data_ = generic_laplace(modality.data_, prewitt)
+        elif self.edge_detector == 'kirsch':
+            if self.n_derivative == '1st':
+                conv_data = np.zeros((modality.data_.shape[0],
+                                      modality.data_.shape[1],
+                                      modality.data_.shape[2],
+                                      len(KIRSCH_FILTERS)))
+                # Compute the convolution for each slice
+                for sl in range(modality.data_.shape[2]):
+                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
+                        conv_data[:, :, sl, idx_kirsch] = convolve(
+                            modality.data_[:, :, sl], kirsh_f, mode='reflect')
+
+                # Extract the maximum gradients
+                self.data_ = np.ndarray.max(conv_data, axis=3)
+            else:
+                conv_data = np.zeros((modality.data_.shape[0],
+                                      modality.data_.shape[1],
+                                      modality.data_.shape[2],
+                                      len(KIRSCH_FILTERS)))
+                # Compute the convolution for each slice
+                for sl in range(modality.data_.shape[2]):
+                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
+                        conv_data[:, :, sl, idx_kirsch] = convolve(
+                            modality.data_[:, :, sl], kirsh_f, mode='reflect')
+
+                dev_1 = np.ndarray.max(conv_data, axis=3)
+
+                # Compute the second derivative
+                for sl in range(dev_1.shape[2]):
+                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
+                        conv_data[:, :, sl, idx_kirsch] = convolve(
+                            dev_1[:, :, sl], kirsh_f, mode='reflect')
+
+                # Extract the maximum gradients
+                self.data_ = np.ndarray.max(conv_data, axis=3)
 
         return self
 
