@@ -506,7 +506,8 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         # - Find the index related to the maximum of the second derivate
         # considering the AIF signal from the start to the previous
         # found index.
-        idx_st_dev = np.diff(aif_signal).argmax()
+        shift_idx = 2
+        idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
         self.start_enh_ = np.diff(np.diff(aif_signal))[:idx_st_dev].argmax()
 
         # Check if we compute or generate the AIF
