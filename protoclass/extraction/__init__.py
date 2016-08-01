@@ -13,6 +13,7 @@ from .tofts_quantification_extraction import ToftsQuantificationExtraction
 
 from .intensity_signal_extraction import IntensitySignalExtraction
 from .edge_signal_extraction import EdgeSignalExtraction
+from .haralick_extraction import HaralickExtraction
 
 from .codebook import CodeBook
 
@@ -32,6 +33,7 @@ __all__ = ['BaseExtraction',
            'ToftsQuantificationExtraction',
            'IntensitySignalExtraction',
            'EdgeSignalExtraction',
+           'HaralickExtraction',
            'CodeBook',
            'HaralickProcessing',
            'LBPMapExtraction',
