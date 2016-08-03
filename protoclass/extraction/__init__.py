@@ -10,6 +10,9 @@ from .standalone_extraction import StandaloneExtraction
 
 from .enhancement_signal_extraction import EnhancementSignalExtraction
 from .tofts_quantification_extraction import ToftsQuantificationExtraction
+from .brix_quantification_extraction import BrixQuantificationExtraction
+from .weibull_quantification_extraction import WeibullQuantificationExtraction
+from .pun_quantification_extraction import PUNQuantificationExtraction
 
 from .intensity_signal_extraction import IntensitySignalExtraction
 from .edge_signal_extraction import EdgeSignalExtraction
@@ -31,6 +34,9 @@ __all__ = ['BaseExtraction',
            'StandaloneExtraction',
            'EnhancementSignalExtraction',
            'ToftsQuantificationExtraction',
+           'BrixQuantificationExtraction',
+           'WeibullQuantificationExtraction',
+           'PUNQuantificationExtraction,'
            'IntensitySignalExtraction',
            'EdgeSignalExtraction',
            'HaralickExtraction',
