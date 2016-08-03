@@ -508,7 +508,9 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         # found index.
         shift_idx = 2
         idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
-        self.start_enh_ = np.diff(np.diff(aif_signal))[:idx_st_dev].argmax()
+        self.start_enh_ = np.diff(np.diff(aif_signal))[
+            shift_idx:
+            idx_st_dev].argmax() + shift_idx
 
         # Check if we compute or generate the AIF
         if fit_aif:
