@@ -34,7 +34,7 @@ def _PUN_model(t, a0=2., r=1., beta=1.):
     t = t / 60.
 
     # Define the signal
-    s_t = np.exp(r * t + (1. / beta) * (a0 - r)(np.exp(beta * t) - 1))
+    s_t = np.exp(r * t + (1. / beta) * (a0 - r) * (np.exp(beta * t) - 1))
 
     return s_t
 
@@ -53,9 +53,6 @@ def _fit_PUN_model(t_mod, s_t, S0, init_params):
     S0 : float,
         The value of the baseline to normalize `s_t`.
 
-    start_enh : int
-        The index when the enhancement start.
-
     init_param : list of float,
         The initial parameters for A, kep, and kel.
 
@@ -66,15 +63,17 @@ def _fit_PUN_model(t_mod, s_t, S0, init_params):
 
     """
 
+    def fit_func(t, a0, r, beta): return _PUN_model(t, a0=a0, r=r, beta=beta)
+
     if S0 < 1.:
         S0 = 1.
 
     # Define the default parameters in case the fitting fail.
-    popt_default = [-1, -1]
+    popt_default = [-1, -1, -1]
 
     # Perform the curve fitting
     try:
-        popt, _ = curve_fit(_PUN_model,
+        popt, _ = curve_fit(fit_func,
                             t_mod,
                             s_t / S0,
                             p0=init_params)
@@ -211,14 +210,13 @@ class PUNQuantificationExtraction(TemporalExtraction):
         print 'DCE signal of interest extracted: {}'.format(signal_dce.shape)
 
         # Define default parameter
-        coef0 = [1.0, 1.0]
+        coef0 = [.1, 2., 0.01]
 
         # Perform the fitting in parallel
         pp = Parallel(n_jobs=-1)(delayed(_fit_PUN_model)(
             modality.time_info_,
             curve,
             np.min(curve[:self.start_enh_]),
-            self.start_enh_,
             coef0)
                                  for curve in signal_dce)
 

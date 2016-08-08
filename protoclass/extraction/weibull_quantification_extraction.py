@@ -53,9 +53,6 @@ def _fit_weibull_model(t_mod, s_t, S0, init_params):
     S0 : float,
         The value of the baseline to normalize `s_t`.
 
-    start_enh : int
-        The index when the enhancement start.
-
     init_param : list of float,
         The initial parameters for A, kep, and kel.
 
@@ -66,6 +63,8 @@ def _fit_weibull_model(t_mod, s_t, S0, init_params):
 
     """
 
+    def fit_func(t, A, B): return _weibull_model(t, A=A, B=B)
+
     if S0 < 1.:
         S0 = 1.
 
@@ -74,7 +73,7 @@ def _fit_weibull_model(t_mod, s_t, S0, init_params):
 
     # Perform the curve fitting
     try:
-        popt, _ = curve_fit(_weibull_model,
+        popt, _ = curve_fit(fit_func,
                             t_mod,
                             s_t / S0,
                             p0=init_params)
@@ -211,14 +210,13 @@ class WeibullQuantificationExtraction(TemporalExtraction):
         print 'DCE signal of interest extracted: {}'.format(signal_dce.shape)
 
         # Define default parameter
-        coef0 = [1.0, 1.0]
+        coef0 = [5., .6]
 
         # Perform the fitting in parallel
         pp = Parallel(n_jobs=-1)(delayed(_fit_weibull_model)(
             modality.time_info_,
             curve,
             np.mean(curve[:self.start_enh_]),
-            self.start_enh_,
             coef0)
                                  for curve in signal_dce)
 
