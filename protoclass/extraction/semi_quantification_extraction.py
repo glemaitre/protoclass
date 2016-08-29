@@ -6,7 +6,7 @@ import numpy as np
 from joblib import Parallel, delayed
 
 from scipy.optimize import curve_fit
-from scipy.optimize import simps
+from scipy.integrate import simps
 
 from .temporal_extraction import TemporalExtraction
 
@@ -254,6 +254,10 @@ def _fit_piecewise_model(t_mod, s_t, t0, S0, init_params):
     def fit_func(t, tau, Sm, wash_out):
         return _piecewise_exp_linear_model(t, t0, S0, tau, Sm, wash_out)
 
+    # Check if we have a null signal
+    if np.sum(s_t) == 0:
+        return {'tau': -1, 'Sm': -1, 'wash-out': -1, 'R2': 0}
+
     # Perform the curve fitting
     param_bounds = ([t_mod[t0], 0, -np.inf], [t_mod[-1], s_t.max(), np.inf])
     try:
@@ -419,9 +423,10 @@ class SemiQuantificationExtraction(TemporalExtraction):
         # considering the AIF signal from the start to the previous
         # found index.
         shift_idx = 2
-        idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
-        self.start_enh_ = np.diff(np.diff(aif_signal))[
-            shift_idx:idx_st_dev].argmax() + shift_idx
+        idx_st_dev = np.diff(aif_signal)[shift_idx:].argmax() + shift_idx
+        # Add on to count for the first derivative missing samples
+        self.start_enh_ = (np.diff(np.diff(aif_signal))[:idx_st_dev].argmax() +
+                           shift_idx + 1)
 
         return self
 
@@ -508,7 +513,7 @@ class SemiQuantificationExtraction(TemporalExtraction):
                                                          init_params))
 
         data = np.zeros((n_sample, 5))
-        for i, curve in zip(signal_dce, range(len(pp))):
+        for curve, i in zip(signal_dce, range(len(pp))):
             # Extract the four semi-quantitative parameters
             # 1. Wash-in
             data[i, 0] = ((pp[i]['Sm'] - np.mean(curve[:self.start_enh_])) /
@@ -520,7 +525,7 @@ class SemiQuantificationExtraction(TemporalExtraction):
 
             # 3. IAUC
             data[i, 2] = simps(curve[self.start_enh_:],
-                               modality.time_info_[self.start_enh_])
+                               modality.time_info_[self.start_enh_:])
 
             # 4. tau as the time enhancement
             data[i, 3] = pp[i]['tau']

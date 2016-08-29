@@ -292,10 +292,11 @@ class StandardTimeNormalization(TemporalNormalization):
         # Find the starting and ending point in the graph - the median is used
         # The median can be estimated from the heatmap
         # Compute the normalize cumulative sum of the first serie
-        cumsum_hist = np.cumsum(heatmap[0, :])
-        cumsum_hist /= cumsum_hist[-1]
-        # Find the median
-        idx_start = np.argmax(cumsum_hist > .5)
+        # cumsum_hist = np.cumsum(heatmap[0, :])
+        # cumsum_hist /= cumsum_hist[-1]
+        # # Find the median
+        # idx_start = np.argmax(cumsum_hist > .5)
+        idx_start = heatmap[0, :].argmax()
 
         # Compute the normalize cumulative sum of the last serie
         cumsum_hist = np.cumsum(heatmap[-1, :])

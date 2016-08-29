@@ -317,7 +317,7 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         Returns
         -------
         aif : ndarray, shape (n_series, )
-            The estimated AIF signal converted into mMol.
+            The estimated AIF signal in au.
 
         Notes
         -----
@@ -354,7 +354,6 @@ class ToftsQuantificationExtraction(TemporalExtraction):
 
         # Get the size of the volume
         sz_vol = dce_modality.metadata_['size']
-
         # For each slice
         signal_aif = np.empty((0, dce_modality.n_serie_), dtype=float)
         for idx_sl in range(sz_vol[2]):
@@ -396,7 +395,6 @@ class ToftsQuantificationExtraction(TemporalExtraction):
                                                            sz_croped_im[2]))
             # Transform the binary image into a labelled image
             label_im = label(bin_im.astype(int))
-
             # Compute the property for each region labelled
             regions = regionprops(label_im)
 
@@ -458,7 +456,9 @@ class ToftsQuantificationExtraction(TemporalExtraction):
 
         return aif
 
-    def fit(self, modality, ground_truth=None, cat=None, fit_aif=True):
+    def fit(self, modality, ground_truth=None, cat=None, fit_aif=True,
+            aif_params=[[48.54, 19.8], [10.2276, 21.9], [3.378, 7.92], 1.050,
+                        0.0028083, 0.63463, 28.98]):
         """Find the parameters needed to apply the extraction.
 
         Parameters
@@ -477,6 +477,10 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         fit_aif : bool, optional (default=True)
             Either to estimate the AIF from the data or from a population-based
             studdy.
+
+        aif_params : list
+            In case that `fit_aif` is False, the list of the parameters for the
+            population-based AIF can be given.
 
         Return
         ------
@@ -507,10 +511,10 @@ class ToftsQuantificationExtraction(TemporalExtraction):
         # considering the AIF signal from the start to the previous
         # found index.
         shift_idx = 2
-        idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
-        self.start_enh_ = np.diff(np.diff(aif_signal))[
-            shift_idx:
-            idx_st_dev].argmax() + shift_idx
+        idx_st_dev = np.diff(aif_signal)[shift_idx:].argmax() + shift_idx
+        # Add on to count for the first derivative missing samples
+        self.start_enh_ = (np.diff(np.diff(aif_signal))[:idx_st_dev].argmax() +
+                           shift_idx + 1)
 
         # Check if we compute or generate the AIF
         if fit_aif:
@@ -519,7 +523,14 @@ class ToftsQuantificationExtraction(TemporalExtraction):
                 np.min(aif_signal[:self.start_enh_]))
         else:
             self.cb_t_ = self.population_based_aif(modality,
-                                                   delay=self.start_enh_)
+                                                   A=aif_params[0],
+                                                   T=aif_params[1],
+                                                   sigma=aif_params[2],
+                                                   alpha=aif_params[3],
+                                                   beta=aif_params[4],
+                                                   s=aif_params[5],
+                                                   tau=aif_params[6],
+                                                   delay=aif_params[7])
 
         # Define the concentration in plasma
         self.cp_t_ = self.cb_t_ / (1. - self.hematocrit_)

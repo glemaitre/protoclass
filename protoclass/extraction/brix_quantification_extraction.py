@@ -287,9 +287,10 @@ class BrixQuantificationExtraction(TemporalExtraction):
         # considering the AIF signal from the start to the previous
         # found index.
         shift_idx = 2
-        idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
-        self.start_enh_ = np.diff(np.diff(aif_signal))[
-            shift_idx:idx_st_dev].argmax() + shift_idx
+        idx_st_dev = np.diff(aif_signal)[shift_idx:].argmax() + shift_idx
+        # Add on to count for the first derivative missing samples
+        self.start_enh_ = (np.diff(np.diff(aif_signal))[:idx_st_dev].argmax() +
+                           shift_idx + 1)
 
         return self
 

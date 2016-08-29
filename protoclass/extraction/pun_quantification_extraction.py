@@ -75,7 +75,7 @@ def _fit_PUN_model(t_mod, s_t, S0, init_params):
     try:
         popt, _ = curve_fit(fit_func,
                             t_mod,
-                            s_t / S0,
+                            (s_t - S0) / S0,
                             p0=init_params)
     except RuntimeError:
         popt = popt_default
@@ -148,10 +148,10 @@ class PUNQuantificationExtraction(TemporalExtraction):
         # considering the AIF signal from the start to the previous
         # found index.
         shift_idx = 2
-        idx_st_dev = np.diff(aif_signal)[2:].argmax() + shift_idx
-        self.start_enh_ = np.diff(np.diff(aif_signal))[
-            shift_idx:idx_st_dev].argmax() + shift_idx
-
+        idx_st_dev = np.diff(aif_signal)[shift_idx:].argmax() + shift_idx
+        # Add on to count for the first derivative missing samples
+        self.start_enh_ = (np.diff(np.diff(aif_signal))[:idx_st_dev].argmax() +
+                           shift_idx + 1)
         return self
 
     def transform(self, modality, ground_truth=None, cat=None):
