@@ -49,7 +49,7 @@ class PiecewiseLinearNormalization(StandaloneNormalization):
         self.counter_partial_fit = 0
 
     def partial_fit_model(self, modality, ground_truth=None, cat=None,
-                          refit=False, verbose=True):
+                          refit=False):
         """Online fitting to update the landmarks used for the normalization.
 
         Parameters
@@ -299,4 +299,3 @@ class PiecewiseLinearNormalization(StandaloneNormalization):
         modality.update_histogram()
 
         return modality
-
