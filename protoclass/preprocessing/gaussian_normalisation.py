@@ -15,7 +15,7 @@ class GaussianNormalization(StandaloneNormalization):
     ----------
     base_modality : object
         The base modality on which the normalization will be applied. The base
-        modality should inherate from TemporalModality class.
+        modality should inherate from StanaloneModality class.
 
     params : str or dict of str: float, optional (default='auto')
         The initial estimation of the parameters:

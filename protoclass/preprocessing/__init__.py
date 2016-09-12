@@ -12,6 +12,7 @@ from .multisequence_normalization import MultisequenceNormalization
 from .standard_time_normalization import StandardTimeNormalization
 from .gaussian_normalisation import GaussianNormalization
 from .rician_normalisation import RicianNormalization
+from .piecewise_linear_normalisation import PiecewiseLinearNormalization
 
 
 __all__ = ['BaseNormalization',
@@ -20,4 +21,5 @@ __all__ = ['BaseNormalization',
            'MultisequenceNormalization',
            'StandardTimeNormalization',
            'GaussianNormalization',
-           'RicianNormalization']
+           'RicianNormalization',
+           'PiecewiseLinearNormalization']
