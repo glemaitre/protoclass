@@ -34,7 +34,7 @@ env:
     - PROJECT="protoclass"
     - EMAIL="g.lemaitre58@gmail.com"
     - DOC_URL=""
-    - ENCRYPTION_LABEL: 3d28be801dca
+    - secure: "vyRSt0JP9qEjKXUwTAWXmkKiTcaQUCL3FwzsdntMNGO6jn5Ps+68IPx1SCBPmbEc7ez5MxDn6g6uS/VCUZnkpoeejRoeGaGEmbzvcxIlq/Lvfx3ervvXk60jD+Oe48yHsoLmg77XD9n980a4HADRoZp8sQktsDtNHtDx036SQTrvh8wc0XtdZsDvjvQymBMpbzgOO+Nk2H2439UUYPsfS1P5Nl5jQcJ6hf+uNv7IzoodG+QNFKj+TZEsv+6PRaAzMaEjdYrt4Ij/GLcp/qbgU+G6g5v2i3bO89HcHc6bcXHr4scWqN9PQcwYkL+JNujWUPDA1suetnFZcyXHMdY9WXlI1ONNRfW5bTWGLYDKUbUOmJvRlAuBRmhs3N8fMJf/TZW1/4S43BaiNoq77Ez9+we2VLAKFL8l9A5Mc5hfOvY84FEm6LukspkTSKQPPyyD3qcdQVDnYGaXY+OIrO+/e8+JS0ZZOkCwXZDZGu0X78mVCnEPhKGbixRQHxa/DxKzK1P1eOXlh1FR8kadYHO8vMBJ4jn9bn0KDT3smHMzDanV5YPAXfalTSbfo6uMjnf+ioanrn3ZlhD/BRC4MmiZ8sqoJLKfyK55QDvD/41jcflvHRJU59aYr7puSaLWuyPJ+kesf/QKUaMqGKkUujXDeaLSSvj9BYWOq3R2rOjhZ14="
   matrix:
     # This environment tests the using anaconda
     - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true"
