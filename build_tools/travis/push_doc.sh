@@ -19,9 +19,9 @@ cd tmp
 
 # Clone the repository to push the doc later
 git clone "https://github.com/glemaitre/protoclass.git"
-git remote set-url origin "https://glemaitre:${GH_TOKEN}@github.com/glemaitre/${PROJECT}.git"
 
 cd $PROJECT
+git remote set-url origin "https://glemaitre:${GH_TOKEN}@github.com/glemaitre/${PROJECT}.git"
 git branch gh-pages
 git checkout -f gh-pages
 git reset --hard origin/gh-pages
