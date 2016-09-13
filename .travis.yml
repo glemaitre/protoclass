@@ -34,7 +34,6 @@ env:
     - PROJECT="protoclass"
     - EMAIL="g.lemaitre58@gmail.com"
     - DOC_URL=""
-    - secure: "parXNeGzbuyg9nLd8sfyk+vYSQEMOVCL7qCFlWvvAFm3JDUU/UG1YEBKud0bkZqyhvD8CGP4IIZ2t09J4zw+757sW7+bPrZamkQppTset411ybbt7AIsU+6io0e6NNKoM91BumoufAIZy+z8VcK8o5H+6ihJsdtTL71y+VZLXguTlo3uXUj8RlGi00rCd4N6cwGQi7uSgQnZLa1ijs9sVKklmY8F75po9TLNJWgPb0AqfZ0hqEHvSE9Yq8jTyCPsOPASuoH48FwqHAiv1gx4L0JGBU9v6zb9vRzPj7vbcZBrZqLRAlHvCNmv+XKspFkNE3d8vxUWMNn5uzZbQ5vi/5pAhhJM4eY88OhcQuIDc3HjRdJK65WCw+jDpxIxfgsQyqvPsal7hk/u8SghW6kbqtx0dYdwayLT0/dC4Nhe4iIXsHX8bXBgvtD7nTmfGJBTcl8SjnZ4egc59edxe5V/xC47C0FGayNMRR8HP4Crzs7nOS3t0zL9hoEf6OVM+DAPIRkzwu2wPK8hKET6S7Csta8as1cvKYzYf4hdyMWPGEOOpiuFhiKDaEBJa8hC2ASFgil4kjvQc0ujuU4frxk+oZbmFqgRRIsP12uFBsp7TUHzsLgXljODmzoEqs9Ntz/bBlqZf1ONNEt9pQkDuxT0bYLac1UVKauxG9Sp3B9VEmI="
 
   matrix:
     # This environment tests the using anaconda
