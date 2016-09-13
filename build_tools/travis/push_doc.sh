@@ -4,12 +4,6 @@ set -o errexit
 
 cd $TRAVIS_BUILD_DIR
 
-# We need to move to the repo where the doc was generated
-cd $TRAVIS_BUILD_DIR/../$DOC_REPO/html
-
-# Create a nojekyll file
-touch .nojekyll
-
 # Create a tempory folder in order to copy all the doc in the already
 # tracked repo
 cd $TRAVIS_BUILD_DIR/../
@@ -29,6 +23,7 @@ git clean -dfx
 
 # Copy the new build docs
 cp -R $TRAVIS_BUILD_DIR/../$DOC_REPO/html/* ./
+touch .nojekyll
 
 git config --global user.email $EMAIL
 git config --global user.name $USERNAME
