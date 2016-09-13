@@ -34,6 +34,7 @@ env:
     - PROJECT="protoclass"
     - EMAIL="g.lemaitre58@gmail.com"
     - DOC_URL=""
+    - ENCRYPTION_LABEL: 3d28be801dca
   matrix:
     # This environment tests the using anaconda
     - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true"

@@ -68,5 +68,5 @@ cd $TRAVIS_BUILD_DIR
 python setup.py develop
 
 # Build the doc
-cd $TRAVIS_BUILD_DIR make html
-
+cd $TRAVIS_BUILD_DIR/doc
+make html
