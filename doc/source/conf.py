@@ -32,11 +32,19 @@ import sphinx_rtd_theme
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
-    'sphinx.ext.coverage',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'numpydoc',
+    'sphinx.ext.pngmath',
+    'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary',
-    'numpydoc'
+    'sphinx_gallery.gen_gallery',
+    'sphinx.ext.autosummary'
 ]
+
+autosummary_generate = True
+
+autodoc_default_flags = ['members', 'inherited-members']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
