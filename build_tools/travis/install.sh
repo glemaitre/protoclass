@@ -37,7 +37,9 @@ conda install --yes cython scikit-image
 conda install --yes -c https://conda.anaconda.org/simpleitk SimpleITK
 conda install --yes libgfortran
 conda install --yes scikit-learn
-conda install --yes -c glemaitre imbalanced-learn=0.1.3
+conda install --yes -c glemaitre imbalanced-learn=0.1.8
+conda install --yes seaborn
+conda install --yes numpydoc
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
@@ -64,3 +66,7 @@ python setup.py install
 
 cd $TRAVIS_BUILD_DIR
 python setup.py develop
+
+# Build the doc
+cd $TRAVIS_BUILD_DIR make html
+

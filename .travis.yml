@@ -29,6 +29,11 @@ env:
     - MODULE=protoclass
     - OMP_NUM_THREADS=4
     - OPENBLAS_NUM_THREADS=4
+    - USERNAME="glemaitre"
+    - DOC_REPO="protoclass-docs"
+    - PROJECT="protoclass"
+    - EMAIL="g.lemaitre58@gmail.com"
+    - DOC_URL=""
   matrix:
     # This environment tests the using anaconda
     - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true"
@@ -39,5 +44,7 @@ before_install:
 install:
   - travis_wait 30
   - source build_tools/travis/install.sh
-script: bash build_tools/travis/test_script.sh
+script: 
+  - bash build_tools/travis/push_doc.sh
+  - bash build_tools/travis/test_script.sh
 after_success: source build_tools/travis/after_success.sh
