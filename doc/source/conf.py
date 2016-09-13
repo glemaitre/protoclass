@@ -32,16 +32,11 @@ import sphinx_rtd_theme
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'numpydoc',
-    'sphinx.ext.pngmath',
-    'sphinx.ext.ifconfig',
+    'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
-    'sphinx_gallery.gen_gallery',
-    'sphinx.ext.autosummary'
+    'sphinx.ext.autosummary',
+    'numpydoc'
 ]
-
 autosummary_generate = True
 
 autodoc_default_flags = ['members', 'inherited-members']
