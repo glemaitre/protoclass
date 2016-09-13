@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.utils.validation &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.utils.validation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.utils.validation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities for input validation.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="check_path_data"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_path_data">[docs]</a><span class="k">def</span> <span class="nf">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if the path data exist.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data : str or list of str</span>
+<span class="sd">        Path to the temporal data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    path_data : str or list of str</span>
+<span class="sd">        Path to the temporal data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if we have a list or a single string object</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="c1"># We have to check that each item is a basestring and if the directory</span>
+        <span class="c1"># is existing</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">path_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+                <span class="c1"># Check that the directory exist</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The directory specified does not exist.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One of the item in path data is not of the&#39;</span>
+                                 <span class="s1">&#39; correct type str.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_data</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="c1"># Check that the directory exist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path_data</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The directory specified does not exist.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The input path_data is of unknown type.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">path_data</span></div>
+
+
+<div class="viewcode-block" id="check_modality"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality">[docs]</a><span class="k">def</span> <span class="nf">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">template_modality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check the modality class is the same than a template modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    modality : object</span>
+<span class="sd">        The modality object of interest.</span>
+
+<span class="sd">    template_modality : object</span>
+<span class="sd">        The template modality object of interest.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check that the two modality classes are coherent</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">modality</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">template_modality</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The input modality is different from the template&#39;</span>
+                         <span class="s1">&#39; modality given during the construction of the&#39;</span>
+                         <span class="s1">&#39; object.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="bp">None</span></div>
+
+
+<div class="viewcode-block" id="check_img_filename"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_img_filename">[docs]</a><span class="k">def</span> <span class="nf">check_img_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Method to check that the filename is an `img` file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        The filename checked.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that filename is of type basetring</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="c1"># Check that filename point to a file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.img&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">filename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file needs to be with an img extension.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename provided does not point to a file.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type for filename variable.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_npy_filename"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_npy_filename">[docs]</a><span class="k">def</span> <span class="nf">check_npy_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Method to check that the filename is an `npy` file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        The filename checked.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Checkt that filename is of type string</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="c1"># Check that filename point to a file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npy&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">filename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file needs to be with an npy extension.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename provided does not point to a file.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type for filename variable.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_filename_pickle_load"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_filename_pickle_load">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Method to check if the filename corresponds to a pickle file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The pickle file to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The checked filename.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check that filename is of string type</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="c1"># Check that this is a fit file</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.p&#39;</span><span class="p">):</span>
+            <span class="c1"># Check that the file is existing</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">filename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file does not exist.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file is not an pickle `.p` file.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename needs to be a string.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_filename_pickle_save"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_filename_pickle_save">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_save</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to check the extension of the pickle file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename which needs to be checked.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename which has been checked.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that the filename is a string</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="c1"># Check the extension</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.p&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename should have a `.p` extension.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename needs to be of type string.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_modality_inherit"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality_inherit">[docs]</a><span class="k">def</span> <span class="nf">check_modality_inherit</span><span class="p">(</span><span class="n">child_modality</span><span class="p">,</span> <span class="n">parent_modality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if a modality inherit from another one.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    child_modality : object</span>
+<span class="sd">        The child object.</span>
+
+<span class="sd">    parent_modality_info : classinfo</span>
+<span class="sd">        The class info of the parent modality.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    child_modality : object</span>
+<span class="sd">        If no error raise, return the child_object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">child_modality</span><span class="p">),</span> <span class="n">parent_modality</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The base modality provided in the constructor is&#39;</span>
+                         <span class="s1">&#39; not a TemporalModality.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">child_modality</span></div>
+
+
+<div class="viewcode-block" id="check_modality_gt"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality_gt">[docs]</a><span class="k">def</span> <span class="nf">check_modality_gt</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">cat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check the consistency of the modality with the ground-truth.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    modality : object</span>
+<span class="sd">        The modality object of interest.</span>
+
+<span class="sd">    ground-truth : object of type GTModality</span>
+<span class="sd">        The ground-truth of GTModality.</span>
+
+<span class="sd">    cat : str</span>
+<span class="sd">        String corresponding at the ground-truth of interest.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    roi_data : ndarray, shape (non_zero_samples, 3)</span>
+<span class="sd">        Corresponds to the indexes of the data of insterest</span>
+<span class="sd">        extracted from the ground-truth.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">..data_management</span> <span class="kn">import</span> <span class="n">GTModality</span>
+
+    <span class="c1"># Check that the ground-truth is from GTModality</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">,</span> <span class="n">GTModality</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The ground-truth should be an object of&#39;</span>
+                         <span class="s1">&#39; class GTModality.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the ground truth has been read</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ground_truth</span><span class="o">.</span><span class="n">is_read</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data have been read during the&#39;</span>
+                         <span class="s1">&#39;construction of the GT modality object.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the ground truth has been read</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">modality</span><span class="o">.</span><span class="n">is_read</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data have been read during the&#39;</span>
+                         <span class="s1">&#39;construction of the modality object.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the size of the ground-truth and the modality</span>
+    <span class="c1"># are consistant</span>
+    <span class="c1"># In this case check only the last three dimension</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">!=</span>
+            <span class="n">ground_truth</span><span class="o">.</span><span class="n">extract_gt_data</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The ground-truth does not correspond to the&#39;</span>
+                         <span class="s1">&#39; given modality volume.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Find the element which are not zero</span>
+    <span class="k">return</span> <span class="n">ground_truth</span><span class="o">.</span><span class="n">extract_gt_data</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.data_management.t2w_modality &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.data_management.t2w_modality</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.data_management.t2w_modality</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;T2W modality class.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="kn">as</span> <span class="nn">sitk</span>
+
+<span class="kn">from</span> <span class="nn">.standalone_modality</span> <span class="kn">import</span> <span class="n">StandaloneModality</span>
+
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
+
+
+<div class="viewcode-block" id="T2WModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality">[docs]</a><span class="k">class</span> <span class="nc">T2WModality</span><span class="p">(</span><span class="n">StandaloneModality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class to handle T2W-MRI modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data : str, optional (default=None)</span>
+<span class="sd">         The folder in which the data are stored.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data_ : string</span>
+<span class="sd">        Location of the data.</span>
+
+<span class="sd">    data_ : ndarray, shape (Y, X, Z)</span>
+<span class="sd">        The different volume of the T2W volume. The data are saved in</span>
+<span class="sd">        Y, X, Z ordered.</span>
+
+<span class="sd">    metadata_ : dict</span>
+<span class="sd">        Dictionnary which contain the MRI sequence information. Note that the</span>
+<span class="sd">        information are given in the original ordering (X, Y, Z), which is</span>
+<span class="sd">        different from the organisation of `data_` which is (Y, X, Z).</span>
+
+<span class="sd">    pdf_ : list, length (n_serie)</span>
+<span class="sd">        List of the PDF for each serie.</span>
+
+<span class="sd">    bin_ : list of ndarray, length (n_serie)</span>
+<span class="sd">        List of the bins used to plot the pdfs.</span>
+
+<span class="sd">    max_ : float</span>
+<span class="sd">        Maximum intensity of the T2W-MRI volume.</span>
+
+<span class="sd">    min_ : float</span>
+<span class="sd">        Minimum intensity of the T2W-MRI volume.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">T2WModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="T2WModality.get_pdf"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.get_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Extract the a list of pdf related with the data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        roi_data : tuple</span>
+<span class="sd">            Indices of elements to consider while computing the histogram.</span>
+<span class="sd">            The ROI is a 3D volume which will be used for each time serie.</span>
+
+<span class="sd">        nb_bins : list of int or str, optional (default=&#39;auto&#39;)</span>
+<span class="sd">            The numbers of bins to use to compute the histogram.</span>
+<span class="sd">            The possibilities are:</span>
+<span class="sd">            - If &#39;auto&#39;, the number of bins is found at fitting time.</span>
+<span class="sd">            - If None, the number of bins used is the one at the last</span>
+<span class="sd">            call of update histogram.</span>
+<span class="sd">            - Otherwise, a list of integer needs to be given.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf_data : ndarray, length (n_serie)</span>
+<span class="sd">            List of the pdf with the associated series.</span>
+
+<span class="sd">        bin_data : list of ndarray, length (n_series + 1)</span>
+<span class="sd">            List of the bins associated with the list of pdf.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the data have been read</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to load the data first. Refer to the&#39;</span>
+                             <span class="s1">&#39; function read_data_from_path().&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Build the histogram corresponding to the current volume</span>
+        <span class="c1"># Find how many bins do we need</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+                <span class="n">nb_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameters for `nb_bins.`&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown type for the parameters `nb_bins`.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                              <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
+                                              <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">roi_data</span><span class="p">],</span>
+                                              <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
+                                              <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span></div>
+
+<div class="viewcode-block" id="T2WModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the PDF and the first-order statistics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_bins : int or None, optional (default=None)</span>
+<span class="sd">            The numbers of bins to use to compute the histogram.</span>
+<span class="sd">            The possibilities are:</span>
+<span class="sd">            - If None, the number of bins found at reading will be used.</span>
+<span class="sd">            - If &#39;auto&#39;, the number of bins is found at fitting time.</span>
+<span class="sd">            - Otherwise, an integer needs to be given.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        There is the possibility to redifine the number of bins to use for</span>
+<span class="sd">        the histogram since it can be tricky to play with normalized data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if the data have been read</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to read the data first. Call the&#39;</span>
+                             <span class="s1">&#39; function read_data_from_path()&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the min and max from the T2W volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+
+        <span class="c1"># Build the histogram corresponding to the current volume</span>
+        <span class="c1"># Find how many bins do we need</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+                <span class="n">nb_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameters for `nb_bins.`&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pdf_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                            <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
+                                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="T2WModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read T2W images which represent a single 3D volume.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : str or None, optional (default=None)</span>
+<span class="sd">            Path to the standalone modality data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">           Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the consistency of the path data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># We will overide the path and raise a warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
+                          <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+        <span class="c1"># Create a reader object</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>
+
+        <span class="c1"># Find the different series present inside the folder</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesIDs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">))</span>
+
+        <span class="c1"># Check that you have more than one serie</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of series should not be larger than&#39;</span>
+                             <span class="s1">&#39; 1 with standalone modality.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># The data can be read</span>
+        <span class="n">dicom_names_serie</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesFileNames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">)</span>
+        <span class="c1"># Set the list of files to read the volume</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">SetFileNames</span><span class="p">(</span><span class="n">dicom_names_serie</span><span class="p">)</span>
+
+        <span class="c1"># Read the data for the current volume</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Execute</span><span class="p">()</span>
+
+        <span class="c1"># Get a numpy volume</span>
+        <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">vol</span><span class="p">)</span>
+
+        <span class="c1"># The Matlab convention is (Y, X, Z)</span>
+        <span class="c1"># The Numpy convention is (Z, Y, X)</span>
+        <span class="c1"># We have to swap these axis</span>
+        <span class="c1"># Swap Z and X</span>
+        <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Convert the volume to float</span>
+        <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">vol_numpy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="c1"># We can create a numpy array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">vol_numpy</span>
+
+        <span class="c1"># Compute the information regarding the T2W images</span>
+        <span class="c1"># Set the number of bins that will be later used to compute</span>
+        <span class="c1"># the histogram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span> <span class="o">-</span>
+                                     <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="c1"># Store the DICOM metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Get the information that have been created by SimpleITK</span>
+        <span class="c1"># Information about data reconstruction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span>
+        <span class="c1"># Information about the MRI sequence</span>
+        <span class="c1"># Read the first image for the sequence</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">dicom_names_serie</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|0080&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|0081&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;flip-angle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|1314&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.utils package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/>
+        <link rel="next" title="protoclass.validation package" href="protoclass.validation.html"/>
+        <link rel="prev" title="protoclass.tool package" href="protoclass.tool.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.classification.html">protoclass.classification package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.data_management.html">protoclass.data_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.html">protoclass.extraction package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.preprocessing.html">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.validation.html">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.utils.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-utils-package">
+<h1>protoclass.utils package<a class="headerlink" href="#protoclass-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.utils.array_helper">
+<span id="protoclass-utils-array-helper-module"></span><h2>protoclass.utils.array_helper module<a class="headerlink" href="#module-protoclass.utils.array_helper" title="Permalink to this headline">¶</a></h2>
+<p>Additional utilities for ndarray used repetetively.</p>
+<dl class="function">
+<dt id="protoclass.utils.array_helper.find_nearest">
+<code class="descclassname">protoclass.utils.array_helper.</code><code class="descname">find_nearest</code><span class="sig-paren">(</span><em>array</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/array_helper.html#find_nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.array_helper.find_nearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the nearest value and index inside an ndarray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array</strong> : ndarray</p>
+<blockquote>
+<div><p>Array in which the value has to be search.</p>
+</div></blockquote>
+<p><strong>value</strong> : array.dtype</p>
+<blockquote>
+<div><p>Targetted value.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nn_value</strong> : array.dtype</p>
+<blockquote>
+<div><p>The nearest value found in the array.</p>
+</div></blockquote>
+<p><strong>idx</strong> : int</p>
+<blockquote class="last">
+<div><p>The associated index of <cite>nn_value</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.utils.export">
+<span id="protoclass-utils-export-module"></span><h2>protoclass.utils.export module<a class="headerlink" href="#module-protoclass.utils.export" title="Permalink to this headline">¶</a></h2>
+<p>Utilities to export the classification results.</p>
+<dl class="function">
+<dt id="protoclass.utils.export.make_table">
+<code class="descclassname">protoclass.utils.export.</code><code class="descname">make_table</code><span class="sig-paren">(</span><em>data</em>, <em>feature_list</em>, <em>filename</em>, <em>decimals=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/export.html#make_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.export.make_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to build a latex table from a numpy matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : ndarray, shape (M, N)</p>
+<blockquote>
+<div><p>The data to save into a latex array. M corresponds to the
+feature category.</p>
+</div></blockquote>
+<p><strong>feature_list: list of str, length (M,)</strong></p>
+<blockquote>
+<div><p>The name of the features in data.</p>
+</div></blockquote>
+<p><strong>filename: str</strong></p>
+<blockquote>
+<div><p>Name of the file where to save the table.
+The format supported is latex (&#8216;.tex&#8217;)</p>
+</div></blockquote>
+<p><strong>decimal: int</strong></p>
+<blockquote>
+<div><p>The precision to report the results.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.utils.validation">
+<span id="protoclass-utils-validation-module"></span><h2>protoclass.utils.validation module<a class="headerlink" href="#module-protoclass.utils.validation" title="Permalink to this headline">¶</a></h2>
+<p>Utilities for input validation.</p>
+<dl class="function">
+<dt id="protoclass.utils.validation.check_filename_pickle_load">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_filename_pickle_load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_filename_pickle_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_filename_pickle_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check if the filename corresponds to a pickle file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The pickle file to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>The checked filename.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_filename_pickle_save">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_filename_pickle_save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_filename_pickle_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_filename_pickle_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to check the extension of the pickle file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename which needs to be checked.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>The filename which has been checked.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_img_filename">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_img_filename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_img_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_img_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check that the filename is an <cite>img</cite> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The filename checked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_modality">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_modality</code><span class="sig-paren">(</span><em>modality</em>, <em>template_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_modality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the modality class is the same than a template modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>template_modality</strong> : object</p>
+<blockquote>
+<div><p>The template modality object of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_modality_gt">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_modality_gt</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth</em>, <em>cat</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality_gt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_modality_gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the consistency of the modality with the ground-truth.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality</p>
+<blockquote>
+<div><p>The ground-truth of GTModality.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : ndarray, shape (non_zero_samples, 3)</p>
+<blockquote class="last">
+<div><p>Corresponds to the indexes of the data of insterest
+extracted from the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_modality_inherit">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_modality_inherit</code><span class="sig-paren">(</span><em>child_modality</em>, <em>parent_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality_inherit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_modality_inherit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a modality inherit from another one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>child_modality</strong> : object</p>
+<blockquote>
+<div><p>The child object.</p>
+</div></blockquote>
+<p><strong>parent_modality_info</strong> : classinfo</p>
+<blockquote>
+<div><p>The class info of the parent modality.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>child_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>If no error raise, return the child_object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_npy_filename">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_npy_filename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_npy_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_npy_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check that the filename is an <cite>npy</cite> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The filename checked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.validation.check_path_data">
+<code class="descclassname">protoclass.utils.validation.</code><code class="descname">check_path_data</code><span class="sig-paren">(</span><em>path_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_path_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.validation.check_path_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the path data exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or list of str</p>
+<blockquote>
+<div><p>Path to the temporal data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or list of str</p>
+<blockquote class="last">
+<div><p>Path to the temporal data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.utils" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-protoclass.utils" title="protoclass.utils"><code class="xref py py-mod docutils literal"><span class="pre">protoclass.utils</span></code></a> module includes various utilities.</p>
+<dl class="function">
+<dt id="protoclass.utils.find_nearest">
+<code class="descclassname">protoclass.utils.</code><code class="descname">find_nearest</code><span class="sig-paren">(</span><em>array</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/array_helper.html#find_nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.find_nearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the nearest value and index inside an ndarray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array</strong> : ndarray</p>
+<blockquote>
+<div><p>Array in which the value has to be search.</p>
+</div></blockquote>
+<p><strong>value</strong> : array.dtype</p>
+<blockquote>
+<div><p>Targetted value.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nn_value</strong> : array.dtype</p>
+<blockquote>
+<div><p>The nearest value found in the array.</p>
+</div></blockquote>
+<p><strong>idx</strong> : int</p>
+<blockquote class="last">
+<div><p>The associated index of <cite>nn_value</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_path_data">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_path_data</code><span class="sig-paren">(</span><em>path_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_path_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_path_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the path data exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or list of str</p>
+<blockquote>
+<div><p>Path to the temporal data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or list of str</p>
+<blockquote class="last">
+<div><p>Path to the temporal data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_modality">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_modality</code><span class="sig-paren">(</span><em>modality</em>, <em>template_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_modality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the modality class is the same than a template modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>template_modality</strong> : object</p>
+<blockquote>
+<div><p>The template modality object of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_img_filename">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_img_filename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_img_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_img_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check that the filename is an <cite>img</cite> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The filename checked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_npy_filename">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_npy_filename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_npy_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_npy_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check that the filename is an <cite>npy</cite> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The filename checked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_filename_pickle_load">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_filename_pickle_load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_filename_pickle_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_filename_pickle_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check if the filename corresponds to a pickle file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The pickle file to check.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>The checked filename.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_filename_pickle_save">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_filename_pickle_save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_filename_pickle_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_filename_pickle_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to check the extension of the pickle file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The filename which needs to be checked.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>The filename which has been checked.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_modality_inherit">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_modality_inherit</code><span class="sig-paren">(</span><em>child_modality</em>, <em>parent_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality_inherit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_modality_inherit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a modality inherit from another one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>child_modality</strong> : object</p>
+<blockquote>
+<div><p>The child object.</p>
+</div></blockquote>
+<p><strong>parent_modality_info</strong> : classinfo</p>
+<blockquote>
+<div><p>The class info of the parent modality.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>child_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>If no error raise, return the child_object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.check_modality_gt">
+<code class="descclassname">protoclass.utils.</code><code class="descname">check_modality_gt</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth</em>, <em>cat</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/validation.html#check_modality_gt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.check_modality_gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the consistency of the modality with the ground-truth.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality</p>
+<blockquote>
+<div><p>The ground-truth of GTModality.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : ndarray, shape (non_zero_samples, 3)</p>
+<blockquote class="last">
+<div><p>Corresponds to the indexes of the data of insterest
+extracted from the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.utils.make_table">
+<code class="descclassname">protoclass.utils.</code><code class="descname">make_table</code><span class="sig-paren">(</span><em>data</em>, <em>feature_list</em>, <em>filename</em>, <em>decimals=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/utils/export.html#make_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.utils.make_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to build a latex table from a numpy matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : ndarray, shape (M, N)</p>
+<blockquote>
+<div><p>The data to save into a latex array. M corresponds to the
+feature category.</p>
+</div></blockquote>
+<p><strong>feature_list: list of str, length (M,)</strong></p>
+<blockquote>
+<div><p>The name of the features in data.</p>
+</div></blockquote>
+<p><strong>filename: str</strong></p>
+<blockquote>
+<div><p>Name of the file where to save the table.
+The format supported is latex (&#8216;.tex&#8217;)</p>
+</div></blockquote>
+<p><strong>decimal: int</strong></p>
+<blockquote>
+<div><p>The precision to report the results.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="protoclass.validation.html" class="btn btn-neutral float-right" title="protoclass.validation package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="protoclass.tool.html" class="btn btn-neutral" title="protoclass.tool package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

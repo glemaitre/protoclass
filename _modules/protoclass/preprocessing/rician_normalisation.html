@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.rician_normalisation &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.rician_normalisation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.rician_normalisation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Rician normalization to normalize standalone modality.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rice</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="kn">import</span> <span class="n">StandaloneNormalization</span>
+
+
+<div class="viewcode-block" id="RicianNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.RicianNormalization">[docs]</a><span class="k">class</span> <span class="nc">RicianNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rician normalization to normalize standalone modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    params : str or dict of str: float, optional (default=&#39;auto&#39;)</span>
+<span class="sd">        The initial estimation of the parameters:</span>
+
+<span class="sd">        - If &#39;auto&#39;, then the standard deviation and mean will be estimated</span>
+<span class="sd">        from the data.</span>
+<span class="sd">        - If dict, a dictionary with the keys &#39;off&#39; and &#39;sigma&#39; should be</span>
+<span class="sd">        specified. The corresponding value of these parameters should be</span>
+<span class="sd">        float. They will be the initial value during fitting.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality_ : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    fit_params_ : dict of str: float</span>
+<span class="sd">        There is the following keys:</span>
+
+<span class="sd">        - &#39;b&#39; is the fitted b.</span>
+<span class="sd">        - &#39;off&#39; is the fitted offset.</span>
+<span class="sd">        - &#39;sigma&#39; is the standard deviation.</span>
+
+<span class="sd">    is_fitted_ : bool</span>
+<span class="sd">        Boolean to know if the `fit` function has been already called.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RicianNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+        <span class="c1"># Check the gaussian parameters argument</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+                <span class="c1"># The parameters will have to be fitted at fit the fit time</span>
+                <span class="c1"># when the data will be available</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The string for the object params is&#39;</span>
+                                 <span class="s1">&#39; unknown.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="s1">&#39;fixed&#39;</span>
+            <span class="c1"># Check that b, off and sigma are inside the dictionary</span>
+            <span class="n">valid_presets</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">val_param</span> <span class="ow">in</span> <span class="n">valid_presets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">val_param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least the parameter {} is not specify&#39;</span>
+                                     <span class="s1">&#39; in the dictionary.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val_param</span><span class="p">))</span>
+            <span class="c1"># For each key, check if this is a known parameters</span>
+            <span class="k">for</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">valid_presets</span><span class="p">:</span>
+                    <span class="c1"># The key is valid, build our dictionary</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">],</span> <span class="nb">float</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The parameter `b`, `off` and `sigma`&#39;</span>
+                                         <span class="s1">&#39; should be some float.&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameter inside the dictionary.&#39;</span>
+                                     <span class="s1">&#39; `b`, `off`, and `sigma` are &#39;</span>
+                                     <span class="s1">&#39;the only two solutions and need to be&#39;</span>
+                                     <span class="s1">&#39; float.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The type of the object params does not fulfill&#39;</span>
+                             <span class="s1">&#39; any requirement.&#39;</span><span class="p">)</span>
+        <span class="c1"># Initialize the fitting boolean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_model_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function defining the Gaussian model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : ndarray, shape (n_samples, )</span>
+<span class="sd">            Array for which we have to compute the PDF.</span>
+
+<span class="sd">        b : float</span>
+<span class="sd">            Distance between the reference point and the center of the</span>
+<span class="sd">            bivariate distribution.</span>
+
+<span class="sd">        off : float</span>
+<span class="sd">            Offset of the Rician model.</span>
+
+<span class="sd">        sigma : float</span>
+<span class="sd">            Standard deviation of the model.</span>
+
+<span class="sd">        scale : float</span>
+<span class="sd">            Scaling factor of the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf : ndarray, shape (n_samples)</span>
+<span class="sd">            The associated PDF to x parametrize through b, off, sigma,</span>
+<span class="sd">            and scale.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The pdf with the Rice distribution should be in the interval 0-1</span>
+
+        <span class="k">return</span> <span class="n">rice</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+
+<div class="viewcode-block" id="RicianNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.RicianNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to find the parameters needed to apply the normalization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type StandaloneModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RicianNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+                                             <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+                                             <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Check if we need to find the initial parameters or they are given</span>
+        <span class="c1"># by the user</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="c1"># Find an original guess of the fitted parameters depending of</span>
+            <span class="c1"># the data</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">])</span>
+            <span class="n">off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">])</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;fixed&#39;</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
+            <span class="n">off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">]</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">])</span> <span class="o">/</span>
+                     <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The value of self.params is unknown. Something&#39;</span>
+                             <span class="s1">&#39; went wrong.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute parameters which will use during the optimization</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">])</span> <span class="o">/</span>
+                 <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="p">))</span>
+
+        <span class="c1"># Compute the histogram that need to be fitted</span>
+        <span class="n">pdf</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="c1"># Compute the bins centers</span>
+        <span class="n">bincenters</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Using the Rice distribution, there is a need to be in the range [0-1]</span>
+        <span class="c1"># Normalize the data range and the parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span> <span class="o">=</span> <span class="n">bincenters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bincenters</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="c1"># Normalize the paramters</span>
+        <span class="n">b</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+        <span class="n">off</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+        <span class="n">sigma</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="c1"># Fit the histogram using the model defined previously</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_fit</span><span class="p">,</span> <span class="n">bincenters</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span>
+                                <span class="n">p0</span><span class="o">=</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">scale</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Optimal parameters not found!!! The original guess&#39;</span>
+                          <span class="s1">&#39; are kept but you should check that you data follow&#39;</span>
+                          <span class="s1">&#39; a Rice distribution.&#39;</span><span class="p">)</span>
+            <span class="n">popt</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">]</span>
+
+        <span class="c1"># Assign the value after convergence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="RicianNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.RicianNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to normalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RicianNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">modality</span><span class="p">)</span>
+
+        <span class="c1"># Check that the parameters have been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the parameters previous to normalize&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Normalize the data of the modality</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">-=</span> <span class="n">rice</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">/=</span> <span class="n">rice</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="c1"># Update the histogram associated to the data</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div>
+
+<div class="viewcode-block" id="RicianNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.RicianNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Denormalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RicianNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">denormalize</span><span class="p">(</span><span class="n">modality</span><span class="p">)</span>
+
+        <span class="c1"># Check that the parameters have been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the parameters previous to normalize&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Normalize the data of the modality</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">*=</span> <span class="n">rice</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">+=</span> <span class="n">rice</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_int</span>
+
+        <span class="c1"># Update the histogram associated to the data</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

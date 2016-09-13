@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.normalisation &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.normalisation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.normalisation</h1><div class="highlight"><pre>
+<span></span><span class="c1">#title           :normalisation.py</span>
+<span class="c1">#description     :This will create a header for a python script.</span>
+<span class="c1">#author          :Guillaume Lemaitre</span>
+<span class="c1">#date            :2015/04/26</span>
+<span class="c1">#version         :0.1</span>
+<span class="c1">#notes           :</span>
+<span class="c1">#python_version  :2.7.6 </span>
+<span class="c1">#==============================================================================</span>
+
+<span class="c1"># Import the needed libraries</span>
+<span class="c1"># Numpy library</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1"># Matplotlib library</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="c1"># Scipy library</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
+<span class="c1">### Scipy library for Gaussian statistics</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="c1">### Scipy library for Rician statistics</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rice</span>
+<span class="c1">### Scipy library for curve fitting</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="c1"># Joblib library</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1"># Multiprocessing library</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<div class="viewcode-block" id="GaussianNormalisation"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.GaussianNormalisation">[docs]</a><span class="k">class</span> <span class="nc">GaussianNormalisation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to perform Gaussian normalisation</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor of the GaussianNormalisation object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Gaussian representation</span>
+<span class="sd">        mu: double</span>
+<span class="sd">            Mean of the Gaussian representation</span>
+<span class="sd">        sigma: double</span>
+<span class="sd">            Standard deviation of the Gaussian representation</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">norm_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mu</span> <span class="o">=</span> <span class="n">mu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+    <span class="k">def</span> <span class="nf">__init_from_data__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to initialise the class members using data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data from which the mean and</span>
+<span class="sd">            standard deviation are derived</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Gaussian representation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">norm_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GaussianNormalisation.get_parameters"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.GaussianNormalisation.get_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to get the parameter of the object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params: tuple </span>
+<span class="sd">            Return a tuple with the amplitude, mean and std of the </span>
+<span class="sd">            Gaussian representation</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__parametrization__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to parametrise the Gaussian PDF</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : 1d-array</span>
+<span class="sd">            Array containing the x values in order to compute the PDF</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Gaussian representation</span>
+<span class="sd">        mu: double</span>
+<span class="sd">            Mean of the Gaussian representation</span>
+<span class="sd">        sigma: double</span>
+<span class="sd">            Standard deviation of the Gaussian representation</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf: 1d-array </span>
+<span class="sd">            Return the Gaussian PDF according the parameters</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+
+    <span class="k">def</span> <span class="nf">__compute_histogram__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to compute the histogram of the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data</span>
+<span class="sd">        x_range: tuple</span>
+<span class="sd">            Tuple containing the minimum and maxumum to consider</span>
+<span class="sd">            to build the histogram of the data x</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf: 1d-array </span>
+<span class="sd">            Return the PDF of x using the range provided by the user</span>
+<span class="sd">        bin_edge: 1d-array</span>
+<span class="sd">            Return the bins corresponding to the PDF</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Compute the histogram for the data x with unit bins</span>
+        <span class="n">pdf_rel</span><span class="p">,</span> <span class="n">bin_edges_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># We need to translate the pdf depending of the range given by x_range</span>
+        <span class="c1">### Create an array with unit bins depending of x_range</span>
+        <span class="c1">### We need max - min + 1 bins</span>
+        <span class="n">pdf_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+        <span class="n">bin_edges_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1">### Copy the relative pdf at the right position</span>
+        <span class="n">pdf_abs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">bin_edges_abs</span><span class="o">==</span><span class="n">bin_edges_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">bin_edges_abs</span><span class="o">==</span><span class="n">bin_edges_rel</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pdf_rel</span><span class="p">[:]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">pdf_abs</span><span class="p">,</span> <span class="n">bin_edges_abs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GaussianNormalisation.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.GaussianNormalisation.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to find the best member parameters to fit </span>
+<span class="sd">           the class parametrisation using Levenverg-Marquardt</span>
+<span class="sd">           curve fitting</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data</span>
+<span class="sd">        x_range: tuple</span>
+<span class="sd">            Tuple containing the minimum and maxumum to consider</span>
+<span class="sd">            to build the histogram of the data x</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        error_fit: double</span>
+<span class="sd">            Return the fitting error</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check that the value in x_range make sense</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">&amp;</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;normalisation.GaussianNormalisation: Wrong range specifications for the x.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the histogram of x</span>
+        <span class="n">x_pdf</span><span class="p">,</span> <span class="n">x_pdf_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__compute_histogram__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">)</span>
+
+        <span class="c1"># We need to normalise the absicisse of the histogram between 0 and 1.</span>
+        <span class="n">norm_factor</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+        <span class="n">x_pdf_bins</span> <span class="o">=</span> <span class="n">x_pdf_bins</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+
+        <span class="c1"># Get the initial parameter for the given data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_from_data__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">)</span>
+        
+        <span class="c1"># We have to fit the pdf now</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__parametrization__</span><span class="p">,</span>
+                               <span class="n">x_pdf_bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">x_pdf</span><span class="p">,</span>
+                               <span class="n">p0</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">))</span>
+
+        <span class="c1"># Update the value of the mean and standard deviation</span>
+        <span class="c1">### We need to unormalise the mean and std</span>
+        <span class="c1">###  WE NEED TO DISCUSS TO DECIDE IF THE NORMALISATION FACTOR SHOULD BE A CONSTANT AND NOT BE OPTIMISED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mu</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">print</span> <span class="s1">&#39;The parameters fitted are {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetParameters</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">pcov</span></div>
+
+<div class="viewcode-block" id="GaussianNormalisation.normalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.GaussianNormalisation.normalise">[docs]</a>    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to normalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the unormalised data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_normalised: ndarray </span>
+<span class="sd">            Return the data x normalised</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mu</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GaussianNormalisation.denormalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.GaussianNormalisation.denormalise">[docs]</a>    <span class="k">def</span> <span class="nf">denormalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to unormalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the normalised data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_unormalised: ndarray </span>
+<span class="sd">            Return the data x unormalised</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mu</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="RicianNormalisation"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.RicianNormalisation">[docs]</a><span class="k">class</span> <span class="nc">RicianNormalisation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to perform Rician normalisation</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor of the GaussianNormalisation object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Rician representation</span>
+<span class="sd">        v: double</span>
+<span class="sd">            Distance to the center of the bivariate distribution</span>
+<span class="sd">        loc: double</span>
+<span class="sd">            Initial shift of the Rician representation</span>
+<span class="sd">        sigma: double</span>
+<span class="sd">            Scale of the Rician representation</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">norm_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+    <span class="k">def</span> <span class="nf">__init_from_data__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to initialise the class members using data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data from which the mean and</span>
+<span class="sd">            standard deviation are derived</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Rician representation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">norm_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RicianNormalisation.get_parameters"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.RicianNormalisation.get_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to get the parameter of the object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params: tuple </span>
+<span class="sd">            Return a tuple the parameters of the Rician representation</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__parametrization__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to parametrise the Rician PDF</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : 1d-array</span>
+<span class="sd">            Array containing the x values in order to compute the PDF</span>
+<span class="sd">        norm_factor: double</span>
+<span class="sd">            Amplitude of the Rician representation</span>
+<span class="sd">        v: double</span>
+<span class="sd">            Distance to center of the Rician representation</span>
+<span class="sd">        loc: double</span>
+<span class="sd">            Location of the Rician representation</span>
+<span class="sd">        sigma: double</span>
+<span class="sd">            Scale of the Rician representation</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf: 1d-array </span>
+<span class="sd">            Return the Gaussian PDF according the parameters</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">rice</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+
+    <span class="k">def</span> <span class="nf">__compute_histogram__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to compute the histogram of the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data</span>
+<span class="sd">        x_range: tuple</span>
+<span class="sd">            Tuple containing the minimum and maxumum to consider</span>
+<span class="sd">            to build the histogram of the data x</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pdf: 1d-array </span>
+<span class="sd">            Return the PDF of x using the range provided by the user</span>
+<span class="sd">        bin_edge: 1d-array</span>
+<span class="sd">            Return the bins corresponding to the PDF</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="c1"># Compute the histogram for the data x with unit bins</span>
+        <span class="n">pdf_rel</span><span class="p">,</span> <span class="n">bin_edges_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># We need to translate the pdf depending of the range given by x_range</span>
+        <span class="c1">### Create an array with unit bins depending of x_range</span>
+        <span class="c1">### We need max - min + 1 bins</span>
+        <span class="n">pdf_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+        <span class="n">bin_edges_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1">### Copy the relative pdf at the right position</span>
+        <span class="n">pdf_abs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">bin_edges_abs</span><span class="o">==</span><span class="n">bin_edges_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> 
+                <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">bin_edges_abs</span><span class="o">==</span><span class="n">bin_edges_rel</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pdf_rel</span><span class="p">[:]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">pdf_abs</span><span class="p">,</span> <span class="n">bin_edges_abs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RicianNormalisation.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.RicianNormalisation.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to find the best member parameters to fit </span>
+<span class="sd">           the class parametrisation using Levenverg-Marquardt</span>
+<span class="sd">           curve fitting</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data</span>
+<span class="sd">        x_range: tuple</span>
+<span class="sd">            Tuple containing the minimum and maxumum to consider</span>
+<span class="sd">            to build the histogram of the data x</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        error_fit: double</span>
+<span class="sd">            Return the fitting error</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the value in x_range make sense</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">&amp;</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;normalisation.GaussianNormalisation: Wrong range specifications for the x.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the histogram of x</span>
+        <span class="n">x_pdf</span><span class="p">,</span> <span class="n">x_pdf_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__compute_histogram__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">)</span>
+
+        <span class="c1"># We need to normalise the absicisse of the histogram between 0 and 1.</span>
+        <span class="n">norm_factor</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+        <span class="n">x_pdf_bins</span> <span class="o">=</span> <span class="n">x_pdf_bins</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_factor</span>
+        
+        <span class="c1"># Get the initial parameter for the given data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_from_data__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">norm_factor</span><span class="p">)</span>
+        
+        <span class="c1"># We have to fit the pdf now</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__parametrization__</span><span class="p">,</span>
+                               <span class="n">x_pdf_bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">x_pdf</span><span class="p">,</span>
+                               <span class="n">p0</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">))</span>
+
+        <span class="c1"># Update the value of the mean and standard deviation</span>
+        <span class="c1">### We need to unormalise the mean and std</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__v</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="k">print</span> <span class="s1">&#39;The parameters fitted are {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetParameters</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">pcov</span></div>
+
+<div class="viewcode-block" id="RicianNormalisation.normalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.RicianNormalisation.normalise">[docs]</a>    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to normalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the unormalised data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_normalised: ndarray </span>
+<span class="sd">            Return the data x normalised</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">rice</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span> <span class="o">/</span> 
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="RicianNormalisation.denormalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.RicianNormalisation.denormalise">[docs]</a>    <span class="k">def</span> <span class="nf">denormalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to unormalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the normalised data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_unormalised: ndarray </span>
+<span class="sd">            Return the data x unormalised</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span> <span class="o">+</span> 
+                 <span class="p">(</span><span class="n">rice</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sigma</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__norm_factor</span><span class="p">)</span> <span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="LinearNormalisationByParts"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.LinearNormalisationByParts">[docs]</a><span class="k">class</span> <span class="nc">LinearNormalisationByParts</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to perform linear normalisation by parts</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">min_perc</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">max_perc</span><span class="o">=</span><span class="mf">98.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor of the GaussianNormalisation object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atlas: array</span>
+<span class="sd">            Array of the mean value of landmarks dedicting from the full dataset</span>
+<span class="sd">            Refers to the function FindLandmarksDataset()</span>
+
+<span class="sd">        min_perc: float (default=2.)</span>
+<span class="sd">            Minimum percentiles to consider</span>
+
+<span class="sd">        max_perc: float (default=98.)</span>
+<span class="sd">            Maximum percentiles to consider</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span> <span class="o">=</span> <span class="n">atlas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__min_perc</span> <span class="o">=</span> <span class="n">min_perc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__max_perc</span> <span class="o">=</span> <span class="n">max_perc</span>
+        <span class="c1"># Find the number of landmarks to compute depending of the atlas provided to the constructor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_landmarks</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="k">def</span> <span class="nf">__init_from_data__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to initialise the class members using data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data from which the landmarks have to be extracted</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">protoclass.tool.dicom_manip</span> <span class="kn">import</span> <span class="n">__VolumePercentilesFromData__</span>
+
+        <span class="c1"># Compute the percentiles from the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span> <span class="o">=</span> <span class="n">__VolumePercentilesFromData__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_landmarks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__min_perc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_perc</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinearNormalisationByParts.get_parameters"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.LinearNormalisationByParts.get_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to get the parameter of the object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params: tuple </span>
+<span class="sd">            Return a tuple with the value of the atlas to be fitted and the landmarks found for the curren volume</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinearNormalisationByParts.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.LinearNormalisationByParts.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to find the best member parameters to make the mapping</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the data</span>
+
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initalise the object using the data provided</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_from_data__</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__rescale_parts__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_norm</span><span class="p">,</span> <span class="n">org_inf</span><span class="p">,</span> <span class="n">org_sup</span><span class="p">,</span> <span class="n">pro_inf</span><span class="p">,</span> <span class="n">pro_sup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to rescale for a given parts</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the unormalised data</span>
+
+<span class="sd">        x_norm: ndarray</span>
+<span class="sd">            Array containing part of the normalise data</span>
+
+<span class="sd">        org_inf: float</span>
+<span class="sd">            Original lower bound</span>
+
+<span class="sd">        org_sup: float</span>
+<span class="sd">            Original superior bound</span>
+
+<span class="sd">        pro_inf: float</span>
+<span class="sd">            Projected lower bound</span>
+
+<span class="sd">        pro_sup: float</span>
+<span class="sd">            Projected superior bound</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_norm: ndarray </span>
+<span class="sd">            Return the data x normalised for this parts</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Find the index of the data which have to be normalised in this round</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">org_inf</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">org_sup</span><span class="p">))</span>
+        <span class="c1"># Apply the linear rescaling</span>
+        <span class="n">x_norm</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">pro_inf</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">org_inf</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pro_sup</span> <span class="o">-</span> <span class="n">pro_inf</span><span class="p">,</span> <span class="n">org_sup</span> <span class="o">-</span> <span class="n">org_inf</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">x_norm</span>
+
+<div class="viewcode-block" id="LinearNormalisationByParts.normalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.LinearNormalisationByParts.normalise">[docs]</a>    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to normalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the unormalised data</span>
+
+<span class="sd">        x_norm: ndarray</span>
+<span class="sd">            Array containing part of the normalise data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_norm: ndarray </span>
+<span class="sd">            Return the data x normalised for this parts</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x_norm</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># We need to go through the n_landmarks - 1 parts</span>
+        <span class="k">for</span> <span class="n">ld</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_landmarks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">x_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rescale_parts__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_norm</span><span class="p">,</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span><span class="p">[</span><span class="n">ld</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span><span class="p">[</span><span class="n">ld</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="p">[</span><span class="n">ld</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="p">[</span><span class="n">ld</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">x_norm</span></div>
+
+<div class="viewcode-block" id="LinearNormalisationByParts.denormalise"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.normalisation.LinearNormalisationByParts.denormalise">[docs]</a>    <span class="k">def</span> <span class="nf">denormalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to unormalise the data</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: ndarray</span>
+<span class="sd">            Array containing the normalised data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_unormalised: ndarray </span>
+<span class="sd">            Return the data x unormalised</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x_norm</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># We need to go through the n_landmarks - 1 parts</span>
+        <span class="k">for</span> <span class="n">ld</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_landmarks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">x_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rescale_parts__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_norm</span><span class="p">,</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="p">[</span><span class="n">ld</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__atlas</span><span class="p">[</span><span class="n">ld</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__percentiles</span><span class="p">[</span><span class="n">ld</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">___percentiles</span><span class="p">[</span><span class="n">ld</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">x_norm</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

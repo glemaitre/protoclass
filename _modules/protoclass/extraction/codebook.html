@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.codebook &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.codebook</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.codebook</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The :mod:`codebook` module includes utilities to create a Bag-of-(visual)Fetures,</span>
+<span class="sd">that takes advantage of :mod:`sklearn`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Joan Massich</span>
+<span class="c1">#          Guillaume Lemaitre</span>
+<span class="c1">#</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClusterMixin</span><span class="p">,</span> <span class="n">TransformerMixin</span>
+
+<span class="c1"># import warnings</span>
+
+<span class="c1"># import scipy.sparse as sp</span>
+
+<span class="c1"># from sklearn.metrics.pairwise import euclidean_distances</span>
+<span class="c1"># from sklearn.utils.extmath import row_norms, squared_norm</span>
+<span class="c1"># from sklearn.utils.sparsefuncs_fast import assign_rows_csr</span>
+<span class="c1"># from sklearn.utils.sparsefuncs import mean_variance_axis</span>
+<span class="c1"># from sklearn.utils.fixes import astype</span>
+<span class="c1"># from sklearn.utils import check_array</span>
+<span class="c1"># from sklearn.utils import check_random_state</span>
+<span class="c1"># from sklearn.utils import as_float_array</span>
+<span class="c1"># from sklearn.utils import gen_batches</span>
+<span class="c1"># from sklearn.utils.validation import check_is_fitted</span>
+<span class="c1"># from sklearn.utils.random import choice</span>
+<span class="c1"># from sklearn.externals.joblib import Parallel</span>
+<span class="c1"># from sklearn.externals.joblib import delayed</span>
+
+
+<div class="viewcode-block" id="CodeBook"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook">[docs]</a><span class="k">class</span> <span class="nc">CodeBook</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClusterMixin</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Code Book creation and manimpulation for Bag-of-(visual)Fetures.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    n_words : int, optional, default: 36</span>
+<span class="sd">        The number of clusters to form as well as the number of</span>
+<span class="sd">        words (centroids) to generate.</span>
+
+<span class="sd">    cluster_core : sklearn.cluster, default: KMeans</span>
+<span class="sd">        Clustering technique used to quantisize the feature space to</span>
+<span class="sd">        generate the code book.</span>
+<span class="sd">        #TODO: its default should be described by _default_clustering()</span>
+
+<span class="sd">    max_iter : int, default: 300</span>
+<span class="sd">        Maximum number of iterations of the k-means algorithm for a</span>
+<span class="sd">        single run.</span>
+
+<span class="sd">    n_init : int, default: 10</span>
+<span class="sd">        Number of time the k-means algorithm will be run with different</span>
+<span class="sd">        centroid seeds. The final results will be the best output of</span>
+<span class="sd">        n_init consecutive runs in terms of inertia.</span>
+
+<span class="sd">    init : {&#39;k-means++&#39;, &#39;random&#39; or an ndarray}</span>
+<span class="sd">        Method for initialization, defaults to &#39;k-means++&#39;:</span>
+
+<span class="sd">        &#39;k-means++&#39; : selects initial cluster centers for k-mean</span>
+<span class="sd">        clustering in a smart way to speed up convergence. See section</span>
+<span class="sd">        Notes in k_init for more details.</span>
+
+<span class="sd">        &#39;random&#39;: choose k observations (rows) at random from data for</span>
+<span class="sd">        the initial centroids.</span>
+
+<span class="sd">        If an ndarray is passed, it should be of shape (n_clusters, n_features)</span>
+<span class="sd">        and gives the initial centers.</span>
+
+
+<span class="sd">    precompute_distances : {&#39;auto&#39;, True, False}</span>
+<span class="sd">        Precompute distances (faster but takes more memory).</span>
+
+<span class="sd">        &#39;auto&#39; : do not precompute distances if n_samples * n_words &gt; 12</span>
+<span class="sd">        million. This corresponds to about 100MB overhead per job using</span>
+<span class="sd">        double precision.</span>
+
+<span class="sd">        True : always precompute distances</span>
+
+<span class="sd">        False : never precompute distances</span>
+
+<span class="sd">    tol : float, default: 1e-4</span>
+<span class="sd">        Relative tolerance with regards to inertia to declare convergence</span>
+
+<span class="sd">    n_jobs : int</span>
+<span class="sd">        The number of jobs to use for the computation. This works by computing</span>
+<span class="sd">        each of the n_init runs in parallel.</span>
+
+<span class="sd">        If -1 all CPUs are used. If 1 is given, no parallel computing code is</span>
+<span class="sd">        used at all, which is useful for debugging. For n_jobs below -1,</span>
+<span class="sd">        (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but one</span>
+<span class="sd">        are used.</span>
+
+<span class="sd">    random_state : integer or numpy.RandomState, optional</span>
+<span class="sd">        The generator used to initialize the centers. If an integer is</span>
+<span class="sd">        given, it fixes the seed. Defaults to the global numpy random</span>
+<span class="sd">        number generator.</span>
+
+<span class="sd">    verbose : int, default 0</span>
+<span class="sd">        Verbosity mode.</span>
+
+<span class="sd">    copy_x : boolean, default True</span>
+<span class="sd">        When pre-computing distances it is more numerically accurate to center</span>
+<span class="sd">        the data first.  If copy_x is True, then the original data is not</span>
+<span class="sd">        modified.  If False, the original data is modified, and put back before</span>
+<span class="sd">        the function returns, but small numerical differences may be introduced</span>
+<span class="sd">        by subtracting and then adding the data mean.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cook_book_ : array, [n_words, n_features]</span>
+<span class="sd">        Coordinates of cluster centers</span>
+
+<span class="sd">    labels_ :</span>
+<span class="sd">        Labels of each point</span>
+
+<span class="sd">    inertia_ : float</span>
+<span class="sd">        Sum of distances of samples to their closest cluster center.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------</span>
+<span class="sd">    The k-means problem is solved using Lloyd&#39;s algorithm.</span>
+
+<span class="sd">    The average complexity is given by O(k n T), were n is the number of</span>
+<span class="sd">    samples and T is the number of iteration.</span>
+
+<span class="sd">    The worst case complexity is given by O(n^(k+2/p)) with</span>
+<span class="sd">    n = n_samples, p = n_features. (D. Arthur and S. Vassilvitskii,</span>
+<span class="sd">    &#39;How slow is the k-means method?&#39; SoCG2006)</span>
+
+<span class="sd">    In practice, the k-means algorithm is very fast (one of the fastest</span>
+<span class="sd">    clustering algorithms available), but it falls in local minima. That&#39;s why</span>
+<span class="sd">    it can be useful to restart it several times.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    dictionary_code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#TODO: test n_words default = 36</span>
+    <span class="c1">#TODO: does make sense these paremters: max_iter, n_init</span>
+    <span class="c1">#TODO: change the cluter_core from cluster_code=None to</span>
+    <span class="c1">#      cluster_code=_default_cluster(), doing all the apropiated</span>
+    <span class="c1">#      changes. Check that BaseEstimator asks for strict declaration</span>
+    <span class="c1">#</span>
+    <span class="c1">#      def _default_cluster(self, n_words=36,</span>
+    <span class="c1">#                   init=&#39;k-means++&#39;, n_init=10, max_iter=300,</span>
+    <span class="c1">#                   tol=1e-4, precompute_distances=&#39;auto&#39;,</span>
+    <span class="c1">#                   verbose=0, random_state=None, copy_x=True, n_jobs=1):</span>
+    <span class="c1">#          &quot;&quot;&quot;Default space clustering strategy to determine the code book&quot;&quot;&quot;</span>
+    <span class="c1">#          from sklearn.cluster import KMeans</span>
+    <span class="c1">#          return KMeans(n_clusters=n_words, ...)</span>
+    <span class="c1">#</span>
+    <span class="c1">#       Then self.set_param can also be used to setup the parameters for the</span>
+    <span class="c1">#       current classification methodology</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_words</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">cluster_core</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+                 <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">precompute_distances</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">copy_x</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="s1">&#39;__array__&#39;</span><span class="p">):</span>
+            <span class="n">n_words</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_words</span> <span class="o">=</span> <span class="n">n_words</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core_name</span> <span class="o">=</span> <span class="n">cluster_core</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precompute_distances</span> <span class="o">=</span> <span class="n">precompute_distances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span> <span class="o">=</span> <span class="n">n_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_x</span> <span class="o">=</span> <span class="n">copy_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core_name</span> <span class="o">==</span> <span class="s1">&#39;random-words&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">print</span> <span class="s1">&#39;The number of iterations and try as been fixed to 1.&#39;</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_core_name</span> <span class="ow">is</span>     <span class="bp">None</span>      <span class="p">)</span> <span class="ow">or</span> 
+             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_core_name</span> <span class="o">==</span> <span class="s1">&#39;random-words&#39;</span><span class="p">)</span>    <span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_words</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">,</span>
+                                       <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span>
+                                       <span class="n">precompute_distances</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">precompute_distances</span><span class="p">,</span>
+                                       <span class="n">n_init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                                       <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+                                       <span class="n">copy_x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_x</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_check_fit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Verify that the number of samples given is larger than n_words&quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_words</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;n_samples=</span><span class="si">%d</span><span class="s2"> should be &gt;= n_words=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_words</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">_check_test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">expected_n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cook_book_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n_features</span> <span class="o">==</span> <span class="n">expected_n_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Incorrect number of features. &quot;</span>
+                             <span class="s2">&quot;Got </span><span class="si">%d</span><span class="s2"> features, expected </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                                 <span class="n">n_features</span><span class="p">,</span> <span class="n">expected_n_features</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Got data type </span><span class="si">%s</span><span class="s2">, converted to float &quot;</span>
+                          <span class="s2">&quot;to avoid overflows&quot;</span> <span class="o">%</span> <span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+                          <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">X</span>
+
+<div class="viewcode-block" id="CodeBook.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the clustering of the space.</span>
+<span class="sd">        #TODO: right now only for K_means, however a dispatcher is</span>
+<span class="sd">               needed so that other clustering stragegies are called</span>
+<span class="sd">               indisticntly</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like or sparse matrix, shape=(n_samples, n_features)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CodeBook.fit_predict"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.fit_predict">[docs]</a>    <span class="k">def</span> <span class="nf">fit_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute cluster centers and predict cluster index for each sample.</span>
+
+<span class="sd">        Convenience method; equivalent to calling fit(X) followed by</span>
+<span class="sd">        predict(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#return self.fit(X).labels_</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="CodeBook.fit_transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute clustering and transform X to cluster-distance space.</span>
+
+<span class="sd">        Equivalent to fit(X).transform(X), but more efficiently implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Currently, this just skips a copy of the data if it is not in</span>
+        <span class="c1"># np.array or CSR format already.</span>
+        <span class="c1"># XXX This skips _check_test_data, which may change the dtype;</span>
+        <span class="c1"># we should refactor the input validation.</span>
+        <span class="c1"># </span>
+        <span class="c1"># X = self._check_fit_data(X)</span>
+        <span class="c1"># return self.fit(X)._transform(X)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="CodeBook.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform X to a cluster-distance space.</span>
+
+<span class="sd">        In the new space, each dimension is the distance to the cluster</span>
+<span class="sd">        centers.  Note that even if X is sparse, the array returned by</span>
+<span class="sd">        `transform` will typically be dense.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix}, shape = [n_samples, n_features]</span>
+<span class="sd">            New data to transform.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_new : array, shape [n_samples, k]</span>
+<span class="sd">            X transformed in the new space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check_is_fitted(self, &#39;cook_book_&#39;)</span>
+
+        <span class="c1"># X = self._check_test_data(X)</span>
+        <span class="c1"># return self._transform(X)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;guts of transform method; no input validation&quot;&quot;&quot;</span>
+        <span class="c1"># return euclidean_distances(X, self.cook_book_)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<div class="viewcode-block" id="CodeBook.predict"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predicts the index value of the closest word within the code book.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix}, shape = [n_samples, n_features]</span>
+<span class="sd">            New data to predict.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        labels : array, shape [n_samples,]</span>
+<span class="sd">            Index of the closest word within the code book.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CodeBook.get_dictionary"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.get_dictionary">[docs]</a>    <span class="k">def</span> <span class="nf">get_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the words forming the code book</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dictionary : array, shape [n_words, n_features]</span>
+<span class="sd">            Code book elements (words of the dictionary) represented</span>
+<span class="sd">            in the feature space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#TODO: check that the coodebook is fitted</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span><span class="o">.</span><span class="n">cluster_centers_</span></div>
+
+<div class="viewcode-block" id="CodeBook.get_BoF_descriptor"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.get_BoF_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">get_BoF_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+        <span class="c1"># norm = lambda x: x.astype(float)/np.linalg.norm(x)</span>
+        <span class="c1"># return norm(np.bincount(self.predict(X)))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span>
+                            <span class="n">bins</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_words</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CodeBook.get_BoF_pramide_descriptor"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.get_BoF_pramide_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">get_BoF_pramide_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Split the image (or volume) in a piramide manner and get</span>
+<span class="sd">        a descriptor for each level (and part). Concatenate the output.</span>
+<span class="sd">        TODO: build proper documentaiton</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">split_data_by2</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="c1"># TODO: rewrite this in a nice manner that uses len(X.shape)</span>
+            <span class="c1"># TODO: this can rise ERROR if length of X is odd</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">slit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">]]</span>
+            <span class="k">return</span> <span class="n">parts</span>
+
+        <span class="k">def</span> <span class="nf">get_occurrences</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_words</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">build_piramide</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">get_occurrences</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">get_occurrences</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">build_piramide</span><span class="p">(</span><span class="n">Xpart</span><span class="p">,</span> <span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">Xpart</span> <span class="ow">in</span> <span class="n">split_data_by2</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">build_piramide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CodeBook.get_params"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CodeBook.set_params"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.codebook.CodeBook.set_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_core</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

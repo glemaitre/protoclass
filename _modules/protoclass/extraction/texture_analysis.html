@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.texture_analysis &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.texture_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.texture_analysis</h1><div class="highlight"><pre>
+<span></span><span class="c1">#title           :texture_analysis.py</span>
+<span class="c1">#description     :This will create a header for a python script.</span>
+<span class="c1">#author          :Guillaume Lemaitre</span>
+<span class="c1">#date            :2015/04/20</span>
+<span class="c1">#version         :0.1</span>
+<span class="c1">#notes           :</span>
+<span class="c1">#python_version  :2.7.6  </span>
+<span class="c1">#==============================================================================</span>
+
+<span class="c1"># Import the needed libraries</span>
+<span class="c1"># Numpy library</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1"># Scikit-learn</span>
+<span class="c1">### Module to extract 2D patches</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction</span> <span class="kn">import</span> <span class="n">image</span>
+<span class="c1"># Mahotas library</span>
+<span class="c1">### Module to extract haralick features</span>
+<span class="kn">from</span> <span class="nn">mahotas.features</span> <span class="kn">import</span> <span class="n">haralick</span>
+<span class="c1"># Joblib library</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1"># Multiprocessing library</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="c1"># Operator library</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+
+<div class="viewcode-block" id="HaralickMapExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.HaralickMapExtraction">[docs]</a><span class="k">def</span> <span class="nf">HaralickMapExtraction</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to extract the Haralick map from a 2D or 3D image</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im: ndarray of int</span>
+<span class="sd">        2D or 3D array containing the image information</span>
+<span class="sd">    win_size: tuple (optional)</span>
+<span class="sd">        Tuple containing 2 or 3 values defining the window size</span>
+<span class="sd">        to consider during the extraction</span>
+<span class="sd">    n_gray_levels: int (optional)</span>
+<span class="sd">        Number of gray level to use to rescale the original image</span>
+<span class="sd">    gray_limits: tuple (optional)</span>
+<span class="sd">        Tuple containing 2 values defining the minimum and maximum</span>
+<span class="sd">        gray level.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        If 2D image - maps is of size 4 x 14 x image height x image width)</span>
+<span class="sd">        which will contain the map corresponding to the different</span>
+<span class="sd">        orientations and statistic of Haralick features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check the dimension of the input image</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">win_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;win_size&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">win_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;win_size&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.texture.haralick:&#39;</span>
+                         <span class="s1">&#39; Can only handle 2D and 3D images.&#39;</span><span class="p">)</span>
+
+    <span class="n">n_gray_levels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_gray_levels&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    <span class="n">gray_limits</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;gray_limits&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">im</span><span class="p">)),</span>
+                                             <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">im</span><span class="p">))))</span>
+
+    <span class="c1"># Check that win_size is a tuple</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gray_limits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;gray_limits has to be a tuple with 2 values&#39;</span>
+                         <span class="s1">&#39; characterizing the extrmum use in the rescaling.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the minimum is inferior to the maximum</span>
+    <span class="k">if</span> <span class="n">gray_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gray_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;gray_limits[0] &gt; gray_limits[1]: Inverse the order&#39;</span>
+                         <span class="s1">&#39; in the tuple such as (min_int, max_int).&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that win_size is a tuple</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">win_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;win_size has to be a tuple with 2 or 3 values&#39;</span>
+                         <span class="s1">&#39; depending of the image.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that nd_im is of the same dimension than win_size</span>
+    <span class="k">if</span> <span class="n">nd_im</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">win_size</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The dimension of the image do not agree with the&#39;</span>
+                         <span class="s1">&#39; window size dimensions: 2D - 3D&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Rescale the image</span>
+    <span class="c1"># Define a lambda function for that</span>
+    <span class="n">ImageRescaling</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">im</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">((</span><span class="n">im</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">gray_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span>
+                                           <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">n_gray_levels</span><span class="p">)</span> <span class="o">/</span>
+                                            <span class="p">(</span><span class="n">gray_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">gray_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+    <span class="n">im_rescale</span> <span class="o">=</span> <span class="n">ImageRescaling</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Call the 2D patch extractors</span>
+    <span class="k">if</span> <span class="n">nd_im</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Extract the patches to analyse</span>
+        <span class="n">patches</span> <span class="o">=</span> <span class="n">ExtractPatches2D</span><span class="p">(</span><span class="n">im_rescale</span><span class="p">,</span> <span class="n">win_size</span><span class="p">)</span>
+        <span class="c1"># Compute the Haralick maps</span>
+        <span class="n">i_h</span><span class="p">,</span> <span class="n">i_w</span> <span class="o">=</span> <span class="n">im_rescale</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">p_h</span><span class="p">,</span> <span class="n">p_w</span> <span class="o">=</span> <span class="n">win_size</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">n_h</span> <span class="o">=</span> <span class="n">i_h</span> <span class="o">-</span> <span class="n">p_h</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">n_w</span> <span class="o">=</span> <span class="n">i_w</span> <span class="o">-</span> <span class="n">p_w</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">maps</span> <span class="o">=</span> <span class="n">BuildMaps2D</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="p">(</span><span class="n">n_h</span><span class="p">,</span> <span class="n">n_w</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">maps</span></div>
+
+
+<div class="viewcode-block" id="HaralickProcessing"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.HaralickProcessing">[docs]</a><span class="k">def</span> <span class="nf">HaralickProcessing</span><span class="p">(</span><span class="n">patch_in</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute Haralick for a patch</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    patch_in: ndarray of int</span>
+<span class="sd">        2D or 3D array containing the image information</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hara_fea: ndarray of np.double</span>
+<span class="sd">        A 4x13 or 4x14 feature vector (one row per direction) if `f` is 2D,</span>
+<span class="sd">        13x13 or 13x14 if it is 3D. The exact number of features depends on the</span>
+<span class="sd">        value of ``compute_14th_feature`` Also, if either ``return_mean`` or</span>
+<span class="sd">        ``return_mean_ptp`` is set, then a single dimensional array is</span>
+<span class="sd">        returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute Haralick feature</span>
+    <span class="k">return</span> <span class="n">haralick</span><span class="p">(</span><span class="n">patch_in</span><span class="p">)</span></div>
+
+<span class="c1">########################################################################################</span>
+<span class="c1">### 2D implementation</span>
+
+
+<div class="viewcode-block" id="ExtractPatches2D"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.ExtractPatches2D">[docs]</a><span class="k">def</span> <span class="nf">ExtractPatches2D</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">win_size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to extract the 2D patches which which will feed haralick</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im: ndarray</span>
+<span class="sd">        2D array containing the image information</span>
+<span class="sd">    win_size: tuple</span>
+<span class="sd">        Array containing 2 values defining the window size in order to</span>
+<span class="sd">        perform the extraction</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    patches: array, shape = (n_patches, patch_height, patch_width)</span>
+<span class="sd">        The collection of patches extracted from the image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;extraction.Extract2DPatches: The image can only be a&#39;</span>
+                         <span class="s1">&#39; 2D image.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">win_size</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;extraction.Extract2DPatches: The win_size can only be&#39;</span>
+                         <span class="s1">&#39; a tuple with 2 values.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">extract_patches_2d</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">win_size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BuildMaps2D"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.BuildMaps2D">[docs]</a><span class="k">def</span> <span class="nf">BuildMaps2D</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute Haralick features for all patch</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    patches: array, shape = (n_patches, patch_height, patch_width)</span>
+<span class="sd">        The collection of patches extracted from the image.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        If 2D image - maps is of size 4 x 14 x image height x image width)</span>
+<span class="sd">        which will contain the map corresponding to the different</span>
+<span class="sd">        orientations and statistic of Haralick features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the Haralick statistic in parallel</span>
+    <span class="n">num_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="n">patch_arr</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">HaralickProcessing</span><span class="p">)(</span><span class="n">p</span><span class="p">)</span>
+                                           <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">)</span>
+
+    <span class="c1"># Convert the patches into maps</span>
+    <span class="k">return</span> <span class="n">ReshapePatchsToMaps2D</span><span class="p">(</span><span class="n">patch_arr</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReshapePatchsToMaps2D"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.ReshapePatchsToMaps2D">[docs]</a><span class="k">def</span> <span class="nf">ReshapePatchsToMaps2D</span><span class="p">(</span><span class="n">patches_haralick</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to reshape the array of patches into proper maps</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    patches: list of array, shape = (n_patches, 4 orientations, 14 features)</span>
+<span class="sd">        See HaralickProcessing() for the justification of the shape.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        If 2D image - maps is of size 4 x 14 x image height x image width)</span>
+<span class="sd">        which will contain the map corresponding to the different</span>
+<span class="sd">        orientations and statistic of Haralick features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Conver the list into a numpy array</span>
+    <span class="n">patches_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">patches_haralick</span><span class="p">)</span>
+
+    <span class="c1"># Get the current size</span>
+    <span class="n">n_patch</span><span class="p">,</span> <span class="n">n_orientations</span><span class="p">,</span> <span class="n">n_statistics</span> <span class="o">=</span> <span class="n">patches_numpy</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Reshape the patches into a map first</span>
+    <span class="n">maps</span> <span class="o">=</span> <span class="n">patches_numpy</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">im_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">im_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">n_orientations</span><span class="p">,</span> <span class="n">n_statistics</span><span class="p">))</span>
+
+    <span class="c1"># Swap the good dimension in order to have [Orientation][Statistic][Y, X]</span>
+    <span class="n">maps</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">maps</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># We would like to have a list for the orientations and</span>
+    <span class="c1"># a list for the statistics</span>
+    <span class="k">return</span> <span class="n">maps</span></div>
+
+
+<div class="viewcode-block" id="LBPMapExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.LBPMapExtraction">[docs]</a><span class="k">def</span> <span class="nf">LBPMapExtraction</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># GOAL: extract the LBP map using the image</span>
+    <span class="c1"># We can handle 2D image, 3D image. 3D should use LBP TOP</span>
+    <span class="c1"># while 2.5D should use normal LBP.</span>
+
+    <span class="c1"># Check the dimension of the input image</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># By default, we will extract the LBP along a given axis</span>
+        <span class="n">extr_3d</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extr_3d&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5D&#39;</span><span class="p">)</span>
+        <span class="n">extr_axis</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extr_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.texture.haralick: Can only handle 2D and&#39;</span>
+                         <span class="s1">&#39; 3D images.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nd_im</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+        <span class="c1"># Get the parameters of the lbp</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">n_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_points&#39;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">skimage.feature</span> <span class="kn">import</span> <span class="n">local_binary_pattern</span>
+
+        <span class="n">lbp_map</span> <span class="o">=</span> <span class="n">local_binary_pattern</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lbp_map</span>
+
+    <span class="k">elif</span> <span class="n">nd_im</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">extr_3d</span> <span class="o">==</span> <span class="s1">&#39;2.5D&#39;</span><span class="p">:</span>
+            <span class="c1"># We will process in parallel the different</span>
+            <span class="c1"># slice along the given axis</span>
+            <span class="c1"># The data are stored in (x, y, z) manner. We need to swap to the</span>
+            <span class="c1"># first position the axis that is not involved in the 2D image</span>
+            <span class="k">if</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                <span class="c1"># Do not do anything</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">im</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="c1"># Move y at the beginning</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+                <span class="c1"># Move z at the beginning</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Get the parameters of the lbp</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">n_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_points&#39;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">)</span>
+            <span class="n">num_cores</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_cores&#39;</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+
+            <span class="kn">from</span> <span class="nn">skimage.feature</span> <span class="kn">import</span> <span class="n">local_binary_pattern</span>
+
+            <span class="n">lbp_map</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">local_binary_pattern</span><span class="p">)</span>
+                                                 <span class="p">(</span><span class="n">sl</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+                                                 <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="n">vol</span><span class="p">)</span>
+
+            <span class="c1"># We have to map back the image</span>
+            <span class="k">if</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                <span class="c1"># Do not do anything</span>
+                <span class="k">return</span> <span class="n">lbp_map</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="c1"># Move y at the beginning</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">lbp_map</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+                <span class="c1"># Move z at the beginning</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">lbp_map</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">extr_3d</span> <span class="o">==</span> <span class="s1">&#39;3D&#39;</span><span class="p">:</span>
+            <span class="c1"># We need to use the LBP TOP</span>
+            <span class="k">print</span> <span class="s1">&#39;LBP TOP not yet implemented&#39;</span></div>
+
+
+<div class="viewcode-block" id="hist_alone"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.hist_alone">[docs]</a><span class="k">def</span> <span class="nf">hist_alone</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Compute the pdf</span>
+    <span class="n">hist</span><span class="p">,</span> <span class="n">edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hist</span></div>
+
+
+<div class="viewcode-block" id="LBPpdfExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.texture_analysis.LBPpdfExtraction">[docs]</a><span class="k">def</span> <span class="nf">LBPpdfExtraction</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># GOAL: extract the LBP pdf from a 2D image</span>
+    <span class="c1"># We can handle 2D image, 3D image.</span>
+
+    <span class="c1"># We need to get the minimum and maximum of the image</span>
+    <span class="n">range_lbp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;range_lbp&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">im</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">im</span><span class="p">)))</span>
+    <span class="c1"># We need to decide the number of bins to be considered for</span>
+    <span class="c1"># the computation of the pdf</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">range_lbp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">range_lbp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># We need to know if we normalisaed the histogram or not</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># Check if we wish a sliding window</span>
+    <span class="n">strategy_win</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;strategy_win&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="c1"># Check the dimension of the input image</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># By default, we will extract the LBP along a given axis</span>
+        <span class="n">extr_3d</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extr_3d&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5D&#39;</span><span class="p">)</span>
+        <span class="n">extr_axis</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extr_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.texture.haralick: Can only handle 2D&#39;</span>
+                         <span class="s1">&#39; and 3D images.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nd_im</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">strategy_win</span> <span class="o">==</span> <span class="s1">&#39;sliding_win&#39;</span><span class="p">:</span>
+            <span class="n">win_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;win_size&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+            <span class="n">overlap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;overlap&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">overlap</span><span class="p">:</span>
+                <span class="c1"># Import the function needed to extract patches</span>
+                <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="kn">import</span> <span class="n">extract_patches</span>
+
+                <span class="n">patches</span> <span class="o">=</span> <span class="n">extract_patches</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">patch_shape</span><span class="o">=</span><span class="n">win_size</span><span class="p">,</span>
+                                          <span class="n">extraction_step</span><span class="o">=</span><span class="p">(</span><span class="n">win_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+                <span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">win_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">win_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">patches</span> <span class="o">=</span> <span class="n">ExtractPatches2D</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">win_size</span><span class="p">)</span>
+
+            <span class="c1"># The number of cores to use</span>
+            <span class="n">num_cores</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_cores&#39;</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+
+            <span class="n">hist_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bins&#39;</span> <span class="p">:</span> <span class="n">bins</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span> <span class="p">:</span> <span class="n">range_lbp</span><span class="p">,</span>
+                         <span class="s1">&#39;density&#39;</span> <span class="p">:</span> <span class="n">density</span><span class="p">}</span>
+            <span class="n">vol_hist</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">hist_alone</span><span class="p">)</span>
+                                                  <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="n">hist_dict</span><span class="p">)</span>
+                                                  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vol_hist</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">hist_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bins&#39;</span> <span class="p">:</span> <span class="n">bins</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span> <span class="p">:</span> <span class="n">range_lbp</span><span class="p">,</span>
+                         <span class="s1">&#39;density&#39;</span> <span class="p">:</span> <span class="n">density</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">hist_alone</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">hist_dict</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">nd_im</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">extr_3d</span> <span class="o">==</span> <span class="s1">&#39;2.5D&#39;</span><span class="p">:</span>
+            <span class="c1"># We will process in parallel the different slice</span>
+            <span class="c1"># along the given axis</span>
+            <span class="c1"># The data are stored in (x, y, z) manner. We need to swap to the</span>
+            <span class="c1"># first position the axis that is not involved in the 2D image</span>
+            <span class="k">if</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                <span class="c1"># Do not do anythin</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">im</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="c1"># Move y at the beginning</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">extr_axis</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+                <span class="c1"># Move z at the beginning</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># The number of cores to use</span>
+            <span class="n">num_cores</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_cores&#39;</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">strategy_win</span> <span class="o">==</span> <span class="s1">&#39;sliding_win&#39;</span><span class="p">:</span>
+                <span class="n">win_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;win_size&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">))</span>
+                <span class="n">overlap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;overlap&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">overlap</span><span class="p">:</span>
+
+                    <span class="c1"># Import the function needed to extract patches</span>
+                    <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="kn">import</span> <span class="n">extract_patches</span>
+
+                    <span class="n">patches</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">extract_patches</span><span class="p">)</span>
+                                                         <span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">patch_shape</span><span class="o">=</span><span class="n">win_size</span><span class="p">,</span>
+                                                          <span class="n">extraction_step</span><span class="o">=</span><span class="p">(</span><span class="n">win_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                                                         <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">vol</span><span class="p">)</span>
+
+                    <span class="n">patches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">win_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                        <span class="n">win_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Still did not implemented this feature.&#39;</span>
+                                     <span class="s1">&#39; It could take so much merory.&#39;</span><span class="p">)</span>
+
+                <span class="n">hist_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bins&#39;</span> <span class="p">:</span> <span class="n">bins</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span> <span class="p">:</span> <span class="n">range_lbp</span><span class="p">,</span>
+                             <span class="s1">&#39;density&#39;</span> <span class="p">:</span> <span class="n">density</span><span class="p">}</span>
+                <span class="n">vol_hist</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">hist_alone</span><span class="p">)</span>
+                                                      <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="n">hist_dict</span><span class="p">)</span>
+                                                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vol_hist</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="c1"># The number of cores to use</span>
+                <span class="n">num_cores</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_cores&#39;</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+
+                <span class="n">hist_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bins&#39;</span> <span class="p">:</span> <span class="n">bins</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span> <span class="p">:</span> <span class="n">range_lbp</span><span class="p">,</span>
+                             <span class="s1">&#39;density&#39;</span> <span class="p">:</span> <span class="n">density</span><span class="p">}</span>
+                <span class="n">vol_hist</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">hist_alone</span><span class="p">)</span>
+                                                      <span class="p">(</span><span class="n">sl</span><span class="p">,</span> <span class="o">**</span><span class="n">hist_dict</span><span class="p">)</span>
+                                                      <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="n">vol</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vol_hist</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">extr_3d</span> <span class="o">==</span> <span class="s1">&#39;3D&#39;</span><span class="p">:</span>
+            <span class="c1"># We need to use the LBP TOP</span>
+            <span class="k">print</span> <span class="s1">&#39;This strategy is not yet implemented.&#39;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

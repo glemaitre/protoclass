@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.semi_quantification_extraction &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.semi_quantification_extraction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.semi_quantification_extraction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Semi quantification extraction from temporal modality.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
+
+<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
+
+<span class="kn">from</span> <span class="nn">.tofts_quantification_extraction</span> <span class="kn">import</span> <span class="n">ToftsQuantificationExtraction</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+
+
+<span class="n">K_MAD</span> <span class="o">=</span> <span class="mf">1.4826</span>
+
+
+<span class="c1"># def _huisman_model(t, a0=2., r=1., beta=1.):</span>
+<span class="c1">#     &quot;&quot;&quot;Huisman model to compute the concentration.</span>
+
+<span class="c1">#     Paramters</span>
+<span class="c1">#     ---------</span>
+<span class="c1">#     t : ndarray, shape (n_serie, )</span>
+<span class="c1">#         The time array.</span>
+
+<span class="c1">#     A, B : float, optional (default=1.1)</span>
+<span class="c1">#         Variables for the modeling.</span>
+
+<span class="c1">#     Returns</span>
+<span class="c1">#     -------</span>
+<span class="c1">#     s_t : ndarray, shape (n_serie, )</span>
+
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     # Transform the time into minutes</span>
+<span class="c1">#     t = t / 60.</span>
+
+<span class="c1">#     # Define the signal</span>
+<span class="c1">#     s_t = np.exp(r * t + (1. / beta) * (a0 - r)(np.exp(beta * t) - 1))</span>
+
+<span class="c1">#     return s_t</span>
+
+
+<span class="c1"># def res_std_dev(model, estimate):</span>
+<span class="c1">#     &quot;&quot;&quot;Compute the residual standard deviation.</span>
+
+<span class="c1">#     Parameters</span>
+<span class="c1">#     ----------</span>
+<span class="c1">#     model : array-like, shape (n_sample, )</span>
+<span class="c1">#          Value used to made the fitting.</span>
+
+<span class="c1">#     estimate : array-like, shape (n_sample, )</span>
+<span class="c1">#          Value obtained by fitting.</span>
+
+<span class="c1">#     Returns</span>
+<span class="c1">#     -------</span>
+<span class="c1">#     residual : float</span>
+<span class="c1">#         Residual standard deviation.</span>
+
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     if model.shape != estimate.shape:</span>
+<span class="c1">#         raise ValueError(&#39;The model and estimate arrays should have&#39;</span>
+<span class="c1">#                          &#39; the same size.&#39;)</span>
+
+<span class="c1">#     return np.sqrt(np.sum((model - estimate) ** 2) /</span>
+<span class="c1">#                    (float(model.size) - 2.))</span>
+
+
+<span class="c1"># def _fit_huisman_model(t_mod, s_t, start_enh, M=8, ngh_sz=3):</span>
+<span class="c1">#     &quot;&quot;&quot;Private function to fit concentration to extended PUN model.</span>
+
+<span class="c1">#     Parameters</span>
+<span class="c1">#     ----------</span>
+<span class="c1">#     t_mod : ndarray, shape (n_serie, )</span>
+<span class="c1">#         The time associated to the concentration kinetic.</span>
+
+<span class="c1">#     s_t : ndarray, shape (n_serie, )</span>
+<span class="c1">#         Signal of the pixel to be fitted.</span>
+
+<span class="c1">#     start_enh : int</span>
+<span class="c1">#         The index when the enhancement start.</span>
+
+<span class="c1">#     M : int, optional (default=8)</span>
+<span class="c1">#         The number of level to use to compute the most probable steepest slope.</span>
+<span class="c1">#         Should be a multiple of 2.</span>
+
+<span class="c1">#     ngh_sz : int, optional (default=3)</span>
+<span class="c1">#         Number of neighbours to check around to find a new maximum.</span>
+
+<span class="c1">#     Returns</span>
+<span class="c1">#     -------</span>
+<span class="c1">#     param : dict of str: float</span>
+<span class="c1">#         The A, kep, and kel parameters.</span>
+
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     if not M % 2 == 0:</span>
+<span class="c1">#         raise ValueError(&#39;M should be a multiple of 2.&#39;)</span>
+
+<span class="c1">#     # Compute the derivative at the different scale</span>
+<span class="c1">#     scale_list = [M // i for i in range(1, M // 2) if M // i &gt; 1]</span>
+<span class="c1">#     s_prime_scale = [</span>
+<span class="c1">#         SemiQuantificationExtraction._derivative_sliding_window(s_t, t_mod, m)</span>
+<span class="c1">#         for m in scale_list]</span>
+<span class="c1">#     # Compute the std of the original signal noise</span>
+<span class="c1">#     std_noise_s = SemiQuantificationExtraction._estimate_noise_std(s_t,</span>
+<span class="c1">#                                                                    start_enh)</span>
+<span class="c1">#     # Compute the estimate of the std noise of the slope</span>
+<span class="c1">#     sigma_prime_scale = [</span>
+<span class="c1">#         SemiQuantificationExtraction._estimate_slope_std(std_noise_s, m,</span>
+<span class="c1">#                                                          t_mod[1] - t_mod[0])</span>
+<span class="c1">#         for m in scale_list]</span>
+
+<span class="c1">#     # Make an iterative search to find t0 and m</span>
+<span class="c1">#     slope_max_idx = []</span>
+<span class="c1">#     # Find the intial maximum at coarser scale</span>
+<span class="c1">#     sigma_thresh = 3 * sigma_prime_scale[0]</span>
+<span class="c1">#     # Find the index of the interesting samples</span>
+<span class="c1">#     idx_candidates = np.flatnonzero(s_prime_scale[0] &gt; sigma_thresh)</span>
+<span class="c1">#     # Find the maximum</span>
+<span class="c1">#     slope_max_idx.append(</span>
+<span class="c1">#         idx_candidates[sigma_prime_scale[0][idx_candidates].argmax()])</span>
+<span class="c1">#     find_max = True</span>
+<span class="c1">#     itr_slope = 1</span>
+<span class="c1">#     while find_max or itr_slope &gt; s_prime_scale.size:</span>
+<span class="c1">#         # Find a maximum next to the previous one</span>
+<span class="c1">#         # Compute the lower bound</span>
+<span class="c1">#         low_bound = slope_max_idx[-1] - ngh_sz</span>
+<span class="c1">#         if low_bound &lt; 0:</span>
+<span class="c1">#             low_bound = 0</span>
+<span class="c1">#         high_bound = slope_max_idx[-1] + ngh_sz</span>
+<span class="c1">#         if (s_prime_scale[itr_slope].max() &gt;</span>
+<span class="c1">#             sigma_prime_scale[itr_slope - 1][slope_max_idx] +</span>
+<span class="c1">#             (2. * sigma_prime_scale[itr_slope])):</span>
+<span class="c1">#             # Add the index of the new max in the list</span>
+<span class="c1">#             slope_max_idx.append(s_prime_scale[itr_slope].argmax())</span>
+<span class="c1">#             # Increment the number of iteration</span>
+<span class="c1">#             itr_slope += 1</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             # If we don&#39;t find any maximum, let&#39;s stop</span>
+<span class="c1">#             find_max = False</span>
+
+<span class="c1">#     # Let&#39;s compute S0</span>
+<span class="c1">#     S0 = np.mean(s_t[:slope_max_idx[-1]])</span>
+<span class="c1">#     # Let&#39;s fit the plateau</span>
+<span class="c1">#     idx_start_plateau = (slope_max_idx[-1] +</span>
+<span class="c1">#                          2 * scale_list[len(slope_max_idx) - 1])</span>
+<span class="c1">#     # Make a line fitting on the plateau</span>
+<span class="c1">#     poly_coeff = np.polyfit(t_mod[idx_start_plateau:],</span>
+<span class="c1">#                             s_t[idx_start_plateau:], 1)</span>
+<span class="c1">#     p = np.poly1d(poly_coeff)</span>
+<span class="c1">#     # If the slop is significant</span>
+<span class="c1">#     thresh_slope = .5</span>
+<span class="c1">#     if p[0] &gt; thresh_slope:</span>
+<span class="c1">#         # Compute the std of the residual</span>
+<span class="c1">#         std_err = res_std_dev(s_t[idx_start_plateau:],</span>
+<span class="c1">#                               p(t_mod[idx_start_plateau:]))</span>
+<span class="c1">#         # Find the first point which enter in the confidence level</span>
+<span class="c1">#         idx_cand_tm = (np.flatnonzero(</span>
+<span class="c1">#             np.abs(s_t[slope_max_idx[-1]] -</span>
+<span class="c1">#                    p(t_mod[slope_max_idx[-1]])) &lt; 2. * std_err)[0] +</span>
+<span class="c1">#                        slope_max_idx[-1])</span>
+<span class="c1">#         # Compute the wash_out and Sm</span>
+<span class="c1">#         Sm = s_t[idx_cand_tm]</span>
+<span class="c1">#         wash_out = p[0]</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         wash_out = 0</span>
+<span class="c1">#         Sm = np.mean(s_t[idx_start_plateau:])</span>
+
+<span class="c1">#     # Return the parameters Ktrans, ve, vp</span>
+<span class="c1">#     return {&#39;a0&#39;: popt[0], &#39;r&#39;: popt[1], &#39;beta&#39;: popt[2]}</span>
+
+<span class="k">def</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">idx</span>
+
+
+<span class="k">def</span> <span class="nf">_piecewise_exp_linear_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">Sm</span><span class="p">,</span> <span class="n">wash_out</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Piecewise exponential linear model for enhancement signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time array.</span>
+
+<span class="sd">    t0 : int,</span>
+<span class="sd">        Index of the time of start of enhancement.</span>
+
+<span class="sd">    S0 : float,</span>
+<span class="sd">        Baseline intensity.</span>
+
+<span class="sd">    tau : float,</span>
+<span class="sd">        Charing time constant.</span>
+
+<span class="sd">    Sm : float,</span>
+<span class="sd">        Maximum enhanced intensity.</span>
+
+<span class="sd">    wash_out : float,</span>
+<span class="sd">        Wash-out on the curve.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s_t : ndarray, shape (n_series, )</span>
+<span class="sd">        The enhancement signal.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">s_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Compute the signal from 0 to t0</span>
+    <span class="n">s_t</span><span class="p">[:</span><span class="n">t0</span><span class="p">]</span> <span class="o">=</span> <span class="n">S0</span>
+    <span class="c1"># Compute the signal between t0 and 2 * tau</span>
+    <span class="n">idx_tau</span> <span class="o">=</span> <span class="n">find_nearest</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tau</span> <span class="o">*</span> <span class="mf">2.</span><span class="p">)</span>
+    <span class="n">s_t</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sm</span> <span class="o">-</span> <span class="p">(</span><span class="n">Sm</span> <span class="o">-</span> <span class="n">S0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">t0</span><span class="p">])</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span>
+    <span class="c1"># Compute the signal between 2 * tau to the end</span>
+    <span class="n">s_t</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Sm</span> <span class="o">-</span>
+                     <span class="p">(</span><span class="n">Sm</span> <span class="o">-</span> <span class="n">S0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">t0</span><span class="p">])</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="n">wash_out</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">:]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">s_t</span>
+
+
+<span class="k">def</span> <span class="nf">_fit_piecewise_model</span><span class="p">(</span><span class="n">t_mod</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function to fit piecewise exponential linear model</span>
+<span class="sd">    for enhancement signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t_mod : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time array.</span>
+
+<span class="sd">    s_t : ndarray, shape(n_serie, )</span>
+<span class="sd">        Original signal to fit.</span>
+
+<span class="sd">    t0 : int,</span>
+<span class="sd">        Index of the time of start of enhancement.</span>
+
+<span class="sd">    S0 : float,</span>
+<span class="sd">        Baseline intensity.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s_t : ndarray, shape (n_series, )</span>
+<span class="sd">        The enhancement signal.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define the default parameters in case the fitting fail.</span>
+    <span class="n">popt_default</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">fit_func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">Sm</span><span class="p">,</span> <span class="n">wash_out</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_piecewise_exp_linear_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">Sm</span><span class="p">,</span> <span class="n">wash_out</span><span class="p">)</span>
+
+    <span class="c1"># Check if we have a null signal</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">s_t</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sm&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;wash-out&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="c1"># Perform the curve fitting</span>
+    <span class="n">param_bounds</span> <span class="o">=</span> <span class="p">([</span><span class="n">t_mod</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="p">[</span><span class="n">t_mod</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">s_t</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_func</span><span class="p">,</span> <span class="n">t_mod</span><span class="p">,</span>
+                            <span class="n">s_t</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">init_params</span><span class="p">,</span>
+                            <span class="n">bounds</span><span class="o">=</span><span class="n">param_bounds</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">popt</span> <span class="o">=</span> <span class="n">popt_default</span>
+
+    <span class="c1"># Return the parameters Ktrans, ve, vp</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;Sm&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;wash-out&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+
+
+<div class="viewcode-block" id="SemiQuantificationExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">SemiQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">     base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SemiQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+
+    <span class="c1"># @staticmethod</span>
+    <span class="c1"># def _derivative_sliding_window(s_t, t, win_sz):</span>
+    <span class="c1">#     &quot;&quot;&quot;Estimate of the derivate of a signal using a sliding window.</span>
+
+    <span class="c1">#     Parameters</span>
+    <span class="c1">#     ----------</span>
+    <span class="c1">#     s_t : ndarray, shape (nsamples, )</span>
+    <span class="c1">#         The signal from which the derivative should be estimated.</span>
+
+    <span class="c1">#     t : ndarray, shape (n_samples, )</span>
+    <span class="c1">#         The time associated with the signal `s_t`.</span>
+
+    <span class="c1">#     win_sz: int,</span>
+    <span class="c1">#         The size of the sliding window used to estimate the slope.</span>
+
+    <span class="c1">#     Returns</span>
+    <span class="c1">#     -------</span>
+    <span class="c1">#     s_prime : ndarray, (n_samples, )</span>
+    <span class="c1">#         The signal derivated with zero padding</span>
+
+    <span class="c1">#     &quot;&quot;&quot;</span>
+
+    <span class="c1">#     # Allocation of the output</span>
+    <span class="c1">#     s_prime = np.zeros(s_t.shape)</span>
+
+    <span class="c1">#     # Compute the derivative by iteratively fitting a line to the samples</span>
+    <span class="c1">#     for t_i in range(s_prime.size - win_sz):</span>
+    <span class="c1">#         poly_coeff = np.polyfit(t[t_i:t_i + win_sz],</span>
+    <span class="c1">#                                 s_t[t_i:t_i + win_sz],</span>
+    <span class="c1">#                                 1)</span>
+    <span class="c1">#         # Get the higest order coefficient</span>
+    <span class="c1">#         s_prime[t_i] = poly_coeff[0]</span>
+
+    <span class="c1">#     return s_prime</span>
+
+    <span class="c1"># @staticmethod</span>
+    <span class="c1"># def _estimate_noise_std(s_t, start_enh):</span>
+    <span class="c1">#     &quot;&quot;&quot;Estimate the noise standard deviation in a signal using</span>
+    <span class="c1">#     median absolute deviation.</span>
+
+    <span class="c1">#     Parameters</span>
+    <span class="c1">#     ----------</span>
+    <span class="c1">#     s_t : ndarray, shape (n_samples, )</span>
+    <span class="c1">#         The signal from which the noise standard deviation needs to</span>
+    <span class="c1">#         be estimated.</span>
+
+    <span class="c1">#     start_enh : int,</span>
+    <span class="c1">#         The indication about when the enhancement start. It will be used to</span>
+    <span class="c1">#         extract the baseline and estimate the noise standard deivation on</span>
+    <span class="c1">#         this portion.</span>
+
+    <span class="c1">#     Returns</span>
+    <span class="c1">#     -------</span>
+    <span class="c1">#     sigma : float,</span>
+    <span class="c1">#         The standard deviation estimate of the noise.</span>
+
+    <span class="c1">#     &quot;&quot;&quot;</span>
+
+    <span class="c1">#     # Compute the median absolute deviation</span>
+    <span class="c1">#     mad = np.median(np.abs(s_t[:start_enh] - np.median(s_t[:start_enh])))</span>
+
+    <span class="c1">#     return K_MAD * mad</span>
+
+    <span class="c1"># def _estimate_slope_std(std_s, win_sz, time_int):</span>
+    <span class="c1">#     &quot;&quot;&quot;Compute the standard deviation of the slope estimate at a</span>
+    <span class="c1">#     given scale.</span>
+
+    <span class="c1">#     Parameters</span>
+    <span class="c1">#     ----------</span>
+    <span class="c1">#     std_s : float,</span>
+    <span class="c1">#         Standard deviation of the signal noise.</span>
+
+    <span class="c1">#     win_sz : int,</span>
+    <span class="c1">#         Number of samples used to compute the derivative.</span>
+
+    <span class="c1">#     time_int : float,</span>
+    <span class="c1">#         The time interval between two samples.</span>
+
+    <span class="c1">#     Returns</span>
+    <span class="c1">#     -------</span>
+    <span class="c1">#     sigma_prime : float,</span>
+    <span class="c1">#         Standard deviation of the slope estimate at a given scale.</span>
+
+    <span class="c1">#     &quot;&quot;&quot;</span>
+
+    <span class="c1">#     return np.sqrt((12. * std_s) /</span>
+    <span class="c1">#                    (np.power(win_sz, 3) - win_sz) * time_int)</span>
+
+<div class="viewcode-block" id="SemiQuantificationExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SemiQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># We need to detect the AIF in order to find the value of the starting</span>
+        <span class="c1"># of the enhancement and subsquently the baseline intensity</span>
+        <span class="n">aif_signal</span> <span class="o">=</span> <span class="n">ToftsQuantificationExtraction</span><span class="o">.</span><span class="n">compute_aif</span><span class="p">(</span>
+            <span class="n">modality</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+
+        <span class="c1"># Find the index to consider for the pre-contrast</span>
+        <span class="c1"># - Find the index corresponfing to the maximum of the first derivative</span>
+        <span class="c1"># of the AIF signal.</span>
+        <span class="c1"># - Find the index related to the maximum of the second derivate</span>
+        <span class="c1"># considering the AIF signal from the start to the previous</span>
+        <span class="c1"># found index.</span>
+        <span class="n">shift_idx</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">idx_st_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">)[</span><span class="n">shift_idx</span><span class="p">:]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span> <span class="n">shift_idx</span>
+        <span class="c1"># Add on to count for the first derivative missing samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">))[:</span><span class="n">idx_st_dev</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span>
+                           <span class="n">shift_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="SemiQuantificationExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        data : ndarray, shape (n_sample, n_feature)</span>
+<span class="sd">            A matrix containing the features extracted. The number of samples</span>
+<span class="sd">            is equal to the number of positive label in the ground-truth.</span>
+<span class="sd">            The feature will be the following (wash-in, wash-out, AUC, tau,</span>
+<span class="sd">            relative enhancement)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SemiQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Organise that data such that we will compute the Toft&#39;s parameter</span>
+        <span class="c1"># for each entry</span>
+        <span class="c1"># Convert the roi to a numpy array</span>
+        <span class="n">roi_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Check the number of samples which will be extracted</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">roi_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Check the number of dimension</span>
+        <span class="n">n_dimension</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span>
+
+        <span class="c1"># Allocate the array</span>
+        <span class="n">signal_dce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">n_dimension</span><span class="p">))</span>
+
+        <span class="c1"># Copy the data at the right place</span>
+        <span class="k">for</span> <span class="n">idx_sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">):</span>
+            <span class="c1"># Get the coordinate of the point to consider</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">roi_data</span><span class="p">[:,</span> <span class="n">idx_sample</span><span class="p">]</span>
+
+            <span class="c1"># Extract the data</span>
+            <span class="n">signal_dce</span><span class="p">[</span><span class="n">idx_sample</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+        <span class="k">print</span> <span class="s1">&#39;DCE signal of interest extracted: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Define default parameter</span>
+        <span class="c1"># Compute the initial guess</span>
+        <span class="c1"># Find the maximum sig</span>
+
+        <span class="c1"># Perform the fitting in parallel</span>
+        <span class="n">idx_split</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="n">signal_dce</span><span class="p">:</span>
+            <span class="c1"># Initialize tau to t0</span>
+            <span class="n">param1</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]</span>
+            <span class="c1"># Initialize Sm to the maximum enhancement</span>
+            <span class="n">param2</span> <span class="o">=</span> <span class="n">curve</span><span class="p">[:</span><span class="n">idx_split</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="c1"># Initialize the wash-out using the slop of the end signal</span>
+            <span class="n">param3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="n">idx_split</span><span class="p">:],</span>
+                        <span class="n">curve</span><span class="p">[</span><span class="n">idx_split</span><span class="p">:],</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">init_params</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">,</span> <span class="n">param3</span><span class="p">])</span>
+
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_piecewise_model</span><span class="p">)(</span>
+            <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">,</span>
+            <span class="n">curve</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">curve</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]),</span>
+            <span class="n">coef0</span><span class="p">)</span>
+                                 <span class="k">for</span> <span class="n">curve</span><span class="p">,</span> <span class="n">coef0</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">signal_dce</span><span class="p">,</span>
+                                                         <span class="n">init_params</span><span class="p">))</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_sample</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">curve</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">signal_dce</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">))):</span>
+            <span class="c1"># Extract the four semi-quantitative parameters</span>
+            <span class="c1"># 1. Wash-in</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Sm&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">curve</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]))</span> <span class="o">/</span>
+                          <span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span> <span class="o">-</span>
+                           <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]))</span>
+
+            <span class="c1"># 2. Wash-out</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;wash-out&#39;</span><span class="p">]</span>
+
+            <span class="c1"># 3. IAUC</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">curve</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">:],</span>
+                               <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">:])</span>
+
+            <span class="c1"># 4. tau as the time enhancement</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span>
+
+            <span class="c1"># 5. Relative enhancment</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Sm&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">curve</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

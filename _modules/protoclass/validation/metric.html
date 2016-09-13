@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.validation.metric &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.validation.metric</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.validation.metric</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Methods to compute classification statistics from the</span>
+<span class="sd">prediction and labels.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">matthews_corrcoef</span>
+
+
+<div class="viewcode-block" id="build_confusion_from_volume"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.build_confusion_from_volume">[docs]</a><span class="k">def</span> <span class="nf">build_confusion_from_volume</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to build the confusion matrix.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cm: ndarray</span>
+<span class="sd">        The resulting confusion matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_sensitivity_specificity"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_sensitivity_specificity">[docs]</a><span class="k">def</span> <span class="nf">labels_to_sensitivity_specificity</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the sensitivity and specificty.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sens, spec: double</span>
+<span class="sd">        The resulting sensitivity and specificity.</span>
+<span class="sd">        The sensitivity is also known as true positive rate, hit rate,</span>
+<span class="sd">        or recall. The specificity is also known as true negative rate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the confusion matrix</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">build_confusion_from_volume</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+
+    <span class="c1"># Compute the sensitivity and specificity</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sens</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sens</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">sens</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_precision_negative_predictive_value"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_precision_negative_predictive_value">[docs]</a><span class="k">def</span> <span class="nf">labels_to_precision_negative_predictive_value</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the precision and the negative predictive value.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    prec, npv: double</span>
+<span class="sd">        The resulting precision and negative predictive value.</span>
+<span class="sd">        The precision is also kown as the positive predictive value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the confusion matrix</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">build_confusion_from_volume</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+
+    <span class="c1"># Compute the sensitivity and specificity</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">prec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prec</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">npv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">npv</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">prec</span><span class="p">,</span> <span class="n">npv</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_geometric_mean"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_geometric_mean">[docs]</a><span class="k">def</span> <span class="nf">labels_to_geometric_mean</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the geometric mean.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gmean: double</span>
+<span class="sd">        The resulting geometric mean of the accuracies measured.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Kubat, M. and Matwin, S. &quot;Addressing the curse of</span>
+<span class="sd">    imbalanced training sets: one-sided selection&quot; ICML (1997)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the confusion matrix</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">build_confusion_from_volume</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+
+    <span class="c1"># Compute the sensitivity and specificity</span>
+    <span class="n">sens</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Compute the geometric mean</span>
+    <span class="n">gmean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sens</span> <span class="o">*</span> <span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gmean</span></div>
+
+
+<div class="viewcode-block" id="labels_to_accuracy"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_accuracy">[docs]</a><span class="k">def</span> <span class="nf">labels_to_accuracy</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the accuracy score.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    acc: double</span>
+<span class="sd">        The resulting accuracy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cost_with_bias"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.cost_with_bias">[docs]</a><span class="k">def</span> <span class="nf">cost_with_bias</span><span class="p">(</span><span class="n">sens</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">bias_pos</span><span class="p">,</span> <span class="n">bias_neg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute cost given the sensitivity and specificity.</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sens: float</span>
+<span class="sd">        Sensitivity.</span>
+<span class="sd">    spec: float</span>
+<span class="sd">        Specificity.</span>
+<span class="sd">    bias_pos: float</span>
+<span class="sd">        Constant influencing the bias of the positive class.</span>
+<span class="sd">    bias_neg: float</span>
+<span class="sd">        Constant influecing the bias of the negative class.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cval: double</span>
+<span class="sd">        The resulting cost value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">bias_pos</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">sens</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">bias_neg</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">spec</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">bias_pos</span> <span class="o">+</span> <span class="n">bias_neg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_cost_value"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_cost_value">[docs]</a><span class="k">def</span> <span class="nf">labels_to_cost_value</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">,</span> <span class="n">bias_pos</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">bias_neg</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute cost given the ground-truth label</span>
+<span class="sd">    and predicted label.</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    bias_pos: float</span>
+<span class="sd">        Constant influencing the bias of the positive class.</span>
+<span class="sd">    bias_neg: float</span>
+<span class="sd">        Constant influecing the bias of the negative class.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cval: double</span>
+<span class="sd">        The resulting cost value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sens</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">labels_to_sensitivity_specificity</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cost_with_bias</span><span class="p">(</span><span class="n">sens</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">bias_pos</span><span class="p">,</span> <span class="n">bias_neg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_f1_score"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_f1_score">[docs]</a><span class="k">def</span> <span class="nf">labels_to_f1_score</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the F1 score.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    f1score: double</span>
+<span class="sd">        The resulting F1 score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_matthew_corrcoef"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_matthew_corrcoef">[docs]</a><span class="k">def</span> <span class="nf">labels_to_matthew_corrcoef</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the Matthew correlation coefficient.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mcc: double</span>
+<span class="sd">        The resulting Matthew correlation coefficient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_generalized_index_balanced_accuracy"><a class="viewcode-back" href="../../../modules/protoclass.validation.html#protoclass.validation.metric.labels_to_generalized_index_balanced_accuracy">[docs]</a><span class="k">def</span> <span class="nf">labels_to_generalized_index_balanced_accuracy</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span>
+                                                  <span class="n">pred_label</span><span class="p">,</span>
+                                                  <span class="n">M</span><span class="o">=</span><span class="s1">&#39;gmean&#39;</span><span class="p">,</span>
+                                                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                                                  <span class="n">squared</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to compute the the generalized index of balanced accuracy.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_label: ndarray</span>
+<span class="sd">        Ground-truth array.</span>
+<span class="sd">    pred_label: ndarray</span>
+<span class="sd">        Prediction label given by the machine learning method.</span>
+<span class="sd">    M: str (default: &#39;gmean&#39;)</span>
+<span class="sd">        Name of the metric to consider</span>
+<span class="sd">        ``sens``:</span>
+<span class="sd">        use the sensitivity.</span>
+<span class="sd">        ``&#39;spec&#39;``:</span>
+<span class="sd">        use the specificity.</span>
+<span class="sd">        ``&#39;prec&#39;``:</span>
+<span class="sd">        use the precision.</span>
+<span class="sd">        ``&#39;npv&#39;``:</span>
+<span class="sd">        use the negative predictive value.</span>
+<span class="sd">        ``&#39;gmean&#39;``:</span>
+<span class="sd">        use the geometric mean.</span>
+<span class="sd">        ``&#39;acc&#39;``:</span>
+<span class="sd">        use the accuracy score.</span>
+<span class="sd">        ``&#39;cost&#39;``:</span>
+<span class="sd">        use the cost value.</span>
+<span class="sd">        ``&#39;f1score&#39;``:</span>
+<span class="sd">        use the F1 score.</span>
+<span class="sd">        ``&#39;mcc&#39;``:</span>
+<span class="sd">        use the Matthew correlation coefficient.</span>
+<span class="sd">    alpha: float (default: 0.1)</span>
+<span class="sd">        Dominance weight</span>
+<span class="sd">    squared: bool (default: True)</span>
+<span class="sd">        If the metric M should be squared</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    iba: double</span>
+<span class="sd">        The resulting generalized index of balanced accuracy.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Garcia, V. and Mollineda, R.A. and Sanchez, J.S. &quot;Theoretical</span>
+<span class="sd">    analysis of a performance measure for imbalanced data&quot; ICPR (2010)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;sens&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the sensitivity</span>
+        <span class="n">met</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">labels_to_sensitivity_specificity</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;spec&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the specificity</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_sensitivity_specificity</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;prec&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the precision</span>
+        <span class="n">met</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">labels_to_precision_negative_predictive_value</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span>
+                                                               <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;npv&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the precision</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_precision_negative_predictive_value</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span>
+                                                               <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;gmean&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the negative predictive value</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_geometric_mean</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;acc&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the accuracy</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_accuracy</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;cost&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the accuracy</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_cost_value</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;f1score&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the F1 Score</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_f1_score</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">==</span> <span class="s1">&#39;mcc&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the Matthew correlation coefficient</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">labels_to_matthew_corrcoef</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.metric.GIBA: The metric that you&#39;</span>
+                         <span class="s1">&#39; attend to correct is not implemented.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check the value of alpha is meaningful</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">alpha</span> <span class="o">&gt;=</span> <span class="mf">0.</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.metric.GIBA: The value of alpha&#39;</span>
+                         <span class="s1">&#39; sould be set between 0 and 1.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if we should square the metric</span>
+    <span class="k">if</span> <span class="n">squared</span><span class="p">:</span>
+        <span class="n">met</span> <span class="o">=</span> <span class="n">met</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># Compute the dominance</span>
+    <span class="c1"># We need the sensitivity and specificity</span>
+    <span class="n">sens</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">labels_to_sensitivity_specificity</span><span class="p">(</span><span class="n">true_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
+    <span class="c1"># Compute the dominance as the difference of the sensitiy and specificity</span>
+    <span class="n">dom</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sens</span> <span class="o">-</span> <span class="n">spec</span><span class="p">)</span>
+
+    <span class="c1"># Compute the generalized index of balanced accuracy</span>
+    <span class="n">iba</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">dom</span><span class="p">)</span> <span class="o">*</span> <span class="n">met</span>
+
+    <span class="k">return</span> <span class="n">iba</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

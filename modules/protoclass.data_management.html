@@ -1,0 +1,2310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.data_management package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.classification.html">protoclass.classification package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.data_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.html">protoclass.extraction package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.preprocessing.html">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.utils.html">protoclass.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.validation.html">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.data_management package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.data_management.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-data-management-package">
+<h1>protoclass.data_management package<a class="headerlink" href="#protoclass-data-management-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.data_management.base_modality">
+<span id="protoclass-data-management-base-modality-module"></span><h2>protoclass.data_management.base_modality module<a class="headerlink" href="#module-protoclass.data_management.base_modality" title="Permalink to this headline">¶</a></h2>
+<p>Basic class for modality.</p>
+<dl class="class">
+<dt id="protoclass.data_management.base_modality.BaseModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.base_modality.</code><code class="descname">BaseModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.base_modality.BaseModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic class for medical modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality.is_read" title="protoclass.data_management.base_modality.BaseModality.is_read"><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code></a>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality.read_data_from_path" title="protoclass.data_management.base_modality.BaseModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(path_data)</td>
+<td>Method allowing to read the data.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality.update_histogram" title="protoclass.data_management.base_modality.BaseModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.base_modality.BaseModality.is_read">
+<code class="descname">is_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.is_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.base_modality.BaseModality.is_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to know if the data have been read.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>is_read</strong> : bool</p>
+<blockquote class="last">
+<div><p>If True, the data have been read at least once.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.base_modality.BaseModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.base_modality.BaseModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method allowing to read the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.base_modality.BaseModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.base_modality.BaseModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.dce_modality">
+<span id="protoclass-data-management-dce-modality-module"></span><h2>protoclass.data_management.dce_modality module<a class="headerlink" href="#module-protoclass.data_management.dce_modality" title="Permalink to this headline">¶</a></h2>
+<p>DCE modality class.</p>
+<dl class="class">
+<dt id="protoclass.data_management.dce_modality.DCEModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.dce_modality.</code><code class="descname">DCEModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dce_modality.DCEModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.temporal_modality.TemporalModality" title="protoclass.data_management.temporal_modality.TemporalModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.temporal_modality.TemporalModality</span></code></a></p>
+<p>Class to handle DCE-MRI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>Path where the data are located. Can also be specified
+when reading the data. It will be overidden with this function.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">path_data_</span></a></td>
+<td>(str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">data_</span></a></td>
+<td>(ndarray, shape (T, Y, X, Z)) The different volume of the DCE serie. The data are saved in T, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">metadata_</span></a></td>
+<td>(dict) A dictionary containing the metadata related to the DCE serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id7"><span class="problematic" id="id8">pdf_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id9"><span class="problematic" id="id10">bin_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-even"><td><a href="#id11"><span class="problematic" id="id12">max_series_</span></a></td>
+<td>(float) Maximum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id13"><span class="problematic" id="id14">min_series_</span></a></td>
+<td>(float) Minimum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-even"><td><a href="#id15"><span class="problematic" id="id16">n_serie_</span></a></td>
+<td>(int) Number of serie in this DCE sequence.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id17"><span class="problematic" id="id18">max_series_list_</span></a></td>
+<td>(list of float) List of the maximum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id19"><span class="problematic" id="id20">min_series_list_</span></a></td>
+<td>(list of float) List of the minimum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id21"><span class="problematic" id="id22">time_info_</span></a></td>
+<td>(ndarray, shape (n_serie, )) Array containing the time information of the acquisition time in seconds</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.dce_modality.DCEModality.build_heatmap" title="protoclass.data_management.dce_modality.DCEModality.build_heatmap"><code class="xref py py-obj docutils literal"><span class="pre">build_heatmap</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Function which return a heatmap using the pdf of each serie.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.dce_modality.DCEModality.get_pdf_list" title="protoclass.data_management.dce_modality.DCEModality.get_pdf_list"><code class="xref py py-obj docutils literal"><span class="pre">get_pdf_list</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Extract the a list of pdf related with the data.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.dce_modality.DCEModality.read_data_from_path" title="protoclass.data_management.dce_modality.DCEModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Function to read temporal images which represent a 3D volume over time.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.dce_modality.DCEModality.update_histogram" title="protoclass.data_management.dce_modality.DCEModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the histogram of each serie and first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.dce_modality.DCEModality.build_heatmap">
+<code class="descname">build_heatmap</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.build_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dce_modality.DCEModality.build_heatmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which return a heatmap using the pdf of each serie.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : int, str or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;None&#8217;, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>heatmap</strong> : ndarray, shape (n_serie, intensity_range)</p>
+<blockquote>
+<div><p>Return an heatmap of the different pdfs. This equivalent to
+<a href="#id23"><span class="problematic" id="id24">pdf_series_</span></a> but properly shifted inside an array.</p>
+</div></blockquote>
+<p><strong>bins_heatmap</strong> : ndarray, shape (intensity_range, )</p>
+<blockquote class="last">
+<div><p>Returns the bins associated with the heatmap.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.dce_modality.DCEModality.get_pdf_list">
+<code class="descname">get_pdf_list</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.get_pdf_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dce_modality.DCEModality.get_pdf_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the a list of pdf related with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : list of int or str, optional (default=&#8217;auto&#8217;)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf_list</strong> : list of ndarray, length (n_serie)</p>
+<blockquote>
+<div><p>List of the pdf with the associated series.</p>
+</div></blockquote>
+<p><strong>bin_list</strong> : list of ndarray, length (n_series + 1)</p>
+<blockquote class="last">
+<div><p>List of the bins associated with the list of pdf.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.dce_modality.DCEModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dce_modality.DCEModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read temporal images which represent a 3D volume
+over time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the temporal data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.dce_modality.DCEModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dce_modality.DCEModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the histogram of each serie and first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : list of int, str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.dwi_modality">
+<span id="protoclass-data-management-dwi-modality-module"></span><h2>protoclass.data_management.dwi_modality module<a class="headerlink" href="#module-protoclass.data_management.dwi_modality" title="Permalink to this headline">¶</a></h2>
+<p>DWI modality class.</p>
+<dl class="class">
+<dt id="protoclass.data_management.dwi_modality.DWIModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.dwi_modality.</code><code class="descname">DWIModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dwi_modality.DWIModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality" title="protoclass.data_management.multisequence_modality.MultisequenceModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.multisequence_modality.MultisequenceModality</span></code></a></p>
+<p>Class to handle DWI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id25"><span class="problematic" id="id26">path_data_</span></a></td>
+<td>(str or list of str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id27"><span class="problematic" id="id28">data_</span></a></td>
+<td>(ndarray, shape (B_seq, Y, X, Z)) The different volume from different B sequuences. The data are saved in B_seq, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id29"><span class="problematic" id="id30">pdf_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id31"><span class="problematic" id="id32">bin_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id33"><span class="problematic" id="id34">max_series_</span></a></td>
+<td>(float) Maximum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-even"><td><a href="#id35"><span class="problematic" id="id36">min_series_</span></a></td>
+<td>(float) Minimum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id37"><span class="problematic" id="id38">n_serie_</span></a></td>
+<td>(int) Number of serie in this DCE sequence.</td>
+</tr>
+<tr class="row-even"><td><a href="#id39"><span class="problematic" id="id40">max_series_list_</span></a></td>
+<td>(list of float) List of the maximum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id41"><span class="problematic" id="id42">min_series_list_</span></a></td>
+<td>(list of float) List of the minimum intensity for each DCE serie.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.dwi_modality.DWIModality.read_data_from_path" title="protoclass.data_management.dwi_modality.DWIModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Function to read DWI images which represent a 3D volume over time.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.dwi_modality.DWIModality.update_histogram" title="protoclass.data_management.dwi_modality.DWIModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the histogram of each serie and first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.dwi_modality.DWIModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dwi_modality.DWIModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read DWI images which represent a 3D volume
+over time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the DWI data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.dwi_modality.DWIModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.dwi_modality.DWIModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the histogram of each serie and first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : list of int, str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.gt_modality">
+<span id="protoclass-data-management-gt-modality-module"></span><h2>protoclass.data_management.gt_modality module<a class="headerlink" href="#module-protoclass.data_management.gt_modality" title="Permalink to this headline">¶</a></h2>
+<p>GT modality class.</p>
+<dl class="class">
+<dt id="protoclass.data_management.gt_modality.GTModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.gt_modality.</code><code class="descname">GTModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.gt_modality.GTModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality" title="protoclass.data_management.multisequence_modality.MultisequenceModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.multisequence_modality.MultisequenceModality</span></code></a></p>
+<p>Class to handle GT modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id43"><span class="problematic" id="id44">path_data_</span></a></td>
+<td>(str or list of str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id45"><span class="problematic" id="id46">data_</span></a></td>
+<td>(ndarray, shape (GT, Y, X, Z)) The different volume of the GT volume. The data are saved in GT, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id47"><span class="problematic" id="id48">n_serie_</span></a></td>
+<td>(int) The number of ground-truth volume. Refer to <a href="#id49"><span class="problematic" id="id50">cat_gt_</span></a> to know the information associated to each volume.</td>
+</tr>
+<tr class="row-even"><td><a href="#id51"><span class="problematic" id="id52">cat_gt_</span></a></td>
+<td>(list of str) Categorical labels associated with each ground-truth volume read.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.gt_modality.GTModality.extract_gt_data" title="protoclass.data_management.gt_modality.GTModality.extract_gt_data"><code class="xref py py-obj docutils literal"><span class="pre">extract_gt_data</span></code></a>(label[,&nbsp;output_type])</td>
+<td>Extract data corresponding to a given label.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.gt_modality.GTModality.read_data_from_path" title="protoclass.data_management.gt_modality.GTModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(cat_gt[,&nbsp;path_data])</td>
+<td>Read GT images which correspond to a 3D volume, a volume for different information.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.gt_modality.GTModality.update_histogram" title="protoclass.data_management.gt_modality.GTModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.gt_modality.GTModality.extract_gt_data">
+<code class="descname">extract_gt_data</code><span class="sig-paren">(</span><em>label</em>, <em>output_type='index'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.extract_gt_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.gt_modality.GTModality.extract_gt_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data corresponding to a given label.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>label</strong> : str</p>
+<blockquote>
+<div><p>Label of the ground-truth to extract.</p>
+</div></blockquote>
+<p><strong>output_type</strong> : str, optional (default=&#8217;index&#8217;)</p>
+<blockquote>
+<div><p>Type of the desired output. The choices are.</p>
+<ul class="simple">
+<li>If &#8216;index&#8217;, the index corresponding to the positive class will</li>
+</ul>
+<p>be returned.
+- If &#8216;data&#8217;, the full ground-truth data will be returned.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>output</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>The output data. Depends of the arguments <cite>output_type</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.gt_modality.GTModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>cat_gt</em>, <em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.gt_modality.GTModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read GT images which correspond to a 3D volume, a volume
+for different information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cat_gt</strong> : list of str</p>
+<blockquote>
+<div><p>Categorical label affected to each ground-truth volume read.</p>
+</div></blockquote>
+<p><strong>path_data</strong> : str, list or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the temporal data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This function overwrite the function of MultisequenceModality since
+that a GT can contain only one sequence as well.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.gt_modality.GTModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.gt_modality.GTModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.multisequence_modality">
+<span id="protoclass-data-management-multisequence-modality-module"></span><h2>protoclass.data_management.multisequence_modality module<a class="headerlink" href="#module-protoclass.data_management.multisequence_modality" title="Permalink to this headline">¶</a></h2>
+<p>Basic class for multisequence modality (DW, GT).</p>
+<dl class="class">
+<dt id="protoclass.data_management.multisequence_modality.MultisequenceModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.multisequence_modality.</code><code class="descname">MultisequenceModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.multisequence_modality.MultisequenceModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for multisequence medical modality (DW).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality.read_data_from_path" title="protoclass.data_management.multisequence_modality.MultisequenceModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a specific path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality.update_histogram" title="protoclass.data_management.multisequence_modality.MultisequenceModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.multisequence_modality.MultisequenceModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.multisequence_modality.MultisequenceModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a specific path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.multisequence_modality.MultisequenceModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.multisequence_modality.MultisequenceModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.oct_modality">
+<span id="protoclass-data-management-oct-modality-module"></span><h2>protoclass.data_management.oct_modality module<a class="headerlink" href="#module-protoclass.data_management.oct_modality" title="Permalink to this headline">¶</a></h2>
+<p>OCT modality class.</p>
+<dl class="class">
+<dt id="protoclass.data_management.oct_modality.OCTModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.oct_modality.</code><code class="descname">OCTModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.oct_modality.OCTModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="protoclass.data_management.standalone_modality.StandaloneModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.standalone_modality.StandaloneModality</span></code></a></p>
+<p>Class to handle OCT modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The <cite>img</cite> file where the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id53"><span class="problematic" id="id54">path_data_</span></a></td>
+<td>(string) Location of the <cite>img</cite> file.</td>
+</tr>
+<tr class="row-even"><td><a href="#id55"><span class="problematic" id="id56">data_</span></a></td>
+<td>(array-like, shape (Y, Z, X)) The different volume of the SD-OCT volume. The data are saved in Y, Z, X ordered. Generally, the data are coded on 8 bits.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id57"><span class="problematic" id="id58">pdf_</span></a></td>
+<td>(list, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id59"><span class="problematic" id="id60">bin_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id61"><span class="problematic" id="id62">max_</span></a></td>
+<td>(float) Maximum intensity of the OCT volume.</td>
+</tr>
+<tr class="row-even"><td><a href="#id63"><span class="problematic" id="id64">min_</span></a></td>
+<td>(float) Minimum intensity of the OCT volume.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.oct_modality.OCTModality.read_data_from_path" title="protoclass.data_management.oct_modality.OCTModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(sz_data[,&nbsp;path_data,&nbsp;dtype])</td>
+<td>Function to read OCT images which correspond to a 3D volume.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.oct_modality.OCTModality.update_histogram" title="protoclass.data_management.oct_modality.OCTModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the PDF and the first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.oct_modality.OCTModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>sz_data</em>, <em>path_data=None</em>, <em>dtype='uint8'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.oct_modality.OCTModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read OCT images which correspond to a 3D volume.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sz_data</strong> : tuple of int, shape (Y, Z, X)</p>
+<blockquote>
+<div><p>Tuple with 3 values specifying the dimension of the volume.</p>
+</div></blockquote>
+<p><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the <cite>img</cite> file. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str, optional (default=&#8217;uint8&#8217;)</p>
+<blockquote>
+<div><p>Type of the raw data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.oct_modality.OCTModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.oct_modality.OCTModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the PDF and the first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : int or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>There is the possibility to redifine the number of bins to use for
+the histogram since it can be tricky to play with normalized data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.standalone_modality">
+<span id="protoclass-data-management-standalone-modality-module"></span><h2>protoclass.data_management.standalone_modality module<a class="headerlink" href="#module-protoclass.data_management.standalone_modality" title="Permalink to this headline">¶</a></h2>
+<p>Basic class for standalone modality (T1, T2, etc.).</p>
+<dl class="class">
+<dt id="protoclass.data_management.standalone_modality.StandaloneModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.standalone_modality.</code><code class="descname">StandaloneModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for medical modality (T1, T2, etc.).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality.read_data_from_path" title="protoclass.data_management.standalone_modality.StandaloneModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality.update_histogram" title="protoclass.data_management.standalone_modality.StandaloneModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.standalone_modality.StandaloneModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.standalone_modality.StandaloneModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.standalone_modality.StandaloneModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.standalone_modality.StandaloneModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.t2w_modality">
+<span id="protoclass-data-management-t2w-modality-module"></span><h2>protoclass.data_management.t2w_modality module<a class="headerlink" href="#module-protoclass.data_management.t2w_modality" title="Permalink to this headline">¶</a></h2>
+<p>T2W modality class.</p>
+<dl class="class">
+<dt id="protoclass.data_management.t2w_modality.T2WModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.t2w_modality.</code><code class="descname">T2WModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.t2w_modality.T2WModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="protoclass.data_management.standalone_modality.StandaloneModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.standalone_modality.StandaloneModality</span></code></a></p>
+<p>Class to handle T2W-MRI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id65"><span class="problematic" id="id66">path_data_</span></a></td>
+<td>(string) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id67"><span class="problematic" id="id68">data_</span></a></td>
+<td>(ndarray, shape (Y, X, Z)) The different volume of the T2W volume. The data are saved in Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id69"><span class="problematic" id="id70">metadata_</span></a></td>
+<td>(dict) Dictionnary which contain the MRI sequence information. Note that the information are given in the original ordering (X, Y, Z), which is different from the organisation of <cite>data_</cite> which is (Y, X, Z).</td>
+</tr>
+<tr class="row-even"><td><a href="#id71"><span class="problematic" id="id72">pdf_</span></a></td>
+<td>(list, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id73"><span class="problematic" id="id74">bin_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-even"><td><a href="#id75"><span class="problematic" id="id76">max_</span></a></td>
+<td>(float) Maximum intensity of the T2W-MRI volume.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id77"><span class="problematic" id="id78">min_</span></a></td>
+<td>(float) Minimum intensity of the T2W-MRI volume.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.t2w_modality.T2WModality.get_pdf" title="protoclass.data_management.t2w_modality.T2WModality.get_pdf"><code class="xref py py-obj docutils literal"><span class="pre">get_pdf</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Extract the a list of pdf related with the data.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.t2w_modality.T2WModality.read_data_from_path" title="protoclass.data_management.t2w_modality.T2WModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read T2W images which represent a single 3D volume.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.t2w_modality.T2WModality.update_histogram" title="protoclass.data_management.t2w_modality.T2WModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the PDF and the first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.t2w_modality.T2WModality.get_pdf">
+<code class="descname">get_pdf</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.get_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.t2w_modality.T2WModality.get_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the a list of pdf related with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : list of int or str, optional (default=&#8217;auto&#8217;)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- If None, the number of bins used is the one at the last
+call of update histogram.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf_data</strong> : ndarray, length (n_serie)</p>
+<blockquote>
+<div><p>List of the pdf with the associated series.</p>
+</div></blockquote>
+<p><strong>bin_data</strong> : list of ndarray, length (n_series + 1)</p>
+<blockquote class="last">
+<div><p>List of the bins associated with the list of pdf.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.t2w_modality.T2WModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.t2w_modality.T2WModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read T2W images which represent a single 3D volume.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the standalone modality data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.t2w_modality.T2WModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.t2w_modality.T2WModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the PDF and the first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : int or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>There is the possibility to redifine the number of bins to use for
+the histogram since it can be tricky to play with normalized data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management.temporal_modality">
+<span id="protoclass-data-management-temporal-modality-module"></span><h2>protoclass.data_management.temporal_modality module<a class="headerlink" href="#module-protoclass.data_management.temporal_modality" title="Permalink to this headline">¶</a></h2>
+<p>Base class for temporal modality (DCE).</p>
+<dl class="class">
+<dt id="protoclass.data_management.temporal_modality.TemporalModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.temporal_modality.</code><code class="descname">TemporalModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.temporal_modality.TemporalModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for temporal medical modality (DCE).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.temporal_modality.TemporalModality.read_data_from_path" title="protoclass.data_management.temporal_modality.TemporalModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.temporal_modality.TemporalModality.update_histogram" title="protoclass.data_management.temporal_modality.TemporalModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.temporal_modality.TemporalModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.temporal_modality.TemporalModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.temporal_modality.TemporalModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.temporal_modality.TemporalModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.data_management">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.data_management" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-protoclass.data_management" title="protoclass.data_management"><code class="xref py py-mod docutils literal"><span class="pre">protoclass.data_management</span></code></a> modules allows to handle medical
+data format.</p>
+<dl class="class">
+<dt id="protoclass.data_management.BaseModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">BaseModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.BaseModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic class for medical modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.BaseModality.is_read" title="protoclass.data_management.BaseModality.is_read"><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code></a>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.BaseModality.read_data_from_path" title="protoclass.data_management.BaseModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(path_data)</td>
+<td>Method allowing to read the data.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.BaseModality.update_histogram" title="protoclass.data_management.BaseModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.BaseModality.is_read">
+<code class="descname">is_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.is_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.BaseModality.is_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to know if the data have been read.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>is_read</strong> : bool</p>
+<blockquote class="last">
+<div><p>If True, the data have been read at least once.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.BaseModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.BaseModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method allowing to read the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.BaseModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/base_modality.html#BaseModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.BaseModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.StandaloneModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">StandaloneModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.StandaloneModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for medical modality (T1, T2, etc.).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.StandaloneModality.read_data_from_path" title="protoclass.data_management.StandaloneModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.StandaloneModality.update_histogram" title="protoclass.data_management.StandaloneModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.StandaloneModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.StandaloneModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.StandaloneModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/standalone_modality.html#StandaloneModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.StandaloneModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.TemporalModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">TemporalModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.TemporalModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for temporal medical modality (DCE).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.TemporalModality.read_data_from_path" title="protoclass.data_management.TemporalModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.TemporalModality.update_histogram" title="protoclass.data_management.TemporalModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.TemporalModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.TemporalModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.TemporalModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/temporal_modality.html#TemporalModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.TemporalModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.MultisequenceModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">MultisequenceModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.MultisequenceModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.base_modality.BaseModality" title="protoclass.data_management.base_modality.BaseModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.base_modality.BaseModality</span></code></a></p>
+<p>Basic class for multisequence medical modality (DW).</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.MultisequenceModality.read_data_from_path" title="protoclass.data_management.MultisequenceModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read the data from a specific path.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.MultisequenceModality.update_histogram" title="protoclass.data_management.MultisequenceModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.MultisequenceModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.MultisequenceModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data from a specific path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.MultisequenceModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/multisequence_modality.html#MultisequenceModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.MultisequenceModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.DCEModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">DCEModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DCEModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.temporal_modality.TemporalModality" title="protoclass.data_management.temporal_modality.TemporalModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.temporal_modality.TemporalModality</span></code></a></p>
+<p>Class to handle DCE-MRI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>Path where the data are located. Can also be specified
+when reading the data. It will be overidden with this function.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id79"><span class="problematic" id="id80">path_data_</span></a></td>
+<td>(str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id81"><span class="problematic" id="id82">data_</span></a></td>
+<td>(ndarray, shape (T, Y, X, Z)) The different volume of the DCE serie. The data are saved in T, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id83"><span class="problematic" id="id84">metadata_</span></a></td>
+<td>(dict) A dictionary containing the metadata related to the DCE serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id85"><span class="problematic" id="id86">pdf_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id87"><span class="problematic" id="id88">bin_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-even"><td><a href="#id89"><span class="problematic" id="id90">max_series_</span></a></td>
+<td>(float) Maximum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id91"><span class="problematic" id="id92">min_series_</span></a></td>
+<td>(float) Minimum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-even"><td><a href="#id93"><span class="problematic" id="id94">n_serie_</span></a></td>
+<td>(int) Number of serie in this DCE sequence.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id95"><span class="problematic" id="id96">max_series_list_</span></a></td>
+<td>(list of float) List of the maximum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id97"><span class="problematic" id="id98">min_series_list_</span></a></td>
+<td>(list of float) List of the minimum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id99"><span class="problematic" id="id100">time_info_</span></a></td>
+<td>(ndarray, shape (n_serie, )) Array containing the time information of the acquisition time in seconds</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.DCEModality.build_heatmap" title="protoclass.data_management.DCEModality.build_heatmap"><code class="xref py py-obj docutils literal"><span class="pre">build_heatmap</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Function which return a heatmap using the pdf of each serie.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.DCEModality.get_pdf_list" title="protoclass.data_management.DCEModality.get_pdf_list"><code class="xref py py-obj docutils literal"><span class="pre">get_pdf_list</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Extract the a list of pdf related with the data.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.DCEModality.read_data_from_path" title="protoclass.data_management.DCEModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Function to read temporal images which represent a 3D volume over time.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.DCEModality.update_histogram" title="protoclass.data_management.DCEModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the histogram of each serie and first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.DCEModality.build_heatmap">
+<code class="descname">build_heatmap</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.build_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DCEModality.build_heatmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which return a heatmap using the pdf of each serie.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : int, str or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;None&#8217;, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>heatmap</strong> : ndarray, shape (n_serie, intensity_range)</p>
+<blockquote>
+<div><p>Return an heatmap of the different pdfs. This equivalent to
+<a href="#id101"><span class="problematic" id="id102">pdf_series_</span></a> but properly shifted inside an array.</p>
+</div></blockquote>
+<p><strong>bins_heatmap</strong> : ndarray, shape (intensity_range, )</p>
+<blockquote class="last">
+<div><p>Returns the bins associated with the heatmap.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.DCEModality.get_pdf_list">
+<code class="descname">get_pdf_list</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.get_pdf_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DCEModality.get_pdf_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the a list of pdf related with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : list of int or str, optional (default=&#8217;auto&#8217;)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf_list</strong> : list of ndarray, length (n_serie)</p>
+<blockquote>
+<div><p>List of the pdf with the associated series.</p>
+</div></blockquote>
+<p><strong>bin_list</strong> : list of ndarray, length (n_series + 1)</p>
+<blockquote class="last">
+<div><p>List of the bins associated with the list of pdf.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.DCEModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DCEModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read temporal images which represent a 3D volume
+over time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the temporal data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.DCEModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dce_modality.html#DCEModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DCEModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the histogram of each serie and first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : list of int, str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.T2WModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">T2WModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.T2WModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="protoclass.data_management.standalone_modality.StandaloneModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.standalone_modality.StandaloneModality</span></code></a></p>
+<p>Class to handle T2W-MRI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id103"><span class="problematic" id="id104">path_data_</span></a></td>
+<td>(string) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id105"><span class="problematic" id="id106">data_</span></a></td>
+<td>(ndarray, shape (Y, X, Z)) The different volume of the T2W volume. The data are saved in Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id107"><span class="problematic" id="id108">metadata_</span></a></td>
+<td>(dict) Dictionnary which contain the MRI sequence information. Note that the information are given in the original ordering (X, Y, Z), which is different from the organisation of <cite>data_</cite> which is (Y, X, Z).</td>
+</tr>
+<tr class="row-even"><td><a href="#id109"><span class="problematic" id="id110">pdf_</span></a></td>
+<td>(list, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id111"><span class="problematic" id="id112">bin_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-even"><td><a href="#id113"><span class="problematic" id="id114">max_</span></a></td>
+<td>(float) Maximum intensity of the T2W-MRI volume.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id115"><span class="problematic" id="id116">min_</span></a></td>
+<td>(float) Minimum intensity of the T2W-MRI volume.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.T2WModality.get_pdf" title="protoclass.data_management.T2WModality.get_pdf"><code class="xref py py-obj docutils literal"><span class="pre">get_pdf</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Extract the a list of pdf related with the data.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.T2WModality.read_data_from_path" title="protoclass.data_management.T2WModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read T2W images which represent a single 3D volume.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.T2WModality.update_histogram" title="protoclass.data_management.T2WModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the PDF and the first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.T2WModality.get_pdf">
+<code class="descname">get_pdf</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.get_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.T2WModality.get_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the a list of pdf related with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : list of int or str, optional (default=&#8217;auto&#8217;)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- If None, the number of bins used is the one at the last
+call of update histogram.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf_data</strong> : ndarray, length (n_serie)</p>
+<blockquote>
+<div><p>List of the pdf with the associated series.</p>
+</div></blockquote>
+<p><strong>bin_data</strong> : list of ndarray, length (n_series + 1)</p>
+<blockquote class="last">
+<div><p>List of the bins associated with the list of pdf.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.T2WModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.T2WModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read T2W images which represent a single 3D volume.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the standalone modality data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.T2WModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/t2w_modality.html#T2WModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.T2WModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the PDF and the first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : int or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>There is the possibility to redifine the number of bins to use for
+the histogram since it can be tricky to play with normalized data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.ADCModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">ADCModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/adc_modality.html#ADCModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.ADCModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="protoclass.data_management.standalone_modality.StandaloneModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.standalone_modality.StandaloneModality</span></code></a></p>
+<p>Class to handle ADC modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id117"><span class="problematic" id="id118">path_data_</span></a></td>
+<td>(string) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id119"><span class="problematic" id="id120">data_</span></a></td>
+<td>(ndarray, shape (Y, X, Z)) The different volume of the T2W volume. The data are saved in Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id121"><span class="problematic" id="id122">metadata_</span></a></td>
+<td>(dict) Dictionnary which contain the MRI sequence information. Note that the information are given in the original ordering (X, Y, Z), which is different from the organisation of <cite>data_</cite> which is (Y, X, Z).</td>
+</tr>
+<tr class="row-even"><td><a href="#id123"><span class="problematic" id="id124">pdf_</span></a></td>
+<td>(list, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id125"><span class="problematic" id="id126">bin_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-even"><td><a href="#id127"><span class="problematic" id="id128">max_</span></a></td>
+<td>(float) Maximum intensity of the T2W-MRI volume.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id129"><span class="problematic" id="id130">min_</span></a></td>
+<td>(float) Minimum intensity of the T2W-MRI volume.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.ADCModality.get_pdf" title="protoclass.data_management.ADCModality.get_pdf"><code class="xref py py-obj docutils literal"><span class="pre">get_pdf</span></code></a>([roi_data,&nbsp;nb_bins])</td>
+<td>Extract the a list of pdf related with the data.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.ADCModality.read_data_from_path" title="protoclass.data_management.ADCModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Read T2W images which represent a single 3D volume.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.ADCModality.update_histogram" title="protoclass.data_management.ADCModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the PDF and the first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.ADCModality.get_pdf">
+<code class="descname">get_pdf</code><span class="sig-paren">(</span><em>roi_data=None</em>, <em>nb_bins='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/adc_modality.html#ADCModality.get_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.ADCModality.get_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the a list of pdf related with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>roi_data</strong> : tuple</p>
+<blockquote>
+<div><p>Indices of elements to consider while computing the histogram.
+The ROI is a 3D volume which will be used for each time serie.</p>
+</div></blockquote>
+<p><strong>nb_bins</strong> : list of int or str, optional (default=&#8217;auto&#8217;)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- If None, the number of bins used is the one at the last
+call of update histogram.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf_data</strong> : ndarray, length (n_serie)</p>
+<blockquote>
+<div><p>List of the pdf with the associated series.</p>
+</div></blockquote>
+<p><strong>bin_data</strong> : list of ndarray, length (n_series + 1)</p>
+<blockquote class="last">
+<div><p>List of the bins associated with the list of pdf.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.ADCModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/adc_modality.html#ADCModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.ADCModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read T2W images which represent a single 3D volume.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the standalone modality data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.ADCModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/adc_modality.html#ADCModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.ADCModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the PDF and the first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : int or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>There is the possibility to redifine the number of bins to use for
+the histogram since it can be tricky to play with normalized data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.DWIModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">DWIModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DWIModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality" title="protoclass.data_management.multisequence_modality.MultisequenceModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.multisequence_modality.MultisequenceModality</span></code></a></p>
+<p>Class to handle DWI modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id131"><span class="problematic" id="id132">path_data_</span></a></td>
+<td>(str or list of str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id133"><span class="problematic" id="id134">data_</span></a></td>
+<td>(ndarray, shape (B_seq, Y, X, Z)) The different volume from different B sequuences. The data are saved in B_seq, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id135"><span class="problematic" id="id136">pdf_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id137"><span class="problematic" id="id138">bin_series_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id139"><span class="problematic" id="id140">max_series_</span></a></td>
+<td>(float) Maximum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-even"><td><a href="#id141"><span class="problematic" id="id142">min_series_</span></a></td>
+<td>(float) Minimum intensity of all the DCE series.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id143"><span class="problematic" id="id144">n_serie_</span></a></td>
+<td>(int) Number of serie in this DCE sequence.</td>
+</tr>
+<tr class="row-even"><td><a href="#id145"><span class="problematic" id="id146">max_series_list_</span></a></td>
+<td>(list of float) List of the maximum intensity for each DCE serie.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id147"><span class="problematic" id="id148">min_series_list_</span></a></td>
+<td>(list of float) List of the minimum intensity for each DCE serie.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.DWIModality.read_data_from_path" title="protoclass.data_management.DWIModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>([path_data])</td>
+<td>Function to read DWI images which represent a 3D volume over time.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.DWIModality.update_histogram" title="protoclass.data_management.DWIModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the histogram of each serie and first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.DWIModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DWIModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read DWI images which represent a 3D volume
+over time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the DWI data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.DWIModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/dwi_modality.html#DWIModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.DWIModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the histogram of each serie and first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : list of int, str, or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- If &#8216;auto&#8217;, the number of bins is found at fitting time.
+- Otherwise, a list of integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.GTModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">GTModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.GTModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.multisequence_modality.MultisequenceModality" title="protoclass.data_management.multisequence_modality.MultisequenceModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.multisequence_modality.MultisequenceModality</span></code></a></p>
+<p>Class to handle GT modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, list of str, or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The folder in which the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id149"><span class="problematic" id="id150">path_data_</span></a></td>
+<td>(str or list of str) Location of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id151"><span class="problematic" id="id152">data_</span></a></td>
+<td>(ndarray, shape (GT, Y, X, Z)) The different volume of the GT volume. The data are saved in GT, Y, X, Z ordered.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id153"><span class="problematic" id="id154">n_serie_</span></a></td>
+<td>(int) The number of ground-truth volume. Refer to <a href="#id155"><span class="problematic" id="id156">cat_gt_</span></a> to know the information associated to each volume.</td>
+</tr>
+<tr class="row-even"><td><a href="#id157"><span class="problematic" id="id158">cat_gt_</span></a></td>
+<td>(list of str) Categorical labels associated with each ground-truth volume read.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.GTModality.extract_gt_data" title="protoclass.data_management.GTModality.extract_gt_data"><code class="xref py py-obj docutils literal"><span class="pre">extract_gt_data</span></code></a>(label[,&nbsp;output_type])</td>
+<td>Extract data corresponding to a given label.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.GTModality.read_data_from_path" title="protoclass.data_management.GTModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(cat_gt[,&nbsp;path_data])</td>
+<td>Read GT images which correspond to a 3D volume, a volume for different information.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.GTModality.update_histogram" title="protoclass.data_management.GTModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>()</td>
+<td>Method to compute histogram and statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.GTModality.extract_gt_data">
+<code class="descname">extract_gt_data</code><span class="sig-paren">(</span><em>label</em>, <em>output_type='index'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.extract_gt_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.GTModality.extract_gt_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data corresponding to a given label.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>label</strong> : str</p>
+<blockquote>
+<div><p>Label of the ground-truth to extract.</p>
+</div></blockquote>
+<p><strong>output_type</strong> : str, optional (default=&#8217;index&#8217;)</p>
+<blockquote>
+<div><p>Type of the desired output. The choices are.</p>
+<ul class="simple">
+<li>If &#8216;index&#8217;, the index corresponding to the positive class will</li>
+</ul>
+<p>be returned.
+- If &#8216;data&#8217;, the full ground-truth data will be returned.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>output</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>The output data. Depends of the arguments <cite>output_type</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.GTModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>cat_gt</em>, <em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.GTModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read GT images which correspond to a 3D volume, a volume
+for different information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cat_gt</strong> : list of str</p>
+<blockquote>
+<div><p>Categorical label affected to each ground-truth volume read.</p>
+</div></blockquote>
+<p><strong>path_data</strong> : str, list or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the temporal data. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This function overwrite the function of MultisequenceModality since
+that a GT can contain only one sequence as well.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.GTModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/gt_modality.html#GTModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.GTModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute histogram and statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.data_management.OCTModality">
+<em class="property">class </em><code class="descclassname">protoclass.data_management.</code><code class="descname">OCTModality</code><span class="sig-paren">(</span><em>path_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.OCTModality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.data_management.standalone_modality.StandaloneModality" title="protoclass.data_management.standalone_modality.StandaloneModality"><code class="xref py py-class docutils literal"><span class="pre">protoclass.data_management.standalone_modality.StandaloneModality</span></code></a></p>
+<p>Class to handle OCT modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_data</strong> : str, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The <cite>img</cite> file where the data are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id159"><span class="problematic" id="id160">path_data_</span></a></td>
+<td>(string) Location of the <cite>img</cite> file.</td>
+</tr>
+<tr class="row-even"><td><a href="#id161"><span class="problematic" id="id162">data_</span></a></td>
+<td>(array-like, shape (Y, Z, X)) The different volume of the SD-OCT volume. The data are saved in Y, Z, X ordered. Generally, the data are coded on 8 bits.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id163"><span class="problematic" id="id164">pdf_</span></a></td>
+<td>(list, length (n_serie)) List of the PDF for each serie.</td>
+</tr>
+<tr class="row-even"><td><a href="#id165"><span class="problematic" id="id166">bin_</span></a></td>
+<td>(list of ndarray, length (n_serie)) List of the bins used to plot the pdfs.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id167"><span class="problematic" id="id168">max_</span></a></td>
+<td>(float) Maximum intensity of the OCT volume.</td>
+</tr>
+<tr class="row-even"><td><a href="#id169"><span class="problematic" id="id170">min_</span></a></td>
+<td>(float) Minimum intensity of the OCT volume.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_read</span></code>()</td>
+<td>Function to know if the data have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.data_management.OCTModality.read_data_from_path" title="protoclass.data_management.OCTModality.read_data_from_path"><code class="xref py py-obj docutils literal"><span class="pre">read_data_from_path</span></code></a>(sz_data[,&nbsp;path_data,&nbsp;dtype])</td>
+<td>Function to read OCT images which correspond to a 3D volume.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.data_management.OCTModality.update_histogram" title="protoclass.data_management.OCTModality.update_histogram"><code class="xref py py-obj docutils literal"><span class="pre">update_histogram</span></code></a>([nb_bins])</td>
+<td>Update the PDF and the first-order statistics.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.data_management.OCTModality.read_data_from_path">
+<code class="descname">read_data_from_path</code><span class="sig-paren">(</span><em>sz_data</em>, <em>path_data=None</em>, <em>dtype='uint8'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality.read_data_from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.OCTModality.read_data_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read OCT images which correspond to a 3D volume.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sz_data</strong> : tuple of int, shape (Y, Z, X)</p>
+<blockquote>
+<div><p>Tuple with 3 values specifying the dimension of the volume.</p>
+</div></blockquote>
+<p><strong>path_data</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>Path to the <cite>img</cite> file. It will overrides the path given
+in the constructor.</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str, optional (default=&#8217;uint8&#8217;)</p>
+<blockquote>
+<div><p>Type of the raw data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.data_management.OCTModality.update_histogram">
+<code class="descname">update_histogram</code><span class="sig-paren">(</span><em>nb_bins=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/data_management/oct_modality.html#OCTModality.update_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.data_management.OCTModality.update_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the PDF and the first-order statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nb_bins</strong> : int or None, optional (default=None)</p>
+<blockquote>
+<div><p>The numbers of bins to use to compute the histogram.
+The possibilities are:
+- If None, the number of bins found at reading will be used.
+- Otherwise, an integer needs to be given.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>There is the possibility to redifine the number of bins to use for
+the histogram since it can be tricky to play with normalized data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

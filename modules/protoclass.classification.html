@@ -1,0 +1,1034 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.classification package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/>
+        <link rel="prev" title="protoclass package" href="protoclass.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.classification package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.data_management.html">protoclass.data_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.html">protoclass.extraction package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.preprocessing.html">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.utils.html">protoclass.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.validation.html">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.classification package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.classification.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-classification-package">
+<h1>protoclass.classification package<a class="headerlink" href="#protoclass-classification-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.classification.classification">
+<span id="protoclass-classification-classification-module"></span><h2>protoclass.classification.classification module<a class="headerlink" href="#module-protoclass.classification.classification" title="Permalink to this headline">¶</a></h2>
+<p>Module to perform classification.</p>
+<dl class="function">
+<dt id="protoclass.classification.classification.Classify">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">Classify</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>testing_data</em>, <em>testing_label</em>, <em>classifier_str='random-forest'</em>, <em>balancing_criterion=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#Classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.Classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestAdaBoost">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestAdaBoost</code><span class="sig-paren">(</span><em>cadb</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestAdaBoost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestAdaBoost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the adaboost classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cadb</strong> : object</p>
+<blockquote>
+<div><p>Adaboost object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestGNB">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestGNB</code><span class="sig-paren">(</span><em>cgnb</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestGNB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestGNB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the Gaussian naive Bayes classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cgnb</strong> : object</p>
+<blockquote>
+<div><p>Gaussian Naive Bayes object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestGradientBoosting">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestGradientBoosting</code><span class="sig-paren">(</span><em>cgb</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestGradientBoosting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestGradientBoosting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the gradient boosting classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cgb</strong> : object</p>
+<blockquote>
+<div><p>Gradient boosting object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestKNN">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestKNN</code><span class="sig-paren">(</span><em>cknn</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestKNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestKNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the k-NN classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cknn</strong> : object</p>
+<blockquote>
+<div><p>K-nn object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestKernelSVM">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestKernelSVM</code><span class="sig-paren">(</span><em>cksvm</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestKernelSVM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestKernelSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the kernel SVM classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cksvm</strong> : object</p>
+<blockquote>
+<div><p>Kernel SVM object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestLDA">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestLDA</code><span class="sig-paren">(</span><em>clda</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestLDA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestLDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the linear discriminant analysis classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>clda</strong> : object</p>
+<blockquote>
+<div><p>Linear discriminant analysis object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestLinearSVM">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestLinearSVM</code><span class="sig-paren">(</span><em>clsvm</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestLinearSVM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestLinearSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the linear SVM classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>clsvm</strong> : object</p>
+<blockquote>
+<div><p>Linear SVM object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestLogisticRegression">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestLogisticRegression</code><span class="sig-paren">(</span><em>clr</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestLogisticRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestLogisticRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the logistic regression classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>clr</strong> : object</p>
+<blockquote>
+<div><p>Logistic regression object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestPerceptron">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestPerceptron</code><span class="sig-paren">(</span><em>cp</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestPerceptron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestPerceptron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the perceptron classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cp</strong> : object</p>
+<blockquote>
+<div><p>Perceptron object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestQDA">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestQDA</code><span class="sig-paren">(</span><em>cqda</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestQDA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestQDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the quadratic discriminant analysis classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cqda</strong> : object</p>
+<blockquote>
+<div><p>Quadratic discriminant analysis object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestRandomForest">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestRandomForest</code><span class="sig-paren">(</span><em>crf</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestRandomForest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestRandomForest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the random forest classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>crf</strong> : object</p>
+<blockquote>
+<div><p>Random forest object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TestTree">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TestTree</code><span class="sig-paren">(</span><em>cdt</em>, <em>testing_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TestTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TestTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the decision tree classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cdt</strong> : object</p>
+<blockquote>
+<div><p>Decision tree object.</p>
+</div></blockquote>
+<p><strong>testing_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The data which need to be predicted.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pred_prob</strong> : ndarray, shape (n_samples, n_classes)</p>
+<blockquote>
+<div><p>Predicted probabilities.</p>
+</div></blockquote>
+<p><strong>pred_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote class="last">
+<div><p>Predicted labels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainAdaBoost">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainAdaBoost</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainAdaBoost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainAdaBoost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a adaboost classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cadb</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainGNB">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainGNB</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainGNB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainGNB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a Gaussian Naive Bayes classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cgb</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainGradientBoosting">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainGradientBoosting</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainGradientBoosting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainGradientBoosting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a gradient boosting classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cgb</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainKNN">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainKNN</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainKNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainKNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a k-NN classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cknn</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainKernelSVM">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainKernelSVM</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainKernelSVM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainKernelSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a kernel SVM classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cksvm</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainLDA">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainLDA</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainLDA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainLDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a linear discriminant analysis classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>clda</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainLinearSVM">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainLinearSVM</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainLinearSVM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainLinearSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a linear SVM classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>clsvm</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainLogisticRegression">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainLogisticRegression</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainLogisticRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainLogisticRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a logistic regression classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>clr</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainPerceptron">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainPerceptron</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainPerceptron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainPerceptron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a perceptron classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cp</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainQDA">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainQDA</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainQDA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainQDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a quadratic discriminant analysis classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cqda</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainRandomForest">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainRandomForest</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainRandomForest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainRandomForest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a random forest classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>crf</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.classification.classification.TrainTree">
+<code class="descclassname">protoclass.classification.classification.</code><code class="descname">TrainTree</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#TrainTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.classification.TrainTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a decision tree classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>training_data</strong> : ndarray, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training data stored inside an array.</p>
+</div></blockquote>
+<p><strong>training_label</strong> : ndarray, shape (n_samples, )</p>
+<blockquote>
+<div><p>The training label in which the labels are stored.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cdt</strong> : object,</p>
+<blockquote class="last">
+<div><p>The classifier object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.classification.classification.roc_auc">
+<em class="property">class </em><code class="descclassname">protoclass.classification.classification.</code><code class="descname">roc_auc</code><a class="headerlink" href="#protoclass.classification.classification.roc_auc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.classification.classification.roc_auc.auc" title="protoclass.classification.classification.roc_auc.auc"><code class="xref py py-obj docutils literal"><span class="pre">auc</span></code></a></td>
+<td>Alias for field number 3</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.classification.classification.roc_auc.fpr" title="protoclass.classification.classification.roc_auc.fpr"><code class="xref py py-obj docutils literal"><span class="pre">fpr</span></code></a></td>
+<td>Alias for field number 0</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.classification.classification.roc_auc.thresh" title="protoclass.classification.classification.roc_auc.thresh"><code class="xref py py-obj docutils literal"><span class="pre">thresh</span></code></a></td>
+<td>Alias for field number 2</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.classification.classification.roc_auc.tpr" title="protoclass.classification.classification.roc_auc.tpr"><code class="xref py py-obj docutils literal"><span class="pre">tpr</span></code></a></td>
+<td>Alias for field number 1</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">count</span></code>(...)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">index</span></code>((value,&nbsp;[start,&nbsp;...)</td>
+<td>Raises ValueError if the value is not present.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="protoclass.classification.classification.roc_auc.auc">
+<code class="descname">auc</code><a class="headerlink" href="#protoclass.classification.classification.roc_auc.auc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="protoclass.classification.classification.roc_auc.fpr">
+<code class="descname">fpr</code><a class="headerlink" href="#protoclass.classification.classification.roc_auc.fpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="protoclass.classification.classification.roc_auc.thresh">
+<code class="descname">thresh</code><a class="headerlink" href="#protoclass.classification.classification.roc_auc.thresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="protoclass.classification.classification.roc_auc.tpr">
+<code class="descname">tpr</code><a class="headerlink" href="#protoclass.classification.classification.roc_auc.tpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.classification">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.classification" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.classification.Classify">
+<code class="descclassname">protoclass.classification.</code><code class="descname">Classify</code><span class="sig-paren">(</span><em>training_data</em>, <em>training_label</em>, <em>testing_data</em>, <em>testing_label</em>, <em>classifier_str='random-forest'</em>, <em>balancing_criterion=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/classification/classification.html#Classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.classification.Classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="protoclass.html" class="btn btn-neutral" title="protoclass package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.edge_analysis &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.edge_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.edge_analysis</h1><div class="highlight"><pre>
+<span></span><span class="c1">#title           :edge_analysis.py</span>
+<span class="c1">#description     :This will create a header for a python script.</span>
+<span class="c1">#author          :Guillaume Lemaitre</span>
+<span class="c1">#date            :2015/04/20</span>
+<span class="c1">#version         :0.1</span>
+<span class="c1">#notes           :</span>
+<span class="c1">#python_version  :2.7.6  </span>
+<span class="c1">#==============================================================================</span>
+
+<span class="c1"># Import the needed libraries</span>
+<span class="c1"># Numpy library</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1"># Scipy library</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="c1">### Scipy generic gradient magnitude computation</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">generic_gradient_magnitude</span><span class="p">,</span> <span class="n">generic_laplace</span>
+<span class="c1">### Scipy edge detector</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">prewitt</span><span class="p">,</span> <span class="n">sobel</span><span class="p">,</span> <span class="n">laplace</span>
+<span class="c1">### Scipy filtering</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">convolve</span>
+<span class="c1"># Scikit-image library</span>
+<span class="c1">### Gabor filtering</span>
+<span class="kn">from</span> <span class="nn">skimage.filters</span> <span class="kn">import</span> <span class="n">gabor_kernel</span>
+<span class="c1"># Phasepack library</span>
+<span class="kn">import</span> <span class="nn">phasepack</span> <span class="kn">as</span> <span class="nn">phc</span>
+<span class="c1"># Joblib library</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1"># Multiprocessing library</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="c1"># Operator library</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+<div class="viewcode-block" id="EdgeMapExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.edge_analysis.EdgeMapExtraction">[docs]</a><span class="k">def</span> <span class="nf">EdgeMapExtraction</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to apply different filters to obtain maps based on edge detection</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im: ndarray 2D or 3D</span>
+<span class="sd">        Input image.</span>
+<span class="sd">    edge_detector: str</span>
+<span class="sd">        Selection of the edge detector wanted: [&#39;Sobel1stDev&#39;, &#39;Prewitt1stDev&#39;, &#39;Sobel2ndDev&#39;, </span>
+<span class="sd">        &#39;Prewitt2ndDev&#39;, &#39;GaborBank&#39;, &#39;PhaseCong&#39;].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        If edge_detector is either &#39;Sobel1stDev&#39;, &#39;Prewitt1stDev&#39;, &#39;Sobel2ndDev&#39;, &#39;Prewitt2ndDev&#39;,</span>
+<span class="sd">        maps is of size of im.</span>
+<span class="sd">        If edge_detector is &#39;GaborBank&#39;, the size depends of the configuration of the filter bank.</span>
+<span class="sd">        If edge_detector is &#39;PhaseCong&#39;, two maps of the same size as im are returned. The first map</span>
+<span class="sd">        is an edge-based detection whereas the second map is a blob-based detector.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check the dimension of the input image</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">nd_im</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.edge: Can only handle 2D and 3D images.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Assign the edge detector</span>
+    <span class="n">edge_detector</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;edge_detector&#39;</span><span class="p">,</span> <span class="s1">&#39;Sobel1stDev&#39;</span><span class="p">)</span>
+    <span class="n">detector_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sobel1stDev&#39;</span><span class="p">,</span> <span class="s1">&#39;Prewitt1stDev&#39;</span><span class="p">,</span> <span class="s1">&#39;Sobel2ndDev&#39;</span><span class="p">,</span> <span class="s1">&#39;Prewitt2ndDev&#39;</span><span class="p">,</span> <span class="s1">&#39;GaborBank&#39;</span><span class="p">,</span> <span class="s1">&#39;PhaseCong&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">edge_detector</span> <span class="ow">in</span> <span class="n">dl</span> <span class="k">for</span> <span class="n">dl</span> <span class="ow">in</span> <span class="n">detector_list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.edge: The name of the detector is unknown.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;Sobel1stDev&#39;</span><span class="p">:</span>
+        <span class="n">edge_im</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;Prewitt1stDev&#39;</span><span class="p">:</span>
+        <span class="n">edge_im</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">prewitt</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;Sobel2ndDev&#39;</span><span class="p">:</span>
+        <span class="n">edge_im</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;Prewitt2ndDev&#39;</span><span class="p">:</span>
+        <span class="n">edge_im</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">prewitt</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;GaborBank&#39;</span><span class="p">:</span>        
+        <span class="c1"># Check that the input image is only 2D</span>
+        <span class="k">if</span> <span class="n">nd_im</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.edge.phase-congruency: Cannot handle 3D image yet. Go for 2D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Extract the value of the parameters</span>
+        <span class="n">n_freq</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_freq&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">freq_range</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;freq_range&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">.</span><span class="mo">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">n_theta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_theta&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">win_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;win_size&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">15.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">))</span>
+        <span class="c1"># Generate the different kernel which are needed</span>
+        <span class="n">kernels_gabor</span><span class="p">,</span> <span class="n">kernels_gabor_params</span> <span class="o">=</span> <span class="n">GaborKernelBank</span><span class="p">(</span><span class="n">n_freq</span><span class="o">=</span><span class="n">n_freq</span><span class="p">,</span> 
+                                                              <span class="n">freq_range</span><span class="o">=</span><span class="n">freq_range</span><span class="p">,</span> 
+                                                              <span class="n">n_theta</span><span class="o">=</span><span class="n">n_theta</span><span class="p">,</span> 
+                                                              <span class="n">win_size</span><span class="o">=</span><span class="n">win_size</span><span class="p">)</span>
+        <span class="c1"># Extract the maps from Gabor</span>
+        <span class="n">edge_im</span> <span class="o">=</span> <span class="n">BuildMaps2DGabor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">kernels_gabor</span><span class="p">)</span>
+        
+        <span class="c1"># Return the maps and the parameters of the Gabor kernels</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">edge_im</span><span class="p">,</span> <span class="n">kernels_gabor_params</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;PhaseCong&#39;</span><span class="p">:</span>
+        <span class="c1"># Check that the input image is only 2D</span>
+        <span class="k">if</span> <span class="n">nd_im</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;mahotas.edge.phase-congruency: Cannot handle 3D image yet. Go for 2D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Extract the value of the parameters</span>
+        <span class="n">nscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;nscale&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">norient</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;norient&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">minWaveLength</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;minWaveLength&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">mult</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mult&#39;</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">)</span>
+        <span class="n">sigmaOnf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;sigmaOnf&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">55</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+        <span class="n">cutOff</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;cutOff&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">noiseMethod</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;noiseMethod&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">M</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">PC</span><span class="p">,</span> <span class="n">EO</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">phc</span><span class="o">.</span><span class="n">phasecong</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> 
+                                                 <span class="n">nscale</span><span class="o">=</span><span class="n">nscale</span><span class="p">,</span> 
+                                                 <span class="n">norient</span><span class="o">=</span><span class="n">norient</span><span class="p">,</span> 
+                                                 <span class="n">minWaveLength</span><span class="o">=</span><span class="n">minWaveLength</span><span class="p">,</span> 
+                                                 <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span>
+                                                 <span class="n">sigmaOnf</span><span class="o">=</span><span class="n">sigmaOnf</span><span class="p">,</span> 
+                                                 <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> 
+                                                 <span class="n">cutOff</span><span class="o">=</span><span class="n">cutOff</span><span class="p">,</span> 
+                                                 <span class="n">g</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> 
+                                                 <span class="n">noiseMethod</span><span class="o">=</span><span class="n">noiseMethod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">edge_im</span></div>
+
+<div class="viewcode-block" id="ImageFiltering"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.edge_analysis.ImageFiltering">[docs]</a><span class="k">def</span> <span class="nf">ImageFiltering</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to filter an image with a given kernel</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im: ndarray 2D</span>
+<span class="sd">        Input image.</span>
+<span class="sd">    kernel: str</span>
+<span class="sd">        Gabor kernel.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        Detection from gabor filtering.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Compute Haralick feature</span>
+    <span class="k">return</span> <span class="n">convolve</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wrap&#39;</span><span class="p">)</span></div>
+
+<span class="c1">########################################################################################</span>
+<span class="c1">### 2D implementation</span>
+
+<span class="c1">### Gabor filter</span>
+
+<div class="viewcode-block" id="GaborKernelBank"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.edge_analysis.GaborKernelBank">[docs]</a><span class="k">def</span> <span class="nf">GaborKernelBank</span><span class="p">(</span><span class="n">n_freq</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">freq_range</span><span class="o">=</span><span class="p">(</span><span class="o">.</span><span class="mo">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">),</span> <span class="n">n_theta</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">win_size</span><span class="o">=</span><span class="p">(</span><span class="mf">15.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Function to create the bank of Gabor filters</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_freq = int</span>
+<span class="sd">        Number of frequency in order to create the different kernels.</span>
+<span class="sd">    freq_range: tuple of double</span>
+<span class="sd">        The range of frequencies in which to sample.</span>
+<span class="sd">    n_theta: int</span>
+<span class="sd">        Number of angle in order to create the different kernels.</span>
+<span class="sd">    win_size: tuple of double</span>
+<span class="sd">        Size in pixel of the kernel</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kernels: list of 2D array</span>
+<span class="sd">        Array containing the different kernels</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Affect the right values for the sigmas</span>
+    <span class="n">s_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">win_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">6.</span> 
+    <span class="n">s_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">win_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">6.</span>
+
+    <span class="c1"># Generate the values for the different thetas</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_theta</span><span class="p">))</span>
+
+    <span class="c1"># Generate the values for the different frequencies</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">freq_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freq_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_freq</span><span class="p">))</span>
+
+    <span class="n">kernels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kernels_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">gabor_kernel</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> 
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">sigma_x</span><span class="o">=</span><span class="n">s_x</span><span class="p">,</span> 
+                                          <span class="n">sigma_y</span><span class="o">=</span><span class="n">s_y</span><span class="p">))</span>
+            <span class="n">kernels_params</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">freq</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">s_x</span><span class="p">))</span>
+            <span class="n">kernels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">kernels</span><span class="p">,</span> <span class="n">kernels_params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BuildMaps2DGabor"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.edge_analysis.BuildMaps2DGabor">[docs]</a><span class="k">def</span> <span class="nf">BuildMaps2DGabor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">kernels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to process the image through the bank of Gabor filters</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im: ndarray 2D or 3D</span>
+<span class="sd">        Input image.</span>
+<span class="sd">    kernels: list of 2D array</span>
+<span class="sd">        Array containing the different kernels</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    maps: ndarray of np.double</span>
+<span class="sd">        Image filtered using the Gabor filter bank</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute the Haralick statistic in parallel</span>
+    <span class="n">num_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">ImageFiltering</span><span class="p">)(</span><span class="n">im</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

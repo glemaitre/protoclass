@@ -1,0 +1,1080 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.standard_time_normalization &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.standard_time_normalization</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.standard_time_normalization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Standard time normalization to normalize temporal modality.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.matlib</span> <span class="kn">import</span> <span class="n">repmat</span>
+
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">gaussian_filter1d</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.csgraph</span> <span class="kn">import</span> <span class="n">shortest_path</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">optimize</span>
+
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">img_as_float</span>
+<span class="kn">from</span> <span class="nn">skimage.graph</span> <span class="kn">import</span> <span class="n">route_through_array</span>
+
+<span class="kn">from</span> <span class="nn">.temporal_normalization</span> <span class="kn">import</span> <span class="n">TemporalNormalization</span>
+
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_npy_filename</span>
+
+
+<div class="viewcode-block" id="StandardTimeNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization">[docs]</a><span class="k">class</span> <span class="nc">StandardTimeNormalization</span><span class="p">(</span><span class="n">TemporalNormalization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Standard normalization to normalize temporal modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality_ : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    fit_params_ : dict of str : float</span>
+<span class="sd">        There is the following keys:</span>
+
+<span class="sd">        - &#39;shift-int&#39; is the shift found using graph walking. It corresponds</span>
+<span class="sd">        to an intensity shift.</span>
+<span class="sd">        - &#39;shift-time&#39; corresponds to the time shifting equivalent to a shift</span>
+<span class="sd">        of serie.</span>
+<span class="sd">        - &#39;scale-int&#39; is a scaling factor for the intensity.</span>
+
+<span class="sd">    is_fitted_ : bool</span>
+<span class="sd">        True if the fitting parameters have been infered</span>
+
+<span class="sd">    is_model_fitted_ : bool</span>
+<span class="sd">        True if the model has beeen fitted.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+        <span class="c1"># Initialize the fitting boolean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_graph</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">param_alpha</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build a graph representation from the heatmap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        heatmap : ndarray, shape (n_serie, nb_bins)</span>
+<span class="sd">            The heatmap from which the graph will be built.</span>
+
+<span class="sd">        param_alpha : float</span>
+<span class="sd">            Weight for the vertical and horizontal vertices.</span>
+
+<span class="sd">        verbose : bool</span>
+<span class="sd">            Display the completion or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        graph : ndarray, shape (n_serie * nb_bins, n_serie * nb_bins)</span>
+<span class="sd">            Fully connected graph computed from the heatmap.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># We can build the graph associated with the heatmap</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">heatmap</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># Come back to the pixel index</span>
+            <span class="n">px_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">px_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="n">px_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="c1"># Get the pixel value</span>
+            <span class="n">edge_val</span> <span class="o">=</span> <span class="n">heatmap</span><span class="p">[</span><span class="n">px_idx</span><span class="p">]</span>
+            <span class="c1"># Assign the verteces</span>
+            <span class="c1"># Find the position of the verteces inside the graph</span>
+            <span class="n">p_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">((</span><span class="n">px_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">px_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                                       <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">p_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">((</span><span class="n">px_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">px_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                                       <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="c1"># Assign the edge value</span>
+            <span class="n">graph</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">p_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_alpha</span> <span class="o">*</span> <span class="n">edge_val</span>
+            <span class="n">graph</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">p_2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">param_alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">edge_val</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s1">&#39;Graph built ...&#39;</span>
+
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_walk_through_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">heatmap</span><span class="p">,</span>
+                            <span class="n">start_end_vertices</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;shortest-path&#39;</span><span class="p">,</span>
+                            <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find path through the path with different a-priori.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph : ndarray, shape (n_serie * nb_bins, n_serie * nb_bins)</span>
+<span class="sd">            Fully connected graph computed from the heatmap.</span>
+
+<span class="sd">        heatmap : ndarray, shape (n_serie, nb_bins)</span>
+<span class="sd">            The heatmap from which the graph will be built.</span>
+
+<span class="sd">        start_end_vertices : tuple, shape ((start_vertice, end_vertice))</span>
+<span class="sd">            Tuple containing the starting and ending vertices to enter and exit</span>
+<span class="sd">            the graph.</span>
+
+<span class="sd">        method : str, optional (default=&#39;shortest-path&#39;)</span>
+<span class="sd">            Method to use to walk through the graph. The following</span>
+<span class="sd">            possibilities:</span>
+<span class="sd">            - &#39;shortest-path&#39; : find shortest-path using scipy implementation.</span>
+<span class="sd">            - &#39;route-through-graph&#39; : find the path using MCP algorithm from</span>
+<span class="sd">                skimage.</span>
+
+<span class="sd">        verbose : bool</span>
+<span class="sd">            Show the processing stage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        path : ndarray, shape (n_serie, 2)</span>
+<span class="sd">            The path found to walk through the graph.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Split the starting and ending vertices</span>
+        <span class="n">start_tuple</span> <span class="o">=</span> <span class="n">start_end_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_tuple</span> <span class="o">=</span> <span class="n">start_end_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;shortest-path&#39;</span><span class="p">:</span>
+            <span class="c1"># Define a function to go from px to vertices</span>
+            <span class="k">def</span> <span class="nf">px2v</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">)</span>
+
+            <span class="c1"># Define a function to go from vertices to px</span>
+            <span class="k">def</span> <span class="nf">v2px</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">im_shape</span><span class="p">)</span>
+
+            <span class="c1"># Compute the shortest path for the whole graph</span>
+            <span class="n">d</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">return_predecessors</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="c1"># Initialize the path</span>
+            <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">end_tuple</span><span class="p">]</span>
+            <span class="c1"># Find the shortest path thorugh an iterative process</span>
+            <span class="k">while</span> <span class="n">end_tuple</span> <span class="o">!=</span> <span class="n">start_tuple</span><span class="p">:</span>
+                <span class="c1"># Convert coord from px to v</span>
+                <span class="n">s_v</span> <span class="o">=</span> <span class="n">px2v</span><span class="p">(</span><span class="n">start_tuple</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">e_v</span> <span class="o">=</span> <span class="n">px2v</span><span class="p">(</span><span class="n">end_tuple</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+                <span class="c1"># Find the predecessor</span>
+                <span class="n">pred_v</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">s_v</span><span class="p">,</span> <span class="n">e_v</span><span class="p">]</span>
+
+                <span class="c1"># Convert into pixel</span>
+                <span class="n">pred_px</span> <span class="o">=</span> <span class="n">v2px</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">path_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_px</span><span class="p">)</span>
+
+                <span class="c1"># Update the last point of the path</span>
+                <span class="n">end_tuple</span> <span class="o">=</span> <span class="n">pred_px</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;route-through-graph&#39;</span><span class="p">:</span>
+            <span class="c1"># Call the function from skimage</span>
+            <span class="n">indices</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">route_through_array</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span>
+                                                  <span class="n">start_tuple</span><span class="p">,</span>
+                                                  <span class="n">end_tuple</span><span class="p">,</span>
+                                                  <span class="n">geometric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">path_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="c1"># Convert the list into array</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">path_list</span><span class="p">)</span>
+
+        <span class="c1"># Clean the path serie by serie to have a unique value</span>
+        <span class="n">cleaned_path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t_serie</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># Find all the intensities corresponding to this serie</span>
+            <span class="n">poi</span> <span class="o">=</span> <span class="n">path_list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">path_list</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_serie</span><span class="p">)]</span>
+
+            <span class="c1"># Compute the median of the second column</span>
+            <span class="n">med_path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">poi</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">cleaned_path</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">t_serie</span><span class="p">,</span> <span class="n">med_path</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s1">&#39;Walked through the graph ...&#39;</span>
+
+        <span class="c1"># Convert list to array</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cleaned_path</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_shift_heatmap</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Roll the heatmap depending on a given shift.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        heatmap : ndarray, shape (n_series, nb_bins)</span>
+<span class="sd">            The heatmap to be shifted.</span>
+
+<span class="sd">        shift : ndarray, shape (n_series, )</span>
+<span class="sd">            The shift to apply.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        heatmap_shifted : ndarray, shape (n_series, nb_bins)</span>
+<span class="sd">            The shifted heatmap.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that we have the same number of series</span>
+        <span class="k">if</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">shift</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Inconsitent size for the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Find the index where to align every sequence</span>
+        <span class="n">middle_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+        <span class="c1"># Shift the heatmap accordling</span>
+        <span class="n">heatmap_shifted</span> <span class="o">=</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">idx_serie</span><span class="p">,</span> <span class="n">heatmap_serie</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">heatmap</span><span class="p">):</span>
+            <span class="c1"># Define the shift to perform</span>
+            <span class="n">shift_rel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">middle_idx</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">])</span>
+            <span class="n">heatmap_shifted</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">heatmap_serie</span><span class="p">,</span> <span class="n">shift_rel</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">heatmap_shifted</span>
+
+    <span class="k">def</span> <span class="nf">_find_shift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span><span class="p">,</span>
+                    <span class="n">param_std</span><span class="p">,</span> <span class="n">param_exp</span><span class="p">,</span> <span class="n">param_alpha</span><span class="p">,</span> <span class="n">param_max_iter</span><span class="p">,</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the shift through iterative shortest-path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        heatmap : ndarray, shape (n_serie, nb_bins)</span>
+<span class="sd">            Heatmap from the DCE modality.</span>
+
+<span class="sd">        bins_heatmap : ndarray, shape (nb_bins, )</span>
+<span class="sd">            Associated bins with the heatmap.</span>
+
+<span class="sd">        param_std : float</span>
+<span class="sd">            Parameter for the Gaussian filter.</span>
+
+<span class="sd">        param_exp : float</span>
+<span class="sd">            Parameter to compute the exponential heatmap.</span>
+
+<span class="sd">        param_alpha : float</span>
+<span class="sd">            Parameter for vertices weight of the graph.</span>
+
+<span class="sd">        param_max_iter : int</span>
+<span class="sd">            Parameter for the max number of iteration to walk through</span>
+<span class="sd">            the graph.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        shift : ndarray, shape (n_serie, )</span>
+<span class="sd">            The vector of intensity from which each serie has to be shifted.</span>
+
+<span class="sd">        idx_shift : ndarray, shape (n_serie, )</span>
+<span class="sd">            Vector with the corresponding index in `bins_heatmap`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Smooth the heatmap using a Gaussian filter</span>
+        <span class="n">heatmap_inv_exp</span> <span class="o">=</span> <span class="n">gaussian_filter1d</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span>
+                                            <span class="n">param_std</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Inverse the map such that we can take the shortest path</span>
+        <span class="n">heatmap_inv_exp</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">heatmap_inv_exp</span> <span class="o">/</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">heatmap_inv_exp</span><span class="p">))</span>
+        <span class="c1"># Compute the exponential map to emplify the differences</span>
+        <span class="n">heatmap_inv_exp</span> <span class="o">=</span> <span class="n">img_as_float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">param_exp</span> <span class="o">*</span>
+                                              <span class="n">heatmap_inv_exp</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s1">&#39;Heatmap built ...&#39;</span>
+
+        <span class="c1"># Initialization of the output</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_graph</span><span class="p">(</span><span class="n">heatmap_inv_exp</span><span class="p">,</span> <span class="n">param_alpha</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Find the starting and ending point in the graph - the median is used</span>
+        <span class="c1"># The median can be estimated from the heatmap</span>
+        <span class="c1"># Compute the normalize cumulative sum of the first serie</span>
+        <span class="c1"># cumsum_hist = np.cumsum(heatmap[0, :])</span>
+        <span class="c1"># cumsum_hist /= cumsum_hist[-1]</span>
+        <span class="c1"># # Find the median</span>
+        <span class="c1"># idx_start = np.argmax(cumsum_hist &gt; .5)</span>
+        <span class="n">idx_start</span> <span class="o">=</span> <span class="n">heatmap</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+
+        <span class="c1"># Compute the normalize cumulative sum of the last serie</span>
+        <span class="n">cumsum_hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">heatmap</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">cumsum_hist</span> <span class="o">/=</span> <span class="n">cumsum_hist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Find the median</span>
+        <span class="n">idx_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cumsum_hist</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># Create the starting and ending tuple</span>
+        <span class="n">start_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx_start</span><span class="p">)</span>
+        <span class="n">end_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx_end</span><span class="p">)</span>
+        <span class="n">start_end_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_tuple</span><span class="p">,</span> <span class="n">end_tuple</span><span class="p">)</span>
+
+        <span class="c1"># Compute the shortest path</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;shortest-path&#39;</span>
+        <span class="n">absolute_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_through_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">heatmap_inv_exp</span><span class="p">,</span>
+                                                  <span class="n">start_end_tuple</span><span class="p">,</span>
+                                                  <span class="n">method</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># Keep only the uselful information of the shift</span>
+        <span class="n">absolute_shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">absolute_shift</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># do-while loop</span>
+        <span class="n">middle_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">itr_loop</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s1">&#39;Iteration #{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">itr_loop</span><span class="p">)</span>
+            <span class="c1"># Increment the shifting of the previous iteration</span>
+            <span class="n">shift</span> <span class="o">+=</span> <span class="p">(</span><span class="n">absolute_shift</span> <span class="o">-</span> <span class="n">middle_idx</span><span class="p">)</span>
+            <span class="c1"># Shift the heatmap accordingly</span>
+            <span class="n">heatmap_inv_exp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_heatmap</span><span class="p">(</span><span class="n">heatmap_inv_exp</span><span class="p">,</span>
+                                                  <span class="n">absolute_shift</span><span class="p">)</span>
+            <span class="c1"># Apply again the shortest path</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_graph</span><span class="p">(</span><span class="n">heatmap_inv_exp</span><span class="p">,</span> <span class="n">param_alpha</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+            <span class="c1"># Create the starting and ending tuple</span>
+            <span class="n">middle_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">heatmap_inv_exp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+            <span class="n">start_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">middle_idx</span><span class="p">)</span>
+            <span class="n">end_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">middle_idx</span><span class="p">)</span>
+            <span class="n">start_end_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_tuple</span><span class="p">,</span> <span class="n">end_tuple</span><span class="p">)</span>
+
+            <span class="c1"># Compute the shortest path</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;route-through-graph&#39;</span>
+            <span class="n">absolute_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_through_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">heatmap_inv_exp</span><span class="p">,</span>
+                                                      <span class="n">start_end_tuple</span><span class="p">,</span>
+                                                      <span class="n">method</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+            <span class="c1"># Keep only the uselful information of the shift</span>
+            <span class="n">absolute_shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">absolute_shift</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># Keep track of the iteration</span>
+            <span class="n">itr_loop</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># Breaking condition - We don&#39;t move</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">absolute_shift</span> <span class="o">-</span> <span class="n">middle_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span>
+                    <span class="n">itr_loop</span> <span class="o">&gt;</span> <span class="n">param_max_iter</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Store the shift in the dictionary</span>
+        <span class="c1"># Take the intensity value, not the bin</span>
+        <span class="k">return</span> <span class="n">bins_heatmap</span><span class="p">[</span><span class="n">shift</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)],</span> <span class="n">shift</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span><span class="p">,</span>
+                      <span class="n">shift</span><span class="p">,</span> <span class="n">idx_shift</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the root mean squared error from the shift estimator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        heatmap : ndarray, shape (n_serie, nb_bins)</span>
+<span class="sd">            Heatmap from the DCE modality.</span>
+
+<span class="sd">        bins_heatmap : ndarray, shape (nb_bins, )</span>
+<span class="sd">            Associated bins with the heatmap.</span>
+
+<span class="sd">        shift : ndarray, shape (n_serie, )</span>
+<span class="sd">            The vector of intensity from which each serie has to be shifted.</span>
+
+<span class="sd">        idx_shift : ndarray, shape (n_serie, )</span>
+<span class="sd">            Vector with the corresponding index in `bins_heatmap`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rmse_estimator : ndarray, shape (n_serie, )</span>
+<span class="sd">            The vector of intensity from which each serie has to be shifted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Shift the original heatmap</span>
+        <span class="n">heatmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_heatmap</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">idx_shift</span><span class="p">)</span>
+        <span class="c1"># Shift the bins accordingly</span>
+        <span class="n">bins_heatmap_serie</span> <span class="o">=</span> <span class="n">repmat</span><span class="p">(</span><span class="n">bins_heatmap</span><span class="p">,</span> <span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">bins_heatmap_serie</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_heatmap</span><span class="p">(</span><span class="n">bins_heatmap_serie</span><span class="p">,</span>
+                                                 <span class="n">idx_shift</span><span class="p">)</span>
+
+        <span class="c1"># Compute the RMSE for each serie</span>
+        <span class="n">rmse_estimator</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx_serie</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># Compute sum i^2 p(i)</span>
+            <span class="c1"># + .5 since we consider the center of each bins</span>
+            <span class="c1"># The zero is the center of the histogram, shift the zero</span>
+            <span class="n">i_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">bins_heatmap_serie</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">]</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">])</span>
+            <span class="n">i2pi_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_array</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">heatmap</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">rmse_estimator</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">i2pi_array</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rmse_estimator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StandardTimeNormalization.load_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a model used at the time to align the RMSE.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            The path to npy file with the data of the model inside.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the filename is ok</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">check_npy_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Load the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Store that we loaded the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="StandardTimeNormalization.save_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store the model into an npy file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            The path where to store the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the model has been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit a model before to save it.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check that the file is an npy file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npy&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file provided needs to be of `npy`&#39;</span>
+                             <span class="s1">&#39; extension.&#39;</span><span class="p">)</span>
+
+        <span class="n">dir_storage</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_storage</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_storage</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_validate_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validate the list of parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params : str or dict of str: float, optional (default=&#39;default&#39;)</span>
+<span class="sd">            The initial estimation of the parameters:</span>
+
+<span class="sd">            - If &#39;default&#39;, the value following value will be affected:</span>
+<span class="sd">            {&#39;std&#39; : 50., &#39;exp&#39; : 25., &#39;alpha&#39; : .9, &#39;max_iter&#39; : 5}</span>
+<span class="sd">            - If dict, a dictionary with the keys &#39;std&#39;, &#39;exp&#39;, &#39;alpha&#39;,</span>
+<span class="sd">            and &#39;max_iter&#39; should be specified. The corresponding value of</span>
+<span class="sd">            these parameters should be float. They will be the initial value</span>
+<span class="sd">            during fitting.</span>
+
+<span class="sd">            &#39;std&#39; corresponds to the standard deviation when applying the</span>
+<span class="sd">            Gaussian filter; &#39;exp&#39; corresponds to the factor in the</span>
+<span class="sd">            exponential; &#39;alpha&#39; corresponds to the parameters to penalize</span>
+<span class="sd">            vertical and horizontal weight in the graph; &#39;max_iter&#39; is the</span>
+<span class="sd">            maximum number of walks through the graph.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the gaussian parameters argument</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+                <span class="c1"># Give the default values for each parameter</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="mf">50.</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="mf">25.</span><span class="p">,</span>
+                                <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The string for the object params is&#39;</span>
+                                 <span class="s1">&#39; unknown.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># Check that mu and sigma are inside the dictionary</span>
+            <span class="n">valid_presets</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;max_iter&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">val_param</span> <span class="ow">in</span> <span class="n">valid_presets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">val_param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least the parameter {} is not specify&#39;</span>
+                                     <span class="s1">&#39; in the dictionary.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val_param</span><span class="p">))</span>
+            <span class="c1"># For each key, check if this is a known parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">param_float</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">)</span>
+            <span class="n">param_int</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;max_iter&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">param_float</span> <span class="ow">or</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">param_int</span><span class="p">:</span>
+                    <span class="c1"># The key is valid, build our dictionary</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">k_param</span> <span class="ow">in</span> <span class="n">param_float</span> <span class="ow">and</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">],</span> <span class="nb">float</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">k_param</span> <span class="ow">in</span> <span class="n">param_int</span> <span class="ow">and</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">],</span> <span class="nb">int</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">k_param</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type. Check the parameter {}&#39;</span>
+                                         <span class="s1">&#39; type.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k_param</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameter inside the dictionary.&#39;</span>
+                                     <span class="s1">&#39; `std`, `exp`, `alpha`, and `max_iter`.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The type of the object params does not fulfill&#39;</span>
+                             <span class="s1">&#39; any requirement.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="StandardTimeNormalization.partial_fit_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                          <span class="n">params</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Online fittinf of template model to drive the fitting of</span>
+<span class="sd">        one modality.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object</span>
+<span class="sd">            Object inherated from TemporalModality.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None, optional</span>
+<span class="sd">            (default=None)</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None, optional (default=None)</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        params : str or dict of str: float, optional (default=&#39;default&#39;)</span>
+<span class="sd">            The initial estimation of the parameters:</span>
+
+<span class="sd">            - If &#39;default&#39;, the value following value will be affected:</span>
+<span class="sd">            {&#39;std&#39; : 50., &#39;exp&#39; : 25., &#39;alpha&#39; : .9, &#39;max_iter&#39; : 5}</span>
+<span class="sd">            - If dict, a dictionary with the keys &#39;std&#39;, &#39;exp&#39;, &#39;alpha&#39;,</span>
+<span class="sd">            and &#39;max_iter&#39; should be specified. The corresponding value of</span>
+<span class="sd">            these parameters should be float. They will be the initial value</span>
+<span class="sd">            during fitting.</span>
+
+<span class="sd">            &#39;std&#39; corresponds to the standard deviation when applying the</span>
+<span class="sd">            Gaussian filter; &#39;exp&#39; corresponds to the factor in the</span>
+<span class="sd">            exponential; &#39;alpha&#39; corresponds to the parameters to penalize</span>
+<span class="sd">            vertical and horizontal weight in the graph; &#39;max_iter&#39; is the</span>
+<span class="sd">            maximum number of walks through the graph.</span>
+
+<span class="sd">        refit : bool, optional (default=False)</span>
+<span class="sd">            Either to refit the model or not.</span>
+
+<span class="sd">        verbose : bool, optional (default=True)</span>
+<span class="sd">            Whether to show the fitting process information.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># By calling the parents function, self.roi_data_ will be affected</span>
+        <span class="c1"># and can be used in all cases.</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+                                                   <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+                                                   <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># Compute the heatmap</span>
+        <span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">build_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Find the shift in the data</span>
+        <span class="n">shift</span><span class="p">,</span> <span class="n">shift_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_shift</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span>
+                                            <span class="n">bins_heatmap</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;exp&#39;</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;max_iter&#39;</span><span class="p">],</span>
+                                            <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Compute the associated RMSE of the estimator found</span>
+        <span class="n">rmse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rmse</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span><span class="p">,</span>
+                                  <span class="n">shift</span><span class="p">,</span>
+                                  <span class="n">shift_idx</span><span class="p">,</span>
+                                  <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># First fitting or refit</span>
+        <span class="k">if</span> <span class="n">refit</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;model_&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">rmse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nb_partial_fit</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="c1"># Online fitting</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nb_partial_fit</span> <span class="o">+=</span> <span class="mf">1.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">+</span>
+                           <span class="p">(</span><span class="n">rmse</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_partial_fit</span><span class="p">)</span>
+
+        <span class="c1"># Update the status of the fitting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_shift_serie</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shift a signal in time with recopy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        signal : ndarray, shape (n_serie, )</span>
+<span class="sd">            The original signal to be shifted according the the tau value.</span>
+
+<span class="sd">        tau : int</span>
+<span class="sd">            Integer to roll the signal.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        signal_shifted : ndarray, shape (n_serie, )</span>
+<span class="sd">            The signal shifted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Force tau to be integer</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tau</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">tau</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Shift to the write with recopy of the first value</span>
+            <span class="n">signal_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">signal_shifted</span><span class="p">[</span><span class="n">tau</span><span class="p">::]</span> <span class="o">=</span> <span class="n">signal</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">tau</span><span class="p">]</span>
+            <span class="n">signal_shifted</span><span class="p">[:</span><span class="n">tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">signal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tau</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">signal_shifted</span>
+        <span class="k">elif</span> <span class="n">tau</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Shift to the left with recopy of the last value</span>
+            <span class="n">signal_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">signal_shifted</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="p">[</span><span class="o">-</span><span class="n">tau</span><span class="p">::]</span>
+            <span class="n">signal_shifted</span><span class="p">[</span><span class="n">tau</span><span class="p">::]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">signal</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">tau</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">signal_shifted</span>
+        <span class="k">elif</span> <span class="n">tau</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">signal</span>
+
+    <span class="k">def</span> <span class="nf">_find_rmse_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmse</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the set of parameters to re-aligned the rmse to the</span>
+<span class="sd">        previously fitted model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rmse : ndarray, shape (n_serie, )</span>
+<span class="sd">            The sigal which needs to be realigned.)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : dict of str : float</span>
+<span class="sd">            The set of parameters fitted. There is two parameters returned:</span>
+<span class="sd">            - `shift-time`: corresponds to the shift in time (i.e., serie);</span>
+<span class="sd">            - `scale-int`: corresponds to the scaling factor.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Define the cost function with x the parameters to find</span>
+        <span class="k">def</span> <span class="nf">cost_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">-</span>
+                          <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_serie</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Initialize the parameters</span>
+        <span class="c1"># Initial shift in time - aligned both with the maximum of</span>
+        <span class="c1"># the derivative which corresponds to the middle of the maximum</span>
+        <span class="c1"># enhancement</span>
+        <span class="n">init_shift_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">]))</span> <span class="o">-</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">rmse</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">])))</span>
+        <span class="c1"># Initial scale factor</span>
+        <span class="c1"># Ratio of the baseline with the peak of enhancement</span>
+        <span class="n">init_alpha</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">]))</span> <span class="o">/</span>
+                      <span class="p">(</span><span class="n">rmse</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rmse</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">])))</span>
+
+        <span class="c1"># Fix the bounds for the optimization</span>
+        <span class="n">bnds</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.</span><span class="p">))</span>
+        <span class="c1"># Rund the optimization</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;L-BFGS-B&#39;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cost_func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="n">init_shift_t</span><span class="p">,</span> <span class="n">init_alpha</span><span class="p">],</span>
+                                <span class="n">method</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bnds</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;shift-time&#39;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;scale-int&#39;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+
+<div class="viewcode-block" id="StandardTimeNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the normalization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object</span>
+<span class="sd">            Object inherated from TemporalModality.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None, optional</span>
+<span class="sd">            (default=None)</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None, optional (default=None)</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        params : str or dict of str: float, optional (default=&#39;default&#39;)</span>
+<span class="sd">            The initial estimation of the parameters:</span>
+
+<span class="sd">            - If &#39;default&#39;, the value following value will be affected:</span>
+<span class="sd">            {&#39;std&#39; : 50., &#39;exp&#39; : 25., &#39;alpha&#39; : .9, &#39;max_iter&#39; : 5}</span>
+<span class="sd">            - If dict, a dictionary with the keys &#39;std&#39;, &#39;exp&#39;, &#39;alpha&#39;,</span>
+<span class="sd">            and &#39;max_iter&#39; should be specified. The corresponding value of</span>
+<span class="sd">            these parameters should be float. They will be the initial value</span>
+<span class="sd">            during fitting.</span>
+
+<span class="sd">            &#39;std&#39; corresponds to the standard deviation when applying the</span>
+<span class="sd">            Gaussian filter; &#39;exp&#39; corresponds to the factor in the</span>
+<span class="sd">            exponential; &#39;alpha&#39; corresponds to the parameters to penalize</span>
+<span class="sd">            vertical and horizontal weight in the graph; &#39;max_iter&#39; is the</span>
+<span class="sd">            maximum number of walks through the graph.</span>
+
+<span class="sd">        verbose : bool, optional (default=True)</span>
+<span class="sd">            Whether to show the fitting process information.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that a model was fitted or loaded</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A model needs to be either loaded or fitted.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># By calling the parents function, self.roi_data_ will be affected</span>
+        <span class="c1"># and can be used in all cases.</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+                                                   <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+                                                   <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># Initialize the parameter dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Compute the heatmap</span>
+        <span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">build_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Find the shift in the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-int&#39;</span><span class="p">],</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">shift_int_idx_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_shift</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span>
+                                                   <span class="n">bins_heatmap</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">],</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;exp&#39;</span><span class="p">],</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">[</span><span class="s1">&#39;max_iter&#39;</span><span class="p">],</span>
+                                                   <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Compute the associated RMSE of the estimator found</span>
+        <span class="n">rmse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rmse</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-int&#39;</span><span class="p">],</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">shift_int_idx_</span><span class="p">,</span>
+                                  <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># The next fitting parameters will be found by aligning the RMSE on</span>
+        <span class="c1"># the model previously fitted</span>
+        <span class="c1"># Update the dictonary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_find_rmse_params</span><span class="p">(</span><span class="n">rmse</span><span class="p">))</span>
+
+        <span class="c1"># Fitting performed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_shift_time_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shift the data from tau.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : ndarray, shape (T, Y, X, Z)</span>
+<span class="sd">            The data to be shifted.</span>
+
+<span class="sd">        tau : int</span>
+<span class="sd">            The delay to insert in the data time serie.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_shifted : ndarray, shape (T, Y, X, Z)</span>
+<span class="sd">            The shifted data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Force tau to be an integer</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+        <span class="c1"># Allocate the ouptut</span>
+        <span class="n">data_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tau</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># We need to shift the serie to positive time</span>
+            <span class="n">data_shifted</span><span class="p">[</span><span class="n">tau</span><span class="p">::,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">tau</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">data_shifted</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="p">(</span><span class="n">tau</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">data_shifted</span>
+        <span class="k">elif</span> <span class="n">tau</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># We need to shift the serie to negative time</span>
+            <span class="n">data_shifted</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="n">tau</span><span class="p">::,</span> <span class="p">:]</span>
+            <span class="n">data_shifted</span><span class="p">[</span><span class="n">tau</span><span class="p">::,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:],</span> <span class="p">(</span><span class="o">-</span><span class="n">tau</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">data_shifted</span>
+        <span class="k">elif</span> <span class="n">tau</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+<div class="viewcode-block" id="StandardTimeNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">)</span>
+
+        <span class="c1"># Check that the parameters have been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the parameters previous to normalize&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Apply the intensity shift first</span>
+        <span class="k">for</span> <span class="n">idx_serie</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span><span class="p">):</span>
+            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-int&#39;</span><span class="p">][</span><span class="n">idx_serie</span><span class="p">]</span>
+
+        <span class="c1"># Apply the time shifting</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_time_data</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-time&#39;</span><span class="p">])</span>
+        <span class="c1"># Apply the scaling factor</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;scale-int&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Update the histogram</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div>
+
+<div class="viewcode-block" id="StandardTimeNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Denormalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">denormalize</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">)</span>
+
+        <span class="c1"># Check that the parameters have been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the parameters previous to normalize&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Apply the scaling factor</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;scale-int&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Apply the time shifting</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift_time_data</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                               <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-time&#39;</span><span class="p">])</span>
+        <span class="c1"># Apply the intensity shift first</span>
+        <span class="k">for</span> <span class="n">idx_serie</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span><span class="p">):</span>
+            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">idx_serie</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;shift-int&#39;</span><span class="p">][</span><span class="n">idx_serie</span><span class="p">]</span>
+
+        <span class="c1"># Update the histogram</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

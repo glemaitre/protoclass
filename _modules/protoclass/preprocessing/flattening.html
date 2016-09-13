@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.flattening &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.flattening</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.flattening</h1><div class="highlight"><pre>
+<span></span><span class="c1">#title           :flattening.py</span>
+<span class="c1">#description     :This will create a header for a python script.</span>
+<span class="c1">#author          :Guillaume Lemaitre</span>
+<span class="c1">#date            :2015/06/06</span>
+<span class="c1">#version         :0.1</span>
+<span class="c1">#notes           :</span>
+<span class="c1">#python_version  :2.7.6 </span>
+<span class="c1">#==============================================================================</span>
+
+<span class="c1"># Import the needed libraries</span>
+<span class="c1"># Numpy library</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1"># Matplotlib library</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="c1"># Joblib library</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1"># Multiprocessing library</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<div class="viewcode-block" id="Flatten3D"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.flattening.Flatten3D">[docs]</a><span class="k">def</span> <span class="nf">Flatten3D</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">flattening_method</span><span class="o">=</span><span class="s1">&#39;morph-mat&#39;</span><span class="p">,</span> <span class="n">crop</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># GOAL: flatten a complete 3D volume</span>
+
+    <span class="c1"># Check that the type of image is float and in the range (0., 1.)</span>
+    <span class="c1">### Check the type</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span> <span class="p">(</span><span class="n">volume</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="ow">or</span> 
+             <span class="p">(</span><span class="n">volume</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;float64&#39;</span><span class="p">)</span>    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening: The volume data should be float data.&#39;</span><span class="p">)</span>
+
+    <span class="c1">### Check the range</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">and</span>
+         <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span>     <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening: The volume data should range between 0.0 and 1.0.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">flattening_method</span> <span class="o">==</span> <span class="s1">&#39;morph-mat&#39;</span><span class="p">):</span>
+
+        <span class="c1"># The dimension which will vary will be Y. </span>
+        <span class="c1"># We need to swap Y in first position</span>
+        <span class="n">volume_swaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Compute the Haralick statistic in parallel</span>
+        <span class="n">num_cores</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_cores&#39;</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+        <span class="k">print</span> <span class="n">num_cores</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">Flatten2DMphMath</span><span class="p">)(</span><span class="n">im</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">volume_swaped</span><span class="p">)</span>
+
+        <span class="c1"># Unpack the data</span>
+        <span class="n">volume_flatten</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">baseline_volume</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">baseline_volume</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">volume_flatten</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sl</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># We need now to align the volume</span>
+        <span class="n">center_line</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">baseline_volume</span><span class="p">)</span>
+        <span class="n">volume_aligned</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">Align2DIm</span><span class="p">)(</span><span class="n">im</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">baseline_volume</span><span class="p">[</span><span class="n">idx_im</span><span class="p">],</span> <span class="n">center_line</span><span class="p">)</span>
+                                                    <span class="k">for</span> <span class="n">idx_im</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">volume_flatten</span><span class="p">))</span>
+
+        <span class="c1"># Do we want to crop an image</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">crop</span> <span class="o">==</span> <span class="bp">True</span><span class="p">):</span>
+            <span class="n">crop_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;crop_size&#39;</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+            <span class="n">volume_cropped</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">Cropping2DIm</span><span class="p">)(</span><span class="n">im</span><span class="p">,</span> <span class="n">center_line</span><span class="p">,</span> <span class="n">crop_size</span><span class="p">)</span>
+                                                        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">volume_aligned</span><span class="p">)</span>
+
+            <span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">volume_cropped</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+
+            <span class="c1"># We need to swap back</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">volume_cropped</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># We need to swap back</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">volume_aligned</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#return np.swapaxes(np.swapaxes(volume_aligned, 1, 2), 1, 0)</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening: Unrecognise type of flattening.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Flatten2DMphMath"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.flattening.Flatten2DMphMath">[docs]</a><span class="k">def</span> <span class="nf">Flatten2DMphMath</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># GOAL: flatten the 2d image using some morpho mat and warping</span>
+    <span class="c1"># Parameters - check kawrgs.pop</span>
+
+    <span class="c1">### Original pipeline proposed by:</span>
+    <span class="c1">### Liu et al. &quot;Automated macular pathology diagnosis in retinal OCT images using multi-scale spatial pyramid and</span>
+    <span class="c1">### local binary patterns in texture and shape encoding&quot;, Medical Image Anlysis 15 (2011)</span>
+    <span class="c1">### 1. Thresholding</span>
+    <span class="c1">### 2. Median filtering</span>
+    <span class="c1">### 3. Closing + opening</span>
+    <span class="c1">### 4. Fitting via 2nd order polynomial</span>
+    <span class="c1">### 5. Warping the entire image to get a straight line</span>
+
+    <span class="c1"># ----- 1. THRESHOLDING ----- #</span>
+    <span class="c1"># PARAMETERS</span>
+    <span class="c1">### Get the type of threshold needed to segment the image</span>
+    <span class="n">thres_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;thres_type&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">thres_type</span> <span class="o">==</span> <span class="s1">&#39;static&#39;</span><span class="p">):</span>
+        <span class="c1"># Get the threshold if specified</span>
+        <span class="n">thres_val</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;thres_val&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># By default the static threshold will be .2</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">thres_type</span> <span class="o">==</span> <span class="s1">&#39;otsu&#39;</span><span class="p">):</span>
+        <span class="c1"># Import the threshold otsu from skimage</span>
+        <span class="kn">from</span> <span class="nn">skimage.filters</span> <span class="kn">import</span> <span class="n">threshold_otsu</span>
+        <span class="n">thres_val</span> <span class="o">=</span> <span class="n">threshold_otsu</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening.Flatten2DMphMath: Unrecognise type of thresholding.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># PROCESSING</span>
+    <span class="c1">### Apply the thresholding</span>
+    <span class="n">bin_img</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">&gt;</span> <span class="n">thres_val</span><span class="p">)</span>
+
+    <span class="c1"># ----- 2. MEDIAN FILTERING ----- #</span>
+    <span class="c1"># PARAMETERS</span>
+    <span class="c1">### Get the morphological operator for the median filtering</span>
+    <span class="n">median_kernel_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;median_kernel_type&#39;</span><span class="p">,</span> <span class="s1">&#39;square&#39;</span><span class="p">)</span> <span class="c1"># Default type of kernel square</span>
+    <span class="n">median_kernel_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;median_kernel_size&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># Default kernel size 5</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">median_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;square&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">square</span>
+        <span class="n">median_kernel</span> <span class="o">=</span> <span class="n">square</span><span class="p">(</span><span class="n">median_kernel_size</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">median_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;disk&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">disk</span>
+        <span class="n">median_kernel</span> <span class="o">=</span> <span class="n">disk</span><span class="p">(</span><span class="n">median_kernel_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening.Flatten2DMphMath: Median kernel type unrecognized&#39;</span><span class="p">)</span>
+
+    <span class="c1"># CONVERSION INTO UBYTE</span>
+    <span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">img_as_ubyte</span>
+    <span class="n">bin_img_uint8</span> <span class="o">=</span> <span class="n">img_as_ubyte</span><span class="p">(</span><span class="n">bin_img</span><span class="p">)</span>
+
+    <span class="c1"># PROCESSING</span>
+    <span class="kn">from</span> <span class="nn">skimage.filters</span> <span class="kn">import</span> <span class="n">median</span>
+    <span class="n">bin_filt_img_uint8</span> <span class="o">=</span> <span class="n">median</span><span class="p">(</span><span class="n">bin_img_uint8</span><span class="p">,</span> <span class="n">median_kernel</span><span class="p">)</span>
+
+    <span class="c1"># CONVERSION INTO BOOL</span>
+    <span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">img_as_bool</span>
+    <span class="n">bin_filt_img</span> <span class="o">=</span> <span class="n">img_as_bool</span><span class="p">(</span><span class="n">bin_filt_img_uint8</span><span class="p">)</span>
+    
+    <span class="c1"># ----- 3. MORPHO MATH ----- #</span>
+    <span class="c1"># PARAMETERS</span>
+    <span class="c1">### Get the morphological operator for the opening operation</span>
+    <span class="n">opening_kernel_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;opening_kernel_type&#39;</span><span class="p">,</span> <span class="s1">&#39;disk&#39;</span><span class="p">)</span> <span class="c1"># Default type of kernel disk</span>
+    <span class="n">opening_kernel_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;opening_kernel_size&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># Default kernel size 5</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">opening_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;square&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">square</span>
+        <span class="n">opening_kernel</span> <span class="o">=</span> <span class="n">square</span><span class="p">(</span><span class="n">opening_kernel_size</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">opening_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;disk&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">disk</span>
+        <span class="n">opening_kernel</span> <span class="o">=</span> <span class="n">disk</span><span class="p">(</span><span class="n">opening_kernel_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening.Flatten2DMphMath: Opening kernel type unrecognized&#39;</span><span class="p">)</span>
+        
+    <span class="c1">### Get the morphological operator for the closing operation</span>
+    <span class="n">closing_kernel_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;closing_kernel_type&#39;</span><span class="p">,</span> <span class="s1">&#39;disk&#39;</span><span class="p">)</span> <span class="c1"># Default type of kernel disk</span>
+    <span class="n">closing_kernel_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;closing_kernel_size&#39;</span><span class="p">,</span> <span class="mi">35</span><span class="p">)</span> <span class="c1"># Default kernel size 35</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">closing_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;square&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">square</span>
+        <span class="n">closing_kernel</span> <span class="o">=</span> <span class="n">square</span><span class="p">(</span><span class="n">closing_kernel_size</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">closing_kernel_type</span> <span class="o">==</span> <span class="s1">&#39;disk&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">disk</span>
+        <span class="n">closing_kernel</span> <span class="o">=</span> <span class="n">disk</span><span class="p">(</span><span class="n">closing_kernel_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.preprocessing.flattening.Flatten2DMphMath: Closing kernel type unrecognized&#39;</span><span class="p">)</span>
+
+    <span class="c1"># PROCESSING</span>
+    <span class="c1">### Apply a closing operation</span>
+    <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">binary_closing</span>
+    <span class="n">bin_closing</span> <span class="o">=</span> <span class="n">binary_closing</span><span class="p">(</span><span class="n">bin_filt_img</span><span class="p">,</span> <span class="n">closing_kernel</span><span class="p">)</span>
+
+    <span class="c1">### Apply an opening operation</span>
+    <span class="kn">from</span> <span class="nn">skimage.morphology</span> <span class="kn">import</span> <span class="n">binary_opening</span>
+    <span class="n">bin_opening</span> <span class="o">=</span> <span class="n">binary_opening</span><span class="p">(</span><span class="n">bin_closing</span><span class="p">,</span> <span class="n">opening_kernel</span><span class="p">)</span>
+
+    <span class="c1"># ----- 4. POLYNOMIAL FITTING ----- #</span>
+    <span class="c1"># PROCESSING</span>
+    <span class="c1">### Get the x,y position of True value in the binary image</span>
+    <span class="n">y_img</span><span class="p">,</span> <span class="n">x_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">bin_opening</span><span class="p">)</span>
+
+    <span class="c1">### Fit a second order polynomial</span>
+    <span class="n">x_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">bin_opening</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">p_fitted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_img</span><span class="p">,</span> <span class="n">y_img</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">y_interp</span> <span class="o">=</span> <span class="n">p_fitted</span><span class="p">(</span><span class="n">x_interp</span><span class="p">)</span>
+    
+    <span class="c1"># ----- 5. WARPING OF THE IMAGE ----- #</span>
+    <span class="c1">### Allocate the memory for the image</span>
+    <span class="n">warped_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1">### Get each column of the original image</span>
+    <span class="c1">### Get the minimum y of the interpolated value in order to align the value to this baseline</span>
+    <span class="n">baseline_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y_interp</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col_ind</span><span class="p">,</span> <span class="n">col_img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+        
+        <span class="c1">### Compute the distance to apply the rolling</span>
+        <span class="n">dist_roll</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">baseline_y</span> <span class="o">-</span> <span class="n">y_interp</span><span class="p">[</span><span class="n">col_ind</span><span class="p">]))</span>
+
+        <span class="c1">### Assign the new column to the warped image</span>
+        <span class="n">warped_img</span><span class="p">[:,</span> <span class="n">col_ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">col_img</span><span class="p">,</span> <span class="n">dist_roll</span><span class="p">)</span>
+
+    <span class="c1"># Finally return the unflatten image</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">baseline_y</span><span class="p">),</span> <span class="n">warped_img</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Align2DIm"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.flattening.Align2DIm">[docs]</a><span class="k">def</span> <span class="nf">Align2DIm</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">baseline_im</span><span class="p">,</span> <span class="n">center_line</span><span class="p">):</span>
+    <span class="c1"># GOAL: All the different images need to be aligned to the same reference</span>
+
+    <span class="c1">### Compute the distance to apply the rolling</span>
+    <span class="n">dist_roll</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">center_line</span> <span class="o">-</span> <span class="n">baseline_im</span><span class="p">))</span>
+
+    <span class="c1">### Roll each column of the image</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dist_roll</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Cropping2DIm"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.flattening.Cropping2DIm">[docs]</a><span class="k">def</span> <span class="nf">Cropping2DIm</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">center_line</span><span class="p">,</span> <span class="n">crop_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># GOAL: Crop each 2D image</span>
+
+    <span class="c1">### Compute the top and bottom limits</span>
+    <span class="n">top_limit</span> <span class="o">=</span> <span class="n">center_line</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">crop_size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">bottom_limit</span> <span class="o">=</span> <span class="n">center_line</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">crop_size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="c1">### Check the validity of the limit</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">top_limit</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">top_limit</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bottom_limit</span> <span class="o">=</span> <span class="n">crop_size</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">bottom_limit</span> <span class="o">&gt;</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">bottom_limit</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">top_limit</span> <span class="o">=</span> <span class="n">bottom_limit</span> <span class="o">-</span> <span class="n">crop_size</span>
+
+    <span class="k">return</span> <span class="n">image</span><span class="p">[:,</span> <span class="n">top_limit</span><span class="p">:</span><span class="n">bottom_limit</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

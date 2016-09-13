@@ -1,0 +1,2673 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.classification.html">protoclass.classification package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.data_management.html">protoclass.data_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.html">protoclass.extraction package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.utils.html">protoclass.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.validation.html">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.preprocessing.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-preprocessing-package">
+<h1>protoclass.preprocessing package<a class="headerlink" href="#protoclass-preprocessing-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.preprocessing.base_normalization">
+<span id="protoclass-preprocessing-base-normalization-module"></span><h2>protoclass.preprocessing.base_normalization module<a class="headerlink" href="#module-protoclass.preprocessing.base_normalization" title="Permalink to this headline">¶</a></h2>
+<p>Basic class for normalization.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.base_normalization.</code><code class="descname">BaseNormalization</code><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic class for normalization.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization.denormalize" title="protoclass.preprocessing.base_normalization.BaseNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Reverse the normalization.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization.fit" title="protoclass.preprocessing.base_normalization.BaseNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization.load_from_pickles" title="protoclass.preprocessing.base_normalization.BaseNormalization.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization.normalize" title="protoclass.preprocessing.base_normalization.BaseNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the data after fitting the data.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization.save_to_pickles" title="protoclass.preprocessing.base_normalization.BaseNormalization.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the normalization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the
+normalization.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization.load_from_pickles">
+<em class="property">static </em><code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.load_from_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to load a normalization object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bpp</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns the loaded object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the data after fitting the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.base_normalization.BaseNormalization.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.save_to_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.base_normalization.BaseNormalization.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to save a normalizatio object using pickles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.denoising">
+<span id="protoclass-preprocessing-denoising-module"></span><h2>protoclass.preprocessing.denoising module<a class="headerlink" href="#module-protoclass.preprocessing.denoising" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.preprocessing.denoising.Denoising3D">
+<code class="descclassname">protoclass.preprocessing.denoising.</code><code class="descname">Denoising3D</code><span class="sig-paren">(</span><em>volume</em>, <em>denoising_method='non-local-means'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/denoising.html#Denoising3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.denoising.Denoising3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.preprocessing.denoising.DenoisingNLM2D">
+<code class="descclassname">protoclass.preprocessing.denoising.</code><code class="descname">DenoisingNLM2D</code><span class="sig-paren">(</span><em>image</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/denoising.html#DenoisingNLM2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.denoising.DenoisingNLM2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.flattening">
+<span id="protoclass-preprocessing-flattening-module"></span><h2>protoclass.preprocessing.flattening module<a class="headerlink" href="#module-protoclass.preprocessing.flattening" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.preprocessing.flattening.Align2DIm">
+<code class="descclassname">protoclass.preprocessing.flattening.</code><code class="descname">Align2DIm</code><span class="sig-paren">(</span><em>image</em>, <em>baseline_im</em>, <em>center_line</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/flattening.html#Align2DIm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.flattening.Align2DIm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.preprocessing.flattening.Cropping2DIm">
+<code class="descclassname">protoclass.preprocessing.flattening.</code><code class="descname">Cropping2DIm</code><span class="sig-paren">(</span><em>image</em>, <em>center_line</em>, <em>crop_size</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/flattening.html#Cropping2DIm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.flattening.Cropping2DIm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.preprocessing.flattening.Flatten2DMphMath">
+<code class="descclassname">protoclass.preprocessing.flattening.</code><code class="descname">Flatten2DMphMath</code><span class="sig-paren">(</span><em>image</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/flattening.html#Flatten2DMphMath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.flattening.Flatten2DMphMath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.preprocessing.flattening.Flatten3D">
+<code class="descclassname">protoclass.preprocessing.flattening.</code><code class="descname">Flatten3D</code><span class="sig-paren">(</span><em>volume</em>, <em>flattening_method='morph-mat'</em>, <em>crop=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/flattening.html#Flatten3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.flattening.Flatten3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.gaussian_normalisation">
+<span id="protoclass-preprocessing-gaussian-normalisation-module"></span><h2>protoclass.preprocessing.gaussian_normalisation module<a class="headerlink" href="#module-protoclass.preprocessing.gaussian_normalisation" title="Permalink to this headline">¶</a></h2>
+<p>Gaussian normalization to normalize standalone modality.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.gaussian_normalisation.</code><code class="descname">GaussianNormalization</code><span class="sig-paren">(</span><em>base_modality</em>, <em>params='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.standalone_normalization.StandaloneNormalization</span></code></a></p>
+<p>Gaussian normalization to normalize standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StanaloneModality class.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;auto&#8217;)</p>
+<blockquote class="last">
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;auto&#8217;, then the standard deviation and mean will be estimated</li>
+</ul>
+<p>from the data.
+- If dict, a dictionary with the keys &#8216;mu&#8217; and &#8216;sigma&#8217; should be
+specified. The corresponding value of these parameters should be
+float. They will be the initial value during fitting.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">fit_params_</span></a></td>
+<td>(dict of str: float) There is the following keys:  - &#8216;mu&#8217; is the fitted mean. - &#8216;sigma&#8217; is the standard deviation.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">is_fitted_</span></a></td>
+<td>(bool) Boolean to know if the <cite>fit</cite> function has been already called.</td>
+</tr>
+<tr class="row-even"><td><a href="#id7"><span class="problematic" id="id8">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.denormalize" title="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.fit" title="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.normalize" title="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Method to normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.gaussian_normalisation.GaussianNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.multisequence_normalization">
+<span id="protoclass-preprocessing-multisequence-normalization-module"></span><h2>protoclass.preprocessing.multisequence_normalization module<a class="headerlink" href="#module-protoclass.preprocessing.multisequence_normalization" title="Permalink to this headline">¶</a></h2>
+<p>Basic class to normalize multisequence modality.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.multisequence_normalization.</code><code class="descname">MultisequenceNormalization</code><a class="reference internal" href="../_modules/protoclass/preprocessing/multisequence_normalization.html#MultisequenceNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize multisequence modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code>(modality)</td>
+<td>Reverse the normalization.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization.fit" title="protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>()</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code>(modality)</td>
+<td>Normalize the data after fitting the data.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/multisequence_normalization.html#MultisequenceNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.multisequence_normalization.MultisequenceNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.normalisation">
+<span id="protoclass-preprocessing-normalisation-module"></span><h2>protoclass.preprocessing.normalisation module<a class="headerlink" href="#module-protoclass.preprocessing.normalisation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="protoclass.preprocessing.normalisation.GaussianNormalisation">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.normalisation.</code><code class="descname">GaussianNormalisation</code><span class="sig-paren">(</span><em>norm_factor=1.0</em>, <em>mu=0.0</em>, <em>sigma=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#GaussianNormalisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.GaussianNormalisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to perform Gaussian normalisation</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.denormalise" title="protoclass.preprocessing.normalisation.GaussianNormalisation.denormalise"><code class="xref py py-obj docutils literal"><span class="pre">denormalise</span></code></a>(x)</td>
+<td>Function to unormalise the data</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.fit" title="protoclass.preprocessing.normalisation.GaussianNormalisation.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(x,&nbsp;x_range)</td>
+<td>Function to find the best member parameters to fit</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.get_parameters" title="protoclass.preprocessing.normalisation.GaussianNormalisation.get_parameters"><code class="xref py py-obj docutils literal"><span class="pre">get_parameters</span></code></a>()</td>
+<td>Function to get the parameter of the object</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.normalise" title="protoclass.preprocessing.normalisation.GaussianNormalisation.normalise"><code class="xref py py-obj docutils literal"><span class="pre">normalise</span></code></a>(x)</td>
+<td>Function to normalise the data</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.GaussianNormalisation.denormalise">
+<code class="descname">denormalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#GaussianNormalisation.denormalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.denormalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to unormalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the normalised data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_unormalised: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x unormalised</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.GaussianNormalisation.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>x</em>, <em>x_range</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#GaussianNormalisation.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.fit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Function to find the best member parameters to fit </dt>
+<dd>the class parametrisation using Levenverg-Marquardt
+curve fitting</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the data</p>
+</div></blockquote>
+<p><strong>x_range: tuple</strong></p>
+<blockquote>
+<div><p>Tuple containing the minimum and maxumum to consider
+to build the histogram of the data x</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">error_fit: double</p>
+<blockquote class="last">
+<div><p>Return the fitting error</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.GaussianNormalisation.get_parameters">
+<code class="descname">get_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#GaussianNormalisation.get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the parameter of the object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">params: tuple</p>
+<blockquote class="last">
+<div><p>Return a tuple with the amplitude, mean and std of the 
+Gaussian representation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.GaussianNormalisation.normalise">
+<code class="descname">normalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#GaussianNormalisation.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.GaussianNormalisation.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to normalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the unormalised data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_normalised: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x normalised</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.normalisation.LinearNormalisationByParts">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.normalisation.</code><code class="descname">LinearNormalisationByParts</code><span class="sig-paren">(</span><em>atlas</em>, <em>min_perc=2.0</em>, <em>max_perc=98.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#LinearNormalisationByParts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to perform linear normalisation by parts</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.denormalise" title="protoclass.preprocessing.normalisation.LinearNormalisationByParts.denormalise"><code class="xref py py-obj docutils literal"><span class="pre">denormalise</span></code></a>(x)</td>
+<td>Function to unormalise the data</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.fit" title="protoclass.preprocessing.normalisation.LinearNormalisationByParts.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(x)</td>
+<td>Function to find the best member parameters to make the mapping</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.get_parameters" title="protoclass.preprocessing.normalisation.LinearNormalisationByParts.get_parameters"><code class="xref py py-obj docutils literal"><span class="pre">get_parameters</span></code></a>()</td>
+<td>Function to get the parameter of the object</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.normalise" title="protoclass.preprocessing.normalisation.LinearNormalisationByParts.normalise"><code class="xref py py-obj docutils literal"><span class="pre">normalise</span></code></a>(x)</td>
+<td>Function to normalise the data</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.LinearNormalisationByParts.denormalise">
+<code class="descname">denormalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#LinearNormalisationByParts.denormalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.denormalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to unormalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the normalised data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_unormalised: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x unormalised</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.LinearNormalisationByParts.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#LinearNormalisationByParts.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to find the best member parameters to make the mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote class="last">
+<div><p>Array containing the data</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.LinearNormalisationByParts.get_parameters">
+<code class="descname">get_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#LinearNormalisationByParts.get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the parameter of the object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">params: tuple</p>
+<blockquote class="last">
+<div><p>Return a tuple with the value of the atlas to be fitted and the landmarks found for the curren volume</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.LinearNormalisationByParts.normalise">
+<code class="descname">normalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#LinearNormalisationByParts.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.LinearNormalisationByParts.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to normalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the unormalised data</p>
+</div></blockquote>
+<p><strong>x_norm: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing part of the normalise data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_norm: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x normalised for this parts</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.normalisation.RicianNormalisation">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.normalisation.</code><code class="descname">RicianNormalisation</code><span class="sig-paren">(</span><em>norm_factor=1.0</em>, <em>v=0.0</em>, <em>loc=0.0</em>, <em>sigma=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#RicianNormalisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.RicianNormalisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to perform Rician normalisation</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.RicianNormalisation.denormalise" title="protoclass.preprocessing.normalisation.RicianNormalisation.denormalise"><code class="xref py py-obj docutils literal"><span class="pre">denormalise</span></code></a>(x)</td>
+<td>Function to unormalise the data</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.RicianNormalisation.fit" title="protoclass.preprocessing.normalisation.RicianNormalisation.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(x,&nbsp;x_range)</td>
+<td>Function to find the best member parameters to fit</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.RicianNormalisation.get_parameters" title="protoclass.preprocessing.normalisation.RicianNormalisation.get_parameters"><code class="xref py py-obj docutils literal"><span class="pre">get_parameters</span></code></a>()</td>
+<td>Function to get the parameter of the object</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.normalisation.RicianNormalisation.normalise" title="protoclass.preprocessing.normalisation.RicianNormalisation.normalise"><code class="xref py py-obj docutils literal"><span class="pre">normalise</span></code></a>(x)</td>
+<td>Function to normalise the data</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.RicianNormalisation.denormalise">
+<code class="descname">denormalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#RicianNormalisation.denormalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.RicianNormalisation.denormalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to unormalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the normalised data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_unormalised: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x unormalised</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.RicianNormalisation.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>x</em>, <em>x_range</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#RicianNormalisation.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.RicianNormalisation.fit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Function to find the best member parameters to fit </dt>
+<dd>the class parametrisation using Levenverg-Marquardt
+curve fitting</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the data</p>
+</div></blockquote>
+<p><strong>x_range: tuple</strong></p>
+<blockquote>
+<div><p>Tuple containing the minimum and maxumum to consider
+to build the histogram of the data x</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">error_fit: double</p>
+<blockquote class="last">
+<div><p>Return the fitting error</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.RicianNormalisation.get_parameters">
+<code class="descname">get_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#RicianNormalisation.get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.RicianNormalisation.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the parameter of the object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">params: tuple</p>
+<blockquote class="last">
+<div><p>Return a tuple the parameters of the Rician representation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.normalisation.RicianNormalisation.normalise">
+<code class="descname">normalise</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/normalisation.html#RicianNormalisation.normalise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.normalisation.RicianNormalisation.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to normalise the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>Array containing the unormalised data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x_normalised: ndarray</p>
+<blockquote class="last">
+<div><p>Return the data x normalised</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.standalone_normalization">
+<span id="protoclass-preprocessing-standalone-normalization-module"></span><h2>protoclass.preprocessing.standalone_normalization module<a class="headerlink" href="#module-protoclass.preprocessing.standalone_normalization" title="Permalink to this headline">¶</a></h2>
+<p>Basic class to normalize standalone modality.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.standalone_normalization.StandaloneNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.standalone_normalization.</code><code class="descname">StandaloneNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize standalone modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.denormalize" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.fit" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.normalize" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Method to normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standalone_normalization.StandaloneNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.standard_time_normalization">
+<span id="protoclass-preprocessing-standard-time-normalization-module"></span><h2>protoclass.preprocessing.standard_time_normalization module<a class="headerlink" href="#module-protoclass.preprocessing.standard_time_normalization" title="Permalink to this headline">¶</a></h2>
+<p>Standard time normalization to normalize temporal modality.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.standard_time_normalization.</code><code class="descname">StandardTimeNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization" title="protoclass.preprocessing.temporal_normalization.TemporalNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.temporal_normalization.TemporalNormalization</span></code></a></p>
+<p>Standard normalization to normalize temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id9"><span class="problematic" id="id10">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id11"><span class="problematic" id="id12">fit_params_</span></a></td>
+<td>(dict of str) There is the following keys:  - &#8216;shift-int&#8217; is the shift found using graph walking. It corresponds to an intensity shift. - &#8216;shift-time&#8217; corresponds to the time shifting equivalent to a shift of serie. - &#8216;scale-int&#8217; is a scaling factor for the intensity.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id13"><span class="problematic" id="id14">is_fitted_</span></a></td>
+<td>(bool) True if the fitting parameters have been infered</td>
+</tr>
+<tr class="row-even"><td><a href="#id15"><span class="problematic" id="id16">is_model_fitted_</span></a></td>
+<td>(bool) True if the model has beeen fitted.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id17"><span class="problematic" id="id18">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;params,&nbsp;...])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model"><code class="xref py py-obj docutils literal"><span class="pre">load_model</span></code></a>(filename)</td>
+<td>Load a model used at the time to align the RMSE.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model"><code class="xref py py-obj docutils literal"><span class="pre">partial_fit_model</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;...])</td>
+<td>Online fittinf of template model to drive the fitting of one modality.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model" title="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model"><code class="xref py py-obj docutils literal"><span class="pre">save_model</span></code></a>(filename)</td>
+<td>Store the model into an npy file.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>params='default'</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>Object inherated from TemporalModality.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None, optional</p>
+<blockquote>
+<div><p>(default=None)
+The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;default&#8217;)</p>
+<blockquote>
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;default&#8217;, the value following value will be affected:</li>
+</ul>
+<p>{&#8216;std&#8217; : 50., &#8216;exp&#8217; : 25., &#8216;alpha&#8217; : .9, &#8216;max_iter&#8217; : 5}
+- If dict, a dictionary with the keys &#8216;std&#8217;, &#8216;exp&#8217;, &#8216;alpha&#8217;,
+and &#8216;max_iter&#8217; should be specified. The corresponding value of
+these parameters should be float. They will be the initial value
+during fitting.</p>
+<p>&#8216;std&#8217; corresponds to the standard deviation when applying the
+Gaussian filter; &#8216;exp&#8217; corresponds to the factor in the
+exponential; &#8216;alpha&#8217; corresponds to the parameters to penalize
+vertical and horizontal weight in the graph; &#8216;max_iter&#8217; is the
+maximum number of walks through the graph.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to show the fitting process information.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model">
+<code class="descname">load_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.load_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a model used at the time to align the RMSE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path to npy file with the data of the model inside.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model">
+<code class="descname">partial_fit_model</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>params='default'</em>, <em>refit=False</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.partial_fit_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Online fittinf of template model to drive the fitting of
+one modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>Object inherated from TemporalModality.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None, optional</p>
+<blockquote>
+<div><p>(default=None)
+The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;default&#8217;)</p>
+<blockquote>
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;default&#8217;, the value following value will be affected:</li>
+</ul>
+<p>{&#8216;std&#8217; : 50., &#8216;exp&#8217; : 25., &#8216;alpha&#8217; : .9, &#8216;max_iter&#8217; : 5}
+- If dict, a dictionary with the keys &#8216;std&#8217;, &#8216;exp&#8217;, &#8216;alpha&#8217;,
+and &#8216;max_iter&#8217; should be specified. The corresponding value of
+these parameters should be float. They will be the initial value
+during fitting.</p>
+<p>&#8216;std&#8217; corresponds to the standard deviation when applying the
+Gaussian filter; &#8216;exp&#8217; corresponds to the factor in the
+exponential; &#8216;alpha&#8217; corresponds to the parameters to penalize
+vertical and horizontal weight in the graph; &#8216;max_iter&#8217; is the
+maximum number of walks through the graph.</p>
+</div></blockquote>
+<p><strong>refit</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>Either to refit the model or not.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to show the fitting process information.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model">
+<code class="descname">save_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.save_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the model into an npy file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path where to store the model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing.temporal_normalization">
+<span id="protoclass-preprocessing-temporal-normalization-module"></span><h2>protoclass.preprocessing.temporal_normalization module<a class="headerlink" href="#module-protoclass.preprocessing.temporal_normalization" title="Permalink to this headline">¶</a></h2>
+<p>Basic class to normalize temporal modality.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.temporal_normalization.TemporalNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.temporal_normalization.</code><code class="descname">TemporalNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize temporal modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.denormalize" title="protoclass.preprocessing.temporal_normalization.TemporalNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.fit" title="protoclass.preprocessing.temporal_normalization.TemporalNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.normalize" title="protoclass.preprocessing.temporal_normalization.TemporalNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.temporal_normalization.TemporalNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.temporal_normalization.TemporalNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.temporal_normalization.TemporalNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.preprocessing">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.preprocessing" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-protoclass.preprocessing" title="protoclass.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">protoclass.preprocessing</span></code></a> modules allows to apply some
+pre-processing on medical imaging data.</p>
+<dl class="class">
+<dt id="protoclass.preprocessing.BaseNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">BaseNormalization</code><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic class for normalization.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.BaseNormalization.denormalize" title="protoclass.preprocessing.BaseNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Reverse the normalization.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.BaseNormalization.fit" title="protoclass.preprocessing.BaseNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.BaseNormalization.load_from_pickles" title="protoclass.preprocessing.BaseNormalization.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.BaseNormalization.normalize" title="protoclass.preprocessing.BaseNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the data after fitting the data.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.BaseNormalization.save_to_pickles" title="protoclass.preprocessing.BaseNormalization.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.BaseNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the normalization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.BaseNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the
+normalization.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="protoclass.preprocessing.BaseNormalization.load_from_pickles">
+<em class="property">static </em><code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.load_from_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to load a normalization object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bpp</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns the loaded object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.BaseNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the data after fitting the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.BaseNormalization.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/base_normalization.html#BaseNormalization.save_to_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.BaseNormalization.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to save a normalizatio object using pickles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.StandaloneNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">StandaloneNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandaloneNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize standalone modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.StandaloneNormalization.denormalize" title="protoclass.preprocessing.StandaloneNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.StandaloneNormalization.fit" title="protoclass.preprocessing.StandaloneNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.StandaloneNormalization.normalize" title="protoclass.preprocessing.StandaloneNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Method to normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.StandaloneNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandaloneNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandaloneNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandaloneNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandaloneNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standalone_normalization.html#StandaloneNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandaloneNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.TemporalNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">TemporalNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.TemporalNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize temporal modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.TemporalNormalization.denormalize" title="protoclass.preprocessing.TemporalNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.TemporalNormalization.fit" title="protoclass.preprocessing.TemporalNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.TemporalNormalization.normalize" title="protoclass.preprocessing.TemporalNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.TemporalNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.TemporalNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.TemporalNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.TemporalNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.TemporalNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/temporal_normalization.html#TemporalNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.TemporalNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.MultisequenceNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">MultisequenceNormalization</code><a class="reference internal" href="../_modules/protoclass/preprocessing/multisequence_normalization.html#MultisequenceNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.MultisequenceNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.base_normalization.BaseNormalization" title="protoclass.preprocessing.base_normalization.BaseNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.base_normalization.BaseNormalization</span></code></a></p>
+<p>Basic class to normalize multisequence modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code>(modality)</td>
+<td>Reverse the normalization.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.MultisequenceNormalization.fit" title="protoclass.preprocessing.MultisequenceNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>()</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code>(modality)</td>
+<td>Normalize the data after fitting the data.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.MultisequenceNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/multisequence_normalization.html#MultisequenceNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.MultisequenceNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.StandardTimeNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">StandardTimeNormalization</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.temporal_normalization.TemporalNormalization" title="protoclass.preprocessing.temporal_normalization.TemporalNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.temporal_normalization.TemporalNormalization</span></code></a></p>
+<p>Standard normalization to normalize temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id19"><span class="problematic" id="id20">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id21"><span class="problematic" id="id22">fit_params_</span></a></td>
+<td>(dict of str) There is the following keys:  - &#8216;shift-int&#8217; is the shift found using graph walking. It corresponds to an intensity shift. - &#8216;shift-time&#8217; corresponds to the time shifting equivalent to a shift of serie. - &#8216;scale-int&#8217; is a scaling factor for the intensity.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id23"><span class="problematic" id="id24">is_fitted_</span></a></td>
+<td>(bool) True if the fitting parameters have been infered</td>
+</tr>
+<tr class="row-even"><td><a href="#id25"><span class="problematic" id="id26">is_model_fitted_</span></a></td>
+<td>(bool) True if the model has beeen fitted.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id27"><span class="problematic" id="id28">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.denormalize" title="protoclass.preprocessing.StandardTimeNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.fit" title="protoclass.preprocessing.StandardTimeNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;params,&nbsp;...])</td>
+<td>Find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.load_model" title="protoclass.preprocessing.StandardTimeNormalization.load_model"><code class="xref py py-obj docutils literal"><span class="pre">load_model</span></code></a>(filename)</td>
+<td>Load a model used at the time to align the RMSE.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.normalize" title="protoclass.preprocessing.StandardTimeNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.partial_fit_model" title="protoclass.preprocessing.StandardTimeNormalization.partial_fit_model"><code class="xref py py-obj docutils literal"><span class="pre">partial_fit_model</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;...])</td>
+<td>Online fittinf of template model to drive the fitting of one modality.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.StandardTimeNormalization.save_model" title="protoclass.preprocessing.StandardTimeNormalization.save_model"><code class="xref py py-obj docutils literal"><span class="pre">save_model</span></code></a>(filename)</td>
+<td>Store the model into an npy file.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>params='default'</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>Object inherated from TemporalModality.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None, optional</p>
+<blockquote>
+<div><p>(default=None)
+The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;default&#8217;)</p>
+<blockquote>
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;default&#8217;, the value following value will be affected:</li>
+</ul>
+<p>{&#8216;std&#8217; : 50., &#8216;exp&#8217; : 25., &#8216;alpha&#8217; : .9, &#8216;max_iter&#8217; : 5}
+- If dict, a dictionary with the keys &#8216;std&#8217;, &#8216;exp&#8217;, &#8216;alpha&#8217;,
+and &#8216;max_iter&#8217; should be specified. The corresponding value of
+these parameters should be float. They will be the initial value
+during fitting.</p>
+<p>&#8216;std&#8217; corresponds to the standard deviation when applying the
+Gaussian filter; &#8216;exp&#8217; corresponds to the factor in the
+exponential; &#8216;alpha&#8217; corresponds to the parameters to penalize
+vertical and horizontal weight in the graph; &#8216;max_iter&#8217; is the
+maximum number of walks through the graph.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to show the fitting process information.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.load_model">
+<code class="descname">load_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.load_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.load_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a model used at the time to align the RMSE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path to npy file with the data of the model inside.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.partial_fit_model">
+<code class="descname">partial_fit_model</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>params='default'</em>, <em>refit=False</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.partial_fit_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.partial_fit_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Online fittinf of template model to drive the fitting of
+one modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>Object inherated from TemporalModality.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None, optional</p>
+<blockquote>
+<div><p>(default=None)
+The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;default&#8217;)</p>
+<blockquote>
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;default&#8217;, the value following value will be affected:</li>
+</ul>
+<p>{&#8216;std&#8217; : 50., &#8216;exp&#8217; : 25., &#8216;alpha&#8217; : .9, &#8216;max_iter&#8217; : 5}
+- If dict, a dictionary with the keys &#8216;std&#8217;, &#8216;exp&#8217;, &#8216;alpha&#8217;,
+and &#8216;max_iter&#8217; should be specified. The corresponding value of
+these parameters should be float. They will be the initial value
+during fitting.</p>
+<p>&#8216;std&#8217; corresponds to the standard deviation when applying the
+Gaussian filter; &#8216;exp&#8217; corresponds to the factor in the
+exponential; &#8216;alpha&#8217; corresponds to the parameters to penalize
+vertical and horizontal weight in the graph; &#8216;max_iter&#8217; is the
+maximum number of walks through the graph.</p>
+</div></blockquote>
+<p><strong>refit</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>Either to refit the model or not.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to show the fitting process information.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.StandardTimeNormalization.save_model">
+<code class="descname">save_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/standard_time_normalization.html#StandardTimeNormalization.save_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.StandardTimeNormalization.save_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the model into an npy file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path where to store the model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.GaussianNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">GaussianNormalization</code><span class="sig-paren">(</span><em>base_modality</em>, <em>params='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.GaussianNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.standalone_normalization.StandaloneNormalization</span></code></a></p>
+<p>Gaussian normalization to normalize standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StanaloneModality class.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;auto&#8217;)</p>
+<blockquote class="last">
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;auto&#8217;, then the standard deviation and mean will be estimated</li>
+</ul>
+<p>from the data.
+- If dict, a dictionary with the keys &#8216;mu&#8217; and &#8216;sigma&#8217; should be
+specified. The corresponding value of these parameters should be
+float. They will be the initial value during fitting.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id29"><span class="problematic" id="id30">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id31"><span class="problematic" id="id32">fit_params_</span></a></td>
+<td>(dict of str: float) There is the following keys:  - &#8216;mu&#8217; is the fitted mean. - &#8216;sigma&#8217; is the standard deviation.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id33"><span class="problematic" id="id34">is_fitted_</span></a></td>
+<td>(bool) Boolean to know if the <cite>fit</cite> function has been already called.</td>
+</tr>
+<tr class="row-even"><td><a href="#id35"><span class="problematic" id="id36">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.GaussianNormalization.denormalize" title="protoclass.preprocessing.GaussianNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.GaussianNormalization.fit" title="protoclass.preprocessing.GaussianNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.GaussianNormalization.normalize" title="protoclass.preprocessing.GaussianNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Method to normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.GaussianNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.GaussianNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.GaussianNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.GaussianNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.GaussianNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/gaussian_normalisation.html#GaussianNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.GaussianNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.RicianNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">RicianNormalization</code><span class="sig-paren">(</span><em>base_modality</em>, <em>params='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/rician_normalisation.html#RicianNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.RicianNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.standalone_normalization.StandaloneNormalization</span></code></a></p>
+<p>Rician normalization to normalize standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+<p><strong>params</strong> : str or dict of str: float, optional (default=&#8217;auto&#8217;)</p>
+<blockquote class="last">
+<div><p>The initial estimation of the parameters:</p>
+<ul class="simple">
+<li>If &#8216;auto&#8217;, then the standard deviation and mean will be estimated</li>
+</ul>
+<p>from the data.
+- If dict, a dictionary with the keys &#8216;off&#8217; and &#8216;sigma&#8217; should be
+specified. The corresponding value of these parameters should be
+float. They will be the initial value during fitting.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id37"><span class="problematic" id="id38">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id39"><span class="problematic" id="id40">fit_params_</span></a></td>
+<td>(dict of str: float) There is the following keys:  - &#8216;b&#8217; is the fitted b. - &#8216;off&#8217; is the fitted offset. - &#8216;sigma&#8217; is the standard deviation.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id41"><span class="problematic" id="id42">is_fitted_</span></a></td>
+<td>(bool) Boolean to know if the <cite>fit</cite> function has been already called.</td>
+</tr>
+<tr class="row-even"><td><a href="#id43"><span class="problematic" id="id44">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.RicianNormalization.denormalize" title="protoclass.preprocessing.RicianNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.RicianNormalization.fit" title="protoclass.preprocessing.RicianNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.RicianNormalization.normalize" title="protoclass.preprocessing.RicianNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Method to normalize the given modality using the fitted parameters.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.RicianNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/rician_normalisation.html#RicianNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.RicianNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.RicianNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/rician_normalisation.html#RicianNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.RicianNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.RicianNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/rician_normalisation.html#RicianNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.RicianNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to normalize the given modality using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization">
+<em class="property">class </em><code class="descclassname">protoclass.preprocessing.</code><code class="descname">PiecewiseLinearNormalization</code><span class="sig-paren">(</span><em>base_modality</em>, <em>nb_landmarks=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protoclass.preprocessing.standalone_normalization.StandaloneNormalization" title="protoclass.preprocessing.standalone_normalization.StandaloneNormalization"><code class="xref py py-class docutils literal"><span class="pre">protoclass.preprocessing.standalone_normalization.StandaloneNormalization</span></code></a></p>
+<p>Piecewise-linear normalization to normalize standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StandaloneModality class.</p>
+</div></blockquote>
+<p><strong>nb_landmarks</strong> : int, optional (default=5)</p>
+<blockquote class="last">
+<div><p>The number of landmarks to consider to divide the signal.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>landmarks_model</td>
+<td>(ndarray, shape (nb_landmarks, )) The landmarks which will be match during the normalization.</td>
+</tr>
+<tr class="row-even"><td><a href="#id45"><span class="problematic" id="id46">fit_params_</span></a></td>
+<td>(ndarray, shape (nb_landmarks, )) The array of the landmarks for the current fitted modality</td>
+</tr>
+<tr class="row-odd"><td><a href="#id47"><span class="problematic" id="id48">is_fitted_</span></a></td>
+<td>(bool) Boolean to know if the <cite>fit</cite> function has been already called.</td>
+</tr>
+<tr class="row-even"><td><a href="#id49"><span class="problematic" id="id50">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.denormalize" title="protoclass.preprocessing.PiecewiseLinearNormalization.denormalize"><code class="xref py py-obj docutils literal"><span class="pre">denormalize</span></code></a>(modality)</td>
+<td>Denormalize the data using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.fit" title="protoclass.preprocessing.PiecewiseLinearNormalization.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Method to find the parameters needed to apply the normalization.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.load_model" title="protoclass.preprocessing.PiecewiseLinearNormalization.load_model"><code class="xref py py-obj docutils literal"><span class="pre">load_model</span></code></a>(filename)</td>
+<td>Load a model used at the time to align the RMSE.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.normalize" title="protoclass.preprocessing.PiecewiseLinearNormalization.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(modality)</td>
+<td>Normalize the data using the fitted parameters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model" title="protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model"><code class="xref py py-obj docutils literal"><span class="pre">partial_fit_model</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;...])</td>
+<td>Online fitting to update the landmarks used for the normalization.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.preprocessing.PiecewiseLinearNormalization.save_model" title="protoclass.preprocessing.PiecewiseLinearNormalization.save_model"><code class="xref py py-obj docutils literal"><span class="pre">save_model</span></code></a>(filename)</td>
+<td>Store the model into an npy file.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.denormalize">
+<code class="descname">denormalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denormalize the data using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be denormalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be denormalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the parameters needed to apply the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.load_model">
+<code class="descname">load_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.load_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.load_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a model used at the time to align the RMSE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path to npy file with the data of the model inside.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><em>modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the data using the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality: object of type StandaloneModality</strong></p>
+<blockquote>
+<div><p>The modality object from which the data need to be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">modality: object of type StandaloneModality</p>
+<blockquote class="last">
+<div><p>The modality object in which the data will be normalized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">
+<code class="descname">partial_fit_model</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>refit=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.partial_fit_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Online fitting to update the landmarks used for the normalization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object</p>
+<blockquote>
+<div><p>Object inherated from StandalineModality.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None, optional</p>
+<blockquote>
+<div><p>(default=None)
+The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None, optional (default=None)</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>refit</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>Either to refit the model or not.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to show the fitting process information.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> : object</p>
+<blockquote class="last">
+<div><p>Return self.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.preprocessing.PiecewiseLinearNormalization.save_model">
+<code class="descname">save_model</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/preprocessing/piecewise_linear_normalisation.html#PiecewiseLinearNormalization.save_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.preprocessing.PiecewiseLinearNormalization.save_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the model into an npy file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The path where to store the model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.validation package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/>
+        <link rel="prev" title="protoclass.utils package" href="protoclass.utils.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.classification.html">protoclass.classification package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.data_management.html">protoclass.data_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.html">protoclass.extraction package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.preprocessing.html">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.utils.html">protoclass.utils package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.validation package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.validation.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-validation-package">
+<h1>protoclass.validation package<a class="headerlink" href="#protoclass-validation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.validation.metric">
+<span id="protoclass-validation-metric-module"></span><h2>protoclass.validation.metric module<a class="headerlink" href="#module-protoclass.validation.metric" title="Permalink to this headline">¶</a></h2>
+<p>Methods to compute classification statistics from the
+prediction and labels.</p>
+<dl class="function">
+<dt id="protoclass.validation.metric.build_confusion_from_volume">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">build_confusion_from_volume</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#build_confusion_from_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.build_confusion_from_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to build the confusion matrix.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>cm: ndarray</dt>
+<dd>The resulting confusion matrix.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.cost_with_bias">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">cost_with_bias</code><span class="sig-paren">(</span><em>sens</em>, <em>spec</em>, <em>bias_pos</em>, <em>bias_neg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#cost_with_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.cost_with_bias" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>sens: float</dt>
+<dd>Sensitivity.</dd>
+<dt>spec: float</dt>
+<dd>Specificity.</dd>
+<dt>bias_pos: float</dt>
+<dd>Constant influencing the bias of the positive class.</dd>
+<dt>bias_neg: float</dt>
+<dd>Constant influecing the bias of the negative class.</dd>
+</dl>
+<dl class="docutils">
+<dt>cval: double</dt>
+<dd>The resulting cost value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_accuracy">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_accuracy</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the accuracy score.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>acc: double</dt>
+<dd>The resulting accuracy.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_cost_value">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_cost_value</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em>, <em>bias_pos=1.5</em>, <em>bias_neg=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_cost_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_cost_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute cost given the ground-truth label
+and predicted label.
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+<dt>bias_pos: float</dt>
+<dd>Constant influencing the bias of the positive class.</dd>
+<dt>bias_neg: float</dt>
+<dd>Constant influecing the bias of the negative class.</dd>
+</dl>
+<dl class="docutils">
+<dt>cval: double</dt>
+<dd>The resulting cost value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_f1_score">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_f1_score</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_f1_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_f1_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the F1 score.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>f1score: double</dt>
+<dd>The resulting F1 score.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_generalized_index_balanced_accuracy">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_generalized_index_balanced_accuracy</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em>, <em>M='gmean'</em>, <em>alpha=0.1</em>, <em>squared=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_generalized_index_balanced_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_generalized_index_balanced_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the the generalized index of balanced accuracy.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+<dt>M: str (default: &#8216;gmean&#8217;)</dt>
+<dd>Name of the metric to consider
+<code class="docutils literal"><span class="pre">sens</span></code>:
+use the sensitivity.
+<code class="docutils literal"><span class="pre">'spec'</span></code>:
+use the specificity.
+<code class="docutils literal"><span class="pre">'prec'</span></code>:
+use the precision.
+<code class="docutils literal"><span class="pre">'npv'</span></code>:
+use the negative predictive value.
+<code class="docutils literal"><span class="pre">'gmean'</span></code>:
+use the geometric mean.
+<code class="docutils literal"><span class="pre">'acc'</span></code>:
+use the accuracy score.
+<code class="docutils literal"><span class="pre">'cost'</span></code>:
+use the cost value.
+<code class="docutils literal"><span class="pre">'f1score'</span></code>:
+use the F1 score.
+<code class="docutils literal"><span class="pre">'mcc'</span></code>:
+use the Matthew correlation coefficient.</dd>
+<dt>alpha: float (default: 0.1)</dt>
+<dd>Dominance weight</dd>
+<dt>squared: bool (default: True)</dt>
+<dd>If the metric M should be squared</dd>
+</dl>
+<dl class="docutils">
+<dt>iba: double</dt>
+<dd>The resulting generalized index of balanced accuracy.</dd>
+</dl>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R9]</a></td><td>Garcia, V. and Mollineda, R.A. and Sanchez, J.S. &#8220;Theoretical</td></tr>
+</tbody>
+</table>
+<p>analysis of a performance measure for imbalanced data&#8221; ICPR (2010)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_geometric_mean">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_geometric_mean</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_geometric_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_geometric_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the geometric mean.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>gmean: double</dt>
+<dd>The resulting geometric mean of the accuracies measured.</dd>
+</dl>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[R10]</a></td><td>Kubat, M. and Matwin, S. &#8220;Addressing the curse of</td></tr>
+</tbody>
+</table>
+<p>imbalanced training sets: one-sided selection&#8221; ICML (1997)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_matthew_corrcoef">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_matthew_corrcoef</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_matthew_corrcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_matthew_corrcoef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the Matthew correlation coefficient.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>mcc: double</dt>
+<dd>The resulting Matthew correlation coefficient.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_precision_negative_predictive_value">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_precision_negative_predictive_value</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_precision_negative_predictive_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_precision_negative_predictive_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the precision and the negative predictive value.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>prec, npv: double</dt>
+<dd>The resulting precision and negative predictive value.
+The precision is also kown as the positive predictive value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.metric.labels_to_sensitivity_specificity">
+<code class="descclassname">protoclass.validation.metric.</code><code class="descname">labels_to_sensitivity_specificity</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_sensitivity_specificity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.metric.labels_to_sensitivity_specificity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the sensitivity and specificty.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>sens, spec: double</dt>
+<dd>The resulting sensitivity and specificity.
+The sensitivity is also known as true positive rate, hit rate,
+or recall. The specificity is also known as true negative rate.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.validation.validation">
+<span id="protoclass-validation-validation-module"></span><h2>protoclass.validation.validation module<a class="headerlink" href="#module-protoclass.validation.validation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.validation.validation.OpenROCPatients">
+<code class="descclassname">protoclass.validation.validation.</code><code class="descname">OpenROCPatients</code><span class="sig-paren">(</span><em>path_to_results</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#OpenROCPatients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.validation.OpenROCPatients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.validation.PlotROCPatients">
+<code class="descclassname">protoclass.validation.validation.</code><code class="descname">PlotROCPatients</code><span class="sig-paren">(</span><em>rocs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#PlotROCPatients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.validation.PlotROCPatients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.validation.ResultToLabel">
+<code class="descclassname">protoclass.validation.validation.</code><code class="descname">ResultToLabel</code><span class="sig-paren">(</span><em>path_to_result</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#ResultToLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.validation.ResultToLabel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.validation.ResultToVolume">
+<code class="descclassname">protoclass.validation.validation.</code><code class="descname">ResultToVolume</code><span class="sig-paren">(</span><em>path_to_result</em>, <em>path_to_gt</em>, <em>reverse_gt=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#ResultToVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.validation.ResultToVolume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.validation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.validation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.validation.ResultToLabel">
+<code class="descclassname">protoclass.validation.</code><code class="descname">ResultToLabel</code><span class="sig-paren">(</span><em>path_to_result</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#ResultToLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.ResultToLabel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.ResultToVolume">
+<code class="descclassname">protoclass.validation.</code><code class="descname">ResultToVolume</code><span class="sig-paren">(</span><em>path_to_result</em>, <em>path_to_gt</em>, <em>reverse_gt=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#ResultToVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.ResultToVolume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.PlotROCPatients">
+<code class="descclassname">protoclass.validation.</code><code class="descname">PlotROCPatients</code><span class="sig-paren">(</span><em>rocs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#PlotROCPatients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.PlotROCPatients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.OpenROCPatients">
+<code class="descclassname">protoclass.validation.</code><code class="descname">OpenROCPatients</code><span class="sig-paren">(</span><em>path_to_results</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/validation.html#OpenROCPatients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.OpenROCPatients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_accuracy">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_accuracy</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the accuracy score.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>acc: double</dt>
+<dd>The resulting accuracy.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_cost_value">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_cost_value</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em>, <em>bias_pos=1.5</em>, <em>bias_neg=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_cost_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_cost_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute cost given the ground-truth label
+and predicted label.
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+<dt>bias_pos: float</dt>
+<dd>Constant influencing the bias of the positive class.</dd>
+<dt>bias_neg: float</dt>
+<dd>Constant influecing the bias of the negative class.</dd>
+</dl>
+<dl class="docutils">
+<dt>cval: double</dt>
+<dd>The resulting cost value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_f1_score">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_f1_score</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_f1_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_f1_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the F1 score.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>f1score: double</dt>
+<dd>The resulting F1 score.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_generalized_index_balanced_accuracy">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_generalized_index_balanced_accuracy</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em>, <em>M='gmean'</em>, <em>alpha=0.1</em>, <em>squared=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_generalized_index_balanced_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_generalized_index_balanced_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the the generalized index of balanced accuracy.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+<dt>M: str (default: &#8216;gmean&#8217;)</dt>
+<dd>Name of the metric to consider
+<code class="docutils literal"><span class="pre">sens</span></code>:
+use the sensitivity.
+<code class="docutils literal"><span class="pre">'spec'</span></code>:
+use the specificity.
+<code class="docutils literal"><span class="pre">'prec'</span></code>:
+use the precision.
+<code class="docutils literal"><span class="pre">'npv'</span></code>:
+use the negative predictive value.
+<code class="docutils literal"><span class="pre">'gmean'</span></code>:
+use the geometric mean.
+<code class="docutils literal"><span class="pre">'acc'</span></code>:
+use the accuracy score.
+<code class="docutils literal"><span class="pre">'cost'</span></code>:
+use the cost value.
+<code class="docutils literal"><span class="pre">'f1score'</span></code>:
+use the F1 score.
+<code class="docutils literal"><span class="pre">'mcc'</span></code>:
+use the Matthew correlation coefficient.</dd>
+<dt>alpha: float (default: 0.1)</dt>
+<dd>Dominance weight</dd>
+<dt>squared: bool (default: True)</dt>
+<dd>If the metric M should be squared</dd>
+</dl>
+<dl class="docutils">
+<dt>iba: double</dt>
+<dd>The resulting generalized index of balanced accuracy.</dd>
+</dl>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[R11]</a></td><td>Garcia, V. and Mollineda, R.A. and Sanchez, J.S. &#8220;Theoretical</td></tr>
+</tbody>
+</table>
+<p>analysis of a performance measure for imbalanced data&#8221; ICPR (2010)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_geometric_mean">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_geometric_mean</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_geometric_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_geometric_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the geometric mean.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>gmean: double</dt>
+<dd>The resulting geometric mean of the accuracies measured.</dd>
+</dl>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[R12]</a></td><td>Kubat, M. and Matwin, S. &#8220;Addressing the curse of</td></tr>
+</tbody>
+</table>
+<p>imbalanced training sets: one-sided selection&#8221; ICML (1997)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_matthew_corrcoef">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_matthew_corrcoef</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_matthew_corrcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_matthew_corrcoef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the Matthew correlation coefficient.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>mcc: double</dt>
+<dd>The resulting Matthew correlation coefficient.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_precision_negative_predictive_value">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_precision_negative_predictive_value</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_precision_negative_predictive_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_precision_negative_predictive_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the precision and the negative predictive value.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>prec, npv: double</dt>
+<dd>The resulting precision and negative predictive value.
+The precision is also kown as the positive predictive value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.labels_to_sensitivity_specificity">
+<code class="descclassname">protoclass.validation.</code><code class="descname">labels_to_sensitivity_specificity</code><span class="sig-paren">(</span><em>true_label</em>, <em>pred_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#labels_to_sensitivity_specificity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.labels_to_sensitivity_specificity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute the sensitivity and specificty.
+Parameters
+&#8212;&#8212;&#8212;-
+true_label: ndarray</p>
+<blockquote>
+<div>Ground-truth array.</div></blockquote>
+<dl class="docutils">
+<dt>pred_label: ndarray</dt>
+<dd>Prediction label given by the machine learning method.</dd>
+</dl>
+<dl class="docutils">
+<dt>sens, spec: double</dt>
+<dd>The resulting sensitivity and specificity.
+The sensitivity is also known as true positive rate, hit rate,
+or recall. The specificity is also known as true negative rate.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.validation.cost_with_bias">
+<code class="descclassname">protoclass.validation.</code><code class="descname">cost_with_bias</code><span class="sig-paren">(</span><em>sens</em>, <em>spec</em>, <em>bias_pos</em>, <em>bias_neg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/validation/metric.html#cost_with_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.validation.cost_with_bias" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>sens: float</dt>
+<dd>Sensitivity.</dd>
+<dt>spec: float</dt>
+<dd>Specificity.</dd>
+<dt>bias_pos: float</dt>
+<dd>Constant influencing the bias of the positive class.</dd>
+<dt>bias_neg: float</dt>
+<dd>Constant influecing the bias of the negative class.</dd>
+</dl>
+<dl class="docutils">
+<dt>cval: double</dt>
+<dd>The resulting cost value.</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="protoclass.utils.html" class="btn btn-neutral" title="protoclass.utils package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.edge_signal_extraction &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.edge_signal_extraction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.edge_signal_extraction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Edge signal extraction from standalone modality.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">generic_gradient_magnitude</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">generic_laplace</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">convolve</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">prewitt</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">sobel</span>
+
+<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
+
+<span class="n">FILTER</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sobel&#39;</span><span class="p">,</span> <span class="s1">&#39;prewitt&#39;</span><span class="p">,</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">)</span>
+<span class="n">DERIVATIVE</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;1st&#39;</span><span class="p">,</span> <span class="s1">&#39;2nd&#39;</span><span class="p">)</span>
+<span class="n">KIRSCH_FILTERS</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]))</span>
+
+
+<div class="viewcode-block" id="EdgeSignalExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EdgeSignalExtraction">[docs]</a><span class="k">class</span> <span class="nc">EdgeSignalExtraction</span><span class="p">(</span><span class="n">StandaloneExtraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Edge signal extraction from standalone modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">     base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from StandaloneModality class.</span>
+
+<span class="sd">    edge_detector : str, optional (default=&#39;sobel&#39;)</span>
+<span class="sd">        Name of the filter to apply. Can be &#39;sobel&#39;, &#39;prewitt&#39;, &#39;kirsch&#39;.</span>
+
+<span class="sd">    n_derivative : str, optional (default=&#39;1st&#39;)</span>
+<span class="sd">        Which level of derivative to compute. Can be &#39;1st&#39;, &#39;2nd&#39;.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality_ : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from StandaloneModality class.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">edge_detector</span><span class="o">=</span><span class="s1">&#39;sobel&#39;</span><span class="p">,</span>
+                 <span class="n">n_derivative</span><span class="o">=</span><span class="s1">&#39;1st&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EdgeSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">=</span> <span class="n">edge_detector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">=</span> <span class="n">n_derivative</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="EdgeSignalExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EdgeSignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the images images.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EdgeSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+                                              <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+                                              <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Check that the filter provided is known</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">FILTER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;{} filter is unknown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span><span class="p">))</span>
+
+        <span class="c1"># Check the value of the derivative to compute</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">DERIVATIVE</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It is impossible to compute the {}. Only `1st`&#39;</span>
+                             <span class="s1">&#39; and `2nd` can be computed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;sobel&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;prewitt&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                                        <span class="n">prewitt</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">prewitt</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
+                <span class="n">conv_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                      <span class="nb">len</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">)))</span>
+                <span class="c1"># Compute the convolution for each slice</span>
+                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
+                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
+                            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+
+                <span class="c1"># Extract the maximum gradients</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">conv_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                      <span class="nb">len</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">)))</span>
+                <span class="c1"># Compute the convolution for each slice</span>
+                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
+                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
+                            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+
+                <span class="n">dev_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+                <span class="c1"># Compute the second derivative</span>
+                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dev_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
+                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
+                            <span class="n">dev_1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+
+                <span class="c1"># Extract the maximum gradients</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="EdgeSignalExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EdgeSignalExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type StandaloneModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        data : ndarray, shape (n_sample, n_feature)</span>
+<span class="sd">             A matrix containing the features extracted. The number of samples</span>
+<span class="sd">             is equal to the number of positive label in the ground-truth.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EdgeSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Check that we fitted the data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data before to extract anything.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.data_management.oct_modality &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.data_management.oct_modality</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.data_management.oct_modality</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;OCT modality class.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">img_as_float</span>
+
+<span class="kn">from</span> <span class="nn">.standalone_modality</span> <span class="kn">import</span> <span class="n">StandaloneModality</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_img_filename</span>
+
+
+<div class="viewcode-block" id="OCTModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.oct_modality.OCTModality">[docs]</a><span class="k">class</span> <span class="nc">OCTModality</span><span class="p">(</span><span class="n">StandaloneModality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to handle OCT modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data : str, optional (default=None)</span>
+<span class="sd">         The `img` file where the data are stored.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data_ : string</span>
+<span class="sd">        Location of the `img` file.</span>
+
+<span class="sd">    data_ : array-like, shape (Y, Z, X)</span>
+<span class="sd">        The different volume of the SD-OCT volume. The data are saved in</span>
+<span class="sd">        Y, Z, X ordered. Generally, the data are coded on 8 bits.</span>
+
+<span class="sd">    pdf_ : list, length (n_serie)</span>
+<span class="sd">        List of the PDF for each serie.</span>
+
+<span class="sd">    bin_ : list of ndarray, length (n_serie)</span>
+<span class="sd">        List of the bins used to plot the pdfs.</span>
+
+<span class="sd">    max_ : float</span>
+<span class="sd">        Maximum intensity of the OCT volume.</span>
+
+<span class="sd">    min_ : float</span>
+<span class="sd">        Minimum intensity of the OCT volume.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path_data</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.img&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_img_filename</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">OCTModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="OCTModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.oct_modality.OCTModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the PDF and the first-order statistics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_bins : int or None, optional (default=None)</span>
+<span class="sd">            The numbers of bins to use to compute the histogram.</span>
+<span class="sd">            The possibilities are:</span>
+<span class="sd">            - If None, the number of bins found at reading will be used.</span>
+<span class="sd">            - Otherwise, an integer needs to be given.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        There is the possibility to redifine the number of bins to use for</span>
+<span class="sd">        the histogram since it can be tricky to play with normalized data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if the data have been read</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to read the data first. Call the&#39;</span>
+                             <span class="s1">&#39; function read_data_from_path()&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the min and max from the T2W volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+
+        <span class="c1"># Build the histogram corresponding to the current volume</span>
+        <span class="c1"># Find how many bins do we need</span>
+        <span class="k">if</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown type for parameters nb_bins.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Build the histogram corresponding to the current volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pdf_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                            <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
+                                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="OCTModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.oct_modality.OCTModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sz_data</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to read OCT images which correspond to a 3D volume.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sz_data : tuple of int, shape (Y, Z, X)</span>
+<span class="sd">            Tuple with 3 values specifying the dimension of the volume.</span>
+
+<span class="sd">        path_data : str or None, optional (default=None)</span>
+<span class="sd">            Path to the `img` file. It will overrides the path given</span>
+<span class="sd">            in the constructor.</span>
+
+<span class="sd">        dtype : str, optional (default=&#39;uint8&#39;)</span>
+<span class="sd">            Type of the raw data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">           Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the consistency of the path data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># We will overide the path and raise a warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
+                          <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_img_filename</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_img_filename</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Data are stored as (Y, Z, X)</span>
+        <span class="n">vol_oct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span>
+                              <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sz_data</span><span class="p">)</span>
+        <span class="n">vol_oct</span> <span class="o">=</span> <span class="n">img_as_float</span><span class="p">(</span><span class="n">vol_oct</span><span class="p">)</span>
+        <span class="c1"># However there is a need to flip up down along Z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vol_oct</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx_z</span><span class="p">,</span> <span class="n">im_oct</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vol_oct</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">idx_z</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">im_oct</span><span class="p">)</span>    
+
+        <span class="c1"># Compute the information regarding the OCT images</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;uint8&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span> <span class="o">=</span> <span class="mi">256</span>
+
+        <span class="c1"># Compute the information regarding the OCT images</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

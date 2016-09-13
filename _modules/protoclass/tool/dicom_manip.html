@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.tool.dicom_manip &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.tool.dicom_manip</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.tool.dicom_manip</h1><div class="highlight"><pre>
+<span></span><span class="c1">#title           :dicom_manip.py</span>
+<span class="c1">#description     :This will create a header for a python script.</span>
+<span class="c1">#author          :Guillaume Lemaitre</span>
+<span class="c1">#date            :2015/04/20</span>
+<span class="c1">#version         :0.1</span>
+<span class="c1">#notes           :</span>
+<span class="c1">#python_version  :2.7.6  </span>
+<span class="c1">#==============================================================================</span>
+
+<span class="c1"># Import the needed libraries</span>
+<span class="c1"># Numpy library</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1"># SimpleITK library</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="kn">as</span> <span class="nn">sitk</span>
+<span class="c1"># Joblib library</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1">### Module to performed parallel processing</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="c1"># OS library</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span>
+<span class="c1"># Import namedtuple</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<div class="viewcode-block" id="OpenRawImageOCT"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenRawImageOCT">[docs]</a><span class="k">def</span> <span class="nf">OpenRawImageOCT</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read a raw image. The size as to be known</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        Filename of the raw image.</span>
+
+<span class="sd">    size: tuple of ints (X, Y, Z)</span>
+<span class="sd">        Tuple with 2 or 3 values depending of the dimensionality of the data.</span>
+<span class="sd">    </span>
+<span class="sd">    dtype: default - uint8</span>
+<span class="sd">        Type of the raw data.</span>
+
+<span class="sd">    reverse: bool</span>
+<span class="sd">        We have maybe to return the data for more convenience.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    im_numpy: ndarray</span>
+<span class="sd">        A 2D or 3D numpy array in the order ()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">img_as_float</span>
+
+    <span class="n">size_OCT</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># Data are stored as (Y, Z, X)</span>
+    <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">size_OCT</span><span class="p">)</span>
+
+    <span class="c1"># We need to roll the x axis to obtain (X, Y, Z)</span>
+    <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">im_numpy</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Return the data if needed</span>
+    <span class="n">im_numpy_cp</span> <span class="o">=</span> <span class="n">im_numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">reverse</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">im_numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">im_numpy</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_numpy_cp</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">img_as_float</span><span class="p">(</span><span class="n">im_numpy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OpenOneSerieDCM"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenOneSerieDCM">[docs]</a><span class="k">def</span> <span class="nf">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_to_serie</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read a single serie DCM to return a 3D volume</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_serie: str</span>
+<span class="sd">        The path to the folder containing all the dicom images.</span>
+<span class="sd">    reverse: bool</span>
+<span class="sd">        Since that there is a mistake in the data we need to flip in z the gt.</span>
+<span class="sd">        Have to be corrected in the future.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    im_numpy: ndarray</span>
+<span class="sd">        A 3D array containing the volume extracted from the DCM serie.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Define the object in order to read the DCM serie</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>
+
+    <span class="c1"># Get the DCM filenames of the serie</span>
+    <span class="n">dicom_names</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesFileNames</span><span class="p">(</span><span class="n">path_to_serie</span><span class="p">)</span>
+
+    <span class="c1"># Set the filenames to read</span>
+    <span class="n">reader</span><span class="o">.</span><span class="n">SetFileNames</span><span class="p">(</span><span class="n">dicom_names</span><span class="p">)</span>
+
+    <span class="c1"># Build the volume from the set of 2D images</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Execute</span><span class="p">()</span>
+
+    <span class="c1"># Convert the image into a numpy matrix</span>
+    <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+
+    <span class="c1"># The Matlab convention is (Y, X, Z)</span>
+    <span class="c1"># The Numpy convention is (Z, Y, X)</span>
+    <span class="c1"># We have to swap these axis</span>
+    <span class="c1">### Swap Z and X</span>
+    <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">im_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">im_numpy_cp</span> <span class="o">=</span> <span class="n">im_numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">reverse</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1">#print &#39;Inversing the GT&#39;</span>
+        <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">im_numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">im_numpy</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_numpy_cp</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+
+    
+    <span class="k">return</span> <span class="n">im_numpy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OpenVolumeNumpy"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenVolumeNumpy">[docs]</a><span class="k">def</span> <span class="nf">OpenVolumeNumpy</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reverse_volume</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read a numpy array previously saved</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        Filename of the numpy array *.npy.</span>
+<span class="sd">    reverse_volume: bool</span>
+<span class="sd">        Since that there is a mistake in the data we need to flip in z the gt.</span>
+<span class="sd">        Have to be corrected in the future.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    im_numpy: ndarray</span>
+<span class="sd">        A 3D array containing the volume.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npy&#39;</span><span class="p">):</span>
+
+        <span class="c1"># Open the volume</span>
+        <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Copy the volume temporary</span>
+        <span class="n">im_numpy_cp</span> <span class="o">=</span> <span class="n">im_numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">reverse_volume</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1">#print &#39;Inversing the GT&#39;</span>
+            <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">im_numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">im_numpy</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_numpy_cp</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">im_numpy</span>
+                
+    <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npz&#39;</span><span class="p">):</span>
+
+        <span class="c1"># Get the keyword of the name of the variable to extract</span>
+        <span class="n">name_var_extract</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name_var_extract&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c1"># Get the volume from file</span>
+        <span class="n">npzfile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">im_numpy</span> <span class="o">=</span> <span class="n">npzfile</span><span class="p">[</span><span class="n">name_var_extract</span><span class="p">]</span>
+
+        <span class="c1"># Copy the volume temporary</span>
+        <span class="n">im_numpy_cp</span> <span class="o">=</span> <span class="n">im_numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">reverse_volume</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1">#print &#39;Inversing the GT&#39;</span>
+            <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">im_numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">im_numpy</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_numpy_cp</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">im_numpy</span></div>
+
+
+<div class="viewcode-block" id="OpenSerieUsingGTDCM"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenSerieUsingGTDCM">[docs]</a><span class="k">def</span> <span class="nf">OpenSerieUsingGTDCM</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="n">path_to_gt</span><span class="p">,</span> <span class="n">reverse_gt</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reverse_data</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read a DCM volume and apply a GT mask</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_data: str</span>
+<span class="sd">        Path containing the modality data.</span>
+<span class="sd">    path_to_gt: str</span>
+<span class="sd">        Path containing the gt.</span>
+<span class="sd">    reverse_gt: bool</span>
+<span class="sd">        Since that there is a mistake in the data we need to flip in z the gt.</span>
+<span class="sd">        Have to be corrected in the future.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    volume_data: ndarray</span>
+<span class="sd">        A 3D array containing the volume extracted from the DCM serie.</span>
+<span class="sd">        The data not corresponding to the GT of interest will be tagged NaN.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Open the data volume</span>
+    <span class="n">volume_data</span> <span class="o">=</span> <span class="n">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="n">reverse_data</span><span class="p">)</span>
+
+    <span class="c1"># Open the gt volume</span>
+    <span class="n">tmp_volume_gt</span> <span class="o">=</span> <span class="n">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_to_gt</span><span class="p">)</span>
+    <span class="n">volume_gt</span> <span class="o">=</span> <span class="n">tmp_volume_gt</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">reverse_gt</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1">#print &#39;Inversing the GT&#39;</span>
+        <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">volume_gt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">volume_gt</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_volume_gt</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+
+    <span class="c1"># Affect all the value which are 0 in the gt to NaN</span>
+    <span class="n">volume_data</span><span class="p">[(</span><span class="n">volume_gt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+    <span class="c1"># Return the volume read</span>
+    <span class="k">return</span> <span class="n">volume_data</span></div>
+
+<div class="viewcode-block" id="OpenDataLabel"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenDataLabel">[docs]</a><span class="k">def</span> <span class="nf">OpenDataLabel</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read data and label form an *.npz file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_serie: str</span>
+<span class="sd">        The path to the *.npz file.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data: ndarray</span>
+<span class="sd">        A list of 2D matrix containing the data.</span>
+<span class="sd">    label: ndarray</span>
+<span class="sd">        A list of 1D vector containing the label associated to the data matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_to_data</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npz&#39;</span><span class="p">)):</span>
+        <span class="c1"># Check that the path is in fact a file and npz format</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.tool.OpenDataLabel: An *.npz file is expected.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># The file can be considered</span>
+        <span class="n">npzfile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">)</span>
+
+        <span class="c1"># return the desired variable</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">npzfile</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">npzfile</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="GetGTSamples"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.GetGTSamples">[docs]</a><span class="k">def</span> <span class="nf">GetGTSamples</span><span class="p">(</span><span class="n">path_to_gt</span><span class="p">,</span> <span class="n">reverse_gt</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">pos_value</span><span class="o">=</span><span class="mf">255.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to return the samples corresponding to the ground-truth</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_gt: str</span>
+<span class="sd">        Path containing the gt.</span>
+<span class="sd">    reverse_gt: bool</span>
+<span class="sd">        Since that there is a mistake in the data we need to flip in z the gt.</span>
+<span class="sd">        Have to be corrected in the future.</span>
+<span class="sd">    reverse_gt: numeric or bool</span>
+<span class="sd">        Value considered as the positive class. By default it is 255., but it could be</span>
+<span class="sd">        1 or True</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    idx_gt: ndarray</span>
+<span class="sd">        A 3D array containing the volume extracted from the DCM serie.</span>
+<span class="sd">        The data not corresponding to the GT of interest will be tagged NaN.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Open the gt volume</span>
+    <span class="n">tmp_volume_gt</span> <span class="o">=</span> <span class="n">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_to_gt</span><span class="p">)</span>
+    <span class="n">volume_gt</span> <span class="o">=</span> <span class="n">tmp_volume_gt</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">reverse_gt</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1">#print &#39;Inversing the GT&#39;</span>
+        <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">volume_gt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">volume_gt</span><span class="p">[:,:,</span><span class="o">-</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_volume_gt</span><span class="p">[:,:,</span><span class="n">sl</span><span class="p">]</span>
+
+    <span class="c1"># Get the samples that we are interested with</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">volume_gt</span> <span class="o">==</span> <span class="n">pos_value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VolumeToLabelUsingGT"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.VolumeToLabelUsingGT">[docs]</a><span class="k">def</span> <span class="nf">VolumeToLabelUsingGT</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">path_to_gt</span><span class="p">,</span> <span class="n">reverse_gt</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+
+    <span class="k">return</span> <span class="n">BinariseLabel</span><span class="p">(</span><span class="n">volume</span><span class="p">[</span><span class="n">GetGTSamples</span><span class="p">(</span><span class="n">path_to_gt</span><span class="p">,</span> <span class="n">reverse_gt</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="OpenResult"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.OpenResult">[docs]</a><span class="k">def</span> <span class="nf">OpenResult</span><span class="p">(</span><span class="n">path_to_result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read results: label and roc information</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_result: str</span>
+<span class="sd">        Path containing the filename of the result file.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pred_label: 1D array</span>
+<span class="sd">        The label results for the patient considered as test.</span>
+<span class="sd">    roc: namedtuple</span>
+<span class="sd">        A named tuple such as roc_auc = namedtuple(&#39;roc_auc&#39;, [&#39;fpr&#39;, &#39;tpr&#39;, &#39;thresh&#39;, &#39;auc&#39;])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># The results are saved into a npz file</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_to_result</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_to_result</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npz&#39;</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;protoclass.tool.dicom_manip: The result file is not an *.npz file&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Load the file</span>
+        <span class="n">npzfile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_result</span><span class="p">)</span>
+
+        <span class="c1"># Define our namedtuple</span>
+        <span class="n">roc_auc</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fpr&#39;</span><span class="p">,</span> <span class="s1">&#39;tpr&#39;</span><span class="p">,</span> <span class="s1">&#39;thresh&#39;</span><span class="p">,</span> <span class="s1">&#39;auc&#39;</span><span class="p">])</span>
+        <span class="n">roc</span> <span class="o">=</span> <span class="n">roc_auc</span><span class="o">.</span><span class="n">_make</span><span class="p">(</span><span class="n">npzfile</span><span class="p">[</span><span class="s1">&#39;roc&#39;</span><span class="p">])</span>
+        <span class="n">pred_label</span> <span class="o">=</span> <span class="n">npzfile</span><span class="p">[</span><span class="s1">&#39;pred_label&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">roc</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">__VolumeMinMax__</span><span class="p">(</span><span class="n">path_patient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function in order to return min max of a 3D volume</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_patient: str</span>
+<span class="sd">        Path where the data are localised.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (min_int, max_int): tuple</span>
+<span class="sd">        Return a tuple containing the minimum and maximum for the patient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if we have either a file or a directory</span>
+    <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_patient</span><span class="p">):</span>
+        <span class="c1"># Read a volume for the current patient</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_patient</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">isfile</span><span class="p">(</span><span class="n">path_patient</span><span class="p">):</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">OpenVolumeNumpy</span><span class="p">(</span><span class="n">path_patient</span><span class="p">)</span>
+
+    <span class="c1"># Return a tuple with the min and max</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">volume</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">volume</span><span class="p">))</span>
+
+<div class="viewcode-block" id="FindExtremumDataSet"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.FindExtremumDataSet">[docs]</a><span class="k">def</span> <span class="nf">FindExtremumDataSet</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to find the minimum and maximum intensities</span>
+<span class="sd">       in a 3D volume</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_data: str</span>
+<span class="sd">        Path containing the modality data.</span>
+<span class="sd">    modality: str</span>
+<span class="sd">        String containing the name of the modality to treat.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (min_int, max_int): tuple</span>
+<span class="sd">        A tuple containing the minimum and the maximum intensities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Define the path to the modality</span>
+    <span class="n">path_modality</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;modality&#39;</span><span class="p">,</span> <span class="s1">&#39;T2W&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create a list with the path name</span>
+    <span class="n">path_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">dirs</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">):</span>
+        <span class="c1"># Create the path variable</span>
+        <span class="n">path_patient</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="n">dirs</span><span class="p">)</span>
+        <span class="n">path_patients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">path_patient</span><span class="p">,</span> <span class="n">path_modality</span><span class="p">))</span>
+       
+    <span class="c1"># Compute the Haralick statistic in parallel</span>
+    <span class="n">num_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="c1"># Check if we have original DICOM or Numpy volume</span>
+    <span class="n">min_max_list</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">__VolumeMinMax__</span><span class="p">)(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_patients</span><span class="p">)</span>
+    <span class="c1"># Convert the list into numpy array</span>
+    <span class="n">min_max_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">min_max_list</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">min_max_array</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">min_max_array</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BinariseLabel"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.BinariseLabel">[docs]</a><span class="k">def</span> <span class="nf">BinariseLabel</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to find the minimum and maximum intensities</span>
+<span class="sd">       in a 3D volume</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label: array</span>
+<span class="sd">        Array with values usually 0. and 255. .</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    label: array</span>
+<span class="sd">        Array with values either -1. or 1. .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">label</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">label</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">-</span> <span class="mf">1.</span>
+
+    <span class="k">return</span> <span class="n">label</span></div>
+
+<span class="k">def</span> <span class="nf">__VolumePercentilesFromPath__</span><span class="p">(</span><span class="n">path_patient</span><span class="p">,</span> <span class="n">path_gt</span><span class="p">,</span> <span class="n">n_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_perc</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">max_perc</span><span class="o">=</span><span class="mf">98.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function in order to find the different percentiles of a dataset</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_patient: str</span>
+<span class="sd">        Path where the data are localised.</span>
+
+<span class="sd">    path_gt: str</span>
+<span class="sd">        Path where the data are localised.</span>
+<span class="sd">    </span>
+<span class="sd">    n_landmarks: int (default=5)</span>
+<span class="sd">        Number of landmarks which have to be extracted</span>
+
+<span class="sd">    min_perc: float (default=2.)</span>
+<span class="sd">        The minimum percentile of interest</span>
+
+<span class="sd">    max_perc: float (default=98.)</span>
+<span class="sd">        The maximum percentile of interest</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    intensities_arr: array</span>
+<span class="sd">        Return an array with the intensities corresponding to the percentiles of interest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if we have either a file or a directory</span>
+    <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_patient</span><span class="p">):</span>
+        <span class="c1"># Read a volume for the current patient</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">OpenOneSerieDCM</span><span class="p">(</span><span class="n">path_patient</span><span class="p">)</span>
+        <span class="n">volume_emd_gt</span> <span class="o">=</span> <span class="n">OpenSerieUsingGTDCM</span><span class="p">(</span><span class="n">path_patient</span><span class="p">,</span> <span class="n">path_gt</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">isfile</span><span class="p">(</span><span class="n">path_patient</span><span class="p">):</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">OpenVolumeNumpy</span><span class="p">(</span><span class="n">path_patient</span><span class="p">)</span>
+
+    <span class="n">prostate_data</span> <span class="o">=</span> <span class="n">volume_emd_gt</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">volume_emd_gt</span><span class="p">))]</span>
+
+    <span class="n">intensities_arr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Find iteratively the different percentiles of the volume of interest</span>
+    <span class="c1">### Create the array of percentiles to find</span>
+    <span class="n">perc_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_perc</span><span class="p">,</span> <span class="n">max_perc</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">n_landmarks</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">perc</span> <span class="ow">in</span> <span class="n">perc_arr</span><span class="p">:</span>
+        <span class="n">intensities_arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">prostate_data</span><span class="p">,</span> <span class="n">perc</span><span class="p">))</span>
+
+    <span class="c1"># Return a tuple with the min and max</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intensities_arr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">__VolumePercentilesFromData__</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">n_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_perc</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">max_perc</span><span class="o">=</span><span class="mf">98.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function in order to find the different percentiles of a dataset</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    volume: array</span>
+<span class="sd">        Array with the data.</span>
+<span class="sd">    </span>
+<span class="sd">    n_landmarks: int (default=5)</span>
+<span class="sd">        Number of landmarks which have to be extracted</span>
+
+<span class="sd">    min_perc: float (default=2.)</span>
+<span class="sd">        The minimum percentile of interest</span>
+
+<span class="sd">    max_perc: float (default=98.)</span>
+<span class="sd">        The maximum percentile of interest</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    intensities_arr: array</span>
+<span class="sd">        Return an array with the intensities corresponding to the percentiles of interest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">intensities_arr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Find iteratively the different percentiles of the volume of interest</span>
+    <span class="c1">### Create the array of percentiles to find</span>
+    <span class="n">perc_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_perc</span><span class="p">,</span> <span class="n">max_perc</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">n_landmarks</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">perc</span> <span class="ow">in</span> <span class="n">perc_arr</span><span class="p">:</span>
+        <span class="n">intensities_arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">perc</span><span class="p">))</span>
+
+    <span class="c1"># Return a tuple with the min and max</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intensities_arr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FindLandmarksDataset"><a class="viewcode-back" href="../../../modules/protoclass.tool.html#protoclass.tool.dicom_manip.FindLandmarksDataset">[docs]</a><span class="k">def</span> <span class="nf">FindLandmarksDataset</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="n">path_modality</span><span class="p">,</span> <span class="n">path_gt</span><span class="p">,</span> <span class="n">n_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_perc</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">max_perc</span><span class="o">=</span><span class="mf">98.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to find the minimum and maximum intensities</span>
+<span class="sd">       in a 3D volume</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_to_data: str</span>
+<span class="sd">        Path containing the modality data.</span>
+<span class="sd">    modality: str</span>
+<span class="sd">        String containing the name of the modality to treat.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (min_int, max_int): tuple</span>
+<span class="sd">        A tuple containing the minimum and the maximum intensities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a list with the path name</span>
+    <span class="n">path_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">path_patients_gt</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">dirs</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">):</span>
+        <span class="c1"># Create the path variable</span>
+        <span class="n">path_patient</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">path_to_data</span><span class="p">,</span> <span class="n">dirs</span><span class="p">)</span>
+        <span class="n">path_patients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">path_patient</span><span class="p">,</span> <span class="n">path_modality</span><span class="p">))</span>
+        <span class="n">path_patients_gt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">path_patient</span><span class="p">,</span> <span class="n">path_gt</span><span class="p">))</span>
+       
+    <span class="c1"># Compute the Haralick statistic in parallel</span>
+    <span class="n">num_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="c1"># Check if we have original DICOM or Numpy volume</span>
+    <span class="n">intensities_list</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">__VolumePercentilesFromPath__</span><span class="p">)(</span><span class="n">path</span><span class="p">,</span> <span class="n">path2</span><span class="p">,</span> <span class="n">n_landmarks</span><span class="p">,</span> <span class="n">min_perc</span><span class="p">,</span> <span class="n">max_perc</span><span class="p">)</span> 
+                                                  <span class="k">for</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">path2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">path_patients</span><span class="p">,</span> <span class="n">path_patients_gt</span><span class="p">))</span>
+    <span class="c1"># Convert the list into numpy array</span>
+    <span class="n">intensities_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intensities_list</span><span class="p">)</span>
+
+    <span class="c1"># We have to return the mean landmarks</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">intensities_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

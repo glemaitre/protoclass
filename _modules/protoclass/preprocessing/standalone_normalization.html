@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.standalone_normalization &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.standalone_normalization</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.standalone_normalization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Basic class to normalize standalone modality.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">from</span> <span class="nn">.base_normalization</span> <span class="kn">import</span> <span class="n">BaseNormalization</span>
+
+<span class="kn">from</span> <span class="nn">..data_management</span> <span class="kn">import</span> <span class="n">StandaloneModality</span>
+<span class="kn">from</span> <span class="nn">..data_management</span> <span class="kn">import</span> <span class="n">GTModality</span>
+
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality_inherit</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality_gt</span>
+
+
+<div class="viewcode-block" id="StandaloneNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standalone_normalization.StandaloneNormalization">[docs]</a><span class="k">class</span> <span class="nc">StandaloneNormalization</span><span class="p">(</span><span class="n">BaseNormalization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic class to normalize standalone modality.</span>
+
+<span class="sd">    Warning: This class should not be used directly. Use the derive classes</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_modality_</span> <span class="o">=</span> <span class="n">check_modality_inherit</span><span class="p">(</span><span class="n">base_modality</span><span class="p">,</span>
+                                                     <span class="n">StandaloneModality</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="StandaloneNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the normalization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type StandaloneModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the modality is from the template class</span>
+        <span class="n">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_modality_</span><span class="p">)</span>
+
+        <span class="c1"># Check that the data were read during the creation of the modality</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">modality</span><span class="o">.</span><span class="n">is_read</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data have been read during the construction&#39;</span>
+                             <span class="s1">&#39; of the modality object.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check the consistency of the data</span>
+        <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">cat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;You specified a category for the ground-truth&#39;</span>
+                          <span class="s1">&#39; without giving any ground-truth. The whole volume&#39;</span>
+                          <span class="s1">&#39; will be considered for the fitting.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">ground_truth</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">cat</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">ground_truth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">cat</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The category label of the ground-truth from&#39;</span>
+                             <span class="s1">&#39; which you want to extract the information needs&#39;</span>
+                             <span class="s1">&#39; to be specified.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span> <span class="o">=</span> <span class="n">check_modality_gt</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span>
+                                               <span class="n">ground_truth</span><span class="p">,</span>
+                                               <span class="n">cat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="StandaloneNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to normalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the class of modality is the same than the template</span>
+        <span class="c1"># modality</span>
+        <span class="n">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_modality_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="StandaloneNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standalone_normalization.StandaloneNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Denormalize the given modality using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the class of modality is the same than the template</span>
+        <span class="c1"># modality</span>
+        <span class="n">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_modality_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

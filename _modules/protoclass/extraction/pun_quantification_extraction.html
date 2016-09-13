@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.pun_quantification_extraction &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.pun_quantification_extraction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.pun_quantification_extraction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;PUN quantification extraction from temporal modality.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
+
+<span class="kn">from</span> <span class="nn">.tofts_quantification_extraction</span> <span class="kn">import</span> <span class="n">ToftsQuantificationExtraction</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+
+
+<span class="k">def</span> <span class="nf">_PUN_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;PUN model to compute the concentration.</span>
+
+<span class="sd">    Paramters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time array.</span>
+
+<span class="sd">    A, B : float, optional (default=1.1)</span>
+<span class="sd">        Variables for the modeling.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s_t : ndarray, shape (n_serie, )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Transform the time into minutes</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">60.</span>
+
+    <span class="c1"># Define the signal</span>
+    <span class="n">s_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a0</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">s_t</span>
+
+
+<span class="k">def</span> <span class="nf">_fit_PUN_model</span><span class="p">(</span><span class="n">t_mod</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function to fit concentration to extended PUN model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t_mod : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time associated to the concentration kinetic.</span>
+
+<span class="sd">    s_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        Signal of the pixel to be fitted.</span>
+
+<span class="sd">    S0 : float,</span>
+<span class="sd">        The value of the baseline to normalize `s_t`.</span>
+
+<span class="sd">    init_param : list of float,</span>
+<span class="sd">        The initial parameters for A, kep, and kel.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    param : dict of str: float</span>
+<span class="sd">        The A, kep, and kel parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">fit_func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span> <span class="k">return</span> <span class="n">_PUN_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="n">a0</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">S0</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
+        <span class="n">S0</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="c1"># Define the default parameters in case the fitting fail.</span>
+    <span class="n">popt_default</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Perform the curve fitting</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_func</span><span class="p">,</span>
+                            <span class="n">t_mod</span><span class="p">,</span>
+                            <span class="p">(</span><span class="n">s_t</span> <span class="o">-</span> <span class="n">S0</span><span class="p">)</span> <span class="o">/</span> <span class="n">S0</span><span class="p">,</span>
+                            <span class="n">p0</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">popt</span> <span class="o">=</span> <span class="n">popt_default</span>
+
+    <span class="c1"># Return the parameters Ktrans, ve, vp</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;a0&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+
+
+<div class="viewcode-block" id="PUNQuantificationExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.PUNQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">PUNQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">     base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PUNQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+
+<div class="viewcode-block" id="PUNQuantificationExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.PUNQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PUNQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># We need to detect the AIF in order to find the value of the starting</span>
+        <span class="c1"># of the enhancement and subsquently the baseline intensity</span>
+        <span class="n">aif_signal</span> <span class="o">=</span> <span class="n">ToftsQuantificationExtraction</span><span class="o">.</span><span class="n">compute_aif</span><span class="p">(</span>
+            <span class="n">modality</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+
+        <span class="c1"># Find the index to consider for the pre-contrast</span>
+        <span class="c1"># - Find the index corresponfing to the maximum of the first derivative</span>
+        <span class="c1"># of the AIF signal.</span>
+        <span class="c1"># - Find the index related to the maximum of the second derivate</span>
+        <span class="c1"># considering the AIF signal from the start to the previous</span>
+        <span class="c1"># found index.</span>
+        <span class="n">shift_idx</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">idx_st_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">)[</span><span class="n">shift_idx</span><span class="p">:]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span> <span class="n">shift_idx</span>
+        <span class="c1"># Add on to count for the first derivative missing samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">))[:</span><span class="n">idx_st_dev</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span>
+                           <span class="n">shift_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PUNQuantificationExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.PUNQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        data : ndarray, shape (n_sample, n_feature)</span>
+<span class="sd">            A matrix containing the features extracted. The number of samples</span>
+<span class="sd">            is equal to the number of positive label in the ground-truth.</span>
+<span class="sd">            The feature will be the following (a0, r, beta)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PUNQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Organise that data such that we will compute the Toft&#39;s parameter</span>
+        <span class="c1"># for each entry</span>
+        <span class="c1"># Convert the roi to a numpy array</span>
+        <span class="n">roi_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Check the number of samples which will be extracted</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">roi_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Check the number of dimension</span>
+        <span class="n">n_dimension</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span>
+
+        <span class="c1"># Allocate the array</span>
+        <span class="n">signal_dce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">n_dimension</span><span class="p">))</span>
+
+        <span class="c1"># Copy the data at the right place</span>
+        <span class="k">for</span> <span class="n">idx_sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">):</span>
+            <span class="c1"># Get the coordinate of the point to consider</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">roi_data</span><span class="p">[:,</span> <span class="n">idx_sample</span><span class="p">]</span>
+
+            <span class="c1"># Extract the data</span>
+            <span class="n">signal_dce</span><span class="p">[</span><span class="n">idx_sample</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+        <span class="k">print</span> <span class="s1">&#39;DCE signal of interest extracted: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Define default parameter</span>
+        <span class="n">coef0</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]</span>
+
+        <span class="c1"># Perform the fitting in parallel</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_PUN_model</span><span class="p">)(</span>
+            <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">,</span>
+            <span class="n">curve</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">curve</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]),</span>
+            <span class="n">coef0</span><span class="p">)</span>
+                                 <span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="n">signal_dce</span><span class="p">)</span>
+
+        <span class="c1"># Convert the output to an numpy array</span>
+        <span class="n">param_kwd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Allocate the data matrix</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">idx_key</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[:,</span> <span class="n">idx_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">([</span><span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">))])</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

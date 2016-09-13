@@ -1,0 +1,1043 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.tofts_quantification_extraction &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.extraction.tofts_quantification_extraction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.extraction.tofts_quantification_extraction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Toft quantification extraction from temporal modality.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="kn">import</span> <span class="n">label</span>
+<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="kn">import</span> <span class="n">regionprops</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
+
+<span class="kn">from</span> <span class="nn">..data_management</span> <span class="kn">import</span> <span class="n">DCEModality</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+
+
+<span class="k">def</span> <span class="nf">_regular_tofts</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ve</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Regular Tofts model to compute the concentration.</span>
+
+<span class="sd">    Paramters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time array.</span>
+
+<span class="sd">    cp_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The plasma concentration.</span>
+
+<span class="sd">    Ktrans : float, optional (default=0.1)</span>
+<span class="sd">        Transfer constantB.</span>
+
+<span class="sd">    ve : float, optional (default=0.2)</span>
+<span class="sd">        Fractional volume of the extravascular extracellular space.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ct_t : ndarray, shape (n_serie, )</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The model is defined in [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Tofts, P.S., Brix, G., Buckley, D.L., Evelhoch, J.L., Henderson, E.,</span>
+<span class="sd">       Knopp, M.V., Larsson, H.B., Lee, T.Y., Mayr, N.A., Parker, G.J. and</span>
+<span class="sd">       Port, R.E. (1999). Estimating kinetic parameters from dynamic</span>
+<span class="sd">       contrast-enhanced T 1-weighted MRI of a diffusable tracer: standardized</span>
+<span class="sd">       quantities and symbols. Journal of Magnetic Resonance Imaging, 10(3),</span>
+<span class="sd">       223-232.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Pre-allocation</span>
+    <span class="n">ct_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cp_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Transform the time into minutes</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">60.</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">ct_t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Ktrans</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">ve</span><span class="p">)</span> <span class="o">*</span>
+                        <span class="n">cp_t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">Ktrans</span>
+
+    <span class="k">return</span> <span class="n">ct_t</span>
+
+
+<span class="k">def</span> <span class="nf">_fit_regular_tofts</span><span class="p">(</span><span class="n">t_mod</span><span class="p">,</span> <span class="n">ct_t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function to fit concentration to regular Tofts model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t_mod : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time associated to the concentration kinetic.</span>
+
+<span class="sd">    ct_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        Concentration of the pixel to be fitted.</span>
+
+<span class="sd">    cp_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        Concentration of the AIF.</span>
+
+<span class="sd">    init_param : list of float,</span>
+<span class="sd">        The initial parameters for Ktrans, ve, and vp.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    param : dict of str: float</span>
+<span class="sd">        The Ktrans, ve, and vp parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define the default parameters in case the fitting fail.</span>
+    <span class="n">popt_default</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Define the function to use</span>
+    <span class="k">def</span> <span class="nf">fit_func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="p">,</span> <span class="n">ve</span><span class="p">):</span> <span class="k">return</span> <span class="n">_regular_tofts</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="o">=</span><span class="n">Ktrans</span><span class="p">,</span>
+                                                       <span class="n">ve</span><span class="o">=</span><span class="n">ve</span><span class="p">)</span>
+
+    <span class="c1"># Perform the curve fitting</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_func</span><span class="p">,</span> <span class="n">t_mod</span><span class="p">,</span>
+                            <span class="n">ct_t</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">popt</span> <span class="o">=</span> <span class="n">popt_default</span>
+
+    <span class="c1"># Return the parameters Ktrans, ve, vp</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;Ktrans&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ve&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+
+
+<span class="k">def</span> <span class="nf">_extended_tofts</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ve</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">vp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extended Tofts model to compute the concentration.</span>
+
+<span class="sd">    Paramters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time array.</span>
+
+<span class="sd">    cp_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        The plasma concentration.</span>
+
+<span class="sd">    Ktrans : float, optional (default=0.1)</span>
+<span class="sd">        Transfer constantB.</span>
+
+<span class="sd">    ve : float, optional (default=0.2)</span>
+<span class="sd">        Fractional volume of the extravascular extracellular space.</span>
+
+<span class="sd">    vp : float, optional (default=0.1)</span>
+<span class="sd">        Fractional volume of the intravascular space.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ct_t : ndarray, shape (n_serie, )</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The model is defined in [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Tofts, P. S. (1997). Modeling tracer kinetics in dynamic Gd-DTPA</span>
+<span class="sd">       MR imaging. Journal of Magnetic Resonance Imaging, 7(1), 91-101.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Pre-allocation</span>
+    <span class="n">ct_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cp_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Transform the time into minutes</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">60.</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">ct_t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Ktrans</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">ve</span><span class="p">)</span> <span class="o">*</span>
+                        <span class="n">cp_t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">[:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">Ktrans</span> <span class="o">+</span> <span class="n">vp</span> <span class="o">*</span> <span class="n">cp_t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ct_t</span>
+
+
+<span class="k">def</span> <span class="nf">_fit_extended_tofts</span><span class="p">(</span><span class="n">t_mod</span><span class="p">,</span> <span class="n">ct_t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function to fit concentration to extended Tofts model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t_mod : ndarray, shape (n_serie, )</span>
+<span class="sd">        The time associated to the concentration kinetic.</span>
+
+<span class="sd">    ct_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        Concentration of the pixel to be fitted.</span>
+
+<span class="sd">    cp_t : ndarray, shape (n_serie, )</span>
+<span class="sd">        Concentration of the AIF.</span>
+
+<span class="sd">    init_param : list of float,</span>
+<span class="sd">        The initial parameters for Ktrans, ve, and vp.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    param : dict of str: float</span>
+<span class="sd">        The Ktrans, ve, and vp parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define the default parameters in case the fitting fail.</span>
+    <span class="n">popt_default</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Define the function to use</span>
+    <span class="k">def</span> <span class="nf">fit_func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="p">,</span> <span class="n">ve</span><span class="p">,</span> <span class="n">vp</span><span class="p">):</span> <span class="k">return</span> <span class="n">_extended_tofts</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span>
+                                                            <span class="n">Ktrans</span><span class="o">=</span><span class="n">Ktrans</span><span class="p">,</span>
+                                                            <span class="n">ve</span><span class="o">=</span><span class="n">ve</span><span class="p">,</span> <span class="n">vp</span><span class="o">=</span><span class="n">vp</span><span class="p">)</span>
+
+    <span class="c1"># Perform the curve fitting</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">popt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_func</span><span class="p">,</span> <span class="n">t_mod</span><span class="p">,</span>
+                            <span class="n">ct_t</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">popt</span> <span class="o">=</span> <span class="n">popt_default</span>
+
+    <span class="c1"># Return the parameters Ktrans, ve, vp</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;Ktrans&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ve&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;vp&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+
+
+<div class="viewcode-block" id="ToftsQuantificationExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">ToftsQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">     base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    T10 : float</span>
+<span class="sd">        Relaxation time without contrast agent. Perfectly it should be given</span>
+<span class="sd">        using a T1 map. We do not have such data for the moment. The unit is s.</span>
+
+<span class="sd">    r1 : float</span>
+<span class="sd">        Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</span>
+
+<span class="sd">    hematocrit : float, optional (default=0.42)</span>
+<span class="sd">        Hematrocrit level in percentage.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from TemporalModality class.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    T10_ : float</span>
+<span class="sd">        Relaxation time without contrast agent. Perfectly it should be given</span>
+<span class="sd">        using a T1 map. We do not have such data for the moment. The unit is s.</span>
+
+<span class="sd">    r1_ : float</span>
+<span class="sd">        Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</span>
+
+<span class="sd">    hematocrit_ : float</span>
+<span class="sd">        Hematrocrit level in percentage.</span>
+
+<span class="sd">    TR_ : float</span>
+<span class="sd">        Repetition time in s units.</span>
+
+<span class="sd">    flip_angle : float</span>
+<span class="sd">        Flip angle in deg units.</span>
+
+<span class="sd">    cb_t_ : ndarray, shape (n_series, )</span>
+<span class="sd">        The blood concentration associated with the AIF.</span>
+
+<span class="sd">    cp_t_ : ndarray, shape (n_series, )</span>
+<span class="sd">        The plasma concentration associated with the AIF.</span>
+
+<span class="sd">    start_enh_ : int</span>
+<span class="sd">        The time index from which the contrast appear in the blood.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">T10</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">hematocrit</span><span class="o">=</span><span class="mf">0.42</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ToftsQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span> <span class="o">=</span> <span class="n">T10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r1_</span> <span class="o">=</span> <span class="n">r1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hematocrit_</span> <span class="o">=</span> <span class="n">hematocrit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.compute_aif"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.compute_aif">[docs]</a>    <span class="k">def</span> <span class="nf">compute_aif</span><span class="p">(</span><span class="n">dce_modality</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
+                    <span class="n">diameter</span><span class="o">=</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span> <span class="n">area</span><span class="o">=</span><span class="p">(</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">400.</span><span class="p">),</span>
+                    <span class="n">thres_sel</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the AIF by segmenting the aorta in the kinetic sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dce_modality : object DCEModality</span>
+<span class="sd">            The modality to use to compute the AIF, signal.</span>
+
+<span class="sd">        n_clusters : int, optional (default=6)</span>
+<span class="sd">            The number of clusters to use to make the detection of the zone</span>
+<span class="sd">            of interest to later segment the aorta or veins.</span>
+
+<span class="sd">        eccentricity : float, optional (default=.5)</span>
+<span class="sd">            The eccentricity is the ratio of the focal distance</span>
+<span class="sd">            (distance between focal points) over the major axis length. The</span>
+<span class="sd">            value is in the interval [0, 1). When it is 0, the ellipse becomes</span>
+<span class="sd">            a circle. Greater is more permissive and find more regions of</span>
+<span class="sd">            interest.</span>
+
+<span class="sd">        diameter : tuple of float, optional (default=(10., 20.))</span>
+<span class="sd">            Tuple of the minimum and maximum value of the diameters of the</span>
+<span class="sd">            region. The region having a diameter included in this interval</span>
+<span class="sd">            will be kept as potential region.</span>
+
+<span class="sd">        area : tuple of float, optional (default=(100., 400.))</span>
+<span class="sd">            Tuple of the minimum and maximum area in between which the region</span>
+<span class="sd">            of interest will be kept.</span>
+
+<span class="sd">        thres_sel : float, optional (default=0.9)</span>
+<span class="sd">            For each region detected only the voxels with an enhancement</span>
+<span class="sd">            greater than this threshold will be kept to compute the final AIF.</span>
+<span class="sd">            The value should be in the range [0., 1.].</span>
+
+<span class="sd">        estimator : str, optional (default=&#39;median&#39;)</span>
+<span class="sd">            The estimator used to estimate the AIF from the segmented region.</span>
+<span class="sd">            Can be the following: &#39;median&#39;, &#39;max&#39;, and &#39;mean&#39;</span>
+
+<span class="sd">        random_state : integer or numpy.RandomState, optional (default=None)</span>
+<span class="sd">            The generator used to initialize the centers. If an integer is</span>
+<span class="sd">            given, it fixes the seed. Defaults to the global numpy random</span>
+<span class="sd">            number generator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        aif : ndarray, shape (n_series, )</span>
+<span class="sd">            The estimated AIF signal in au.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The selection of the most enhanced voxels is done to address the</span>
+<span class="sd">        problem of partial volume effects. The proposed thresholding is taken</span>
+<span class="sd">        from [1]_.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [1] Schabel, Matthias C., and Dennis L. Parker. &quot;Uncertainty and</span>
+<span class="sd">           bias in contrast concentration measurements using spoiled gradient</span>
+<span class="sd">           echo pulse sequences.&quot; Physics in medicine and biology 53.9</span>
+<span class="sd">           (2008): 2345.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the modality provided is from the good class</span>
+        <span class="n">check_modality</span><span class="p">(</span><span class="n">dce_modality</span><span class="p">,</span> <span class="n">DCEModality</span><span class="p">())</span>
+
+        <span class="c1"># Check that the parameters have acceptable values</span>
+        <span class="k">if</span> <span class="n">eccentricity</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">eccentricity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Check the value of the parameters&#39;</span>
+                             <span class="s1">&#39; `eccentricity`.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">thres_sel</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">thres_sel</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Check the value of the parameters `thres_sel`.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check that the data have been read</span>
+        <span class="k">if</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Read the data first.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check the type of estimator</span>
+        <span class="n">choice_est</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">choice_est</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type of estimator choosen&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get the size of the volume</span>
+        <span class="n">sz_vol</span> <span class="o">=</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+        <span class="c1"># For each slice</span>
+        <span class="n">signal_aif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">n_serie_</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx_sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sz_vol</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+
+            <span class="c1"># Crop the upper part of the image</span>
+            <span class="n">org_im</span> <span class="o">=</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="mi">50</span><span class="p">:(</span><span class="n">sz_vol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:,</span> <span class="n">idx_sl</span><span class="p">]</span>
+
+            <span class="c1"># Reshape the data to make some clustring later on</span>
+            <span class="n">sz_croped_im</span> <span class="o">=</span> <span class="n">org_im</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">org_im</span><span class="p">,</span> <span class="p">(</span><span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                       <span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span>
+                                       <span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+
+            <span class="c1"># Make a k-means filtering</span>
+            <span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span>
+                        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+            <span class="c1"># Fit and predict the data</span>
+            <span class="n">data_label</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="c1"># Skip to the next iteration if we did not find any candidate</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_label</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Find the cluster with the highest enhancement - it will</span>
+            <span class="c1"># correspond to blood</span>
+            <span class="n">cl_perc</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_label</span><span class="p">):</span>
+
+                <span class="c1"># Compute the maximum enhancement of the current cluster</span>
+                <span class="c1"># and find the 90 percentile</span>
+                <span class="n">perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data_label</span> <span class="o">==</span> <span class="n">cl</span><span class="p">],</span>
+                                            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">90</span><span class="p">)</span>
+                <span class="n">cl_perc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">perc</span><span class="p">)</span>
+
+            <span class="c1"># Select only the cluster of interest</span>
+            <span class="n">cl_aorta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cl_perc</span><span class="p">)</span>
+            <span class="n">bin_im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">data_label</span> <span class="o">==</span> <span class="n">cl_aorta</span><span class="p">],</span> <span class="p">(</span><span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                           <span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="c1"># Transform the binary image into a labelled image</span>
+            <span class="n">label_im</span> <span class="o">=</span> <span class="n">label</span><span class="p">(</span><span class="n">bin_im</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="c1"># Compute the property for each region labelled</span>
+            <span class="n">regions</span> <span class="o">=</span> <span class="n">regionprops</span><span class="p">(</span><span class="n">label_im</span><span class="p">)</span>
+
+            <span class="c1"># Remove the regions in the image which do not follow the</span>
+            <span class="c1"># specificity imposed</span>
+            <span class="k">for</span> <span class="n">idx_reg</span><span class="p">,</span> <span class="n">reg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regions</span><span class="p">):</span>
+
+                <span class="c1"># Check the eccentricity</span>
+                <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">eccentricity</span> <span class="o">&gt;</span> <span class="n">eccentricity</span><span class="p">:</span>
+                    <span class="n">label_im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label_im</span> <span class="o">==</span> <span class="n">idx_reg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Check the diameter</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">equivalent_diameter</span> <span class="o">&lt;</span> <span class="n">diameter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span>
+                        <span class="n">reg</span><span class="o">.</span><span class="n">equivalent_diameter</span> <span class="o">&gt;</span> <span class="n">diameter</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">label_im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label_im</span> <span class="o">==</span> <span class="n">idx_reg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Check the area</span>
+                <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">area</span> <span class="o">&lt;</span> <span class="n">area</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">reg</span><span class="o">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="n">area</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">label_im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label_im</span> <span class="o">==</span> <span class="n">idx_reg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Remove the voxels which are contaminated by partial volume</span>
+                <span class="c1"># effect</span>
+                <span class="c1"># Find the index of the data of interest</span>
+                <span class="n">idx_region_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">label_im</span> <span class="o">==</span> <span class="n">idx_reg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                                       <span class="p">(</span><span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span>
+                                                        <span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+                <span class="c1"># Extract the data of interest</span>
+                <span class="n">roi_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx_region_data</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="c1"># Compute the maximum enhancement for these voxels</span>
+                <span class="n">max_enhancement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">roi_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span>
+                                                  <span class="n">roi_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+                <span class="c1"># Find the voxels index to keep which are enhanced enough</span>
+                <span class="c1"># Put to zero the one which are not</span>
+                <span class="n">idx_not_aif_voxel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">max_enhancement</span> <span class="o">&lt;</span>
+                                               <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_enhancement</span><span class="p">)</span> <span class="o">*</span>
+                                                <span class="n">thres_sel</span><span class="p">))</span>
+                <span class="n">label_im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span>
+                    <span class="n">idx_region_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">idx_not_aif_voxel</span><span class="p">],</span>
+                    <span class="p">(</span><span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                     <span class="n">sz_croped_im</span><span class="p">[</span><span class="mi">2</span><span class="p">]))]</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Store the signal that will be used to estimated the AIF</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">label_im</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">signal_aif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">signal_aif</span><span class="p">,</span>
+                                        <span class="n">org_im</span><span class="p">[:,</span>
+                                               <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label_im</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                                               <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">label_im</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+        <span class="c1"># Get the final estimate</span>
+        <span class="k">if</span> <span class="n">estimator</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+            <span class="n">aif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">signal_aif</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">estimator</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+            <span class="n">aif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">signal_aif</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">estimator</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
+            <span class="n">aif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">signal_aif</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">aif</span></div>
+
+<div class="viewcode-block" id="ToftsQuantificationExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_aif</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">aif_params</span><span class="o">=</span><span class="p">[[</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.378</span><span class="p">,</span> <span class="mf">7.92</span><span class="p">],</span> <span class="mf">1.050</span><span class="p">,</span>
+                        <span class="mf">0.0028083</span><span class="p">,</span> <span class="mf">0.63463</span><span class="p">,</span> <span class="mf">28.98</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        fit_aif : bool, optional (default=True)</span>
+<span class="sd">            Either to estimate the AIF from the data or from a population-based</span>
+<span class="sd">            studdy.</span>
+
+<span class="sd">        aif_params : list</span>
+<span class="sd">            In case that `fit_aif` is False, the list of the parameters for the</span>
+<span class="sd">            population-based AIF can be given.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ToftsQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Extract TR and alpha from the metadata</span>
+        <span class="c1"># The dicom store the results in milliseconds. To be consistent save</span>
+        <span class="c1"># it in seconds.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TR&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1000.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;flip-angle&#39;</span><span class="p">])</span>
+
+        <span class="c1"># We need to find when the enhancement of the curve will start</span>
+        <span class="c1"># For that matter, let&#39;s start by computing the AIF t0 have all the</span>
+        <span class="c1"># parmeters</span>
+        <span class="n">aif_signal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_aif</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+
+        <span class="c1"># Find the index to consider for the pre-contrast</span>
+        <span class="c1"># - Find the index corresponfing to the maximum of the first derivative</span>
+        <span class="c1"># of the AIF signal.</span>
+        <span class="c1"># - Find the index related to the maximum of the second derivate</span>
+        <span class="c1"># considering the AIF signal from the start to the previous</span>
+        <span class="c1"># found index.</span>
+        <span class="n">shift_idx</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">idx_st_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">)[</span><span class="n">shift_idx</span><span class="p">:]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span> <span class="n">shift_idx</span>
+        <span class="c1"># Add on to count for the first derivative missing samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">))[:</span><span class="n">idx_st_dev</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span> <span class="o">+</span>
+                           <span class="n">shift_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Check if we compute or generate the AIF</span>
+        <span class="k">if</span> <span class="n">fit_aif</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal_to_conc</span><span class="p">(</span>
+                <span class="n">aif_signal</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">aif_signal</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_based_aif</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span>
+                                                   <span class="n">A</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                   <span class="n">T</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                   <span class="n">sigma</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                                   <span class="n">alpha</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                                   <span class="n">beta</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                                                   <span class="n">s</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                                                   <span class="n">tau</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+                                                   <span class="n">delay</span><span class="o">=</span><span class="n">aif_params</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+
+        <span class="c1"># Define the concentration in plasma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hematocrit_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ToftsQuantificationExtraction.conc_to_signal"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal">[docs]</a>    <span class="k">def</span> <span class="nf">conc_to_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the concentration compute the MRI signal using FLASH sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        conc : ndarray, shape (n_series, )</span>
+<span class="sd">            Concentration in mMol.</span>
+
+<span class="sd">        s_pre_contrast : float</span>
+<span class="sd">            Signal before injection of contrast agent.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        signal : ndarray, shape (n_series, )</span>
+<span class="sd">            Concentration related to the signal.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The nonlinear approach is based on [1]_.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [1] Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,</span>
+<span class="sd">           &amp; Duerk, J. L. (2003). Determining and optimizing the precision of</span>
+<span class="sd">           quantitative measurements of perfusion from dynamic contrast</span>
+<span class="sd">           enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the fitting was performed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;You should fit the data before to try any&#39;</span>
+                               <span class="s1">&#39; conversion.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the relaxation</span>
+        <span class="n">R10</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span>
+        <span class="c1"># Define the relaxation rate in the presence of contrast agent</span>
+        <span class="n">E1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">*</span> <span class="p">(</span><span class="n">R10</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">r1_</span> <span class="o">*</span> <span class="n">conc</span><span class="p">))</span>
+        <span class="c1"># Define the relaxation rate contrast agent free</span>
+        <span class="n">E10</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">*</span> <span class="n">R10</span><span class="p">)</span>
+
+        <span class="c1"># Define the cosine of the flip angle</span>
+        <span class="n">flip_angle_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span><span class="p">)</span>
+        <span class="n">cos_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">flip_angle_rad</span><span class="p">)</span>
+
+        <span class="c1"># Compute the relative enhancement</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">(((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">E1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">E10</span> <span class="o">*</span> <span class="n">cos_alpha</span><span class="p">))</span> <span class="o">/</span>
+             <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">E1</span> <span class="o">*</span> <span class="n">cos_alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">E10</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">E</span> <span class="o">*</span> <span class="n">s_pre_contrast</span></div>
+
+<div class="viewcode-block" id="ToftsQuantificationExtraction.signal_to_conc"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc">[docs]</a>    <span class="k">def</span> <span class="nf">signal_to_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the MRI signal compute the concentration using FLASH sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        signal : ndarray, shape (n_series, )</span>
+<span class="sd">            Signal obtained from the DCE modality.</span>
+
+<span class="sd">        s_pre_contrast : float or ndarray, shape (n_series, )</span>
+<span class="sd">            Signal before injection of contrast agent.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        C_t : ndarray, shape (n_series, )</span>
+<span class="sd">            Concentration related to the signal in mMol.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The nonlinear approach is based on [1]_.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [1] Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,</span>
+<span class="sd">           &amp; Duerk, J. L. (2003). Determining and optimizing the precision of</span>
+<span class="sd">           quantitative measurements of perfusion from dynamic contrast</span>
+<span class="sd">           enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the fitting was performed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;You should fit the data before to try any&#39;</span>
+                               <span class="s1">&#39; conversion.&#39;</span><span class="p">)</span>
+
+
+        <span class="c1"># Compute the relative enhancement post-contrast / pre-contrast</span>
+        <span class="n">s_rel</span> <span class="o">=</span> <span class="n">signal</span> <span class="o">/</span> <span class="n">s_pre_contrast</span>
+
+        <span class="c1"># Convert the flip angle into radians</span>
+        <span class="n">flip_angle_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span><span class="p">)</span>
+
+        <span class="c1"># Compute the numerator</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span><span class="p">)</span> <span class="o">*</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">flip_angle_rad</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">s_rel</span><span class="p">)</span> <span class="o">+</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span><span class="p">)</span> <span class="o">*</span>
+             <span class="p">(</span><span class="n">s_rel</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">flip_angle_rad</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="c1"># Compute the denominator</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span><span class="p">)</span> <span class="o">*</span>
+             <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">flip_angle_rad</span><span class="p">)</span> <span class="o">-</span> <span class="n">s_rel</span><span class="p">)</span> <span class="o">+</span> <span class="n">s_rel</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r1_</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">A</span> <span class="o">/</span> <span class="n">B</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.population_based_aif"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif">[docs]</a>    <span class="k">def</span> <span class="nf">population_based_aif</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="p">(</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">),</span> <span class="n">T</span><span class="o">=</span><span class="p">(</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">),</span>
+                             <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mf">3.378</span><span class="p">,</span> <span class="mf">7.92</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.050</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.0028083</span><span class="p">,</span>
+                             <span class="n">s</span><span class="o">=</span><span class="mf">0.63463</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">28.98</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate an AIF from a population-based AIF.</span>
+
+<span class="sd">        The model is based on a mixture of 2 Guassians plus an exponential</span>
+<span class="sd">        modulated with a sigmoid function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        A : tuple of 2 floats, optional (default=(48.54, 19.8))</span>
+<span class="sd">            Scaling constants of the Gaussians.</span>
+
+<span class="sd">        T : tuple of 2 floats, optional (default=(10.2276, 21.9))</span>
+<span class="sd">            Center of the Gaussians.</span>
+
+<span class="sd">        sigma : tuple of 2 floats, optional (default=(3.378, 7.92))</span>
+<span class="sd">            Width of the Gaussians.</span>
+
+<span class="sd">        alpha : float, optional (default=1.050)</span>
+<span class="sd">            Amplitude of the exponential.</span>
+
+<span class="sd">        beta : float, optional (default=0.0028083)</span>
+<span class="sd">            Decay of the exponential.</span>
+
+<span class="sd">        s : float, optional (default=0.63463)</span>
+<span class="sd">            Width of the sigmoid.</span>
+
+<span class="sd">        tau : float, optional (default=28.98)</span>
+<span class="sd">            Center of the sigmoid.</span>
+
+<span class="sd">        delay : int, optional (default=0)</span>
+<span class="sd">            From which time (index) the AIF will start.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cb_t : ndarray, shape (n_serie, )</span>
+<span class="sd">            Concentration in mMol of the an population-based AIF.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The method is based on [1]_. The default parameters have been found</span>
+<span class="sd">        infered from 67 AIFs.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [1] Parker, G.J., Roberts, C., Macdonald, A., Buonaccorsi, G.A.,</span>
+<span class="sd">           Cheung, S., Buckley, D.L., Jackson, A., Watson, Y., Davies, K. and</span>
+<span class="sd">           Jayson, G.C. (2006). Experimentally-derived functional form for a</span>
+<span class="sd">           population-averaged high-temporal-resolution arterial input function</span>
+<span class="sd">           for dynamic contrast-enhanced MRI. Magnetic resonance in medicine,</span>
+<span class="sd">           56(5), 993-1000.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Allocate the output</span>
+        <span class="n">cb_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span><span class="p">,</span> <span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">idx_t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cb_t</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">cb_t</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span> <span class="o">+=</span> <span class="p">((</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span> <span class="o">*</span>
+                                <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span> <span class="o">-</span>
+                                           <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span>
+                                        <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">+</span>
+                                <span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">beta</span> <span class="o">*</span>
+                                                <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="n">idx_t</span><span class="p">])</span> <span class="o">/</span>
+                                 <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">[</span><span class="n">idx_t</span><span class="p">]</span> <span class="o">-</span>
+                                                   <span class="n">tau</span><span class="p">)))))</span>
+
+        <span class="c1"># Take into account the starting time</span>
+        <span class="n">cb_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">cb_t</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+        <span class="c1"># Put to the zero the initial value</span>
+        <span class="n">cb_t</span><span class="p">[:</span><span class="n">delay</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">return</span> <span class="n">cb_t</span></div>
+
+<div class="viewcode-block" id="ToftsQuantificationExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;extended&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type TemporalModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        kind : string, optional (default=&#39;extended&#39;)</span>
+<span class="sd">            Type of Tofts model to use: &#39;regular&#39; or &#39;extended&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        data : ndarray, shape (n_sample, n_feature)</span>
+<span class="sd">            A matrix containing the features extracted. The number of samples</span>
+<span class="sd">            is equal to the number of positive label in the ground-truth.</span>
+<span class="sd">            The feature will be the following:</span>
+
+<span class="sd">            - If &#39;regular&#39;: 1st feature will be `Ktrans` and the 2nd will be</span>
+<span class="sd">            `ve`.</span>
+<span class="sd">            - If &#39;extended&#39;: 1st feature will be `Ktrans`, the 2nd will be</span>
+<span class="sd">            `ve`, and the third will be `vp`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ToftsQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Check the parameter kind</span>
+        <span class="n">param_kind</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;regular&#39;</span><span class="p">,</span> <span class="s1">&#39;extended&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">param_kind</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameter for kind.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check that the data have been fitted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data previous to transform them.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Organise that data such that we will compute the Toft&#39;s parameter</span>
+        <span class="c1"># for each entry</span>
+        <span class="c1"># Convert the roi to a numpy array</span>
+        <span class="n">roi_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Check the number of samples which will be extracted</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">roi_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Check the number of dimension</span>
+        <span class="n">n_dimension</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">n_serie_</span>
+
+        <span class="c1"># Allocate the array</span>
+        <span class="n">signal_dce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">n_dimension</span><span class="p">))</span>
+
+        <span class="c1"># Copy the data at the right place</span>
+        <span class="k">for</span> <span class="n">idx_sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">):</span>
+            <span class="c1"># Get the coordinate of the point to consider</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">roi_data</span><span class="p">[:,</span> <span class="n">idx_sample</span><span class="p">]</span>
+
+            <span class="c1"># Extract the data</span>
+            <span class="n">signal_dce</span><span class="p">[</span><span class="n">idx_sample</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                       <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+        <span class="k">print</span> <span class="s1">&#39;DCE signal of interest extracted: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Compute the concentration for each DCE signal</span>
+        <span class="c1"># Let&#39;s do it in parallel</span>
+        <span class="c1"># Build a matrix contraining the baseline</span>
+        <span class="n">pre_contrast_dce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">signal_dce</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">start_enh_</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal_to_conc</span><span class="p">(</span><span class="n">signal_dce</span><span class="p">,</span>
+                                         <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">pre_contrast_dce</span><span class="p">,</span>
+                                                 <span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="c1"># Convert the possible NaN of inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span><span class="p">)</span>
+
+        <span class="k">print</span> <span class="s1">&#39;Concentration computed from the signal&#39;</span>
+
+        <span class="c1"># Fit the Tofts parameters</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;extended&#39;</span><span class="p">:</span>
+            <span class="c1"># Define default parameter</span>
+            <span class="n">coef0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]</span>
+
+            <span class="c1"># Perform the fitting in parallel</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_extended_tofts</span><span class="p">)(</span>
+                <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">,</span>
+                <span class="n">curve</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span><span class="p">,</span>
+                <span class="n">coef0</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span><span class="p">)</span>
+
+            <span class="c1"># Convert the output to an numpy array</span>
+            <span class="n">param_kwd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Ktrans&#39;</span><span class="p">,</span> <span class="s1">&#39;ve&#39;</span><span class="p">,</span> <span class="s1">&#39;vp&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Allocate the data matrix</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">idx_key</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[:,</span> <span class="n">idx_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">([</span><span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">))])</span>
+
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;regular&#39;</span><span class="p">:</span>
+            <span class="c1"># Define default parameter</span>
+            <span class="n">coef0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]</span>
+
+            <span class="c1"># Perform the fitting in parallel</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_regular_tofts</span><span class="p">)(</span>
+                <span class="n">modality</span><span class="o">.</span><span class="n">time_info_</span><span class="p">,</span>
+                <span class="n">curve</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span><span class="p">,</span>
+                <span class="n">coef0</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span><span class="p">)</span>
+
+            <span class="c1"># Convert the output to an numpy array</span>
+            <span class="n">param_kwd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Ktrans&#39;</span><span class="p">,</span> <span class="s1">&#39;ve&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Allocate the data matrix</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">idx_key</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_kwd</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[:,</span> <span class="n">idx_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">([</span><span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pp</span><span class="p">))])</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

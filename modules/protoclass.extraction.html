@@ -1,0 +1,2883 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction package &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass package" href="protoclass.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">protoclass</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="protoclass.html">protoclass package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="protoclass.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.classification.html">protoclass.classification package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.data_management.html">protoclass.data_management package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.preprocessing.html">protoclass.preprocessing package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.tool.html">protoclass.tool package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.utils.html">protoclass.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.validation.html">protoclass.validation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-protoclass.setup">protoclass.setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protoclass.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">protoclass</a> &raquo;</li>
+      
+          <li><a href="protoclass.html">protoclass package</a> &raquo;</li>
+      
+    <li>protoclass.extraction package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/protoclass.extraction.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-extraction-package">
+<h1>protoclass.extraction package<a class="headerlink" href="#protoclass-extraction-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-protoclass.extraction.codebook">
+<span id="protoclass-extraction-codebook-module"></span><h2>protoclass.extraction.codebook module<a class="headerlink" href="#module-protoclass.extraction.codebook" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-mod docutils literal"><span class="pre">codebook</span></code> module includes utilities to create a Bag-of-(visual)Fetures,
+that takes advantage of <code class="xref py py-mod docutils literal"><span class="pre">sklearn</span></code>.</p>
+<dl class="class">
+<dt id="protoclass.extraction.codebook.CodeBook">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.codebook.</code><code class="descname">CodeBook</code><span class="sig-paren">(</span><em>n_words=36</em>, <em>cluster_core=None</em>, <em>init='k-means++'</em>, <em>n_init=10</em>, <em>max_iter=300</em>, <em>tol=0.0001</em>, <em>precompute_distances='auto'</em>, <em>verbose=0</em>, <em>random_state=None</em>, <em>copy_x=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClusterMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Code Book creation and manimpulation for Bag-of-(visual)Fetures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_words</strong> : int, optional, default: 36</p>
+<blockquote>
+<div><p>The number of clusters to form as well as the number of
+words (centroids) to generate.</p>
+</div></blockquote>
+<p><strong>cluster_core</strong> : sklearn.cluster, default: KMeans</p>
+<blockquote>
+<div><p>Clustering technique used to quantisize the feature space to
+generate the code book.
+#TODO: its default should be described by _default_clustering()</p>
+</div></blockquote>
+<p><strong>max_iter</strong> : int, default: 300</p>
+<blockquote>
+<div><p>Maximum number of iterations of the k-means algorithm for a
+single run.</p>
+</div></blockquote>
+<p><strong>n_init</strong> : int, default: 10</p>
+<blockquote>
+<div><p>Number of time the k-means algorithm will be run with different
+centroid seeds. The final results will be the best output of
+n_init consecutive runs in terms of inertia.</p>
+</div></blockquote>
+<p><strong>init</strong> : {&#8216;k-means++&#8217;, &#8216;random&#8217; or an ndarray}</p>
+<blockquote>
+<div><p>Method for initialization, defaults to &#8216;k-means++&#8217;:</p>
+<p>&#8216;k-means++&#8217; : selects initial cluster centers for k-mean
+clustering in a smart way to speed up convergence. See section
+Notes in k_init for more details.</p>
+<p>&#8216;random&#8217;: choose k observations (rows) at random from data for
+the initial centroids.</p>
+<p>If an ndarray is passed, it should be of shape (n_clusters, n_features)
+and gives the initial centers.</p>
+</div></blockquote>
+<p><strong>precompute_distances</strong> : {&#8216;auto&#8217;, True, False}</p>
+<blockquote>
+<div><p>Precompute distances (faster but takes more memory).</p>
+<p>&#8216;auto&#8217; : do not precompute distances if n_samples * n_words &gt; 12
+million. This corresponds to about 100MB overhead per job using
+double precision.</p>
+<p>True : always precompute distances</p>
+<p>False : never precompute distances</p>
+</div></blockquote>
+<p><strong>tol</strong> : float, default: 1e-4</p>
+<blockquote>
+<div><p>Relative tolerance with regards to inertia to declare convergence</p>
+</div></blockquote>
+<p><strong>n_jobs</strong> : int</p>
+<blockquote>
+<div><p>The number of jobs to use for the computation. This works by computing
+each of the n_init runs in parallel.</p>
+<p>If -1 all CPUs are used. If 1 is given, no parallel computing code is
+used at all, which is useful for debugging. For n_jobs below -1,
+(n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but one
+are used.</p>
+</div></blockquote>
+<p><strong>random_state</strong> : integer or numpy.RandomState, optional</p>
+<blockquote>
+<div><p>The generator used to initialize the centers. If an integer is
+given, it fixes the seed. Defaults to the global numpy random
+number generator.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : int, default 0</p>
+<blockquote>
+<div><p>Verbosity mode.</p>
+</div></blockquote>
+<p><strong>copy_x</strong> : boolean, default True</p>
+<blockquote class="last">
+<div><p>When pre-computing distances it is more numerically accurate to center
+the data first.  If copy_x is True, then the original data is not
+modified.  If False, the original data is modified, and put back before
+the function returns, but small numerical differences may be introduced
+by subtracting and then adding the data mean.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-obj docutils literal"><span class="pre">dictionary_code</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The k-means problem is solved using Lloyd&#8217;s algorithm.</p>
+<p>The average complexity is given by O(k n T), were n is the number of
+samples and T is the number of iteration.</p>
+<p>The worst case complexity is given by O(n^(k+2/p)) with
+n = n_samples, p = n_features. (D. Arthur and S. Vassilvitskii,
+&#8216;How slow is the k-means method?&#8217; SoCG2006)</p>
+<p>In practice, the k-means algorithm is very fast (one of the fastest
+clustering algorithms available), but it falls in local minima. That&#8217;s why
+it can be useful to restart it several times.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id9"><span class="problematic" id="id10">cook_book_</span></a></td>
+<td>(array, [n_words, n_features]) Coordinates of cluster centers</td>
+</tr>
+<tr class="row-even"><td><a href="#id11"><span class="problematic" id="id12">labels_</span></a> :</td>
+<td>Labels of each point</td>
+</tr>
+<tr class="row-odd"><td><a href="#id13"><span class="problematic" id="id14">inertia_</span></a></td>
+<td>(float) Sum of distances of samples to their closest cluster center.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.fit" title="protoclass.extraction.codebook.CodeBook.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute the clustering of the space.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.fit_predict" title="protoclass.extraction.codebook.CodeBook.fit_predict"><code class="xref py py-obj docutils literal"><span class="pre">fit_predict</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute cluster centers and predict cluster index for each sample.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.fit_transform" title="protoclass.extraction.codebook.CodeBook.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute clustering and transform X to cluster-distance space.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.get_BoF_descriptor" title="protoclass.extraction.codebook.CodeBook.get_BoF_descriptor"><code class="xref py py-obj docutils literal"><span class="pre">get_BoF_descriptor</span></code></a>(X)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.get_BoF_pramide_descriptor" title="protoclass.extraction.codebook.CodeBook.get_BoF_pramide_descriptor"><code class="xref py py-obj docutils literal"><span class="pre">get_BoF_pramide_descriptor</span></code></a>(X)</td>
+<td>Split the image (or volume) in a piramide manner and get a descriptor for each level (and part).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.get_dictionary" title="protoclass.extraction.codebook.CodeBook.get_dictionary"><code class="xref py py-obj docutils literal"><span class="pre">get_dictionary</span></code></a>()</td>
+<td>Retrieves the words forming the code book</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.get_params" title="protoclass.extraction.codebook.CodeBook.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.predict" title="protoclass.extraction.codebook.CodeBook.predict"><code class="xref py py-obj docutils literal"><span class="pre">predict</span></code></a>(X)</td>
+<td>Predicts the index value of the closest word within the code book.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.set_params" title="protoclass.extraction.codebook.CodeBook.set_params"><code class="xref py py-obj docutils literal"><span class="pre">set_params</span></code></a>(**params)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.codebook.CodeBook.transform" title="protoclass.extraction.codebook.CodeBook.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Transform X to a cluster-distance space.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the clustering of the space.
+#TODO: right now only for K_means, however a dispatcher is</p>
+<blockquote>
+<div>needed so that other clustering stragegies are called
+indisticntly</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> : array-like or sparse matrix, shape=(n_samples, n_features)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.fit_predict">
+<code class="descname">fit_predict</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit_predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.fit_predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cluster centers and predict cluster index for each sample.</p>
+<p>Convenience method; equivalent to calling fit(X) followed by
+predict(X).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute clustering and transform X to cluster-distance space.</p>
+<p>Equivalent to fit(X).transform(X), but more efficiently implemented.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.get_BoF_descriptor">
+<code class="descname">get_BoF_descriptor</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_BoF_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.get_BoF_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.get_BoF_pramide_descriptor">
+<code class="descname">get_BoF_pramide_descriptor</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_BoF_pramide_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.get_BoF_pramide_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the image (or volume) in a piramide manner and get
+a descriptor for each level (and part). Concatenate the output.
+TODO: build proper documentaiton</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.get_dictionary">
+<code class="descname">get_dictionary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.get_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the words forming the code book</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dictionary</strong> : array, shape [n_words, n_features]</p>
+<blockquote class="last">
+<div><p>Code book elements (words of the dictionary) represented
+in the feature space</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.get_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts the index value of the closest word within the code book.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : {array-like, sparse matrix}, shape = [n_samples, n_features]</p>
+<blockquote>
+<div><p>New data to predict.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>labels</strong> : array, shape [n_samples,]</p>
+<blockquote class="last">
+<div><p>Index of the closest word within the code book.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.set_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.set_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.codebook.CodeBook.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.codebook.CodeBook.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform X to a cluster-distance space.</p>
+<p>In the new space, each dimension is the distance to the cluster
+centers.  Note that even if X is sparse, the array returned by
+<cite>transform</cite> will typically be dense.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : {array-like, sparse matrix}, shape = [n_samples, n_features]</p>
+<blockquote>
+<div><p>New data to transform.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> : array, shape [n_samples, k]</p>
+<blockquote class="last">
+<div><p>X transformed in the new space.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.extraction.edge_analysis">
+<span id="protoclass-extraction-edge-analysis-module"></span><h2>protoclass.extraction.edge_analysis module<a class="headerlink" href="#module-protoclass.extraction.edge_analysis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.extraction.edge_analysis.BuildMaps2DGabor">
+<code class="descclassname">protoclass.extraction.edge_analysis.</code><code class="descname">BuildMaps2DGabor</code><span class="sig-paren">(</span><em>im</em>, <em>kernels</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_analysis.html#BuildMaps2DGabor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.edge_analysis.BuildMaps2DGabor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to process the image through the bank of Gabor filters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray 2D or 3D</strong></p>
+<blockquote>
+<div><p>Input image.</p>
+</div></blockquote>
+<p><strong>kernels: list of 2D array</strong></p>
+<blockquote>
+<div><p>Array containing the different kernels</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>Image filtered using the Gabor filter bank</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.edge_analysis.EdgeMapExtraction">
+<code class="descclassname">protoclass.extraction.edge_analysis.</code><code class="descname">EdgeMapExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_analysis.html#EdgeMapExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.edge_analysis.EdgeMapExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to apply different filters to obtain maps based on edge detection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray 2D or 3D</strong></p>
+<blockquote>
+<div><p>Input image.</p>
+</div></blockquote>
+<p><strong>edge_detector: str</strong></p>
+<blockquote>
+<div><p>Selection of the edge detector wanted: [&#8216;Sobel1stDev&#8217;, &#8216;Prewitt1stDev&#8217;, &#8216;Sobel2ndDev&#8217;, 
+&#8216;Prewitt2ndDev&#8217;, &#8216;GaborBank&#8217;, &#8216;PhaseCong&#8217;].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>If edge_detector is either &#8216;Sobel1stDev&#8217;, &#8216;Prewitt1stDev&#8217;, &#8216;Sobel2ndDev&#8217;, &#8216;Prewitt2ndDev&#8217;,
+maps is of size of im.
+If edge_detector is &#8216;GaborBank&#8217;, the size depends of the configuration of the filter bank.
+If edge_detector is &#8216;PhaseCong&#8217;, two maps of the same size as im are returned. The first map
+is an edge-based detection whereas the second map is a blob-based detector.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.edge_analysis.GaborKernelBank">
+<code class="descclassname">protoclass.extraction.edge_analysis.</code><code class="descname">GaborKernelBank</code><span class="sig-paren">(</span><em>n_freq=10</em>, <em>freq_range=(0.05</em>, <em>0.2)</em>, <em>n_theta=6</em>, <em>win_size=(15.0</em>, <em>15.0)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_analysis.html#GaborKernelBank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.edge_analysis.GaborKernelBank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to create the bank of Gabor filters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_freq = int</strong></p>
+<blockquote>
+<div><p>Number of frequency in order to create the different kernels.</p>
+</div></blockquote>
+<p><strong>freq_range: tuple of double</strong></p>
+<blockquote>
+<div><p>The range of frequencies in which to sample.</p>
+</div></blockquote>
+<p><strong>n_theta: int</strong></p>
+<blockquote>
+<div><p>Number of angle in order to create the different kernels.</p>
+</div></blockquote>
+<p><strong>win_size: tuple of double</strong></p>
+<blockquote>
+<div><p>Size in pixel of the kernel</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kernels: list of 2D array</p>
+<blockquote class="last">
+<div><p>Array containing the different kernels</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.edge_analysis.ImageFiltering">
+<code class="descclassname">protoclass.extraction.edge_analysis.</code><code class="descname">ImageFiltering</code><span class="sig-paren">(</span><em>im</em>, <em>kernel</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_analysis.html#ImageFiltering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.edge_analysis.ImageFiltering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to filter an image with a given kernel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray 2D</strong></p>
+<blockquote>
+<div><p>Input image.</p>
+</div></blockquote>
+<p><strong>kernel: str</strong></p>
+<blockquote>
+<div><p>Gabor kernel.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>Detection from gabor filtering.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.extraction.sampling">
+<span id="protoclass-extraction-sampling-module"></span><h2>protoclass.extraction.sampling module<a class="headerlink" href="#module-protoclass.extraction.sampling" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.extraction.sampling.ParallelProcessingHaralick">
+<code class="descclassname">protoclass.extraction.sampling.</code><code class="descname">ParallelProcessingHaralick</code><span class="sig-paren">(</span><em>it</em>, <em>path_h</em>, <em>path_gt</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/sampling.html#ParallelProcessingHaralick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.sampling.ParallelProcessingHaralick" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.sampling.SamplingHaralickFromGT">
+<code class="descclassname">protoclass.extraction.sampling.</code><code class="descname">SamplingHaralickFromGT</code><span class="sig-paren">(</span><em>path_to_haralick</em>, <em>path_to_gt</em>, <em>vec_angle=array([0</em>, <em>1</em>, <em>2</em>, <em>3])</em>, <em>vec_feat=array([ 0</em>, <em>1</em>, <em>2</em>, <em>3</em>, <em>4</em>, <em>5</em>, <em>6</em>, <em>7</em>, <em>8</em>, <em>9</em>, <em>10</em>, <em>11</em>, <em>12])</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/sampling.html#SamplingHaralickFromGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.sampling.SamplingHaralickFromGT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.sampling.SamplingVolumeFromGT">
+<code class="descclassname">protoclass.extraction.sampling.</code><code class="descname">SamplingVolumeFromGT</code><span class="sig-paren">(</span><em>path_to_volume</em>, <em>path_to_gt</em>, <em>reverse_volume=False</em>, <em>reverse_gt=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/sampling.html#SamplingVolumeFromGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.sampling.SamplingVolumeFromGT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.extraction.texture_analysis">
+<span id="protoclass-extraction-texture-analysis-module"></span><h2>protoclass.extraction.texture_analysis module<a class="headerlink" href="#module-protoclass.extraction.texture_analysis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.BuildMaps2D">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">BuildMaps2D</code><span class="sig-paren">(</span><em>patches</em>, <em>im_shape</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#BuildMaps2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.BuildMaps2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute Haralick features for all patch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>patches: array, shape = (n_patches, patch_height, patch_width)</strong></p>
+<blockquote>
+<div><p>The collection of patches extracted from the image.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>If 2D image - maps is of size 4 x 14 x image height x image width)
+which will contain the map corresponding to the different
+orientations and statistic of Haralick features.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.ExtractPatches2D">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">ExtractPatches2D</code><span class="sig-paren">(</span><em>im</em>, <em>win_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#ExtractPatches2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.ExtractPatches2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract the 2D patches which which will feed haralick</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray</strong></p>
+<blockquote>
+<div><p>2D array containing the image information</p>
+</div></blockquote>
+<p><strong>win_size: tuple</strong></p>
+<blockquote>
+<div><p>Array containing 2 values defining the window size in order to
+perform the extraction</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">patches: array, shape = (n_patches, patch_height, patch_width)</p>
+<blockquote class="last">
+<div><p>The collection of patches extracted from the image.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.HaralickMapExtraction">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">HaralickMapExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#HaralickMapExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.HaralickMapExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract the Haralick map from a 2D or 3D image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray of int</strong></p>
+<blockquote>
+<div><p>2D or 3D array containing the image information</p>
+</div></blockquote>
+<p><strong>win_size: tuple (optional)</strong></p>
+<blockquote>
+<div><p>Tuple containing 2 or 3 values defining the window size
+to consider during the extraction</p>
+</div></blockquote>
+<p><strong>n_gray_levels: int (optional)</strong></p>
+<blockquote>
+<div><p>Number of gray level to use to rescale the original image</p>
+</div></blockquote>
+<p><strong>gray_limits: tuple (optional)</strong></p>
+<blockquote>
+<div><p>Tuple containing 2 values defining the minimum and maximum
+gray level.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>If 2D image - maps is of size 4 x 14 x image height x image width)
+which will contain the map corresponding to the different
+orientations and statistic of Haralick features.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.HaralickProcessing">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">HaralickProcessing</code><span class="sig-paren">(</span><em>patch_in</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#HaralickProcessing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.HaralickProcessing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute Haralick for a patch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>patch_in: ndarray of int</strong></p>
+<blockquote>
+<div><p>2D or 3D array containing the image information</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hara_fea: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>A 4x13 or 4x14 feature vector (one row per direction) if <cite>f</cite> is 2D,
+13x13 or 13x14 if it is 3D. The exact number of features depends on the
+value of <code class="docutils literal"><span class="pre">compute_14th_feature</span></code> Also, if either <code class="docutils literal"><span class="pre">return_mean</span></code> or
+<code class="docutils literal"><span class="pre">return_mean_ptp</span></code> is set, then a single dimensional array is
+returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.LBPMapExtraction">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">LBPMapExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#LBPMapExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.LBPMapExtraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.LBPpdfExtraction">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">LBPpdfExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#LBPpdfExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.LBPpdfExtraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.ReshapePatchsToMaps2D">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">ReshapePatchsToMaps2D</code><span class="sig-paren">(</span><em>patches_haralick</em>, <em>im_shape</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#ReshapePatchsToMaps2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.ReshapePatchsToMaps2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to reshape the array of patches into proper maps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>patches: list of array, shape = (n_patches, 4 orientations, 14 features)</strong></p>
+<blockquote>
+<div><p>See HaralickProcessing() for the justification of the shape.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>If 2D image - maps is of size 4 x 14 x image height x image width)
+which will contain the map corresponding to the different
+orientations and statistic of Haralick features.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.texture_analysis.hist_alone">
+<code class="descclassname">protoclass.extraction.texture_analysis.</code><code class="descname">hist_alone</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#hist_alone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.texture_analysis.hist_alone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-protoclass.extraction">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-protoclass.extraction" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-protoclass.extraction" title="protoclass.extraction"><code class="xref py py-mod docutils literal"><span class="pre">protoclass.extraction</span></code></a> modules allows to extract features which later
+will be used during classification.</p>
+<dl class="class">
+<dt id="protoclass.extraction.BaseExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">BaseExtraction</code><a class="reference internal" href="../_modules/protoclass/extraction/base_extraction.html#BaseExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BaseExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic class for extraction.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.BaseExtraction.fit" title="protoclass.extraction.BaseExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find parameters for later transformation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.BaseExtraction.load_from_pickles" title="protoclass.extraction.BaseExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.BaseExtraction.save_to_pickles" title="protoclass.extraction.BaseExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.BaseExtraction.transform" title="protoclass.extraction.BaseExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.BaseExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/base_extraction.html#BaseExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BaseExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find parameters for later transformation.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="protoclass.extraction.BaseExtraction.load_from_pickles">
+<em class="property">static </em><code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/base_extraction.html#BaseExtraction.load_from_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BaseExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to load a normalization object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bpp</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns the loaded object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.BaseExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/base_extraction.html#BaseExtraction.save_to_pickles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BaseExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to save a normalizatio object using pickles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.BaseExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/base_extraction.html#BaseExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BaseExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.TemporalExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">TemporalExtraction</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/temporal_extraction.html#TemporalExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.TemporalExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.base_extraction.BaseExtraction</span></code></p>
+<p>Basic class to extract feature from temporal modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.TemporalExtraction.fit" title="protoclass.extraction.TemporalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.TemporalExtraction.transform" title="protoclass.extraction.TemporalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.TemporalExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/temporal_extraction.html#TemporalExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.TemporalExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.TemporalExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/temporal_extraction.html#TemporalExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.TemporalExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.StandaloneExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">StandaloneExtraction</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/standalone_extraction.html#StandaloneExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.StandaloneExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.base_extraction.BaseExtraction</span></code></p>
+<p>Basic class to extract feature from standalone modality.</p>
+<p>Warning: This class should not be used directly. Use the derive classes
+instead.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.StandaloneExtraction.fit" title="protoclass.extraction.StandaloneExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.StandaloneExtraction.transform" title="protoclass.extraction.StandaloneExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.StandaloneExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/standalone_extraction.html#StandaloneExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.StandaloneExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.StandaloneExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/standalone_extraction.html#StandaloneExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.StandaloneExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.EnhancementSignalExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">EnhancementSignalExtraction</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/enhancement_signal_extraction.html#EnhancementSignalExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EnhancementSignalExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id15"><span class="problematic" id="id16">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id17"><span class="problematic" id="id18">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EnhancementSignalExtraction.fit" title="protoclass.extraction.EnhancementSignalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EnhancementSignalExtraction.transform" title="protoclass.extraction.EnhancementSignalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.EnhancementSignalExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/enhancement_signal_extraction.html#EnhancementSignalExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EnhancementSignalExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.EnhancementSignalExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/enhancement_signal_extraction.html#EnhancementSignalExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EnhancementSignalExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">ToftsQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>T10</em>, <em>r1</em>, <em>hematocrit=0.42</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+<p><strong>T10</strong> : float</p>
+<blockquote>
+<div><p>Relaxation time without contrast agent. Perfectly it should be given
+using a T1 map. We do not have such data for the moment. The unit is s.</p>
+</div></blockquote>
+<p><strong>r1</strong> : float</p>
+<blockquote>
+<div><p>Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</p>
+</div></blockquote>
+<p><strong>hematocrit</strong> : float, optional (default=0.42)</p>
+<blockquote class="last">
+<div><p>Hematrocrit level in percentage.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id19"><span class="problematic" id="id20">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id21"><span class="problematic" id="id22">T10_</span></a></td>
+<td>(float) Relaxation time without contrast agent. Perfectly it should be given using a T1 map. We do not have such data for the moment. The unit is s.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#r1">r1</a></td>
+<td>(float) Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id23"><span class="problematic" id="id24">hematocrit_</span></a></td>
+<td>(float) Hematrocrit level in percentage.</td>
+</tr>
+<tr class="row-even"><td><a href="#id25"><span class="problematic" id="id26">TR_</span></a></td>
+<td>(float) Repetition time in s units.</td>
+</tr>
+<tr class="row-odd"><td>flip_angle</td>
+<td>(float) Flip angle in deg units.</td>
+</tr>
+<tr class="row-even"><td><a href="#id27"><span class="problematic" id="id28">cb_t_</span></a></td>
+<td>(ndarray, shape (n_series, )) The blood concentration associated with the AIF.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id29"><span class="problematic" id="id30">cp_t_</span></a></td>
+<td>(ndarray, shape (n_series, )) The plasma concentration associated with the AIF.</td>
+</tr>
+<tr class="row-even"><td><a href="#id31"><span class="problematic" id="id32">start_enh_</span></a></td>
+<td>(int) The time index from which the contrast appear in the blood.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.compute_aif" title="protoclass.extraction.ToftsQuantificationExtraction.compute_aif"><code class="xref py py-obj docutils literal"><span class="pre">compute_aif</span></code></a>(dce_modality[,&nbsp;n_clusters,&nbsp;...])</td>
+<td>Determine the AIF by segmenting the aorta in the kinetic sequence.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal" title="protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal"><code class="xref py py-obj docutils literal"><span class="pre">conc_to_signal</span></code></a>(conc,&nbsp;s_pre_contrast)</td>
+<td>Given the concentration compute the MRI signal using FLASH sequence.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.fit" title="protoclass.extraction.ToftsQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;fit_aif,&nbsp;...])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif" title="protoclass.extraction.ToftsQuantificationExtraction.population_based_aif"><code class="xref py py-obj docutils literal"><span class="pre">population_based_aif</span></code></a>(modality[,&nbsp;A,&nbsp;T,&nbsp;...])</td>
+<td>Generate an AIF from a population-based AIF.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc" title="protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc"><code class="xref py py-obj docutils literal"><span class="pre">signal_to_conc</span></code></a>(signal,&nbsp;s_pre_contrast)</td>
+<td>Given the MRI signal compute the concentration using FLASH sequence.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.transform" title="protoclass.extraction.ToftsQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;kind])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.compute_aif">
+<em class="property">static </em><code class="descname">compute_aif</code><span class="sig-paren">(</span><em>dce_modality</em>, <em>n_clusters=6</em>, <em>eccentricity=0.5</em>, <em>diameter=(10.0</em>, <em>20.0)</em>, <em>area=(100.0</em>, <em>400.0)</em>, <em>thres_sel=0.9</em>, <em>estimator='median'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.compute_aif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.compute_aif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the AIF by segmenting the aorta in the kinetic sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dce_modality</strong> : object DCEModality</p>
+<blockquote>
+<div><p>The modality to use to compute the AIF, signal.</p>
+</div></blockquote>
+<p><strong>n_clusters</strong> : int, optional (default=6)</p>
+<blockquote>
+<div><p>The number of clusters to use to make the detection of the zone
+of interest to later segment the aorta or veins.</p>
+</div></blockquote>
+<p><strong>eccentricity</strong> : float, optional (default=.5)</p>
+<blockquote>
+<div><p>The eccentricity is the ratio of the focal distance
+(distance between focal points) over the major axis length. The
+value is in the interval [0, 1). When it is 0, the ellipse becomes
+a circle. Greater is more permissive and find more regions of
+interest.</p>
+</div></blockquote>
+<p><strong>diameter</strong> : tuple of float, optional (default=(10., 20.))</p>
+<blockquote>
+<div><p>Tuple of the minimum and maximum value of the diameters of the
+region. The region having a diameter included in this interval
+will be kept as potential region.</p>
+</div></blockquote>
+<p><strong>area</strong> : tuple of float, optional (default=(100., 400.))</p>
+<blockquote>
+<div><p>Tuple of the minimum and maximum area in between which the region
+of interest will be kept.</p>
+</div></blockquote>
+<p><strong>thres_sel</strong> : float, optional (default=0.9)</p>
+<blockquote>
+<div><p>For each region detected only the voxels with an enhancement
+greater than this threshold will be kept to compute the final AIF.
+The value should be in the range [0., 1.].</p>
+</div></blockquote>
+<p><strong>estimator</strong> : str, optional (default=&#8217;median&#8217;)</p>
+<blockquote>
+<div><p>The estimator used to estimate the AIF from the segmented region.
+Can be the following: &#8216;median&#8217;, &#8216;max&#8217;, and &#8216;mean&#8217;</p>
+</div></blockquote>
+<p><strong>random_state</strong> : integer or numpy.RandomState, optional (default=None)</p>
+<blockquote>
+<div><p>The generator used to initialize the centers. If an integer is
+given, it fixes the seed. Defaults to the global numpy random
+number generator.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>aif</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>The estimated AIF signal in au.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The selection of the most enhanced voxels is done to address the
+problem of partial volume effects. The proposed thresholding is taken
+from <a class="reference internal" href="#r1" id="id1">[R1]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Schabel, Matthias C., and Dennis L. Parker. &#8220;Uncertainty and
+bias in contrast concentration measurements using spoiled gradient
+echo pulse sequences.&#8221; Physics in medicine and biology 53.9
+(2008): 2345.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal">
+<code class="descname">conc_to_signal</code><span class="sig-paren">(</span><em>conc</em>, <em>s_pre_contrast</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.conc_to_signal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the concentration compute the MRI signal using FLASH sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>conc</strong> : ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Concentration in mMol.</p>
+</div></blockquote>
+<p><strong>s_pre_contrast</strong> : float</p>
+<blockquote>
+<div><p>Signal before injection of contrast agent.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>signal</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>Concentration related to the signal.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The nonlinear approach is based on <a class="reference internal" href="#r2" id="id3">[R2]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,
+&amp; Duerk, J. L. (2003). Determining and optimizing the precision of
+quantitative measurements of perfusion from dynamic contrast
+enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality, ground_truth=None, cat=None, fit_aif=True, aif_params=[[48.54, 19.8], [10.2276, 21.9], [3.378, 7.92], 1.05, 0.0028083, 0.63463, 28.98]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>fit_aif</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Either to estimate the AIF from the data or from a population-based
+studdy.</p>
+</div></blockquote>
+<p><strong>aif_params</strong> : list</p>
+<blockquote class="last">
+<div><p>In case that <cite>fit_aif</cite> is False, the list of the parameters for the
+population-based AIF can be given.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.population_based_aif">
+<em class="property">static </em><code class="descname">population_based_aif</code><span class="sig-paren">(</span><em>modality</em>, <em>A=(48.54</em>, <em>19.8)</em>, <em>T=(10.2276</em>, <em>21.9)</em>, <em>sigma=(3.378</em>, <em>7.92)</em>, <em>alpha=1.05</em>, <em>beta=0.0028083</em>, <em>s=0.63463</em>, <em>tau=28.98</em>, <em>delay=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.population_based_aif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an AIF from a population-based AIF.</p>
+<p>The model is based on a mixture of 2 Guassians plus an exponential
+modulated with a sigmoid function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>A</strong> : tuple of 2 floats, optional (default=(48.54, 19.8))</p>
+<blockquote>
+<div><p>Scaling constants of the Gaussians.</p>
+</div></blockquote>
+<p><strong>T</strong> : tuple of 2 floats, optional (default=(10.2276, 21.9))</p>
+<blockquote>
+<div><p>Center of the Gaussians.</p>
+</div></blockquote>
+<p><strong>sigma</strong> : tuple of 2 floats, optional (default=(3.378, 7.92))</p>
+<blockquote>
+<div><p>Width of the Gaussians.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float, optional (default=1.050)</p>
+<blockquote>
+<div><p>Amplitude of the exponential.</p>
+</div></blockquote>
+<p><strong>beta</strong> : float, optional (default=0.0028083)</p>
+<blockquote>
+<div><p>Decay of the exponential.</p>
+</div></blockquote>
+<p><strong>s</strong> : float, optional (default=0.63463)</p>
+<blockquote>
+<div><p>Width of the sigmoid.</p>
+</div></blockquote>
+<p><strong>tau</strong> : float, optional (default=28.98)</p>
+<blockquote>
+<div><p>Center of the sigmoid.</p>
+</div></blockquote>
+<p><strong>delay</strong> : int, optional (default=0)</p>
+<blockquote>
+<div><p>From which time (index) the AIF will start.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cb_t</strong> : ndarray, shape (n_serie, )</p>
+<blockquote class="last">
+<div><p>Concentration in mMol of the an population-based AIF.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The method is based on <a class="reference internal" href="#r3" id="id5">[R3]</a>. The default parameters have been found
+infered from 67 AIFs.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R3]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Parker, G.J., Roberts, C., Macdonald, A., Buonaccorsi, G.A.,
+Cheung, S., Buckley, D.L., Jackson, A., Watson, Y., Davies, K. and
+Jayson, G.C. (2006). Experimentally-derived functional form for a
+population-averaged high-temporal-resolution arterial input function
+for dynamic contrast-enhanced MRI. Magnetic resonance in medicine,
+56(5), 993-1000.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc">
+<code class="descname">signal_to_conc</code><span class="sig-paren">(</span><em>signal</em>, <em>s_pre_contrast</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.signal_to_conc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the MRI signal compute the concentration using FLASH sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>signal</strong> : ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Signal obtained from the DCE modality.</p>
+</div></blockquote>
+<p><strong>s_pre_contrast</strong> : float or ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Signal before injection of contrast agent.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>C_t</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>Concentration related to the signal in mMol.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The nonlinear approach is based on <a class="reference internal" href="#r4" id="id7">[R4]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R4]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id8">2</a>)</em> Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,
+&amp; Duerk, J. L. (2003). Determining and optimizing the precision of
+quantitative measurements of perfusion from dynamic contrast
+enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>kind='extended'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>kind</strong> : string, optional (default=&#8217;extended&#8217;)</p>
+<blockquote>
+<div><p>Type of Tofts model to use: &#8216;regular&#8217; or &#8216;extended&#8217;.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following:</p>
+<ul class="simple">
+<li>If &#8216;regular&#8217;: 1st feature will be <cite>Ktrans</cite> and the 2nd will be</li>
+</ul>
+<p><cite>ve</cite>.
+- If &#8216;extended&#8217;: 1st feature will be <cite>Ktrans</cite>, the 2nd will be
+<cite>ve</cite>, and the third will be <cite>vp</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.BrixQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">BrixQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/brix_quantification_extraction.html#BrixQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BrixQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id33"><span class="problematic" id="id34">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.BrixQuantificationExtraction.fit" title="protoclass.extraction.BrixQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.BrixQuantificationExtraction.transform" title="protoclass.extraction.BrixQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;kind])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.BrixQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/brix_quantification_extraction.html#BrixQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BrixQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.BrixQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>kind='brix'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/brix_quantification_extraction.html#BrixQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.BrixQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>kind</strong> : str, optional (default=&#8217;brix&#8217;)</p>
+<blockquote>
+<div><p>The model to use. It could be:</p>
+<ul class="simple">
+<li>&#8216;brix&#8217; to use the original Brix model,</li>
+<li>&#8216;hoffmann&#8217; to use the modified Brix model proposed by Hoffmann.</li>
+</ul>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following (A, kep, kel)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.WeibullQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">WeibullQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/weibull_quantification_extraction.html#WeibullQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.WeibullQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id35"><span class="problematic" id="id36">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.WeibullQuantificationExtraction.fit" title="protoclass.extraction.WeibullQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.WeibullQuantificationExtraction.transform" title="protoclass.extraction.WeibullQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.WeibullQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/weibull_quantification_extraction.html#WeibullQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.WeibullQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.WeibullQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/weibull_quantification_extraction.html#WeibullQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.WeibullQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following (A, B)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.PUNQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">PUNQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/pun_quantification_extraction.html#PUNQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PUNQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id37"><span class="problematic" id="id38">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PUNQuantificationExtraction.fit" title="protoclass.extraction.PUNQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.PUNQuantificationExtraction.transform" title="protoclass.extraction.PUNQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.PUNQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/pun_quantification_extraction.html#PUNQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PUNQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.PUNQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/pun_quantification_extraction.html#PUNQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PUNQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following (a0, r, beta)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.SemiQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">SemiQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/semi_quantification_extraction.html#SemiQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SemiQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.temporal_extraction.TemporalExtraction</span></code></p>
+<p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id39"><span class="problematic" id="id40">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SemiQuantificationExtraction.fit" title="protoclass.extraction.SemiQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.SemiQuantificationExtraction.transform" title="protoclass.extraction.SemiQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.SemiQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/semi_quantification_extraction.html#SemiQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SemiQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.SemiQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/semi_quantification_extraction.html#SemiQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SemiQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following (wash-in, wash-out, AUC, tau,
+relative enhancement)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.IntensitySignalExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">IntensitySignalExtraction</code><span class="sig-paren">(</span><em>base_modality</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/intensity_signal_extraction.html#IntensitySignalExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.IntensitySignalExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.standalone_extraction.StandaloneExtraction</span></code></p>
+<p>Intensity signal extraction from standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote class="last">
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StandaloneModality class.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id41"><span class="problematic" id="id42">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from StandaloneModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id43"><span class="problematic" id="id44">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.IntensitySignalExtraction.fit" title="protoclass.extraction.IntensitySignalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.IntensitySignalExtraction.transform" title="protoclass.extraction.IntensitySignalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.IntensitySignalExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/intensity_signal_extraction.html#IntensitySignalExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.IntensitySignalExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.IntensitySignalExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/intensity_signal_extraction.html#IntensitySignalExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.IntensitySignalExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.EdgeSignalExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">EdgeSignalExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>edge_detector='sobel'</em>, <em>n_derivative='1st'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.standalone_extraction.StandaloneExtraction</span></code></p>
+<p>Edge signal extraction from standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StandaloneModality class.</p>
+</div></blockquote>
+<p><strong>edge_detector</strong> : str, optional (default=&#8217;sobel&#8217;)</p>
+<blockquote>
+<div><p>Name of the filter to apply. Can be &#8216;sobel&#8217;, &#8216;prewitt&#8217;, &#8216;kirsch&#8217;.</p>
+</div></blockquote>
+<p><strong>n_derivative</strong> : str, optional (default=&#8216;1st&#8217;)</p>
+<blockquote class="last">
+<div><p>Which level of derivative to compute. Can be &#8216;1st&#8217;, &#8216;2nd&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id45"><span class="problematic" id="id46">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from StandaloneModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id47"><span class="problematic" id="id48">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.fit" title="protoclass.extraction.EdgeSignalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Compute the images images.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.transform" title="protoclass.extraction.EdgeSignalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.EdgeSignalExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the images images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.EdgeSignalExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.HaralickExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">HaralickExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>distance=1</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em>, <em>levels=256</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">protoclass.extraction.standalone_extraction.StandaloneExtraction</span></code></p>
+<p>Haralick extraction from standalone modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from StandaloneModality class.</p>
+</div></blockquote>
+<p><strong>distance</strong> : int, optional (default=1)</p>
+<blockquote>
+<div><p>The distance used to compute the cooccurence matrix</p>
+</div></blockquote>
+<p><strong>patch_size</strong> : int or tuple, optional (default=(9, 9, 3))</p>
+<blockquote>
+<div><p>The size of the sliding used to extract patches later used to compute
+the cooccurence matrix.</p>
+</div></blockquote>
+<p><strong>levels</strong> : int, optional (default=256)</p>
+<blockquote class="last">
+<div><p>The input image should contain integers in [0, levels-1], where levels
+indicate the number of grey-levels counted (typically 256 for an 8-bit
+image). This argument is required for 16-bit images or higher and is
+typically the maximum of the image. As the output matrix is at least
+levels x levels, it might be preferable to use binning of the input
+image rather than large values for levels.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id49"><span class="problematic" id="id50">base_modality_</span></a></td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from StandaloneModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id51"><span class="problematic" id="id52">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.fit" title="protoclass.extraction.HaralickExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Compute the images images.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.transform" title="protoclass.extraction.HaralickExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.HaralickExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the images images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote class="last">
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.HaralickExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type StandaloneModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="protoclass.extraction.CodeBook">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">CodeBook</code><span class="sig-paren">(</span><em>n_words=36</em>, <em>cluster_core=None</em>, <em>init='k-means++'</em>, <em>n_init=10</em>, <em>max_iter=300</em>, <em>tol=0.0001</em>, <em>precompute_distances='auto'</em>, <em>verbose=0</em>, <em>random_state=None</em>, <em>copy_x=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClusterMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Code Book creation and manimpulation for Bag-of-(visual)Fetures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_words</strong> : int, optional, default: 36</p>
+<blockquote>
+<div><p>The number of clusters to form as well as the number of
+words (centroids) to generate.</p>
+</div></blockquote>
+<p><strong>cluster_core</strong> : sklearn.cluster, default: KMeans</p>
+<blockquote>
+<div><p>Clustering technique used to quantisize the feature space to
+generate the code book.
+#TODO: its default should be described by _default_clustering()</p>
+</div></blockquote>
+<p><strong>max_iter</strong> : int, default: 300</p>
+<blockquote>
+<div><p>Maximum number of iterations of the k-means algorithm for a
+single run.</p>
+</div></blockquote>
+<p><strong>n_init</strong> : int, default: 10</p>
+<blockquote>
+<div><p>Number of time the k-means algorithm will be run with different
+centroid seeds. The final results will be the best output of
+n_init consecutive runs in terms of inertia.</p>
+</div></blockquote>
+<p><strong>init</strong> : {&#8216;k-means++&#8217;, &#8216;random&#8217; or an ndarray}</p>
+<blockquote>
+<div><p>Method for initialization, defaults to &#8216;k-means++&#8217;:</p>
+<p>&#8216;k-means++&#8217; : selects initial cluster centers for k-mean
+clustering in a smart way to speed up convergence. See section
+Notes in k_init for more details.</p>
+<p>&#8216;random&#8217;: choose k observations (rows) at random from data for
+the initial centroids.</p>
+<p>If an ndarray is passed, it should be of shape (n_clusters, n_features)
+and gives the initial centers.</p>
+</div></blockquote>
+<p><strong>precompute_distances</strong> : {&#8216;auto&#8217;, True, False}</p>
+<blockquote>
+<div><p>Precompute distances (faster but takes more memory).</p>
+<p>&#8216;auto&#8217; : do not precompute distances if n_samples * n_words &gt; 12
+million. This corresponds to about 100MB overhead per job using
+double precision.</p>
+<p>True : always precompute distances</p>
+<p>False : never precompute distances</p>
+</div></blockquote>
+<p><strong>tol</strong> : float, default: 1e-4</p>
+<blockquote>
+<div><p>Relative tolerance with regards to inertia to declare convergence</p>
+</div></blockquote>
+<p><strong>n_jobs</strong> : int</p>
+<blockquote>
+<div><p>The number of jobs to use for the computation. This works by computing
+each of the n_init runs in parallel.</p>
+<p>If -1 all CPUs are used. If 1 is given, no parallel computing code is
+used at all, which is useful for debugging. For n_jobs below -1,
+(n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but one
+are used.</p>
+</div></blockquote>
+<p><strong>random_state</strong> : integer or numpy.RandomState, optional</p>
+<blockquote>
+<div><p>The generator used to initialize the centers. If an integer is
+given, it fixes the seed. Defaults to the global numpy random
+number generator.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : int, default 0</p>
+<blockquote>
+<div><p>Verbosity mode.</p>
+</div></blockquote>
+<p><strong>copy_x</strong> : boolean, default True</p>
+<blockquote class="last">
+<div><p>When pre-computing distances it is more numerically accurate to center
+the data first.  If copy_x is True, then the original data is not
+modified.  If False, the original data is modified, and put back before
+the function returns, but small numerical differences may be introduced
+by subtracting and then adding the data mean.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-obj docutils literal"><span class="pre">dictionary_code</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The k-means problem is solved using Lloyd&#8217;s algorithm.</p>
+<p>The average complexity is given by O(k n T), were n is the number of
+samples and T is the number of iteration.</p>
+<p>The worst case complexity is given by O(n^(k+2/p)) with
+n = n_samples, p = n_features. (D. Arthur and S. Vassilvitskii,
+&#8216;How slow is the k-means method?&#8217; SoCG2006)</p>
+<p>In practice, the k-means algorithm is very fast (one of the fastest
+clustering algorithms available), but it falls in local minima. That&#8217;s why
+it can be useful to restart it several times.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id53"><span class="problematic" id="id54">cook_book_</span></a></td>
+<td>(array, [n_words, n_features]) Coordinates of cluster centers</td>
+</tr>
+<tr class="row-even"><td><a href="#id55"><span class="problematic" id="id56">labels_</span></a> :</td>
+<td>Labels of each point</td>
+</tr>
+<tr class="row-odd"><td><a href="#id57"><span class="problematic" id="id58">inertia_</span></a></td>
+<td>(float) Sum of distances of samples to their closest cluster center.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.fit" title="protoclass.extraction.CodeBook.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute the clustering of the space.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.fit_predict" title="protoclass.extraction.CodeBook.fit_predict"><code class="xref py py-obj docutils literal"><span class="pre">fit_predict</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute cluster centers and predict cluster index for each sample.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.fit_transform" title="protoclass.extraction.CodeBook.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Compute clustering and transform X to cluster-distance space.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.get_BoF_descriptor" title="protoclass.extraction.CodeBook.get_BoF_descriptor"><code class="xref py py-obj docutils literal"><span class="pre">get_BoF_descriptor</span></code></a>(X)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.get_BoF_pramide_descriptor" title="protoclass.extraction.CodeBook.get_BoF_pramide_descriptor"><code class="xref py py-obj docutils literal"><span class="pre">get_BoF_pramide_descriptor</span></code></a>(X)</td>
+<td>Split the image (or volume) in a piramide manner and get a descriptor for each level (and part).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.get_dictionary" title="protoclass.extraction.CodeBook.get_dictionary"><code class="xref py py-obj docutils literal"><span class="pre">get_dictionary</span></code></a>()</td>
+<td>Retrieves the words forming the code book</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.get_params" title="protoclass.extraction.CodeBook.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.predict" title="protoclass.extraction.CodeBook.predict"><code class="xref py py-obj docutils literal"><span class="pre">predict</span></code></a>(X)</td>
+<td>Predicts the index value of the closest word within the code book.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.set_params" title="protoclass.extraction.CodeBook.set_params"><code class="xref py py-obj docutils literal"><span class="pre">set_params</span></code></a>(**params)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.CodeBook.transform" title="protoclass.extraction.CodeBook.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Transform X to a cluster-distance space.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the clustering of the space.
+#TODO: right now only for K_means, however a dispatcher is</p>
+<blockquote>
+<div>needed so that other clustering stragegies are called
+indisticntly</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> : array-like or sparse matrix, shape=(n_samples, n_features)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.fit_predict">
+<code class="descname">fit_predict</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit_predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.fit_predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cluster centers and predict cluster index for each sample.</p>
+<p>Convenience method; equivalent to calling fit(X) followed by
+predict(X).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute clustering and transform X to cluster-distance space.</p>
+<p>Equivalent to fit(X).transform(X), but more efficiently implemented.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.get_BoF_descriptor">
+<code class="descname">get_BoF_descriptor</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_BoF_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.get_BoF_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.get_BoF_pramide_descriptor">
+<code class="descname">get_BoF_pramide_descriptor</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_BoF_pramide_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.get_BoF_pramide_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the image (or volume) in a piramide manner and get
+a descriptor for each level (and part). Concatenate the output.
+TODO: build proper documentaiton</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.get_dictionary">
+<code class="descname">get_dictionary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.get_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the words forming the code book</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dictionary</strong> : array, shape [n_words, n_features]</p>
+<blockquote class="last">
+<div><p>Code book elements (words of the dictionary) represented
+in the feature space</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.get_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts the index value of the closest word within the code book.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : {array-like, sparse matrix}, shape = [n_samples, n_features]</p>
+<blockquote>
+<div><p>New data to predict.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>labels</strong> : array, shape [n_samples,]</p>
+<blockquote class="last">
+<div><p>Index of the closest word within the code book.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.set_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.set_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.CodeBook.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/codebook.html#CodeBook.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.CodeBook.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform X to a cluster-distance space.</p>
+<p>In the new space, each dimension is the distance to the cluster
+centers.  Note that even if X is sparse, the array returned by
+<cite>transform</cite> will typically be dense.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : {array-like, sparse matrix}, shape = [n_samples, n_features]</p>
+<blockquote>
+<div><p>New data to transform.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> : array, shape [n_samples, k]</p>
+<blockquote class="last">
+<div><p>X transformed in the new space.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.HaralickProcessing">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">HaralickProcessing</code><span class="sig-paren">(</span><em>patch_in</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#HaralickProcessing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickProcessing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute Haralick for a patch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>patch_in: ndarray of int</strong></p>
+<blockquote>
+<div><p>2D or 3D array containing the image information</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hara_fea: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>A 4x13 or 4x14 feature vector (one row per direction) if <cite>f</cite> is 2D,
+13x13 or 13x14 if it is 3D. The exact number of features depends on the
+value of <code class="docutils literal"><span class="pre">compute_14th_feature</span></code> Also, if either <code class="docutils literal"><span class="pre">return_mean</span></code> or
+<code class="docutils literal"><span class="pre">return_mean_ptp</span></code> is set, then a single dimensional array is
+returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.LBPMapExtraction">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">LBPMapExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#LBPMapExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPMapExtraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.LBPpdfExtraction">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">LBPpdfExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/texture_analysis.html#LBPpdfExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPpdfExtraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.EdgeMapExtraction">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">EdgeMapExtraction</code><span class="sig-paren">(</span><em>im</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_analysis.html#EdgeMapExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeMapExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to apply different filters to obtain maps based on edge detection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: ndarray 2D or 3D</strong></p>
+<blockquote>
+<div><p>Input image.</p>
+</div></blockquote>
+<p><strong>edge_detector: str</strong></p>
+<blockquote>
+<div><p>Selection of the edge detector wanted: [&#8216;Sobel1stDev&#8217;, &#8216;Prewitt1stDev&#8217;, &#8216;Sobel2ndDev&#8217;, 
+&#8216;Prewitt2ndDev&#8217;, &#8216;GaborBank&#8217;, &#8216;PhaseCong&#8217;].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">maps: ndarray of np.double</p>
+<blockquote class="last">
+<div><p>If edge_detector is either &#8216;Sobel1stDev&#8217;, &#8216;Prewitt1stDev&#8217;, &#8216;Sobel2ndDev&#8217;, &#8216;Prewitt2ndDev&#8217;,
+maps is of size of im.
+If edge_detector is &#8216;GaborBank&#8217;, the size depends of the configuration of the filter bank.
+If edge_detector is &#8216;PhaseCong&#8217;, two maps of the same size as im are returned. The first map
+is an edge-based detection whereas the second map is a blob-based detector.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.SamplingHaralickFromGT">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">SamplingHaralickFromGT</code><span class="sig-paren">(</span><em>path_to_haralick</em>, <em>path_to_gt</em>, <em>vec_angle=array([0</em>, <em>1</em>, <em>2</em>, <em>3])</em>, <em>vec_feat=array([ 0</em>, <em>1</em>, <em>2</em>, <em>3</em>, <em>4</em>, <em>5</em>, <em>6</em>, <em>7</em>, <em>8</em>, <em>9</em>, <em>10</em>, <em>11</em>, <em>12])</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/sampling.html#SamplingHaralickFromGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SamplingHaralickFromGT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="protoclass.extraction.SamplingVolumeFromGT">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">SamplingVolumeFromGT</code><span class="sig-paren">(</span><em>path_to_volume</em>, <em>path_to_gt</em>, <em>reverse_volume=False</em>, <em>reverse_gt=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/sampling.html#SamplingVolumeFromGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SamplingVolumeFromGT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

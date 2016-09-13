@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.preprocessing.piecewise_linear_normalisation &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.preprocessing.piecewise_linear_normalisation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.preprocessing.piecewise_linear_normalisation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Piecewise-linear normalization to normalize standalone modality&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="kn">import</span> <span class="n">StandaloneNormalization</span>
+
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_npy_filename</span>
+
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization">[docs]</a><span class="k">class</span> <span class="nc">PiecewiseLinearNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Piecewise-linear normalization to normalize standalone modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    base_modality : object</span>
+<span class="sd">        The base modality on which the normalization will be applied. The base</span>
+<span class="sd">        modality should inherate from StandaloneModality class.</span>
+
+<span class="sd">    nb_landmarks : int, optional (default=5)</span>
+<span class="sd">        The number of landmarks to consider to divide the signal.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    landmarks_model : ndarray, shape (nb_landmarks, )</span>
+<span class="sd">        The landmarks which will be match during the normalization.</span>
+
+<span class="sd">    fit_params_ : ndarray, shape (nb_landmarks, )</span>
+<span class="sd">        The array of the landmarks for the current fitted modality</span>
+
+<span class="sd">    is_fitted_ : bool</span>
+<span class="sd">        Boolean to know if the `fit` function has been already called.</span>
+
+<span class="sd">    roi_data_ : ndarray, shape flexible</span>
+<span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">nb_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PiecewiseLinearNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span> <span class="o">=</span> <span class="n">nb_landmarks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.partial_fit_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                          <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Online fitting to update the landmarks used for the normalization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object</span>
+<span class="sd">            Object inherated from StandalineModality.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None, optional</span>
+<span class="sd">            (default=None)</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None, optional (default=None)</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        refit : bool, optional (default=False)</span>
+<span class="sd">            Either to refit the model or not.</span>
+
+<span class="sd">        verbose : bool, optional (default=True)</span>
+<span class="sd">            Whether to show the fitting process information.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Call the parent fit such that we get information about the roi</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PiecewiseLinearNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Compute which percentile we should compute for the current modality</span>
+        <span class="n">landmarks_perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span><span class="p">,</span>
+                                     <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># Find the value of the percentile</span>
+        <span class="n">landmarks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">],</span>
+                                            <span class="n">land</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">land</span> <span class="ow">in</span> <span class="n">landmarks_perc</span><span class="p">])</span>
+
+        <span class="c1"># Compute the mean model if there is already computed data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Check the number of landmarks make sense</span>
+            <span class="k">if</span> <span class="n">landmarks</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of landmarks already computed are&#39;</span>
+                                 <span class="s1">&#39; different from the one you are computing&#39;</span>
+                                 <span class="s1">&#39; now.&#39;</span><span class="p">)</span>
+            <span class="c1"># Compute the running mean</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">idx_land</span><span class="p">,</span> <span class="p">(</span><span class="n">avg_land</span><span class="p">,</span> <span class="n">curr_land</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">,</span>
+                    <span class="n">landmarks</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">[</span><span class="n">idx_land</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">avg_land</span> <span class="o">+</span>
+                                             <span class="p">((</span><span class="n">curr_land</span> <span class="o">-</span> <span class="n">avg_land</span><span class="p">)</span> <span class="o">/</span>
+                                              <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">refit</span><span class="p">:</span>
+            <span class="c1"># Affect directly the landamarks which were found</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span> <span class="o">=</span> <span class="n">landmarks</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.load_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a model used at the time to align the RMSE.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            The path to npy file with the data of the model inside.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the filename is ok</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">check_npy_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Load the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Store that we loaded the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.save_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store the model into an npy file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            The path where to store the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that the model has been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit a model before to save it.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check that the file is an npy file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.npy&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The file provided needs to be of `npy`&#39;</span>
+                             <span class="s1">&#39; extension.&#39;</span><span class="p">)</span>
+
+        <span class="n">dir_storage</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_storage</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_storage</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">None</span></div>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to find the parameters needed to apply the normalization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality : object of type StandaloneModality</span>
+<span class="sd">            The modality object of interest.</span>
+
+<span class="sd">        ground-truth : object of type GTModality or None</span>
+<span class="sd">            The ground-truth of GTModality. If None, the whole data will be</span>
+<span class="sd">            considered.</span>
+
+<span class="sd">        cat : str or None</span>
+<span class="sd">            String corresponding at the ground-truth of interest. Cannot be</span>
+<span class="sd">            None if ground-truth is not None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">             Return self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check that a model has been fitted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A model needs to be either loaded or fitted.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Call the parent fit such that we get information about the roi</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PiecewiseLinearNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">=</span><span class="n">modality</span><span class="p">,</span>
+            <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
+            <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
+
+        <span class="c1"># Compute which percentile we should compute for the current modality</span>
+        <span class="n">landmarks_perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span><span class="p">,</span>
+                                     <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># Find the value of the percentile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span>
+            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">],</span>
+            <span class="n">land</span><span class="p">)</span> <span class="k">for</span> <span class="n">land</span> <span class="ow">in</span> <span class="n">landmarks_perc</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_rescale_parts</span><span class="p">(</span><span class="n">org_data</span><span class="p">,</span> <span class="n">res_data</span><span class="p">,</span> <span class="n">land_inf</span><span class="p">,</span> <span class="n">land_sup</span><span class="p">,</span>
+                       <span class="n">land_mod_inf</span><span class="p">,</span> <span class="n">land_mod_sup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Private function to rescale the data using landmarks.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Find the index of the data of interest</span>
+        <span class="n">idx_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">org_data</span> <span class="o">&gt;=</span> <span class="n">land_inf</span><span class="p">,</span>
+                                             <span class="n">org_data</span> <span class="o">&lt;</span> <span class="n">land_sup</span><span class="p">))</span>
+
+        <span class="c1"># Rescale the data linearaly</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">land_mod_sup</span> <span class="o">-</span> <span class="n">land_mod_inf</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">land_sup</span> <span class="o">-</span> <span class="n">land_inf</span><span class="p">)</span>
+        <span class="n">res_data</span><span class="p">[</span><span class="n">idx_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_mod_inf</span> <span class="o">+</span> <span class="p">((</span><span class="n">org_data</span><span class="p">[</span><span class="n">idx_data</span><span class="p">]</span> <span class="o">-</span> <span class="n">land_inf</span><span class="p">)</span> <span class="o">*</span>
+                                             <span class="n">factor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res_data</span>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normalize the data using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be normalized.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make a copy of the data related to the modality</span>
+        <span class="n">data_norm</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Make the rescaling</span>
+        <span class="k">for</span> <span class="n">interval</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">data_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rescale_parts</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">data_norm</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">interval</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">interval</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">[</span><span class="n">interval</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">[</span><span class="n">interval</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">data_norm</span>
+        <span class="c1"># Update the histogram</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div>
+
+<div class="viewcode-block" id="PiecewiseLinearNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Denormalize the data using the fitted parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object from which the data need to be denormalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modality: object of type StandaloneModality</span>
+<span class="sd">            The modality object in which the data will be denormalized.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make a copy of the data related to the modality</span>
+        <span class="n">data_norm</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Make the rescaling</span>
+        <span class="k">for</span> <span class="n">interval</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">data_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rescale_parts</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">data_norm</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">[</span><span class="n">interval</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">[</span><span class="n">interval</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">interval</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">interval</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">data_norm</span>
+        <span class="c1"># Update the histogram</span>
+        <span class="n">modality</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">modality</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

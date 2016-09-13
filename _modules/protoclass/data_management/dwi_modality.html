@@ -1,0 +1,536 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.data_management.dwi_modality &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.data_management.dwi_modality</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.data_management.dwi_modality</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;DWI modality class.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="kn">as</span> <span class="nn">sitk</span>
+
+<span class="kn">from</span> <span class="nn">.multisequence_modality</span> <span class="kn">import</span> <span class="n">MultisequenceModality</span>
+
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
+
+
+<div class="viewcode-block" id="DWIModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality">[docs]</a><span class="k">class</span> <span class="nc">DWIModality</span><span class="p">(</span><span class="n">MultisequenceModality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class to handle DWI modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data : str, list of str, or None, optional (default=None)</span>
+<span class="sd">         The folder in which the data are stored.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data_ : str or list of str</span>
+<span class="sd">        Location of the data.</span>
+
+<span class="sd">    data_ : ndarray, shape (B_seq, Y, X, Z)</span>
+<span class="sd">        The different volume from different B sequuences. The data are</span>
+<span class="sd">        saved in B_seq, Y, X, Z ordered.</span>
+
+<span class="sd">    pdf_series_ : list of ndarray, length (n_serie)</span>
+<span class="sd">        List of the PDF for each serie.</span>
+
+<span class="sd">    bin_series_ : list of ndarray, length (n_serie)</span>
+<span class="sd">        List of the bins used to plot the pdfs.</span>
+
+<span class="sd">    max_series_ : float</span>
+<span class="sd">        Maximum intensity of all the DCE series.</span>
+
+<span class="sd">    min_series_ : float</span>
+<span class="sd">        Minimum intensity of all the DCE series.</span>
+
+<span class="sd">    n_serie_ : int</span>
+<span class="sd">        Number of serie in this DCE sequence.</span>
+
+<span class="sd">    max_series_list_ : list of float</span>
+<span class="sd">        List of the maximum intensity for each DCE serie.</span>
+
+<span class="sd">    min_series_list_ : list of float</span>
+<span class="sd">        List of the minimum intensity for each DCE serie.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DWIModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DWIModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the histogram of each serie and first-order statistics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_bins : list of int, str, or None, optional (default=None)</span>
+<span class="sd">            The numbers of bins to use to compute the histogram.</span>
+<span class="sd">            The possibilities are:</span>
+<span class="sd">            - If None, the number of bins found at reading will be used.</span>
+<span class="sd">            - If &#39;auto&#39;, the number of bins is found at fitting time.</span>
+<span class="sd">            - Otherwise, a list of integer needs to be given.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if the data have been read</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to read the data first. Call the&#39;</span>
+                             <span class="s1">&#39; function read_data_from_path()&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the min and max from all DCE series</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_series_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_series_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+
+        <span class="c1"># For each serie compute the pdfs and store them</span>
+        <span class="n">pdf_series</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bin_series</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">min_series_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">max_series_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Check that we have a proper list of bins</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+                <span class="n">nb_bins</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">data_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">:</span>
+                    <span class="n">nb_bins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data_serie</span><span class="p">)</span> <span class="o">-</span>
+                                                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown arguments for `nb_bins`.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nb_bins</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Provide a list of integer of bins&#39;</span>
+                                 <span class="s1">&#39; with the same size as the number&#39;</span>
+                                 <span class="s1">&#39; of serie in the data.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown arguments for `nb_bins`.&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">data_serie</span><span class="p">,</span> <span class="n">bins</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">nb_bins</span><span class="p">):</span>
+            <span class="n">pdf_s</span><span class="p">,</span> <span class="n">bin_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data_serie</span><span class="p">,</span>
+                                        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                                        <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">pdf_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdf_s</span><span class="p">)</span>
+            <span class="n">bin_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bin_s</span><span class="p">)</span>
+            <span class="n">min_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))</span>
+            <span class="n">max_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))</span>
+
+        <span class="c1"># Keep these data in the object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pdf_series_</span> <span class="o">=</span> <span class="n">pdf_series</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_series_</span> <span class="o">=</span> <span class="n">bin_series</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_series_list_</span> <span class="o">=</span> <span class="n">min_series_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_series_list_</span> <span class="o">=</span> <span class="n">max_series_list</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_build_dict_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build the dictionary from the dicom header.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vol : SimpleITK.Image</span>
+<span class="sd">            A SimpleITK image from which we can get some metadata information.</span>
+
+<span class="sd">        filename : string</span>
+<span class="sd">            The filename to use to open a single image to get additional</span>
+<span class="sd">        information from the DICOM header.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        refit : bool</span>
+<span class="sd">            Update the refit variable</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">refit</span><span class="p">:</span>
+            <span class="c1"># Store the DICOM metadata</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1"># Get the information that have been created by SimpleITK</span>
+            <span class="c1"># Information about data reconstruction</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span>
+            <span class="c1"># Information about the MRI sequence</span>
+            <span class="c1"># Read the first image for the sequence</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|0080&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|0081&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;flip-angle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0018|1314&#39;</span><span class="p">))</span>
+            <span class="c1"># If the data are provided by a GE scanner</span>
+            <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0008|0070&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;GE MEDICAL SYSTEMS&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;b-value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0043|0081&#39;</span><span class="p">)]</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Impossible to get the b-values for&#39;</span>
+                                  <span class="s1">&#39; this sequence.&#39;</span><span class="p">)</span>
+            <span class="n">refit</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0008|0070&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;GE MEDICAL SYSTEMS&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;b-value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0043|0081&#39;</span><span class="p">)]</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Impossible to get the b-values for&#39;</span>
+                                  <span class="s1">&#39; this sequence.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">refit</span>
+
+<div class="viewcode-block" id="DWIModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function to read DWI images which represent a 3D volume</span>
+<span class="sd">        over time.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : str, list of str, or None, optional (default=None)</span>
+<span class="sd">            Path to the DWI data. It will overrides the path given</span>
+<span class="sd">            in the constructor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">           Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check the consistency of the path data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># We will overide the path and raise a warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
+                          <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># There is two possibilities to open the data. If path_data is a list,</span>
+        <span class="c1"># each path will contain only one serie and we can open the data as</span>
+        <span class="c1"># in standalone. If path_data is a single string, the folder contain</span>
+        <span class="c1"># several series and we can go through each of them.</span>
+
+        <span class="c1"># Case that we have a single string</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="c1"># Create a reader object</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>
+
+            <span class="c1"># Find the different series present inside the folder</span>
+            <span class="n">series_seq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesIDs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">))</span>
+
+            <span class="c1"># Check that you have more than one serie</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series_seq</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The multisequence should at least contain&#39;</span>
+                                 <span class="s1">&#39; 2 sequences.&#39;</span><span class="p">)</span>
+
+            <span class="c1"># The IDs need to be re-ordered in an incremental manner</span>
+            <span class="c1"># Create a list by converting to integer the number after</span>
+            <span class="c1"># the last full stop</span>
+            <span class="n">id_series_seq_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+                                          <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">series_seq</span><span class="p">])</span>
+            <span class="c1"># Sort and get the corresponding index</span>
+            <span class="n">idx_series_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">id_series_seq_int</span><span class="p">)</span>
+
+            <span class="c1"># Open the volume in the sorted order</span>
+            <span class="n">list_volume</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">for</span> <span class="n">id_seq</span> <span class="ow">in</span> <span class="n">series_seq</span><span class="p">[</span><span class="n">idx_series_sorted</span><span class="p">]:</span>
+                <span class="c1"># Get the filenames corresponding to the current ID</span>
+                <span class="n">dicom_names_serie</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesFileNames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span>
+                                                                  <span class="n">id_seq</span><span class="p">)</span>
+                <span class="c1"># Set the list of files to read the volume</span>
+                <span class="n">reader</span><span class="o">.</span><span class="n">SetFileNames</span><span class="p">(</span><span class="n">dicom_names_serie</span><span class="p">)</span>
+
+                <span class="c1"># Read the data for the current volume</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Execute</span><span class="p">()</span>
+
+                <span class="c1"># Get a numpy volume</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">vol</span><span class="p">)</span>
+
+                <span class="c1"># The Matlab convention is (Y, X, Z)</span>
+                <span class="c1"># The Numpy convention is (Z, Y, X)</span>
+                <span class="c1"># We have to swap these axis</span>
+                <span class="c1"># Swap Z and X</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Convert the volume to float</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">vol_numpy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+                <span class="c1"># Concatenate the different volume</span>
+                <span class="n">list_volume</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">)</span>
+
+                <span class="c1"># Build the dictionary</span>
+                <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_dict_metadata</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span>
+                                                          <span class="n">dicom_names_serie</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                          <span class="n">is_dict_built</span><span class="p">)</span>
+
+            <span class="c1"># We can create a numpy array</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_volume</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_serie_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Case that we have a list of string</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We have to iterate through each folder and check that we have</span>
+            <span class="c1"># only one serie</span>
+            <span class="c1"># Create a reader object</span>
+
+            <span class="c1"># Check that you have more than one serie</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The multisequence should at least contain&#39;</span>
+                                 <span class="s1">&#39; 2 sequences.&#39;</span><span class="p">)</span>
+
+            <span class="n">list_volume</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">for</span> <span class="n">path_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">:</span>
+
+                <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>
+
+                <span class="c1"># Find the different series present inside the folder</span>
+                <span class="n">series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesIDs</span><span class="p">(</span><span class="n">path_serie</span><span class="p">))</span>
+
+                <span class="c1"># Check that you have more than one serie</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of series should not be&#39;</span>
+                                     <span class="s1">&#39; larger than 1 when a list of path is&#39;</span>
+                                     <span class="s1">&#39; given.&#39;</span><span class="p">)</span>
+
+                <span class="c1"># The data can be read</span>
+                <span class="n">dicom_names_serie</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesFileNames</span><span class="p">(</span><span class="n">path_serie</span><span class="p">)</span>
+                <span class="c1"># Set the list of files to read the volume</span>
+                <span class="n">reader</span><span class="o">.</span><span class="n">SetFileNames</span><span class="p">(</span><span class="n">dicom_names_serie</span><span class="p">)</span>
+
+                <span class="c1"># Read the data for the current volume</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Execute</span><span class="p">()</span>
+
+                <span class="c1"># Get a numpy volume</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">vol</span><span class="p">)</span>
+
+                <span class="c1"># The Matlab convention is (Y, X, Z)</span>
+                <span class="c1"># The Numpy convention is (Z, Y, X)</span>
+                <span class="c1"># We have to swap these axis</span>
+                <span class="c1"># Swap Z and X</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Convert the volume to float</span>
+                <span class="n">vol_numpy</span> <span class="o">=</span> <span class="n">vol_numpy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+                <span class="c1"># Append inside the volume list</span>
+                <span class="n">list_volume</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vol_numpy</span><span class="p">)</span>
+
+                <span class="c1"># Build the dictionary</span>
+                <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_dict_metadata</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span>
+                                                          <span class="n">dicom_names_serie</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                          <span class="n">is_dict_built</span><span class="p">)</span>
+
+            <span class="c1"># We can create a numpy array</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_volume</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_serie_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Create the list of number of bins to compute the histogram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data_serie</span><span class="p">)</span> <span class="o">-</span>
+                                              <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))))</span>
+
+        <span class="c1"># Compute the information regarding the pdf of the DCE series</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_histogram</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
