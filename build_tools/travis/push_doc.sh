@@ -18,7 +18,7 @@ mkdir tmp
 cd tmp
 
 # Clone the repository to push the doc later
-git clone "https://${GITHUB_TOKEN}@$github.com/${PROJECT}.git"
+git clone "https://github.com/glemaitre/${PROJECT}.git"
 
 cd $PROJECT
 git branch gh-pages
@@ -34,4 +34,4 @@ git config --global user.name $USERNAME
 git add -f ./
 git commit -m "Push the doc automatically"
 
-git push --force --quiet "https://${GITHUB_TOKEN}@$github.com/${GITHUB_REPO}.git" master:gh-pages > /dev/null 2>&1
+git push --force --quiet "https://${GITHUB_TOKEN}@github.com/glemaitre/${PROJECT}.git" master:gh-pages > /dev/null 2>&1
