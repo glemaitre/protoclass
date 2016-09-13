@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -138,7 +138,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="check_path_data"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_path_data">[docs]</a><span class="k">def</span> <span class="nf">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">):</span>
+<div class="viewcode-block" id="check_path_data"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_path_data.html#protoclass.utils.check_path_data">[docs]</a><span class="k">def</span> <span class="nf">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if the path data exist.</span>
 
 <span class="sd">    Parameters</span>
@@ -175,7 +175,7 @@
     <span class="k">return</span> <span class="n">path_data</span></div>
 
 
-<div class="viewcode-block" id="check_modality"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality">[docs]</a><span class="k">def</span> <span class="nf">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">template_modality</span><span class="p">):</span>
+<div class="viewcode-block" id="check_modality"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_modality.html#protoclass.utils.check_modality">[docs]</a><span class="k">def</span> <span class="nf">check_modality</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">template_modality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check the modality class is the same than a template modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -203,7 +203,7 @@
     <span class="k">return</span> <span class="bp">None</span></div>
 
 
-<div class="viewcode-block" id="check_img_filename"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_img_filename">[docs]</a><span class="k">def</span> <span class="nf">check_img_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="check_img_filename"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_img_filename.html#protoclass.utils.check_img_filename">[docs]</a><span class="k">def</span> <span class="nf">check_img_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Method to check that the filename is an `img` file.</span>
 
 <span class="sd">    Parameters</span>
@@ -230,7 +230,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type for filename variable.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_npy_filename"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_npy_filename">[docs]</a><span class="k">def</span> <span class="nf">check_npy_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="check_npy_filename"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_npy_filename.html#protoclass.utils.check_npy_filename">[docs]</a><span class="k">def</span> <span class="nf">check_npy_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Method to check that the filename is an `npy` file.</span>
 
 <span class="sd">    Parameters</span>
@@ -257,7 +257,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong type for filename variable.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_filename_pickle_load"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_filename_pickle_load">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="check_filename_pickle_load"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_filename_pickle_load.html#protoclass.utils.check_filename_pickle_load">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Method to check if the filename corresponds to a pickle file.</span>
 
 <span class="sd">    Parameters</span>
@@ -287,7 +287,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename needs to be a string.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_filename_pickle_save"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_filename_pickle_save">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_save</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="check_filename_pickle_save"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_filename_pickle_save.html#protoclass.utils.check_filename_pickle_save">[docs]</a><span class="k">def</span> <span class="nf">check_filename_pickle_save</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function to check the extension of the pickle file.</span>
 
 <span class="sd">    Parameters</span>
@@ -312,7 +312,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The filename needs to be of type string.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_modality_inherit"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality_inherit">[docs]</a><span class="k">def</span> <span class="nf">check_modality_inherit</span><span class="p">(</span><span class="n">child_modality</span><span class="p">,</span> <span class="n">parent_modality</span><span class="p">):</span>
+<div class="viewcode-block" id="check_modality_inherit"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_modality_inherit.html#protoclass.utils.check_modality_inherit">[docs]</a><span class="k">def</span> <span class="nf">check_modality_inherit</span><span class="p">(</span><span class="n">child_modality</span><span class="p">,</span> <span class="n">parent_modality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if a modality inherit from another one.</span>
 
 <span class="sd">    Parameters</span>
@@ -337,7 +337,7 @@
         <span class="k">return</span> <span class="n">child_modality</span></div>
 
 
-<div class="viewcode-block" id="check_modality_gt"><a class="viewcode-back" href="../../../modules/protoclass.utils.html#protoclass.utils.validation.check_modality_gt">[docs]</a><span class="k">def</span> <span class="nf">check_modality_gt</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">cat</span><span class="p">):</span>
+<div class="viewcode-block" id="check_modality_gt"><a class="viewcode-back" href="../../../generated/protoclass.utils.check_modality_gt.html#protoclass.utils.check_modality_gt">[docs]</a><span class="k">def</span> <span class="nf">check_modality_gt</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">cat</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check the consistency of the modality with the ground-truth.</span>
 
 <span class="sd">    Parameters</span>

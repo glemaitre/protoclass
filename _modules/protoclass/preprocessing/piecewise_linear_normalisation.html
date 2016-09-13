@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -144,7 +144,7 @@
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_npy_filename</span>
 
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization">[docs]</a><span class="k">class</span> <span class="nc">PiecewiseLinearNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization">[docs]</a><span class="k">class</span> <span class="nc">PiecewiseLinearNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Piecewise-linear normalization to normalize standalone modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -174,16 +174,16 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">nb_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.__init__"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">nb_landmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PiecewiseLinearNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span> <span class="o">=</span> <span class="n">nb_landmarks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.partial_fit_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.partial_fit_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                           <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Online fitting to update the landmarks used for the normalization.</span>
 
@@ -253,7 +253,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.load_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.load_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a model used at the time to align the RMSE.</span>
 
 <span class="sd">        Parameters</span>
@@ -278,7 +278,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.save_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.save_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Store the model into an npy file.</span>
 
 <span class="sd">        Parameters</span>
@@ -308,7 +308,7 @@
 
         <span class="k">return</span> <span class="bp">None</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method to find the parameters needed to apply the normalization.</span>
 
 <span class="sd">        Parameters</span>
@@ -369,7 +369,7 @@
                                              <span class="n">factor</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res_data</span>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.normalize"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Normalize the data using the fitted parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -402,7 +402,7 @@
 
         <span class="k">return</span> <span class="n">modality</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.PiecewiseLinearNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.denormalize"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Denormalize the data using the fitted parameters.</span>
 
 <span class="sd">        Parameters</span>

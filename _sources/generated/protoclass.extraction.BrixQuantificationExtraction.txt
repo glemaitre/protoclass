@@ -1,0 +1,26 @@
+protoclass.extraction.BrixQuantificationExtraction
+==================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: BrixQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BrixQuantificationExtraction.__init__
+      ~BrixQuantificationExtraction.fit
+      ~BrixQuantificationExtraction.load_from_pickles
+      ~BrixQuantificationExtraction.save_to_pickles
+      ~BrixQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

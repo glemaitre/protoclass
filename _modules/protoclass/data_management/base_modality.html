@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -140,7 +140,7 @@
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
 
 
-<div class="viewcode-block" id="BaseModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.base_modality.BaseModality">[docs]</a><span class="k">class</span> <span class="nc">BaseModality</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BaseModality</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Basic class for medical modality.</span>
 
 <span class="sd">    Warning: This class should not be used directly. Use the derive classes</span>
@@ -158,16 +158,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="BaseModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.base_modality.BaseModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method to compute histogram and statistics.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="BaseModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.base_modality.BaseModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method allowing to read the data.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="BaseModality.is_read"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.base_modality.BaseModality.is_read">[docs]</a>    <span class="k">def</span> <span class="nf">is_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Function to know if the data have been read.</span>
 
 <span class="sd">        Returns</span>
@@ -179,7 +179,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span></div></div>
+            <span class="k">return</span> <span class="bp">True</span>
 </pre></div>
 
            </div>

@@ -1,0 +1,26 @@
+protoclass.data_management.ADCModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: ADCModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ADCModality.__init__
+      ~ADCModality.get_pdf
+      ~ADCModality.is_read
+      ~ADCModality.read_data_from_path
+      ~ADCModality.update_histogram
+   
+   
+
+   
+   
+   

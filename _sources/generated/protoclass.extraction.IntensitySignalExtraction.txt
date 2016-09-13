@@ -1,0 +1,26 @@
+protoclass.extraction.IntensitySignalExtraction
+===============================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: IntensitySignalExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IntensitySignalExtraction.__init__
+      ~IntensitySignalExtraction.fit
+      ~IntensitySignalExtraction.load_from_pickles
+      ~IntensitySignalExtraction.save_to_pickles
+      ~IntensitySignalExtraction.transform
+   
+   
+
+   
+   
+   

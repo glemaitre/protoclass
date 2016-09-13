@@ -1,0 +1,25 @@
+protoclass.data_management.OCTModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: OCTModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OCTModality.__init__
+      ~OCTModality.is_read
+      ~OCTModality.read_data_from_path
+      ~OCTModality.update_histogram
+   
+   
+
+   
+   
+   

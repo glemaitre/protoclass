@@ -1,0 +1,30 @@
+protoclass.preprocessing.StandardTimeNormalization
+==================================================
+
+.. currentmodule:: protoclass.preprocessing
+
+.. autoclass:: StandardTimeNormalization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StandardTimeNormalization.__init__
+      ~StandardTimeNormalization.denormalize
+      ~StandardTimeNormalization.fit
+      ~StandardTimeNormalization.load_from_pickles
+      ~StandardTimeNormalization.load_model
+      ~StandardTimeNormalization.normalize
+      ~StandardTimeNormalization.partial_fit_model
+      ~StandardTimeNormalization.save_model
+      ~StandardTimeNormalization.save_to_pickles
+   
+   
+
+   
+   
+   

@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.ToftsQuantificationExtraction &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass API" href="../api.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html"><cite>protoclass</cite> API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.data_management">Data management module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.preprocessing">Pre-processing module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-protoclass.extraction">Extraction module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id1">Standalone related methods</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id2">Temporal related methods</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EnhancementSignalExtraction.html">protoclass.extraction.EnhancementSignalExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.BrixQuantificationExtraction.html">protoclass.extraction.BrixQuantificationExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PUNQuantificationExtraction.html">protoclass.extraction.PUNQuantificationExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SemiQuantificationExtraction.html">protoclass.extraction.SemiQuantificationExtraction</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.ToftsQuantificationExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.WeibullQuantificationExtraction.html">protoclass.extraction.WeibullQuantificationExtraction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.utils">Utils module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
+      
+    <li>protoclass.extraction.ToftsQuantificationExtraction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/protoclass.extraction.ToftsQuantificationExtraction.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-extraction-toftsquantificationextraction">
+<h1>protoclass.extraction.ToftsQuantificationExtraction<a class="headerlink" href="#protoclass-extraction-toftsquantificationextraction" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">ToftsQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>T10</em>, <em>r1</em>, <em>hematocrit=0.42</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enhancement signal extraction from temporal modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_modality</strong> : object</p>
+<blockquote>
+<div><p>The base modality on which the normalization will be applied. The base
+modality should inherate from TemporalModality class.</p>
+</div></blockquote>
+<p><strong>T10</strong> : float</p>
+<blockquote>
+<div><p>Relaxation time without contrast agent. Perfectly it should be given
+using a T1 map. We do not have such data for the moment. The unit is s.</p>
+</div></blockquote>
+<p><strong>r1</strong> : float</p>
+<blockquote>
+<div><p>Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</p>
+</div></blockquote>
+<p><strong>hematocrit</strong> : float, optional (default=0.42)</p>
+<blockquote class="last">
+<div><p>Hematrocrit level in percentage.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>base_modality</td>
+<td>(object) The base modality on which the normalization will be applied. The base modality should inherate from TemporalModality class.</td>
+</tr>
+<tr class="row-even"><td><a href="#id9"><span class="problematic" id="id10">roi_data_</span></a></td>
+<td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id11"><span class="problematic" id="id12">T10_</span></a></td>
+<td>(float) Relaxation time without contrast agent. Perfectly it should be given using a T1 map. We do not have such data for the moment. The unit is s.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#r1">r1</a></td>
+<td>(float) Relaxivity of the contrast agent. The unit is mmol.L.s^{-1}.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id13"><span class="problematic" id="id14">hematocrit_</span></a></td>
+<td>(float) Hematrocrit level in percentage.</td>
+</tr>
+<tr class="row-even"><td><a href="#id15"><span class="problematic" id="id16">TR_</span></a></td>
+<td>(float) Repetition time in s units.</td>
+</tr>
+<tr class="row-odd"><td>flip_angle</td>
+<td>(float) Flip angle in deg units.</td>
+</tr>
+<tr class="row-even"><td><a href="#id17"><span class="problematic" id="id18">cb_t_</span></a></td>
+<td>(ndarray, shape (n_series, )) The blood concentration associated with the AIF.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id19"><span class="problematic" id="id20">cp_t_</span></a></td>
+<td>(ndarray, shape (n_series, )) The plasma concentration associated with the AIF.</td>
+</tr>
+<tr class="row-even"><td><a href="#id21"><span class="problematic" id="id22">start_enh_</span></a></td>
+<td>(int) The time index from which the contrast appear in the blood.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.compute_aif" title="protoclass.extraction.ToftsQuantificationExtraction.compute_aif"><code class="xref py py-obj docutils literal"><span class="pre">compute_aif</span></code></a>(dce_modality[,&nbsp;n_clusters,&nbsp;...])</td>
+<td>Determine the AIF by segmenting the aorta in the kinetic sequence.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal" title="protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal"><code class="xref py py-obj docutils literal"><span class="pre">conc_to_signal</span></code></a>(conc,&nbsp;s_pre_contrast)</td>
+<td>Given the concentration compute the MRI signal using FLASH sequence.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.fit" title="protoclass.extraction.ToftsQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;fit_aif,&nbsp;...])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles" title="protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif" title="protoclass.extraction.ToftsQuantificationExtraction.population_based_aif"><code class="xref py py-obj docutils literal"><span class="pre">population_based_aif</span></code></a>(modality[,&nbsp;A,&nbsp;T,&nbsp;...])</td>
+<td>Generate an AIF from a population-based AIF.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles" title="protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc" title="protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc"><code class="xref py py-obj docutils literal"><span class="pre">signal_to_conc</span></code></a>(signal,&nbsp;s_pre_contrast)</td>
+<td>Given the MRI signal compute the concentration using FLASH sequence.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.transform" title="protoclass.extraction.ToftsQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;kind])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>T10</em>, <em>r1</em>, <em>hematocrit=0.42</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.__init__" title="protoclass.extraction.ToftsQuantificationExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality,&nbsp;T10,&nbsp;r1[,&nbsp;...])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.compute_aif" title="protoclass.extraction.ToftsQuantificationExtraction.compute_aif"><code class="xref py py-obj docutils literal"><span class="pre">compute_aif</span></code></a>(dce_modality[,&nbsp;n_clusters,&nbsp;...])</td>
+<td>Determine the AIF by segmenting the aorta in the kinetic sequence.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal" title="protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal"><code class="xref py py-obj docutils literal"><span class="pre">conc_to_signal</span></code></a>(conc,&nbsp;s_pre_contrast)</td>
+<td>Given the concentration compute the MRI signal using FLASH sequence.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.fit" title="protoclass.extraction.ToftsQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;fit_aif,&nbsp;...])</td>
+<td>Find the parameters needed to apply the extraction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles" title="protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<td>Function to load a normalization object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif" title="protoclass.extraction.ToftsQuantificationExtraction.population_based_aif"><code class="xref py py-obj docutils literal"><span class="pre">population_based_aif</span></code></a>(modality[,&nbsp;A,&nbsp;T,&nbsp;...])</td>
+<td>Generate an AIF from a population-based AIF.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles" title="protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<td>Function to save a normalizatio object using pickles.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc" title="protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc"><code class="xref py py-obj docutils literal"><span class="pre">signal_to_conc</span></code></a>(signal,&nbsp;s_pre_contrast)</td>
+<td>Given the MRI signal compute the concentration using FLASH sequence.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.ToftsQuantificationExtraction.transform" title="protoclass.extraction.ToftsQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat,&nbsp;kind])</td>
+<td>Extract the data from the given modality.</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.compute_aif">
+<em class="property">static </em><code class="descname">compute_aif</code><span class="sig-paren">(</span><em>dce_modality</em>, <em>n_clusters=6</em>, <em>eccentricity=0.5</em>, <em>diameter=(10.0</em>, <em>20.0)</em>, <em>area=(100.0</em>, <em>400.0)</em>, <em>thres_sel=0.9</em>, <em>estimator='median'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.compute_aif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.compute_aif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the AIF by segmenting the aorta in the kinetic sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dce_modality</strong> : object DCEModality</p>
+<blockquote>
+<div><p>The modality to use to compute the AIF, signal.</p>
+</div></blockquote>
+<p><strong>n_clusters</strong> : int, optional (default=6)</p>
+<blockquote>
+<div><p>The number of clusters to use to make the detection of the zone
+of interest to later segment the aorta or veins.</p>
+</div></blockquote>
+<p><strong>eccentricity</strong> : float, optional (default=.5)</p>
+<blockquote>
+<div><p>The eccentricity is the ratio of the focal distance
+(distance between focal points) over the major axis length. The
+value is in the interval [0, 1). When it is 0, the ellipse becomes
+a circle. Greater is more permissive and find more regions of
+interest.</p>
+</div></blockquote>
+<p><strong>diameter</strong> : tuple of float, optional (default=(10., 20.))</p>
+<blockquote>
+<div><p>Tuple of the minimum and maximum value of the diameters of the
+region. The region having a diameter included in this interval
+will be kept as potential region.</p>
+</div></blockquote>
+<p><strong>area</strong> : tuple of float, optional (default=(100., 400.))</p>
+<blockquote>
+<div><p>Tuple of the minimum and maximum area in between which the region
+of interest will be kept.</p>
+</div></blockquote>
+<p><strong>thres_sel</strong> : float, optional (default=0.9)</p>
+<blockquote>
+<div><p>For each region detected only the voxels with an enhancement
+greater than this threshold will be kept to compute the final AIF.
+The value should be in the range [0., 1.].</p>
+</div></blockquote>
+<p><strong>estimator</strong> : str, optional (default=&#8217;median&#8217;)</p>
+<blockquote>
+<div><p>The estimator used to estimate the AIF from the segmented region.
+Can be the following: &#8216;median&#8217;, &#8216;max&#8217;, and &#8216;mean&#8217;</p>
+</div></blockquote>
+<p><strong>random_state</strong> : integer or numpy.RandomState, optional (default=None)</p>
+<blockquote>
+<div><p>The generator used to initialize the centers. If an integer is
+given, it fixes the seed. Defaults to the global numpy random
+number generator.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>aif</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>The estimated AIF signal in au.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The selection of the most enhanced voxels is done to address the
+problem of partial volume effects. The proposed thresholding is taken
+from <a class="reference internal" href="#r1" id="id1">[R1]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Schabel, Matthias C., and Dennis L. Parker. &#8220;Uncertainty and
+bias in contrast concentration measurements using spoiled gradient
+echo pulse sequences.&#8221; Physics in medicine and biology 53.9
+(2008): 2345.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal">
+<code class="descname">conc_to_signal</code><span class="sig-paren">(</span><em>conc</em>, <em>s_pre_contrast</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.conc_to_signal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the concentration compute the MRI signal using FLASH sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>conc</strong> : ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Concentration in mMol.</p>
+</div></blockquote>
+<p><strong>s_pre_contrast</strong> : float</p>
+<blockquote>
+<div><p>Signal before injection of contrast agent.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>signal</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>Concentration related to the signal.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The nonlinear approach is based on <a class="reference internal" href="#r2" id="id3">[R2]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,
+&amp; Duerk, J. L. (2003). Determining and optimizing the precision of
+quantitative measurements of perfusion from dynamic contrast
+enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality, ground_truth=None, cat=None, fit_aif=True, aif_params=[[48.54, 19.8], [10.2276, 21.9], [3.378, 7.92], 1.05, 0.0028083, 0.63463, 28.98]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>fit_aif</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Either to estimate the AIF from the data or from a population-based
+studdy.</p>
+</div></blockquote>
+<p><strong>aif_params</strong> : list</p>
+<blockquote class="last">
+<div><p>In case that <cite>fit_aif</cite> is False, the list of the parameters for the
+population-based AIF can be given.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles">
+<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to load a normalization object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bpp</strong> : object</p>
+<blockquote class="last">
+<div><p>Returns the loaded object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.population_based_aif">
+<em class="property">static </em><code class="descname">population_based_aif</code><span class="sig-paren">(</span><em>modality</em>, <em>A=(48.54</em>, <em>19.8)</em>, <em>T=(10.2276</em>, <em>21.9)</em>, <em>sigma=(3.378</em>, <em>7.92)</em>, <em>alpha=1.05</em>, <em>beta=0.0028083</em>, <em>s=0.63463</em>, <em>tau=28.98</em>, <em>delay=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.population_based_aif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an AIF from a population-based AIF.</p>
+<p>The model is based on a mixture of 2 Guassians plus an exponential
+modulated with a sigmoid function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>A</strong> : tuple of 2 floats, optional (default=(48.54, 19.8))</p>
+<blockquote>
+<div><p>Scaling constants of the Gaussians.</p>
+</div></blockquote>
+<p><strong>T</strong> : tuple of 2 floats, optional (default=(10.2276, 21.9))</p>
+<blockquote>
+<div><p>Center of the Gaussians.</p>
+</div></blockquote>
+<p><strong>sigma</strong> : tuple of 2 floats, optional (default=(3.378, 7.92))</p>
+<blockquote>
+<div><p>Width of the Gaussians.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float, optional (default=1.050)</p>
+<blockquote>
+<div><p>Amplitude of the exponential.</p>
+</div></blockquote>
+<p><strong>beta</strong> : float, optional (default=0.0028083)</p>
+<blockquote>
+<div><p>Decay of the exponential.</p>
+</div></blockquote>
+<p><strong>s</strong> : float, optional (default=0.63463)</p>
+<blockquote>
+<div><p>Width of the sigmoid.</p>
+</div></blockquote>
+<p><strong>tau</strong> : float, optional (default=28.98)</p>
+<blockquote>
+<div><p>Center of the sigmoid.</p>
+</div></blockquote>
+<p><strong>delay</strong> : int, optional (default=0)</p>
+<blockquote>
+<div><p>From which time (index) the AIF will start.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cb_t</strong> : ndarray, shape (n_serie, )</p>
+<blockquote class="last">
+<div><p>Concentration in mMol of the an population-based AIF.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The method is based on <a class="reference internal" href="#r3" id="id5">[R3]</a>. The default parameters have been found
+infered from 67 AIFs.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R3]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Parker, G.J., Roberts, C., Macdonald, A., Buonaccorsi, G.A.,
+Cheung, S., Buckley, D.L., Jackson, A., Watson, Y., Davies, K. and
+Jayson, G.C. (2006). Experimentally-derived functional form for a
+population-averaged high-temporal-resolution arterial input function
+for dynamic contrast-enhanced MRI. Magnetic resonance in medicine,
+56(5), 993-1000.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to save a normalizatio object using pickles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Filename to the pickle file. The extension should be <cite>.p</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc">
+<code class="descname">signal_to_conc</code><span class="sig-paren">(</span><em>signal</em>, <em>s_pre_contrast</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.signal_to_conc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the MRI signal compute the concentration using FLASH sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>signal</strong> : ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Signal obtained from the DCE modality.</p>
+</div></blockquote>
+<p><strong>s_pre_contrast</strong> : float or ndarray, shape (n_series, )</p>
+<blockquote>
+<div><p>Signal before injection of contrast agent.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>C_t</strong> : ndarray, shape (n_series, )</p>
+<blockquote class="last">
+<div><p>Concentration related to the signal in mMol.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The nonlinear approach is based on <a class="reference internal" href="#r4" id="id7">[R4]</a>.</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R4]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id8">2</a>)</em> Dale, B. M., Jesberger, J. A., Lewin, J. S., Hillenbrand, C. M.,
+&amp; Duerk, J. L. (2003). Determining and optimizing the precision of
+quantitative measurements of perfusion from dynamic contrast
+enhanced MRI. Journal of Magnetic Resonance Imaging, 18(5), 575-584.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="protoclass.extraction.ToftsQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em>, <em>kind='extended'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/tofts_quantification_extraction.html#ToftsQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.ToftsQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the given modality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>modality</strong> : object of type TemporalModality</p>
+<blockquote>
+<div><p>The modality object of interest.</p>
+</div></blockquote>
+<p><strong>ground-truth</strong> : object of type GTModality or None</p>
+<blockquote>
+<div><p>The ground-truth of GTModality. If None, the whole data will be
+considered.</p>
+</div></blockquote>
+<p><strong>cat</strong> : str or None</p>
+<blockquote>
+<div><p>String corresponding at the ground-truth of interest. Cannot be
+None if ground-truth is not None.</p>
+</div></blockquote>
+<p><strong>kind</strong> : string, optional (default=&#8217;extended&#8217;)</p>
+<blockquote>
+<div><p>Type of Tofts model to use: &#8216;regular&#8217; or &#8216;extended&#8217;.</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;</strong></p>
+<p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
+<blockquote class="last">
+<div><p>A matrix containing the features extracted. The number of samples
+is equal to the number of positive label in the ground-truth.
+The feature will be the following:</p>
+<ul class="simple">
+<li>If &#8216;regular&#8217;: 1st feature will be <cite>Ktrans</cite> and the 2nd will be</li>
+</ul>
+<p><cite>ve</cite>.
+- If &#8216;extended&#8217;: 1st feature will be <cite>Ktrans</cite>, the 2nd will be
+<cite>ve</cite>, and the third will be <cite>vp</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

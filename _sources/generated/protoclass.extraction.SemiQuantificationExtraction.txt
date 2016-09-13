@@ -1,0 +1,26 @@
+protoclass.extraction.SemiQuantificationExtraction
+==================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: SemiQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SemiQuantificationExtraction.__init__
+      ~SemiQuantificationExtraction.fit
+      ~SemiQuantificationExtraction.load_from_pickles
+      ~SemiQuantificationExtraction.save_to_pickles
+      ~SemiQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

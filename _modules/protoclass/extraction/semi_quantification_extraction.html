@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -406,7 +406,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;Sm&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;wash-out&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 
-<div class="viewcode-block" id="SemiQuantificationExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">SemiQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+<div class="viewcode-block" id="SemiQuantificationExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.SemiQuantificationExtraction.html#protoclass.extraction.SemiQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">SemiQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -426,9 +426,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SemiQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.SemiQuantificationExtraction.html#protoclass.extraction.SemiQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SemiQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span></div>
 
     <span class="c1"># @staticmethod</span>
     <span class="c1"># def _derivative_sliding_window(s_t, t, win_sz):</span>
@@ -518,7 +518,7 @@
     <span class="c1">#     return np.sqrt((12. * std_s) /</span>
     <span class="c1">#                    (np.power(win_sz, 3) - win_sz) * time_int)</span>
 
-<div class="viewcode-block" id="SemiQuantificationExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SemiQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.SemiQuantificationExtraction.html#protoclass.extraction.SemiQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
 
 <span class="sd">        Parameters</span>
@@ -565,7 +565,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="SemiQuantificationExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.SemiQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SemiQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.SemiQuantificationExtraction.html#protoclass.extraction.SemiQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>

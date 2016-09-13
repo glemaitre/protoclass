@@ -1,0 +1,26 @@
+protoclass.extraction.EdgeSignalExtraction
+==========================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: EdgeSignalExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EdgeSignalExtraction.__init__
+      ~EdgeSignalExtraction.fit
+      ~EdgeSignalExtraction.load_from_pickles
+      ~EdgeSignalExtraction.save_to_pickles
+      ~EdgeSignalExtraction.transform
+   
+   
+
+   
+   
+   

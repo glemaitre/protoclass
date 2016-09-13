@@ -1,0 +1,27 @@
+protoclass.preprocessing.GaussianNormalization
+==============================================
+
+.. currentmodule:: protoclass.preprocessing
+
+.. autoclass:: GaussianNormalization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GaussianNormalization.__init__
+      ~GaussianNormalization.denormalize
+      ~GaussianNormalization.fit
+      ~GaussianNormalization.load_from_pickles
+      ~GaussianNormalization.normalize
+      ~GaussianNormalization.save_to_pickles
+   
+   
+
+   
+   
+   

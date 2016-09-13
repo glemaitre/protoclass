@@ -1,0 +1,26 @@
+protoclass.data_management.GTModality
+=====================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: GTModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GTModality.__init__
+      ~GTModality.extract_gt_data
+      ~GTModality.is_read
+      ~GTModality.read_data_from_path
+      ~GTModality.update_histogram
+   
+   
+
+   
+   
+   

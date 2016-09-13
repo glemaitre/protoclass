@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -140,7 +140,7 @@
 <span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
 
 
-<div class="viewcode-block" id="EnhancementSignalExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EnhancementSignalExtraction">[docs]</a><span class="k">class</span> <span class="nc">EnhancementSignalExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+<div class="viewcode-block" id="EnhancementSignalExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EnhancementSignalExtraction.html#protoclass.extraction.EnhancementSignalExtraction">[docs]</a><span class="k">class</span> <span class="nc">EnhancementSignalExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -160,10 +160,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EnhancementSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
+<div class="viewcode-block" id="EnhancementSignalExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EnhancementSignalExtraction.html#protoclass.extraction.EnhancementSignalExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EnhancementSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EnhancementSignalExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EnhancementSignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EnhancementSignalExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EnhancementSignalExtraction.html#protoclass.extraction.EnhancementSignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
 
 <span class="sd">        Parameters</span>
@@ -191,7 +191,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="EnhancementSignalExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.EnhancementSignalExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EnhancementSignalExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EnhancementSignalExtraction.html#protoclass.extraction.EnhancementSignalExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>

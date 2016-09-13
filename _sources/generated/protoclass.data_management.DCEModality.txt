@@ -1,0 +1,27 @@
+protoclass.data_management.DCEModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: DCEModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DCEModality.__init__
+      ~DCEModality.build_heatmap
+      ~DCEModality.get_pdf_list
+      ~DCEModality.is_read
+      ~DCEModality.read_data_from_path
+      ~DCEModality.update_histogram
+   
+   
+
+   
+   
+   

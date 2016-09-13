@@ -1,0 +1,25 @@
+protoclass.data_management.DWIModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: DWIModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DWIModality.__init__
+      ~DWIModality.is_read
+      ~DWIModality.read_data_from_path
+      ~DWIModality.update_histogram
+   
+   
+
+   
+   
+   

@@ -1,0 +1,26 @@
+protoclass.extraction.PUNQuantificationExtraction
+=================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: PUNQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PUNQuantificationExtraction.__init__
+      ~PUNQuantificationExtraction.fit
+      ~PUNQuantificationExtraction.load_from_pickles
+      ~PUNQuantificationExtraction.save_to_pickles
+      ~PUNQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

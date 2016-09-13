@@ -1,0 +1,26 @@
+protoclass.extraction.WeibullQuantificationExtraction
+=====================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: WeibullQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WeibullQuantificationExtraction.__init__
+      ~WeibullQuantificationExtraction.fit
+      ~WeibullQuantificationExtraction.load_from_pickles
+      ~WeibullQuantificationExtraction.save_to_pickles
+      ~WeibullQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

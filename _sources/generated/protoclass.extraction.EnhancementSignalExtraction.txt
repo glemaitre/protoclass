@@ -1,0 +1,26 @@
+protoclass.extraction.EnhancementSignalExtraction
+=================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: EnhancementSignalExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EnhancementSignalExtraction.__init__
+      ~EnhancementSignalExtraction.fit
+      ~EnhancementSignalExtraction.load_from_pickles
+      ~EnhancementSignalExtraction.save_to_pickles
+      ~EnhancementSignalExtraction.transform
+   
+   
+
+   
+   
+   

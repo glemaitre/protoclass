@@ -1,0 +1,26 @@
+protoclass.data_management.T2WModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: T2WModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~T2WModality.__init__
+      ~T2WModality.get_pdf
+      ~T2WModality.is_read
+      ~T2WModality.read_data_from_path
+      ~T2WModality.update_histogram
+   
+   
+
+   
+   
+   

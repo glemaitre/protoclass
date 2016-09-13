@@ -1,0 +1,6 @@
+protoclass.utils.check_modality_gt
+==================================
+
+.. currentmodule:: protoclass.utils
+
+.. autofunction:: check_modality_gt

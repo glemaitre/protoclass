@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -145,7 +145,7 @@
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
 
 
-<div class="viewcode-block" id="DWIModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality">[docs]</a><span class="k">class</span> <span class="nc">DWIModality</span><span class="p">(</span><span class="n">MultisequenceModality</span><span class="p">):</span>
+<div class="viewcode-block" id="DWIModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DWIModality.html#protoclass.data_management.DWIModality">[docs]</a><span class="k">class</span> <span class="nc">DWIModality</span><span class="p">(</span><span class="n">MultisequenceModality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to handle DWI modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -185,10 +185,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DWIModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+<div class="viewcode-block" id="DWIModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DWIModality.html#protoclass.data_management.DWIModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DWIModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DWIModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DWIModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DWIModality.html#protoclass.data_management.DWIModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the histogram of each serie and first-order statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -311,7 +311,7 @@
 
         <span class="k">return</span> <span class="n">refit</span>
 
-<div class="viewcode-block" id="DWIModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.dwi_modality.DWIModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DWIModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DWIModality.html#protoclass.data_management.DWIModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Function to read DWI images which represent a 3D volume</span>
 <span class="sd">        over time.</span>
 

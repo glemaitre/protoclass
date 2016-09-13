@@ -1,0 +1,30 @@
+protoclass.extraction.ToftsQuantificationExtraction
+===================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: ToftsQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ToftsQuantificationExtraction.__init__
+      ~ToftsQuantificationExtraction.compute_aif
+      ~ToftsQuantificationExtraction.conc_to_signal
+      ~ToftsQuantificationExtraction.fit
+      ~ToftsQuantificationExtraction.load_from_pickles
+      ~ToftsQuantificationExtraction.population_based_aif
+      ~ToftsQuantificationExtraction.save_to_pickles
+      ~ToftsQuantificationExtraction.signal_to_conc
+      ~ToftsQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

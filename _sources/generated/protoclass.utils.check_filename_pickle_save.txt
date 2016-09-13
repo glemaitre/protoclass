@@ -1,0 +1,6 @@
+protoclass.utils.check_filename_pickle_save
+===========================================
+
+.. currentmodule:: protoclass.utils
+
+.. autofunction:: check_filename_pickle_save

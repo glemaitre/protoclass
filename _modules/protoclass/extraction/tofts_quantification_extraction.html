@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -334,7 +334,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;Ktrans&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ve&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;vp&#39;</span><span class="p">:</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">ToftsQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">ToftsQuantificationExtraction</span><span class="p">(</span><span class="n">TemporalExtraction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enhancement signal extraction from temporal modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -389,7 +389,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">T10</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">hematocrit</span><span class="o">=</span><span class="mf">0.42</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">T10</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">hematocrit</span><span class="o">=</span><span class="mf">0.42</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ToftsQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
 
@@ -401,10 +401,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="ToftsQuantificationExtraction.compute_aif"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.compute_aif">[docs]</a>    <span class="k">def</span> <span class="nf">compute_aif</span><span class="p">(</span><span class="n">dce_modality</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.compute_aif"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.compute_aif">[docs]</a>    <span class="k">def</span> <span class="nf">compute_aif</span><span class="p">(</span><span class="n">dce_modality</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
                     <span class="n">diameter</span><span class="o">=</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span> <span class="n">area</span><span class="o">=</span><span class="p">(</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">400.</span><span class="p">),</span>
                     <span class="n">thres_sel</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
                     <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -591,7 +591,7 @@
 
         <span class="k">return</span> <span class="n">aif</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_aif</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_aif</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">aif_params</span><span class="o">=</span><span class="p">[[</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.378</span><span class="p">,</span> <span class="mf">7.92</span><span class="p">],</span> <span class="mf">1.050</span><span class="p">,</span>
                         <span class="mf">0.0028083</span><span class="p">,</span> <span class="mf">0.63463</span><span class="p">,</span> <span class="mf">28.98</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
@@ -672,7 +672,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.conc_to_signal"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal">[docs]</a>    <span class="k">def</span> <span class="nf">conc_to_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.conc_to_signal"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.conc_to_signal">[docs]</a>    <span class="k">def</span> <span class="nf">conc_to_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given the concentration compute the MRI signal using FLASH sequence.</span>
 
 <span class="sd">        Parameters</span>
@@ -722,7 +722,7 @@
 
         <span class="k">return</span> <span class="n">E</span> <span class="o">*</span> <span class="n">s_pre_contrast</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.signal_to_conc"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc">[docs]</a>    <span class="k">def</span> <span class="nf">signal_to_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.signal_to_conc"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.signal_to_conc">[docs]</a>    <span class="k">def</span> <span class="nf">signal_to_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">s_pre_contrast</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given the MRI signal compute the concentration using FLASH sequence.</span>
 
 <span class="sd">        Parameters</span>
@@ -774,7 +774,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r1_</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">A</span> <span class="o">/</span> <span class="n">B</span><span class="p">))</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="ToftsQuantificationExtraction.population_based_aif"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif">[docs]</a>    <span class="k">def</span> <span class="nf">population_based_aif</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="p">(</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">),</span> <span class="n">T</span><span class="o">=</span><span class="p">(</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">),</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.population_based_aif"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.population_based_aif">[docs]</a>    <span class="k">def</span> <span class="nf">population_based_aif</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="p">(</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">),</span> <span class="n">T</span><span class="o">=</span><span class="p">(</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">),</span>
                              <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mf">3.378</span><span class="p">,</span> <span class="mf">7.92</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.050</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.0028083</span><span class="p">,</span>
                              <span class="n">s</span><span class="o">=</span><span class="mf">0.63463</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">28.98</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate an AIF from a population-based AIF.</span>
@@ -849,7 +849,7 @@
 
         <span class="k">return</span> <span class="n">cb_t</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.ToftsQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;extended&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 

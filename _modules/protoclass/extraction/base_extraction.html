@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -145,7 +145,7 @@
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_filename_pickle_save</span>
 
 
-<div class="viewcode-block" id="BaseExtraction"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.BaseExtraction">[docs]</a><span class="k">class</span> <span class="nc">BaseExtraction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BaseExtraction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Basic class for extraction.</span>
 
 <span class="sd">    Warning: This class should not be used directly. Use the derive classes</span>
@@ -160,17 +160,17 @@
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="BaseExtraction.fit"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.BaseExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find parameters for later transformation.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="BaseExtraction.transform"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.BaseExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="BaseExtraction.load_from_pickles"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.BaseExtraction.load_from_pickles">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_pickles</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_from_pickles</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Function to load a normalization object.</span>
 
 <span class="sd">        Parameters</span>
@@ -189,9 +189,9 @@
         <span class="c1"># Load the pickle</span>
         <span class="n">bpp</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">bpp</span></div>
+        <span class="k">return</span> <span class="n">bpp</span>
 
-<div class="viewcode-block" id="BaseExtraction.save_to_pickles"><a class="viewcode-back" href="../../../modules/protoclass.extraction.html#protoclass.extraction.BaseExtraction.save_to_pickles">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_pickles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_to_pickles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Function to save a normalizatio object using pickles.</span>
 
 <span class="sd">        Parameters</span>
@@ -213,7 +213,7 @@
         <span class="c1"># Create the pickle file</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="bp">None</span></div></div>
+        <span class="k">return</span> <span class="bp">None</span>
 </pre></div>
 
            </div>

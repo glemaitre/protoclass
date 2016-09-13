@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -145,7 +145,7 @@
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
 
 
-<div class="viewcode-block" id="T2WModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality">[docs]</a><span class="k">class</span> <span class="nc">T2WModality</span><span class="p">(</span><span class="n">StandaloneModality</span><span class="p">):</span>
+<div class="viewcode-block" id="T2WModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.T2WModality.html#protoclass.data_management.T2WModality">[docs]</a><span class="k">class</span> <span class="nc">T2WModality</span><span class="p">(</span><span class="n">StandaloneModality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to handle T2W-MRI modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -181,10 +181,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">T2WModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+<div class="viewcode-block" id="T2WModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.T2WModality.html#protoclass.data_management.T2WModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">T2WModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="T2WModality.get_pdf"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.get_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="T2WModality.get_pdf"><a class="viewcode-back" href="../../../generated/protoclass.data_management.T2WModality.html#protoclass.data_management.T2WModality.get_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Extract the a list of pdf related with the data.</span>
 
 <span class="sd">        Parameters</span>
@@ -240,7 +240,7 @@
 
         <span class="k">return</span> <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span></div>
 
-<div class="viewcode-block" id="T2WModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="T2WModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.T2WModality.html#protoclass.data_management.T2WModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the PDF and the first-order statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -288,7 +288,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="T2WModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.t2w_modality.T2WModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="T2WModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.T2WModality.html#protoclass.data_management.T2WModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read T2W images which represent a single 3D volume.</span>
 
 <span class="sd">        Parameters</span>

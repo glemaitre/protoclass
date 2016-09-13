@@ -1,0 +1,30 @@
+protoclass.preprocessing.PiecewiseLinearNormalization
+=====================================================
+
+.. currentmodule:: protoclass.preprocessing
+
+.. autoclass:: PiecewiseLinearNormalization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PiecewiseLinearNormalization.__init__
+      ~PiecewiseLinearNormalization.denormalize
+      ~PiecewiseLinearNormalization.fit
+      ~PiecewiseLinearNormalization.load_from_pickles
+      ~PiecewiseLinearNormalization.load_model
+      ~PiecewiseLinearNormalization.normalize
+      ~PiecewiseLinearNormalization.partial_fit_model
+      ~PiecewiseLinearNormalization.save_model
+      ~PiecewiseLinearNormalization.save_to_pickles
+   
+   
+
+   
+   
+   

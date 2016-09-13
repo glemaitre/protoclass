@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -153,7 +153,7 @@
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_npy_filename</span>
 
 
-<div class="viewcode-block" id="StandardTimeNormalization"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization">[docs]</a><span class="k">class</span> <span class="nc">StandardTimeNormalization</span><span class="p">(</span><span class="n">TemporalNormalization</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization">[docs]</a><span class="k">class</span> <span class="nc">StandardTimeNormalization</span><span class="p">(</span><span class="n">TemporalNormalization</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Standard normalization to normalize temporal modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -188,11 +188,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization.__init__"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">StandardTimeNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="c1"># Initialize the fitting boolean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_build_graph</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="n">param_alpha</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
@@ -534,7 +534,7 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rmse_estimator</span><span class="p">)</span>
 
-<div class="viewcode-block" id="StandardTimeNormalization.load_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization.load_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a model used at the time to align the RMSE.</span>
 
 <span class="sd">        Parameters</span>
@@ -559,7 +559,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="StandardTimeNormalization.save_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization.save_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Store the model into an npy file.</span>
 
 <span class="sd">        Parameters</span>
@@ -656,7 +656,7 @@
 
         <span class="k">return</span> <span class="bp">None</span>
 
-<div class="viewcode-block" id="StandardTimeNormalization.partial_fit_model"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StandardTimeNormalization.partial_fit_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                           <span class="n">params</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Online fittinf of template model to drive the fitting of</span>
 <span class="sd">        one modality.</span>
@@ -823,7 +823,7 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;shift-time&#39;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;scale-int&#39;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-<div class="viewcode-block" id="StandardTimeNormalization.fit"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StandardTimeNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">params</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the normalization.</span>
 
@@ -946,7 +946,7 @@
         <span class="k">elif</span> <span class="n">tau</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">data</span>
 
-<div class="viewcode-block" id="StandardTimeNormalization.normalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization.normalize"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Normalize the given modality using the fitted parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -982,7 +982,7 @@
 
         <span class="k">return</span> <span class="n">modality</span></div>
 
-<div class="viewcode-block" id="StandardTimeNormalization.denormalize"><a class="viewcode-back" href="../../../modules/protoclass.preprocessing.html#protoclass.preprocessing.standard_time_normalization.StandardTimeNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardTimeNormalization.denormalize"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Denormalize the given modality using the fitted parameters.</span>
 
 <span class="sd">        Parameters</span>

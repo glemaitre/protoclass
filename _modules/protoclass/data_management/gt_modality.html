@@ -87,7 +87,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/modules.html">protoclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
 </ul>
 
             
@@ -144,7 +144,7 @@
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
 
 
-<div class="viewcode-block" id="GTModality"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.gt_modality.GTModality">[docs]</a><span class="k">class</span> <span class="nc">GTModality</span><span class="p">(</span><span class="n">MultisequenceModality</span><span class="p">):</span>
+<div class="viewcode-block" id="GTModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality">[docs]</a><span class="k">class</span> <span class="nc">GTModality</span><span class="p">(</span><span class="n">MultisequenceModality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to handle GT modality.</span>
 
 <span class="sd">    Parameters</span>
@@ -170,14 +170,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">GTModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+<div class="viewcode-block" id="GTModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GTModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GTModality.update_histogram"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.gt_modality.GTModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GTModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method to compute histogram and statistics.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="GTModality.read_data_from_path"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.gt_modality.GTModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat_gt</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GTModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat_gt</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read GT images which correspond to a 3D volume, a volume</span>
 <span class="sd">        for different information.</span>
 
@@ -324,7 +324,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GTModality.extract_gt_data"><a class="viewcode-back" href="../../../modules/protoclass.data_management.html#protoclass.data_management.gt_modality.GTModality.extract_gt_data">[docs]</a>    <span class="k">def</span> <span class="nf">extract_gt_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GTModality.extract_gt_data"><a class="viewcode-back" href="../../../generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality.extract_gt_data">[docs]</a>    <span class="k">def</span> <span class="nf">extract_gt_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract data corresponding to a given label.</span>
 
 <span class="sd">        Parameters</span>

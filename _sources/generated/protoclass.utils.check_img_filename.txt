@@ -1,0 +1,6 @@
+protoclass.utils.check_img_filename
+===================================
+
+.. currentmodule:: protoclass.utils
+
+.. autofunction:: check_img_filename

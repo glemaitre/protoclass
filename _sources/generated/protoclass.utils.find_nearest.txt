@@ -1,0 +1,6 @@
+protoclass.utils.find_nearest
+=============================
+
+.. currentmodule:: protoclass.utils
+
+.. autofunction:: find_nearest

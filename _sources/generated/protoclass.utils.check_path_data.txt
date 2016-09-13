@@ -1,0 +1,6 @@
+protoclass.utils.check_path_data
+================================
+
+.. currentmodule:: protoclass.utils
+
+.. autofunction:: check_path_data

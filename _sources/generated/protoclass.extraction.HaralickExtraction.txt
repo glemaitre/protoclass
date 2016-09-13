@@ -1,0 +1,26 @@
+protoclass.extraction.HaralickExtraction
+========================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: HaralickExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HaralickExtraction.__init__
+      ~HaralickExtraction.fit
+      ~HaralickExtraction.load_from_pickles
+      ~HaralickExtraction.save_to_pickles
+      ~HaralickExtraction.transform
+   
+   
+
+   
+   
+   

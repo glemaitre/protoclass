@@ -1,0 +1,27 @@
+protoclass.preprocessing.RicianNormalization
+============================================
+
+.. currentmodule:: protoclass.preprocessing
+
+.. autoclass:: RicianNormalization
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RicianNormalization.__init__
+      ~RicianNormalization.denormalize
+      ~RicianNormalization.fit
+      ~RicianNormalization.load_from_pickles
+      ~RicianNormalization.normalize
+      ~RicianNormalization.save_to_pickles
+   
+   
+
+   
+   
+   
