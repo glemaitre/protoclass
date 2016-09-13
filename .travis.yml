@@ -1,51 +1,42 @@
-# make it explicit that we favor the new container-based travis workers
 sudo: false
-
 language: python
 python:
-  - 2.7
-# Pre-install packages for the ubuntu distribution
+- 2.7
 cache:
   apt: true
-  # We use three different cache directory
-  # to work around a Travis bug with multi-platform cache
   directories:
-  - $HOME/.cache/pip
-  - $HOME/download
+  - "$HOME/.cache/pip"
+  - "$HOME/download"
 addons:
   apt:
     packages:
-      - libfftw3-dev
-      - libfftw3-3
-      - libatlas3gf-base
-      - libatlas-dev
-      - gfortran
-      - libgfortran3
-      - eigen3
+    - libfftw3-dev
+    - libfftw3-3
+    - libatlas3gf-base
+    - libatlas-dev
+    - gfortran
+    - libgfortran3
+    - eigen3
 env:
   global:
-    # Directory where tests are run from
-    - TEST_DIR=/tmp/test_dir
-    - MODULE=protoclass
-    - OMP_NUM_THREADS=4
-    - OPENBLAS_NUM_THREADS=4
-    - USERNAME="glemaitre"
-    - DOC_REPO="protoclass-docs"
-    - PROJECT="protoclass"
-    - EMAIL="g.lemaitre58@gmail.com"
-    - DOC_URL=""
-
+  - TEST_DIR=/tmp/test_dir
+  - MODULE=protoclass
+  - OMP_NUM_THREADS=4
+  - OPENBLAS_NUM_THREADS=4
+  - USERNAME="glemaitre"
+  - DOC_REPO="protoclass-docs"
+  - PROJECT="protoclass"
+  - EMAIL="g.lemaitre58@gmail.com"
+  - DOC_URL=""
+  - secure: N/EdgFgllqYCTOgCNacsOxpTk2A9Z73xcQEnht+6sWtqW3BnUwWA9IggKalapLC7Vrel0F1RPB7sTQABzFiAk7WhW5+6ZgzrAFZEqdcyY8UsEsC2WHFgiU9kj+/vn9RGcyHxHRGqFnMVxcabb/4UH7hz5s4Xx0/XjQt8c7HwX4cJ0LtX64qEUL1jRUG7glzgTWvjIw3txQHADq+jt12pKkoVo8n9Cvnx761tFziqTIpi01inqlgFN77gqgtlLdXPIyqpFki+1ye0t6V3G3D5UqYRXzpGQSqKz63/7rogpKJHSe7kjzvw/u3ojvfWUi9e5RqpOT1dQneVkuyUSF24qndotoGcp0YflDHuOgvv30yXPqanIErEnrtAWPadxxU4YtCi7RnpEEB6avORI86ZdsL8cwUU9u5vFy3wZT32ZYZhsYjha3gO6FrkqD0W6DzOSqHbgeZoyHboztM6at67Hbzwblw8XUK+c6bLZAe3n2ltCWkhP7l5apEeW+7hqCuGve32YYwqjrt2infmwG5RX4fG0c6Qbr2bQPNM7FmTWfkiBzJ07BmN+twNSFpjI+ZReKYPeyVyeb20GW1VSCmmEDasDxayce5AvpjSjy9MZfLpIMC05jL6GzboggOOiMR2m261F7kX6E5//tKccwIvhGGib5IWnuQMZfYkX3/+z+k=
   matrix:
-    # This environment tests the using anaconda
-    - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true"
-      NUMPY_VERSION="1.10.0" SCIPY_VERSION="0.17.0"
-
+  - DISTRIB="conda" PYTHON_VERSION="2.7" COVERAGE="true" NUMPY_VERSION="1.10.0" SCIPY_VERSION="0.17.0"
 before_install:
-  - git submodule update --init --recursive
+- git submodule update --init --recursive
 install:
-  - travis_wait 30
-  - source build_tools/travis/install.sh
-script: 
-  - bash build_tools/travis/push_doc.sh
-  - bash build_tools/travis/test_script.sh
+- travis_wait 30
+- source build_tools/travis/install.sh
+script:
+- bash build_tools/travis/push_doc.sh
+- bash build_tools/travis/test_script.sh
 after_success: source build_tools/travis/after_success.sh

@@ -18,8 +18,8 @@ mkdir tmp
 cd tmp
 
 # Clone the repository to push the doc later
-git config --global credential.helper cache
-git clone "https://${GITHUB_TOKEN}@github.com/glemaitre/${PROJECT}.git"
+git clone "https://github.com/glemaitre/protoclass.git"
+git remote set-url origin "https://glemaitre:${GH_TOKEN}@github.com/glemaitre/${PROJECT}.git"
 
 cd $PROJECT
 git branch gh-pages
