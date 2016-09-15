@@ -231,19 +231,19 @@ class EdgeSignalExtraction(StandaloneExtraction):
         # KIRSCH
         elif self.edge_detector == 'kirsch':
             # Allocate the data
-            data = np.zeros((self.roi_data_.size, 2))
+            data = np.zeros((self.roi_data_[0].size, 2))
             # Extract the data for each feature
             for feat_dim in range(2):
                 feat_data = self.data_[feat_dim]
-                data[feat_dim, :] = feat_data[self.roi_data_]
+                data[:, feat_dim] = feat_data[self.roi_data_]
 
         # ALL THE OTHER CASES
         else:
             # Allocate the data
-            data = np.zeros((self.roi_data_.size, 3))
+            data = np.zeros((self.roi_data_[0].size, 3))
             # Extract the data for each feature
             for feat_dim in range(3):
                 feat_data = self.data_[feat_dim]
-                data[feat_dim, :] = feat_data[self.roi_data_]
+                data[:, feat_dim] = feat_data[self.roi_data_]
 
         return data
