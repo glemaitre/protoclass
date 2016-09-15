@@ -58,10 +58,8 @@ class EdgeSignalExtraction(StandaloneExtraction):
         modality should inherate from StandaloneModality class.
 
     edge_detector : str, optional (default='sobel')
-        Name of the filter to apply. Can be 'sobel', 'prewitt', 'kirsch'.
-
-    n_derivative : str, optional (default='1st')
-        Which level of derivative to compute. Can be '1st', '2nd'.
+        Name of the filter to apply. Can be 'sobel', 'prewitt', 'kirsch',
+        'scharr', or 'laplacian'.
 
     Attributes
     ----------
