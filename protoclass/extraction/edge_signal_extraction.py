@@ -3,15 +3,16 @@
 import numpy as np
 
 from scipy.ndimage.filters import generic_gradient_magnitude
-from scipy.ndimage.filters import generic_laplace
+from scipy.ndimage.filters import laplace
 from scipy.ndimage.filters import convolve
 from scipy.ndimage.filters import prewitt
 from scipy.ndimage.filters import sobel
+from scipy.ndimage.filters import _ni_support
+from scipy.ndimage.filters import correlate1d
 
 from .standalone_extraction import StandaloneExtraction
 
-FILTER = ('sobel', 'prewitt', 'kirsch')
-DERIVATIVE = ('1st', '2nd')
+FILTER = ('sobel', 'prewitt', 'kirsch', 'scharr', 'laplacian')
 KIRSCH_FILTERS = (np.array([[5, 5, 5], [-3, 0, -3], [-3, -3, -3]]),
                   np.array([[5, 5, -3], [5, 0, -3], [-3, -3, -3]]),
                   np.array([[5, -3, -3], [5, 0, -3], [5, -3, -3]]),
@@ -20,6 +21,31 @@ KIRSCH_FILTERS = (np.array([[5, 5, 5], [-3, 0, -3], [-3, -3, -3]]),
                   np.array([[-3, -3, -3], [-3, 0, 5], [-3, 5, 5]]),
                   np.array([[-3, -3, 5], [-3, 0, 5], [-3, -3, 5]]),
                   np.array([[-3, 5, 5], [-3, 0, 5], [-3, -3, -3]]))
+KIRSCH_DIRECTIONS = np.array([np.pi / 2., 3. * np.pi / 4.,
+                              np.pi, -3. * np.pi / 4.,
+                              -np.pi / 2., -np.pi / 4.,
+                              0., np.pi / 4.])
+
+def scharr(input, axis=-1, output=None, mode="reflect", cval=0.0):
+    """Calculate a Scharr filter.
+
+    Parameters
+    ----------
+    %(input)s
+    %(axis)s
+    %(output)s
+    %(mode)s
+    %(cval)s
+
+    """
+    input = np.asarray(input)
+    axis = _ni_support._check_axis(axis, input.ndim)
+    output, return_value = _ni_support._get_output(output, input)
+    correlate1d(input, [-1, 0, 1], axis, output, mode, cval, 0)
+    axes = [ii for ii in range(input.ndim) if ii != axis]
+    for ii in axes:
+        correlate1d(output, [3, 10, 3], ii, output, mode, cval, 0)
+    return return_value
 
 
 class EdgeSignalExtraction(StandaloneExtraction):
@@ -46,13 +72,21 @@ class EdgeSignalExtraction(StandaloneExtraction):
     roi_data_ : ndarray, shape flexible
         Corresponds to the index to consider in order to fit the data.
 
+    data_ : ndarray (1, 2, or 3, volume_size)
+        The computed gradient:
+
+        - 'laplacian' will compute a single array containing the laplacian
+        value.
+        - 'sobel', 'prewitt', and 'scharr' compute: (i) the gradient magnitude,
+        (ii) the gradient azimuth, and (iii) the gradient elevation.
+        - 'kirsch' is computed in 2D and therefore the gradient magnitude and
+        the gradient orientation are available
+
     """
 
-    def __init__(self, base_modality, edge_detector='sobel',
-                 n_derivative='1st'):
+    def __init__(self, base_modality, edge_detector='sobel'):
         super(EdgeSignalExtraction, self).__init__(base_modality)
         self.edge_detector = edge_detector
-        self.n_derivative = n_derivative
         self.data_ = None
 
     def fit(self, modality, ground_truth=None, cat=None):
@@ -85,58 +119,76 @@ class EdgeSignalExtraction(StandaloneExtraction):
         if self.edge_detector not in FILTER:
             raise ValueError('{} filter is unknown'.format(self.edge_detector))
 
-        # Check the value of the derivative to compute
-        if self.n_derivative not in DERIVATIVE:
-            raise ValueError('It is impossible to compute the {}. Only `1st`'
-                             ' and `2nd` can be computed'.format(
-                                 self.n_derivative))
+        self.data_ = []
 
+        # SOBEL filter
         if self.edge_detector == 'sobel':
-            if self.n_derivative == '1st':
-                self.data_ = generic_gradient_magnitude(modality.data_, sobel)
-            else:
-                self.data_ = generic_laplace(modality.data_, sobel)
+            # Compute the gradient in the three direction Y, X, Z
+            grad_y = sobel(modality.data_, axis=0)
+            grad_x = sobel(modality.data_, axis=1)
+            grad_z = sobel(modality.data_, axis=2)
+            # Compute the magnitude gradient
+            self.data_.append(generic_gradient_magnitude(modality.data_,
+                                                         sobel))
+            # Compute the gradient azimuth
+            self.data_.append(np.arctan2(grad_y, grad_x))
+            # Compute the gradient elevation
+            self.data_.append(np.arccos(grad_z / self.data_[0]))
+
+        # PREWITT filter
         elif self.edge_detector == 'prewitt':
-            if self.n_derivative == '1st':
-                self.data_ = generic_gradient_magnitude(modality.data_,
-                                                        prewitt)
-            else:
-                self.data_ = generic_laplace(modality.data_, prewitt)
+            # Compute the gradient in the three direction Y, X, Z
+            grad_y = prewitt(modality.data_, axis=0)
+            grad_x = prewitt(modality.data_, axis=1)
+            grad_z = prewitt(modality.data_, axis=2)
+            # Compute the magnitude gradient
+            self.data_.append(generic_gradient_magnitude(modality.data_,
+                                                         prewitt))
+            # Compute the gradient azimuth
+            self.data_.append(np.arctan2(grad_y, grad_x))
+            # Compute the gradient elevation
+            self.data_.append(np.arccos(grad_z / self.data_[0]))
+
+        # SCHARR filter
+        elif self.edge_detector == 'scharr':
+            # Compute the gradient in the three direction Y, X, Z
+            grad_y = scharr(modality.data_, axis=0)
+            grad_x = scharr(modality.data_, axis=1)
+            grad_z = scharr(modality.data_, axis=2)
+            # Compute the magnitude gradient
+            self.data_.append(generic_gradient_magnitude(modality.data_,
+                                                         scharr))
+            # Compute the gradient azimuth
+            self.data_.append(np.arctan2(grad_y, grad_x))
+            # Compute the gradient elevation
+            self.data_.append(np.arccos(grad_z / self.data_[0]))
+
+        # KIRSCH filter
         elif self.edge_detector == 'kirsch':
-            if self.n_derivative == '1st':
-                conv_data = np.zeros((modality.data_.shape[0],
-                                      modality.data_.shape[1],
-                                      modality.data_.shape[2],
-                                      len(KIRSCH_FILTERS)))
-                # Compute the convolution for each slice
-                for sl in range(modality.data_.shape[2]):
-                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
-                        conv_data[:, :, sl, idx_kirsch] = convolve(
-                            modality.data_[:, :, sl], kirsh_f, mode='reflect')
+            conv_data = np.zeros((modality.data_.shape[0],
+                                  modality.data_.shape[1],
+                                  modality.data_.shape[2],
+                                  len(KIRSCH_FILTERS)))
+            # Compute the convolution for each slice
+            for sl in range(modality.data_.shape[2]):
+                for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
+                    conv_data[:, :, sl, idx_kirsch] = convolve(
+                        modality.data_[:, :, sl], kirsh_f, mode='reflect')
 
-                # Extract the maximum gradients
-                self.data_ = np.ndarray.max(conv_data, axis=3)
-            else:
-                conv_data = np.zeros((modality.data_.shape[0],
-                                      modality.data_.shape[1],
-                                      modality.data_.shape[2],
-                                      len(KIRSCH_FILTERS)))
-                # Compute the convolution for each slice
-                for sl in range(modality.data_.shape[2]):
-                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
-                        conv_data[:, :, sl, idx_kirsch] = convolve(
-                            modality.data_[:, :, sl], kirsh_f, mode='reflect')
+            # Extract the maximum gradients
+            self.data_.append(np.ndarray.max(conv_data, axis=3))
+            # Extract the orientattion of the gradients
+            self.data_.append(KIRSCH_DIRECTIONS[np.ndarray.argmax(conv_data,
+                                                                  axis=3)])
 
-                dev_1 = np.ndarray.max(conv_data, axis=3)
+        # LAPLACIAN filter
+        elif self.edge_detector == 'laplacian':
+            self.data_.append(laplace(modality.data_))
 
-                # Compute the second derivative
-                for sl in range(dev_1.shape[2]):
-                    for idx_kirsch, kirsh_f in enumerate(KIRSCH_FILTERS):
-                        conv_data[:, :, sl, idx_kirsch] = convolve(
-                            dev_1[:, :, sl], kirsh_f, mode='reflect')
-
-                # Extract the maximum gradients
-                self.data_ = np.ndarray.max(conv_data, axis=3)
+        # Convert the data into a numpy array
+        self.data_ = np.array(self.data_)
+        # Replace the few NaN value to zero
+        self.data_ = np.nan_to_num(self.data_)
 
         return self
 
@@ -172,4 +224,28 @@ class EdgeSignalExtraction(StandaloneExtraction):
         if self.data_ is None:
             raise RuntimeError('Fit the data before to extract anything.')
 
-        return self.data_[self.roi_data_]
+        # LAPLACIAN
+        if self.edge_detector == 'laplacian':
+            # Allocate the data
+            data = self.data_[0]
+            data = data[self.roi_data_]
+
+        # KIRSCH
+        elif self.edge_detector == 'kirsch':
+            # Allocate the data
+            data = np.zeros((self.roi_data_.size, 2))
+            # Extract the data for each feature
+            for feat_dim in range(2):
+                feat_data = self.data_[feat_dim]
+                data[feat_dim, :] = feat_data[self.roi_data_]
+
+        # ALL THE OTHER CASES
+        else:
+            # Allocate the data
+            data = np.zeros((self.roi_data_.size, 3))
+            # Extract the data for each feature
+            for feat_dim in range(3):
+                feat_data = self.data_[feat_dim]
+                data[feat_dim, :] = feat_data[self.roi_data_]
+
+        return data
