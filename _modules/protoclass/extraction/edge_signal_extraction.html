@@ -138,15 +138,16 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">generic_gradient_magnitude</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">generic_laplace</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">laplace</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">convolve</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">prewitt</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">sobel</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">_ni_support</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">correlate1d</span>
 
 <span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
 
-<span class="n">FILTER</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sobel&#39;</span><span class="p">,</span> <span class="s1">&#39;prewitt&#39;</span><span class="p">,</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">)</span>
-<span class="n">DERIVATIVE</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;1st&#39;</span><span class="p">,</span> <span class="s1">&#39;2nd&#39;</span><span class="p">)</span>
+<span class="n">FILTER</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sobel&#39;</span><span class="p">,</span> <span class="s1">&#39;prewitt&#39;</span><span class="p">,</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">,</span> <span class="s1">&#39;scharr&#39;</span><span class="p">,</span> <span class="s1">&#39;laplacian&#39;</span><span class="p">)</span>
 <span class="n">KIRSCH_FILTERS</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]),</span>
@@ -155,6 +156,31 @@
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]))</span>
+<span class="n">KIRSCH_DIRECTIONS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span>
+                              <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span>
+                              <span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">scharr</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate a Scharr filter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    %(input)s</span>
+<span class="sd">    %(axis)s</span>
+<span class="sd">    %(output)s</span>
+<span class="sd">    %(mode)s</span>
+<span class="sd">    %(cval)s</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_check_axis</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="nb">input</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_get_output</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+    <span class="n">correlate1d</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">ii</span> <span class="o">!=</span> <span class="n">axis</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">correlate1d</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">ii</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">return_value</span>
 
 
 <div class="viewcode-block" id="EdgeSignalExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EdgeSignalExtraction.html#protoclass.extraction.EdgeSignalExtraction">[docs]</a><span class="k">class</span> <span class="nc">EdgeSignalExtraction</span><span class="p">(</span><span class="n">StandaloneExtraction</span><span class="p">):</span>
@@ -167,10 +193,8 @@
 <span class="sd">        modality should inherate from StandaloneModality class.</span>
 
 <span class="sd">    edge_detector : str, optional (default=&#39;sobel&#39;)</span>
-<span class="sd">        Name of the filter to apply. Can be &#39;sobel&#39;, &#39;prewitt&#39;, &#39;kirsch&#39;.</span>
-
-<span class="sd">    n_derivative : str, optional (default=&#39;1st&#39;)</span>
-<span class="sd">        Which level of derivative to compute. Can be &#39;1st&#39;, &#39;2nd&#39;.</span>
+<span class="sd">        Name of the filter to apply. Can be &#39;sobel&#39;, &#39;prewitt&#39;, &#39;kirsch&#39;,</span>
+<span class="sd">        &#39;scharr&#39;, or &#39;laplacian&#39;.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -181,13 +205,21 @@
 <span class="sd">    roi_data_ : ndarray, shape flexible</span>
 <span class="sd">        Corresponds to the index to consider in order to fit the data.</span>
 
+<span class="sd">    data_ : ndarray (1, 2, or 3, volume_size)</span>
+<span class="sd">        The computed gradient:</span>
+
+<span class="sd">        - &#39;laplacian&#39; will compute a single array containing the laplacian</span>
+<span class="sd">        value.</span>
+<span class="sd">        - &#39;sobel&#39;, &#39;prewitt&#39;, and &#39;scharr&#39; compute: (i) the gradient magnitude,</span>
+<span class="sd">        (ii) the gradient azimuth, and (iii) the gradient elevation.</span>
+<span class="sd">        - &#39;kirsch&#39; is computed in 2D and therefore the gradient magnitude and</span>
+<span class="sd">        the gradient orientation are available</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="EdgeSignalExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EdgeSignalExtraction.html#protoclass.extraction.EdgeSignalExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">edge_detector</span><span class="o">=</span><span class="s1">&#39;sobel&#39;</span><span class="p">,</span>
-                 <span class="n">n_derivative</span><span class="o">=</span><span class="s1">&#39;1st&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="EdgeSignalExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EdgeSignalExtraction.html#protoclass.extraction.EdgeSignalExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">edge_detector</span><span class="o">=</span><span class="s1">&#39;sobel&#39;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EdgeSignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">=</span> <span class="n">edge_detector</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">=</span> <span class="n">n_derivative</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span></div>
 
 <div class="viewcode-block" id="EdgeSignalExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.EdgeSignalExtraction.html#protoclass.extraction.EdgeSignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -220,58 +252,76 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">FILTER</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;{} filter is unknown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span><span class="p">))</span>
 
-        <span class="c1"># Check the value of the derivative to compute</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">DERIVATIVE</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It is impossible to compute the {}. Only `1st`&#39;</span>
-                             <span class="s1">&#39; and `2nd` can be computed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="c1"># SOBEL filter</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;sobel&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sobel</span><span class="p">)</span>
+            <span class="c1"># Compute the gradient in the three direction Y, X, Z</span>
+            <span class="n">grad_y</span> <span class="o">=</span> <span class="n">sobel</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">grad_x</span> <span class="o">=</span> <span class="n">sobel</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">grad_z</span> <span class="o">=</span> <span class="n">sobel</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Compute the magnitude gradient</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                                         <span class="n">sobel</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient azimuth</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient elevation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">grad_z</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># PREWITT filter</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;prewitt&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
-                                                        <span class="n">prewitt</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">generic_laplace</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">prewitt</span><span class="p">)</span>
+            <span class="c1"># Compute the gradient in the three direction Y, X, Z</span>
+            <span class="n">grad_y</span> <span class="o">=</span> <span class="n">prewitt</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">grad_x</span> <span class="o">=</span> <span class="n">prewitt</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">grad_z</span> <span class="o">=</span> <span class="n">prewitt</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Compute the magnitude gradient</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                                         <span class="n">prewitt</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient azimuth</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient elevation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">grad_z</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># SCHARR filter</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;scharr&#39;</span><span class="p">:</span>
+            <span class="c1"># Compute the gradient in the three direction Y, X, Z</span>
+            <span class="n">grad_y</span> <span class="o">=</span> <span class="n">scharr</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">grad_x</span> <span class="o">=</span> <span class="n">scharr</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">grad_z</span> <span class="o">=</span> <span class="n">scharr</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Compute the magnitude gradient</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generic_gradient_magnitude</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
+                                                         <span class="n">scharr</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient azimuth</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">))</span>
+            <span class="c1"># Compute the gradient elevation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">grad_z</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># KIRSCH filter</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_derivative</span> <span class="o">==</span> <span class="s1">&#39;1st&#39;</span><span class="p">:</span>
-                <span class="n">conv_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                      <span class="nb">len</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">)))</span>
-                <span class="c1"># Compute the convolution for each slice</span>
-                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
-                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
-                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
-                            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+            <span class="n">conv_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                  <span class="nb">len</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">)))</span>
+            <span class="c1"># Compute the convolution for each slice</span>
+            <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
+                    <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
+                        <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
 
-                <span class="c1"># Extract the maximum gradients</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">conv_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                      <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                      <span class="nb">len</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">)))</span>
-                <span class="c1"># Compute the convolution for each slice</span>
-                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
-                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
-                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
-                            <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+            <span class="c1"># Extract the maximum gradients</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+            <span class="c1"># Extract the orientattion of the gradients</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KIRSCH_DIRECTIONS</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span>
+                                                                  <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)])</span>
 
-                <span class="n">dev_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># LAPLACIAN filter</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;laplacian&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">laplace</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">))</span>
 
-                <span class="c1"># Compute the second derivative</span>
-                <span class="k">for</span> <span class="n">sl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dev_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
-                    <span class="k">for</span> <span class="n">idx_kirsch</span><span class="p">,</span> <span class="n">kirsh_f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">KIRSCH_FILTERS</span><span class="p">):</span>
-                        <span class="n">conv_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">idx_kirsch</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span>
-                            <span class="n">dev_1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="n">kirsh_f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
-
-                <span class="c1"># Extract the maximum gradients</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">conv_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># Convert the data into a numpy array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
+        <span class="c1"># Replace the few NaN value to zero</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -307,7 +357,31 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data before to extract anything.&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span></div></div>
+        <span class="c1"># LAPLACIAN</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;laplacian&#39;</span><span class="p">:</span>
+            <span class="c1"># Allocate the data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+
+        <span class="c1"># KIRSCH</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_detector</span> <span class="o">==</span> <span class="s1">&#39;kirsch&#39;</span><span class="p">:</span>
+            <span class="c1"># Allocate the data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="c1"># Extract the data for each feature</span>
+            <span class="k">for</span> <span class="n">feat_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                <span class="n">feat_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">feat_dim</span><span class="p">]</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">feat_dim</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">feat_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+
+        <span class="c1"># ALL THE OTHER CASES</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Allocate the data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="c1"># Extract the data for each feature</span>
+            <span class="k">for</span> <span class="n">feat_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="n">feat_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">feat_dim</span><span class="p">]</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">feat_dim</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">feat_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
 </pre></div>
 
            </div>
