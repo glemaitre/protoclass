@@ -18,6 +18,7 @@ from .semi_quantification_extraction import SemiQuantificationExtraction
 from .intensity_signal_extraction import IntensitySignalExtraction
 from .edge_signal_extraction import EdgeSignalExtraction
 from .haralick_extraction import HaralickExtraction
+from .phase_congruency_extraction import PhaseCongruencyExtraction
 
 from .codebook import CodeBook
 
@@ -42,6 +43,7 @@ __all__ = ['BaseExtraction',
            'IntensitySignalExtraction',
            'EdgeSignalExtraction',
            'HaralickExtraction',
+           'PhaseCongruencyExtraction',
            'CodeBook',
            'HaralickProcessing',
            'LBPMapExtraction',
