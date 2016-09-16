@@ -19,6 +19,9 @@ from .intensity_signal_extraction import IntensitySignalExtraction
 from .edge_signal_extraction import EdgeSignalExtraction
 from .haralick_extraction import HaralickExtraction
 from .phase_congruency_extraction import PhaseCongruencyExtraction
+from .gabor_bank_extraction import GaborBankExtraction
+
+from .gabor_bank_extraction import gabor_filter_3d
 
 from .codebook import CodeBook
 
@@ -44,6 +47,8 @@ __all__ = ['BaseExtraction',
            'EdgeSignalExtraction',
            'HaralickExtraction',
            'PhaseCongruencyExtraction',
+           'GaborBankExtraction',
+           'gabor_filter_3d',
            'CodeBook',
            'HaralickProcessing',
            'LBPMapExtraction',

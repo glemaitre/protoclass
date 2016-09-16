@@ -75,9 +75,16 @@ Standalone related methods
      extraction.IntensitySignalExtraction
      extraction.EdgeSignalExtraction
      extraction.HaralickExtraction
+     extraction.PhaseCongruencyExtraction
+     extraction.GaborBankExtraction
+
+Addtionally, the following functions are available:
+
+     extraction.gabor_filter_3d
      
 Temporal related methods
 ------------------------
+
 .. currentmodule:: protoclass
 
 .. autosummary::
