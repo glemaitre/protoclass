@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>protoclass.extraction.HaralickExtraction &mdash; protoclass 0.1.dev0 documentation</title>
+  <title>protoclass.extraction.PhaseCongruencyExtraction &mdash; protoclass 0.1.dev0 documentation</title>
   
 
   
@@ -94,8 +94,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id1">Standalone related methods</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.IntensitySignalExtraction.html">protoclass.extraction.IntensitySignalExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EdgeSignalExtraction.html">protoclass.extraction.EdgeSignalExtraction</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.HaralickExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.HaralickExtraction.html">protoclass.extraction.HaralickExtraction</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.PhaseCongruencyExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
 </ul>
 </li>
@@ -137,11 +137,11 @@
       
           <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
       
-    <li>protoclass.extraction.HaralickExtraction</li>
+    <li>protoclass.extraction.PhaseCongruencyExtraction</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/generated/protoclass.extraction.HaralickExtraction.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/protoclass.extraction.PhaseCongruencyExtraction.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -151,12 +151,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="protoclass-extraction-haralickextraction">
-<h1>protoclass.extraction.HaralickExtraction<a class="headerlink" href="#protoclass-extraction-haralickextraction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="protoclass-extraction-phasecongruencyextraction">
+<h1>protoclass.extraction.PhaseCongruencyExtraction<a class="headerlink" href="#protoclass-extraction-phasecongruencyextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="protoclass.extraction.HaralickExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">HaralickExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>distance=1</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em>, <em>levels=256</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Haralick extraction from standalone modality.</p>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">PhaseCongruencyExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>type_filter='regular'</em>, <em>dict_params={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/phase_congruency_extraction.html#PhaseCongruencyExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edge signal extraction from standalone modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -166,23 +166,15 @@
 <div><p>The base modality on which the normalization will be applied. The base
 modality should inherate from StandaloneModality class.</p>
 </div></blockquote>
-<p><strong>distance</strong> : int, optional (default=1)</p>
+<p><strong>type_filter</strong> : string, optional (default=&#8217;regular&#8217;)</p>
 <blockquote>
-<div><p>The distance used to compute the cooccurence matrix</p>
+<div><p>Can be either &#8216;regular&#8217; or &#8216;monogenic&#8217;. Monogenic filters provide a
+speed-up for the computation</p>
 </div></blockquote>
-<p><strong>patch_size</strong> : int or tuple, optional (default=(9, 9, 3))</p>
-<blockquote>
-<div><p>The size of the sliding used to extract patches later used to compute
-the cooccurence matrix.</p>
-</div></blockquote>
-<p><strong>levels</strong> : int, optional (default=256)</p>
+<p><strong>dict_params</strong> : dict, optional (default=parameter in <cite>phasepack</cite>)</p>
 <blockquote class="last">
-<div><p>The input image should contain integers in [0, levels-1], where levels
-indicate the number of grey-levels counted (typically 256 for an 8-bit
-image). This argument is required for 16-bit images or higher and is
-typically the maximum of the image. As the output matrix is at least
-levels x levels, it might be preferable to use binning of the input
-image rather than large values for levels.</p>
+<div><p>A dictionary contaning the different parameters for the phase
+congruency methods. For the list of parameters, refer to phasepack.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -210,23 +202,23 @@ image rather than large values for levels.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.fit" title="protoclass.extraction.HaralickExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.fit" title="protoclass.extraction.PhaseCongruencyExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Compute the images images.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="protoclass.extraction.HaralickExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles" title="protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="protoclass.extraction.HaralickExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles" title="protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.transform" title="protoclass.extraction.HaralickExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.transform" title="protoclass.extraction.PhaseCongruencyExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>distance=1</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em>, <em>levels=256</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>type_filter='regular'</em>, <em>dict_params={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/phase_congruency_extraction.html#PhaseCongruencyExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -236,26 +228,26 @@ image rather than large values for levels.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.__init__" title="protoclass.extraction.HaralickExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;distance,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.__init__" title="protoclass.extraction.PhaseCongruencyExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;type_filter,&nbsp;...])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.fit" title="protoclass.extraction.HaralickExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.fit" title="protoclass.extraction.PhaseCongruencyExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Compute the images images.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="protoclass.extraction.HaralickExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles" title="protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="protoclass.extraction.HaralickExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles" title="protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.transform" title="protoclass.extraction.HaralickExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.PhaseCongruencyExtraction.transform" title="protoclass.extraction.PhaseCongruencyExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/phase_congruency_extraction.html#PhaseCongruencyExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the images images.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -282,8 +274,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.load_from_pickles">
-<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles">
+<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to load a normalization object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -306,8 +298,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.save_to_pickles">
-<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to save a normalizatio object using pickles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -327,8 +319,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.PhaseCongruencyExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/phase_congruency_extraction.html#PhaseCongruencyExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.PhaseCongruencyExtraction.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data from the given modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

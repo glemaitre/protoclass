@@ -1,0 +1,26 @@
+protoclass.extraction.GaborBankExtraction
+=========================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: GaborBankExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GaborBankExtraction.__init__
+      ~GaborBankExtraction.fit
+      ~GaborBankExtraction.load_from_pickles
+      ~GaborBankExtraction.save_to_pickles
+      ~GaborBankExtraction.transform
+   
+   
+
+   
+   
+   

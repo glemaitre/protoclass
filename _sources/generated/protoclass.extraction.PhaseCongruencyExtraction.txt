@@ -1,0 +1,26 @@
+protoclass.extraction.PhaseCongruencyExtraction
+===============================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: PhaseCongruencyExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PhaseCongruencyExtraction.__init__
+      ~PhaseCongruencyExtraction.fit
+      ~PhaseCongruencyExtraction.load_from_pickles
+      ~PhaseCongruencyExtraction.save_to_pickles
+      ~PhaseCongruencyExtraction.transform
+   
+   
+
+   
+   
+   
