@@ -155,7 +155,7 @@
 <h1>protoclass.extraction.GaborBankExtraction<a class="headerlink" href="#protoclass-extraction-gaborbankextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="protoclass.extraction.GaborBankExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">GaborBankExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>thetas</em>, <em>phis</em>, <em>sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">GaborBankExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>betas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edge signal extraction from standalone modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -180,7 +180,7 @@ in x-y plane.</p>
 <div><p>Vector containing the different rotations angles of the filer bank
 in the z plane.</p>
 </div></blockquote>
-<p><strong>sigmas</strong> : ndarray, shape (3, )</p>
+<p><strong>scale_sigmas</strong> : ndarray, shape (3, )</p>
 <blockquote class="last">
 <div><p>The standard deviations x, y, and z for each direction of the
 filter bank.</p>
@@ -227,7 +227,7 @@ filter bank.</p>
 </table>
 <dl class="method">
 <dt id="protoclass.extraction.GaborBankExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>thetas</em>, <em>phis</em>, <em>sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>betas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -237,7 +237,7 @@ filter bank.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.GaborBankExtraction.__init__" title="protoclass.extraction.GaborBankExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality,&nbsp;frequencies,&nbsp;thetas,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.GaborBankExtraction.__init__" title="protoclass.extraction.GaborBankExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality,&nbsp;frequencies,&nbsp;alphas,&nbsp;...)</td>
 <td></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.GaborBankExtraction.fit" title="protoclass.extraction.GaborBankExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
