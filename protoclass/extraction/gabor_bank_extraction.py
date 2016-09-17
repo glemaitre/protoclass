@@ -231,11 +231,9 @@ class GaborBankExtraction(StandaloneExtraction):
         # We can compute the different convolution
         for kernel in kernels:
             # Compute the real filtering
-            self.data_.append(convolve(modality.data_, np.real(kernel),
-                                       mode='same'))
+            self.data_.append(convolve(modality.data_, np.real(kernel)))
             # Compute the imaginary filtering
-            self.data_.append(convolve(modality.data_, np.imag(kernel),
-                                       mode='same'))
+            self.data_.append(convolve(modality.data_, np.imag(kernel)))
 
         # Convert to a numpy array
         self.data_ = np.array(self.data_)
