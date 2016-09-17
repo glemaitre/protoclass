@@ -15,8 +15,9 @@ def _sigma_prefactor(bandwidth):
             (2.0 ** b + 1) / (2.0 ** b - 1))
 
 
-def gabor_filter_3d(frequency, theta=0, phi=0, bandwidth=1, sigma_x=None,
-                    sigma_y=None, sigma_z=None, n_stds=3):
+def gabor_filter_3d(frequency, alpha=0, beta=0, gamma=0, bandwidth=1,
+                    sigma_x=None, sigma_y=None, sigma_z=None,
+                    n_stds=3, scale_x=None, scale_y=None, scale_z=None):
     """Return complex 3D Gabor filter kernel.
 
     Gabor kernel is a Gaussian kernel modulated by a complex harmonic function.
@@ -31,8 +32,8 @@ def gabor_filter_3d(frequency, theta=0, phi=0, bandwidth=1, sigma_x=None,
     frequency : float
         Spatial frequency of the harmonic function. Specified in pixels.
 
-    theta : float, optional
-        Orientation in radians. If 0, the harmonic is in the x-direction.
+    alpha, beta, gamma : float, optional
+        Orientation in radians of the x, y, and z axis.
 
     bandwidth : float, optional
         The bandwidth captured by the filter. For fixed bandwidth, `sigma_x`
@@ -40,9 +41,13 @@ def gabor_filter_3d(frequency, theta=0, phi=0, bandwidth=1, sigma_x=None,
         ignored if `sigma_x` and `sigma_y` are set by the user.
 
     sigma_x, sigma_y, sigma_z : float, optional
-        Standard deviation in x- and y-directions. These directions apply to
-        the kernel *before* rotation. If `theta = pi/2`, then the kernel is
+        Standard deviation in x-, y-, and z-directions. These directions apply
+        to the kernel *before* rotation. If `alpha = pi/2`, then the kernel is
         rotated 90 degrees so that `sigma_x` controls the *vertical* direction.
+
+    scale_x, scale_y, scale_z : float, optional
+        In case of using bandwidth but with a wish of different scale for
+        the sigma
 
     n_stds : scalar, optional
         The linear size of the kernel is n_stds (3 by default) standard
@@ -55,35 +60,73 @@ def gabor_filter_3d(frequency, theta=0, phi=0, bandwidth=1, sigma_x=None,
 
     """
 
+    if scale_x is None:
+        scale_x = 1.
+    if scale_y is None:
+        scale_y = 1.
+    if scale_z is None:
+        scale_z = 1.
+
     if sigma_x is None:
-        sigma_x = _sigma_prefactor(bandwidth) / frequency
+        sigma_x = _sigma_prefactor(bandwidth) / (frequency * scale_x)
     if sigma_y is None:
-        sigma_y = _sigma_prefactor(bandwidth) / frequency
+        sigma_y = _sigma_prefactor(bandwidth) / (frequency * scale_y)
     if sigma_z is None:
-        sigma_z = _sigma_prefactor(bandwidth) / frequency
+        sigma_z = _sigma_prefactor(bandwidth) / (frequency * scale_z)
+
+    # Define the different rotation matrix
+    rot_mat_x = np.matrix([[1, 0, 0],
+                           [0, np.cos(alpha), -np.sin(alpha)],
+                           [0, np.sin(alpha), np.cos(alpha)]])
+    rot_mat_y = np.matrix([[np.cos(beta), 0, np.sin(beta)],
+                           [0, 1, 0],
+                           [-np.sin(beta), 0, np.cos(beta)]])
+    rot_mat_z = np.matrix([[np.cos(gamma), -np.sin(gamma), 0],
+                           [np.sin(gamma), np.cos(gamma), 0],
+                           [0, 0, 1]])
+
+    # Compute the full rotation matrix
+    rot_mat = rot_mat_z * rot_mat_y * rot_mat_x
 
     # Find the limit of the filter
-    x0 = np.ceil(max(np.abs(n_stds * sigma_x * np.cos(theta)),
-                     np.abs(n_stds * sigma_y * np.sin(theta) * np.cos(phi)),
-                     np.abs(n_stds * sigma_z * np.sin(phi) * np.sin(theta)),
+    x0 = np.ceil(max(np.abs(n_stds * sigma_x * np.cos(beta) * np.cos(gamma)),
+                     np.abs(n_stds * sigma_y * np.cos(beta) * np.sin(gamma)),
+                     np.abs(n_stds * sigma_z * -np.sin(beta)),
                      1))
 
-    y0 = np.ceil(max(np.abs(n_stds * sigma_x * np.sin(theta)),
-                     np.abs(n_stds * sigma_y * np.cos(phi) * np.cos(theta)),
-                     np.abs(n_stds * sigma_z * np.sin(phi) * np.cos(theta)),
+    y0 = np.ceil(max(np.abs(n_stds * sigma_x * (
+        np.sin(alpha) * np.sin(beta) * np.cos(gamma) -
+        np.cos(alpha) * np.sin(gamma))),
+                     np.abs(n_stds * sigma_y * (
+                         np.sin(alpha) * np.sin(beta) * np.sin(gamma) +
+                         np.cos(alpha) * np.cos(gamma))),
+                     np.abs(n_stds * sigma_z * np.sin(alpha) * np.cos(beta)),
                      1))
 
-    z0 = np.ceil(max(np.abs(n_stds * sigma_y * np.sin(phi)),
-                     np.abs(n_stds * sigma_z * np.cos(phi)),
+    z0 = np.ceil(max(np.abs(n_stds * sigma_x * (
+        np.sin(alpha) * np.sin(gamma) +
+        np.cos(alpha) * np.sin(beta) * np.cos(gamma))),
+                     np.abs(n_stds * sigma_y * (
+                         np.cos(alpha) * np.sin(beta) * np.sin(gamma) -
+                         np.sin(alpha) * np.cos(gamma))),
+                     np.abs(n_stds * sigma_z * np.cos(alpha) * np.cos(beta)),
                      1))
 
-    y, x, z = np.mgrid[-y0:y0 + 1, -x0:x0 + 1, -z0:z0 + 1]
+    x, y, z = np.mgrid[-x0:x0 + 1, -y0:y0 + 1, -z0:z0 + 1]
 
-    rotx = x * np.cos(theta) - y * np.sin(theta)
-    roty = (x * np.cos(phi) * np.sin(theta) +
-            y * np.cos(phi) * np.cos(theta) - z * np.sin(phi))
-    rotz = (x * np.sin(phi) * np.sin(theta) +
-            y * np.sin(phi) * np.cos(theta) + z * np.cos(phi))
+    # Keep the shape of the grid for later reshaping
+    grid_shape = x.shape
+
+    # Build a huge matrix with all the coordinates
+    pos = np.matrix([x.reshape(-1), y.reshape(-1), z.reshape(-1)])
+
+    # Apply the rotation
+    rot_pos = rot_mat * pos
+
+    # Split the data according to the shape of the grid
+    rotx = np.reshape(np.array(rot_pos[0, :]), grid_shape)
+    roty = np.reshape(np.array(rot_pos[1, :]), grid_shape)
+    rotz = np.reshape(np.array(rot_pos[2, :]), grid_shape)
 
     # Allocate the data with complex type
     g = np.zeros(y.shape, dtype=np.complex)
@@ -93,11 +136,9 @@ def gabor_filter_3d(frequency, theta=0, phi=0, bandwidth=1, sigma_x=None,
                           roty ** 2 / sigma_y ** 2 +
                           rotz ** 2 / sigma_z ** 2))
     # Normalize the enveloppe
-    g /= 2 * np.pi * sigma_x * sigma_y * sigma_z
+    g /= ((2 * np.pi)**(3. / 2.)) * sigma_x * sigma_y * sigma_z
     # Apply the sinusoidal
-    g *= np.exp(1j * 2 * np.pi * (frequency * rotx +
-                                  frequency * roty +
-                                  frequency * rotz))
+    g *= np.exp(1j * 2 * np.pi * (frequency * rotx))
 
     return g
 
@@ -122,7 +163,7 @@ class GaborBankExtraction(StandaloneExtraction):
         Vector containing the different rotations angles of the filer bank
         in the z plane.
 
-    sigmas : ndarray, shape (3, )
+    scale_sigmas : ndarray, shape (3, )
         The standard deviations x, y, and z for each direction of the
         filter bank.
 
@@ -137,12 +178,12 @@ class GaborBankExtraction(StandaloneExtraction):
 
     """
 
-    def __init__(self, base_modality, frequencies, thetas, phis, sigmas):
+    def __init__(self, base_modality, frequencies, thetas, phis, scale_sigmas):
         super(GaborBankExtraction, self).__init__(base_modality)
         self.frequencies = frequencies
         self.thetas = thetas
         self.phis = phis
-        self.sigmas = sigmas
+        self.scale_sigmas = scale_sigmas
         self.data_ = None
 
     def fit(self, modality, ground_truth=None, cat=None):
@@ -176,11 +217,12 @@ class GaborBankExtraction(StandaloneExtraction):
         for theta in self.thetas:
             for phi in self.phis:
                 for frequency in self.frequencies:
-                    kernels.append(gabor_filter_3d(frequency,
-                                                   theta=theta, phi=phi,
-                                                   sigma_x=self.sigmas[0],
-                                                   sigma_y=self.sigmas[1],
-                                                   sigma_z=self.sigmas[2]))
+                    kernels.append(gabor_filter_3d(
+                        frequency,
+                        theta=theta, phi=phi,
+                        scale_x=self.scale_sigmas[0],
+                        scale_y=self.scale_sigmas[1],
+                        scale_z=self.scale_sigmas[2]))
 
         self.data_ = []
         # We can compute the different convolution
