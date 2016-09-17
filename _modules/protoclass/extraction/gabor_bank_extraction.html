@@ -138,7 +138,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">convolve</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">fftconvolve</span>
 
 <span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
 
@@ -365,10 +365,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># We can compute the different convolution</span>
         <span class="k">for</span> <span class="n">kernel</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span>
             <span class="c1"># Compute the real filtering</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convolve</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">kernel</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">kernel</span><span class="p">),</span>
+                                          <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">))</span>
             <span class="c1"># Compute the imaginary filtering</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convolve</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">kernel</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">kernel</span><span class="p">),</span>
+                                          <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">))</span>
 
         <span class="c1"># Convert to a numpy array</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">)</span>
