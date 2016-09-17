@@ -178,11 +178,13 @@ class GaborBankExtraction(StandaloneExtraction):
 
     """
 
-    def __init__(self, base_modality, frequencies, thetas, phis, scale_sigmas):
+    def __init__(self, base_modality, frequencies, alphas, betas, gammas,
+                 scale_sigmas):
         super(GaborBankExtraction, self).__init__(base_modality)
         self.frequencies = frequencies
-        self.thetas = thetas
-        self.phis = phis
+        self.alphas = alphas
+        self.betas = betas
+        self.gammas = gammas
         self.scale_sigmas = scale_sigmas
         self.data_ = None
 
@@ -214,15 +216,16 @@ class GaborBankExtraction(StandaloneExtraction):
 
         # Create the kernel for the bank of filter
         kernels = []
-        for theta in self.thetas:
-            for phi in self.phis:
-                for frequency in self.frequencies:
-                    kernels.append(gabor_filter_3d(
-                        frequency,
-                        theta=theta, phi=phi,
-                        scale_x=self.scale_sigmas[0],
-                        scale_y=self.scale_sigmas[1],
-                        scale_z=self.scale_sigmas[2]))
+        for alpha in self.alphas:
+            for beta in self.betas:
+                for gamma in self.gammas:
+                    for frequency in self.frequencies:
+                        kernels.append(gabor_filter_3d(
+                            frequency,
+                            alpha=alpha, beta=beta, gamma=gamma,
+                            scale_x=self.scale_sigmas[0],
+                            scale_y=self.scale_sigmas[1],
+                            scale_z=self.scale_sigmas[2]))
 
         self.data_ = []
         # We can compute the different convolution
