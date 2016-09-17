@@ -229,8 +229,8 @@ class GaborBankExtraction(StandaloneExtraction):
 
         self.data_ = []
         # We can compute the different convolution
-        for kernel in kernels:
-            print kernel.shape
+        for idx_kernel, kernel in enumerate(kernels):
+            print 'Apply kernel #{}/{}'.format(idx_kernel + 1, len(kernels))
             # Compute the real filtering
             self.data_.append(fftconvolve(modality.data_, np.real(kernel),
                                           mode='same'))
