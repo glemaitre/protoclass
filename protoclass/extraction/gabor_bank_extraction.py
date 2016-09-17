@@ -3,7 +3,7 @@ from __future__ import division
 
 import numpy as np
 
-from scipy.ndimage.filters import convolve
+from scipy.signal import fftconvolve
 
 from .standalone_extraction import StandaloneExtraction
 
@@ -230,10 +230,13 @@ class GaborBankExtraction(StandaloneExtraction):
         self.data_ = []
         # We can compute the different convolution
         for kernel in kernels:
+            print kernel.shape
             # Compute the real filtering
-            self.data_.append(convolve(modality.data_, np.real(kernel)))
+            self.data_.append(fftconvolve(modality.data_, np.real(kernel),
+                                          mode='same'))
             # Compute the imaginary filtering
-            self.data_.append(convolve(modality.data_, np.imag(kernel)))
+            self.data_.append(fftconvolve(modality.data_, np.imag(kernel),
+                                          mode='same'))
 
         # Convert to a numpy array
         self.data_ = np.array(self.data_)
