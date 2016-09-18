@@ -1,0 +1,26 @@
+protoclass.extraction.DCTExtraction
+===================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: DCTExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DCTExtraction.__init__
+      ~DCTExtraction.fit
+      ~DCTExtraction.load_from_pickles
+      ~DCTExtraction.save_to_pickles
+      ~DCTExtraction.transform
+   
+   
+
+   
+   
+   

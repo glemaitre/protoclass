@@ -77,6 +77,7 @@ Standalone related methods
      extraction.HaralickExtraction
      extraction.PhaseCongruencyExtraction
      extraction.GaborBankExtraction
+     extraction.DCTExtraction
 
 Addtionally, the following functions are available:
 
