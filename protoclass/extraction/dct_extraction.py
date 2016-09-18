@@ -13,7 +13,7 @@ from .standalone_extraction import StandaloneExtraction
 
 
 def _compute_dct_features(patch):
-    """Compute the haralick feature.
+    """Compute the DCT feature.
 
     This function is used for parallel processing.
 
@@ -93,7 +93,7 @@ class DCTExtraction(StandaloneExtraction):
         # Extract the set of patches from the modality data
         patches = extract_patches(modality.data_, patch_shape=self.patch_size)
 
-        # Allocate the haralick maps, one for each feature that
+        # Allocate the DCT maps, one for each feature that
         # will be computed
         nb_features = np.prod(self.patch_size)
         self.data_ = np.zeros((modality.data_.shape[0],
@@ -101,7 +101,7 @@ class DCTExtraction(StandaloneExtraction):
                                modality.data_.shape[2],
                                nb_features))
 
-        # # Extract Haralick feature for each patch
+        # # Extract DCT feature for each patch
         # # Define the shift to apply
         if isinstance(self.patch_size, tuple):
             y_shift = int(np.ceil((self.patch_size[0] - 1) / 2.))
@@ -130,9 +130,10 @@ class DCTExtraction(StandaloneExtraction):
         dct_features = np.array(dct_features)
         # Reshape the feature matrix
         dct_features = dct_features.reshape((patches.shape[0],
-                                                       patches.shape[1],
-                                                       patches.shape[2],
-                                                       nb_features))
+                                             patches.shape[1],
+                                             patches.shape[2],
+                                             nb_features))
+
         # Copy the feature into the object
         self.data_[y_shift : -y_shift,
                    x_shift : -x_shift,
