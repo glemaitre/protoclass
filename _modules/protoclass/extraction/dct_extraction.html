@@ -148,7 +148,7 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_dct_features</span><span class="p">(</span><span class="n">patch</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the haralick feature.</span>
+    <span class="sd">&quot;&quot;&quot;Compute the DCT feature.</span>
 
 <span class="sd">    This function is used for parallel processing.</span>
 
@@ -228,7 +228,7 @@
         <span class="c1"># Extract the set of patches from the modality data</span>
         <span class="n">patches</span> <span class="o">=</span> <span class="n">extract_patches</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">patch_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span>
 
-        <span class="c1"># Allocate the haralick maps, one for each feature that</span>
+        <span class="c1"># Allocate the DCT maps, one for each feature that</span>
         <span class="c1"># will be computed</span>
         <span class="n">nb_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -236,7 +236,7 @@
                                <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                                <span class="n">nb_features</span><span class="p">))</span>
 
-        <span class="c1"># # Extract Haralick feature for each patch</span>
+        <span class="c1"># # Extract DCT feature for each patch</span>
         <span class="c1"># # Define the shift to apply</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">y_shift</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">))</span>
@@ -265,9 +265,10 @@
         <span class="n">dct_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dct_features</span><span class="p">)</span>
         <span class="c1"># Reshape the feature matrix</span>
         <span class="n">dct_features</span> <span class="o">=</span> <span class="n">dct_features</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                       <span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                                       <span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                                       <span class="n">nb_features</span><span class="p">))</span>
+                                             <span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                             <span class="n">nb_features</span><span class="p">))</span>
+
         <span class="c1"># Copy the feature into the object</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">y_shift</span> <span class="p">:</span> <span class="o">-</span><span class="n">y_shift</span><span class="p">,</span>
                    <span class="n">x_shift</span> <span class="p">:</span> <span class="o">-</span><span class="n">x_shift</span><span class="p">,</span>
