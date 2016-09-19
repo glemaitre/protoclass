@@ -78,6 +78,7 @@ Standalone related methods
      extraction.PhaseCongruencyExtraction
      extraction.GaborBankExtraction
      extraction.DCTExtraction
+     extraction.SpatialExtraction
 
 Addtionally, the following functions are available:
 
