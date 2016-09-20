@@ -40,6 +40,8 @@ conda install --yes scikit-learn
 conda install --yes -c glemaitre imbalanced-learn=0.1.8
 conda install --yes seaborn
 conda install --yes numpydoc
+conda install --yes sphinx
+conda install --yes sphinx_rtd_theme
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
