@@ -8,11 +8,14 @@ from scipy.ndimage.measurements import center_of_mass
 
 from skimage.measure import find_contours
 
+from sklearn.preprocessing import MinMaxScaler
+
 from .standalone_extraction import StandaloneExtraction
 
 KIND_KNOWN = ('position', 'distance')
 COORD_SYSTEM_KNOWN = ('euclidean', 'cylindrical')
 REFERENCE = ('centre', 'nn-contour-point')
+
 
 
 class SpatialExtraction(StandaloneExtraction):
@@ -45,7 +48,9 @@ class SpatialExtraction(StandaloneExtraction):
     roi_data_ : ndarray, shape flexible
         Corresponds to the index to consider in order to fit the data.
 
-    data_ : ndarray
+    data_ : ndarray,
+        Containing the data of all the slices according to the desired spatial
+        information
 
     """
 
@@ -187,18 +192,41 @@ class SpatialExtraction(StandaloneExtraction):
             # Compute the center of mass of the ground-truth
             barycenter = center_of_mass(gt)
 
-            # We need to change X and Y
+            # We need to change X and Y and express in homogeneous coordinate
             barycenter = np.atleast_2d((barycenter[1],
                                         barycenter[0],
-                                        barycenter[2])).T
+                                        barycenter[2],
+                                        1)).T
             # Compute the coordinate of the barycenter in the real world
             # coordinate system
-            self.barycenter = affine_mat * barycenter
+            barycenter = affine_mat * barycenter
+            # Remove the last row
+            self.barycenter = barycenter[:-1, :]
 
-            # # We need to extract either the position or the distance
-            # if self.kind == 'position':
-                
-            # elif self.kind == 'distance':
+            # Compute the relative position in the euclidean space which will
+            # be used afterwards
+            coord_real -= self.barycenter
+
+            # Reshape the coordinate properly
+            X = np.squeeze(np.array(coord_real[0, :]))
+            Y = np.squeeze(np.array(coord_real[1, :]))
+            Z = np.squeeze(np.array(coord_real[2, :]))
+
+            self.data_ = np.array([Y.reshape(modality.data_.shape),
+                                   X.reshape(modality.data_.shape),
+                                   Z.reshape(modality.data_.shape)])
+
+            # We need to extract either the position or the distance
+            if self.kind == 'position' and self.coord_system == 'cylindrical':
+                # Convert the euclidean coordinate to cylindrical coordinate
+                # Copy the data temporary
+                eucl_data = self.data_.copy()
+                self.data_[0] = np.sqrt(eucl_data[0] ** 2 + eucl_data[1] ** 2)
+                self.data_[1] = np.arctan2(eucl_data[0], eucl_data[1])
+
+            elif self.kind == 'distance':
+                # Compute the euclidean distance
+                self.data_ = np.sum(self.data_ ** 2, axis=0)
 
         return self
 
@@ -221,8 +249,10 @@ class SpatialExtraction(StandaloneExtraction):
         Returns
         ------
         data : ndarray, shape (n_sample, n_feature)
-             A matrix containing the features extracted. The number of samples
-             is equal to the number of positive label in the ground-truth.
+            A matrix containing the features extracted. The number of samples
+            is equal to the number of positive label in the ground-truth.
+            If distance, a single feature is returned. If position,
+            3 features are returned.
 
         """
         super(SpatialExtraction, self).transform(
@@ -233,5 +263,32 @@ class SpatialExtraction(StandaloneExtraction):
         # Check that we fitted the data
         if self.data_ is None:
             raise RuntimeError('Fit the data before to extract anything.')
+
+        if self.kind == 'position':
+            # Allocate the data
+            data = np.zeros((self.roi_data_[0].size, 3))
+            # Extract the data for each feature
+            for feat_dim in range(3):
+                feat_data = self.data_[feat_dim]
+                data[:, feat_dim] = feat_data[self.roi_data_]
+
+            # We need to normalize the data
+            if self.coord_system == 'euclidean':
+                # Define an object for the normalization
+                norm_obj = MinMaxScaler()
+                data = norm_obj.fit_transform(data)
+
+            elif self.coord_system == 'cyclindrical':
+                # We need to normalize r and z between -1 and 1
+                norm_obj = MinMaxScaler(feature_range=(-1, 1))
+                # r component
+                data[:, 0] = MinMaxScaler(data[:, 0])
+                # Z component
+                data[:, 2] = MinMaxScaler(data[:, 2])
+
+        elif self.kind == 'distance':
+            data = self.data_[self.roi_data_]
+            # Normalize the distance with the max
+            data = data / np.max(data)
 
         return data
