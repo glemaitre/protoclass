@@ -17,7 +17,6 @@ COORD_SYSTEM_KNOWN = ('euclidean', 'cylindrical')
 REFERENCE = ('centre', 'nn-contour-point')
 
 
-
 class SpatialExtraction(StandaloneExtraction):
     """Spatial extraction from standalone modality.
 
