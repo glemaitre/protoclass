@@ -134,17 +134,17 @@
             
   <h1>Source code for protoclass.extraction.dct_extraction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;DCT extraction from standalone modality.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
-<span class="kn">from</span> <span class="nn">scipy.fftpack</span> <span class="kn">import</span> <span class="n">dct</span>
+<span class="kn">from</span> <span class="nn">scipy.fftpack</span> <span class="k">import</span> <span class="n">dct</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="kn">import</span> <span class="n">extract_patches</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="k">import</span> <span class="n">extract_patches</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
+<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="k">import</span> <span class="n">StandaloneExtraction</span>
 
 
 <span class="k">def</span> <span class="nf">_compute_dct_features</span><span class="p">(</span><span class="n">patch</span><span class="p">):</span>
@@ -197,9 +197,9 @@
 <div class="viewcode-block" id="DCTExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.DCTExtraction.html#protoclass.extraction.DCTExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">patch_size</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DCTExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span> <span class="o">=</span> <span class="n">patch_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="DCTExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.DCTExtraction.html#protoclass.extraction.DCTExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DCTExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.DCTExtraction.html#protoclass.extraction.DCTExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the images images.</span>
 
 <span class="sd">        Parameters</span>
@@ -276,7 +276,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="DCTExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.DCTExtraction.html#protoclass.extraction.DCTExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DCTExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.DCTExtraction.html#protoclass.extraction.DCTExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>
@@ -305,7 +305,7 @@
             <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
 
         <span class="c1"># Check that we fitted the data</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data before to extract anything.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Convert the roi to a numpy array</span>

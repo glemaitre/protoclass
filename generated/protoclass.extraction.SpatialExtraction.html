@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>protoclass.extraction.HaralickExtraction &mdash; protoclass 0.1.dev0 documentation</title>
+  <title>protoclass.extraction.SpatialExtraction &mdash; protoclass 0.1.dev0 documentation</title>
   
 
   
@@ -94,11 +94,11 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id1">Standalone related methods</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.IntensitySignalExtraction.html">protoclass.extraction.IntensitySignalExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EdgeSignalExtraction.html">protoclass.extraction.EdgeSignalExtraction</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.HaralickExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.HaralickExtraction.html">protoclass.extraction.HaralickExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.DCTExtraction.html">protoclass.extraction.DCTExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.SpatialExtraction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#id2">Temporal related methods</a></li>
@@ -139,11 +139,11 @@
       
           <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
       
-    <li>protoclass.extraction.HaralickExtraction</li>
+    <li>protoclass.extraction.SpatialExtraction</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/generated/protoclass.extraction.HaralickExtraction.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/protoclass.extraction.SpatialExtraction.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,12 +153,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="protoclass-extraction-haralickextraction">
-<h1>protoclass.extraction.HaralickExtraction<a class="headerlink" href="#protoclass-extraction-haralickextraction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="protoclass-extraction-spatialextraction">
+<h1>protoclass.extraction.SpatialExtraction<a class="headerlink" href="#protoclass-extraction-spatialextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="protoclass.extraction.HaralickExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">HaralickExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>distance=1</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em>, <em>levels=256</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Haralick extraction from standalone modality.</p>
+<dt id="protoclass.extraction.SpatialExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">SpatialExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>kind='position'</em>, <em>coord_system='euclidean'</em>, <em>reference='centre'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/spatial_extraction.html#SpatialExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SpatialExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spatial extraction from standalone modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -168,23 +168,20 @@
 <div><p>The base modality on which the normalization will be applied. The base
 modality should inherate from StandaloneModality class.</p>
 </div></blockquote>
-<p><strong>distance</strong> : int, optional (default=1)</p>
+<p><strong>kind</strong> : str, optional (default=&#8217;position&#8217;)</p>
 <blockquote>
-<div><p>The distance used to compute the cooccurence matrix</p>
+<div><p>The type of spatial feature to extract. Can be either &#8216;position&#8217; or
+&#8216;distance&#8217;.</p>
 </div></blockquote>
-<p><strong>patch_size</strong> : int or tuple, optional (default=(9, 9, 3))</p>
+<p><strong>coord_system</strong> : str, optional (default=&#8217;euclidean&#8217;)</p>
 <blockquote>
-<div><p>The size of the sliding used to extract patches later used to compute
-the cooccurence matrix.</p>
+<div><p>The type of coordinate system to use. Can be either &#8216;euclidean&#8217; or
+&#8216;cylindrical&#8217;.</p>
 </div></blockquote>
-<p><strong>levels</strong> : int, optional (default=256)</p>
+<p><strong>reference</strong> : str, optional (default=&#8217;centre&#8217;)</p>
 <blockquote class="last">
-<div><p>The input image should contain integers in [0, levels-1], where levels
-indicate the number of grey-levels counted (typically 256 for an 8-bit
-image). This argument is required for 16-bit images or higher and is
-typically the maximum of the image. As the output matrix is at least
-levels x levels, it might be preferable to use binning of the input
-image rather than large values for levels.</p>
+<div><p>If type is &#8216;distance&#8217;, the reference can be either &#8216;centre&#8217; or
+&#8216;nn-contour-point&#8217;</p>
 </div></blockquote>
 </td>
 </tr>
@@ -203,6 +200,9 @@ image rather than large values for levels.</p>
 <tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">roi_data_</span></a></td>
 <td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
 </tr>
+<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">data_</span></a></td>
+<td>(ndarray,) Containing the data of all the slices according to the desired spatial information</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
@@ -212,23 +212,23 @@ image rather than large values for levels.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.fit" title="protoclass.extraction.HaralickExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.fit" title="protoclass.extraction.SpatialExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Compute the images images.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="protoclass.extraction.HaralickExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.load_from_pickles" title="protoclass.extraction.SpatialExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="protoclass.extraction.HaralickExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.save_to_pickles" title="protoclass.extraction.SpatialExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.transform" title="protoclass.extraction.HaralickExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.transform" title="protoclass.extraction.SpatialExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>distance=1</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em>, <em>levels=256</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.SpatialExtraction.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>kind='position'</em>, <em>coord_system='euclidean'</em>, <em>reference='centre'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/spatial_extraction.html#SpatialExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SpatialExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -238,26 +238,26 @@ image rather than large values for levels.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.__init__" title="protoclass.extraction.HaralickExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;distance,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.__init__" title="protoclass.extraction.SpatialExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;kind,&nbsp;...])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.fit" title="protoclass.extraction.HaralickExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.fit" title="protoclass.extraction.SpatialExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Compute the images images.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="protoclass.extraction.HaralickExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.load_from_pickles" title="protoclass.extraction.SpatialExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="protoclass.extraction.HaralickExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.save_to_pickles" title="protoclass.extraction.SpatialExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.HaralickExtraction.transform" title="protoclass.extraction.HaralickExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.SpatialExtraction.transform" title="protoclass.extraction.SpatialExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.SpatialExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/spatial_extraction.html#SpatialExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SpatialExtraction.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the images images.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -284,8 +284,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.load_from_pickles">
-<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.SpatialExtraction.load_from_pickles">
+<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.SpatialExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to load a normalization object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -308,8 +308,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.save_to_pickles">
-<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.SpatialExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.SpatialExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to save a normalizatio object using pickles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -329,8 +329,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.HaralickExtraction.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/haralick_extraction.html#HaralickExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.HaralickExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.SpatialExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/spatial_extraction.html#SpatialExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.SpatialExtraction.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data from the given modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -355,7 +355,9 @@ None if ground-truth is not None.</p>
 <p><strong>data</strong> : ndarray, shape (n_sample, n_feature)</p>
 <blockquote class="last">
 <div><p>A matrix containing the features extracted. The number of samples
-is equal to the number of positive label in the ground-truth.</p>
+is equal to the number of positive label in the ground-truth.
+If distance, a single feature is returned. If position,
+3 features are returned.</p>
 </div></blockquote>
 </td>
 </tr>

@@ -1,0 +1,26 @@
+protoclass.extraction.SpatialExtraction
+=======================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: SpatialExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpatialExtraction.__init__
+      ~SpatialExtraction.fit
+      ~SpatialExtraction.load_from_pickles
+      ~SpatialExtraction.save_to_pickles
+      ~SpatialExtraction.transform
+   
+   
+
+   
+   
+   

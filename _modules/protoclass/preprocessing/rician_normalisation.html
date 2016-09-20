@@ -137,13 +137,13 @@
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rice</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">rice</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="kn">import</span> <span class="n">StandaloneNormalization</span>
+<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="k">import</span> <span class="n">StandaloneNormalization</span>
 
 
 <div class="viewcode-block" id="RicianNormalization"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.RicianNormalization.html#protoclass.preprocessing.RicianNormalization">[docs]</a><span class="k">class</span> <span class="nc">RicianNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
@@ -188,12 +188,12 @@
 <div class="viewcode-block" id="RicianNormalization.__init__"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.RicianNormalization.html#protoclass.preprocessing.RicianNormalization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RicianNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="c1"># Check the gaussian parameters argument</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
                 <span class="c1"># The parameters will have to be fitted at fit the fit time</span>
                 <span class="c1"># when the data will be available</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The string for the object params is&#39;</span>
                                  <span class="s1">&#39; unknown.&#39;</span><span class="p">)</span>
@@ -203,7 +203,7 @@
             <span class="n">valid_presets</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">val_param</span> <span class="ow">in</span> <span class="n">valid_presets</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">val_param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least the parameter {} is not specify&#39;</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least the parameter </span><span class="si">{}</span><span class="s1"> is not specify&#39;</span>
                                      <span class="s1">&#39; in the dictionary.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val_param</span><span class="p">))</span>
             <span class="c1"># For each key, check if this is a known parameters</span>
             <span class="k">for</span> <span class="n">k_param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -223,7 +223,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The type of the object params does not fulfill&#39;</span>
                              <span class="s1">&#39; any requirement.&#39;</span><span class="p">)</span>
         <span class="c1"># Initialize the fitting boolean</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">_model_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Function defining the Gaussian model.</span>
@@ -257,7 +257,7 @@
 
         <span class="k">return</span> <span class="n">rice</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
 
-<div class="viewcode-block" id="RicianNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.RicianNormalization.html#protoclass.preprocessing.RicianNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RicianNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.RicianNormalization.html#protoclass.preprocessing.RicianNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method to find the parameters needed to apply the normalization.</span>
 
 <span class="sd">        Parameters</span>
@@ -306,7 +306,7 @@
                  <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="p">))</span>
 
         <span class="c1"># Compute the histogram that need to be fitted</span>
-        <span class="n">pdf</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">pdf</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="c1"># Compute the bins centers</span>
         <span class="n">bincenters</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
@@ -336,7 +336,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;off&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">popt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 

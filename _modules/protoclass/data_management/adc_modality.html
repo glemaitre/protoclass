@@ -137,12 +137,12 @@
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="kn">as</span> <span class="nn">sitk</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="k">as</span> <span class="nn">sitk</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_modality</span> <span class="kn">import</span> <span class="n">StandaloneModality</span>
+<span class="kn">from</span> <span class="nn">.standalone_modality</span> <span class="k">import</span> <span class="n">StandaloneModality</span>
 
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_path_data</span>
 
 
 <div class="viewcode-block" id="ADCModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality">[docs]</a><span class="k">class</span> <span class="nc">ADCModality</span><span class="p">(</span><span class="n">StandaloneModality</span><span class="p">):</span>
@@ -181,10 +181,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ADCModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ADCModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ADCModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ADCModality.get_pdf"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.get_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ADCModality.get_pdf"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.get_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Extract the a list of pdf related with the data.</span>
 
 <span class="sd">        Parameters</span>
@@ -211,36 +211,36 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check that the data have been read</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to load the data first. Refer to the&#39;</span>
                              <span class="s1">&#39; function read_data_from_path().&#39;</span><span class="p">)</span>
 
         <span class="c1"># Build the histogram corresponding to the current volume</span>
         <span class="c1"># Find how many bins do we need</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
                 <span class="n">nb_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameters for `nb_bins.`&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">pass</span>
-        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown type for the parameters `nb_bins`.&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
                                               <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
-                                              <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                              <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="n">roi_data</span><span class="p">],</span>
                                               <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
-                                              <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                              <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">pdf_data</span><span class="p">,</span> <span class="n">bin_data</span></div>
 
-<div class="viewcode-block" id="ADCModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ADCModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the PDF and the first-order statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -264,7 +264,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if the data have been read</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to read the data first. Call the&#39;</span>
                              <span class="s1">&#39; function read_data_from_path()&#39;</span><span class="p">)</span>
 
@@ -274,21 +274,21 @@
 
         <span class="c1"># Build the histogram corresponding to the current volume</span>
         <span class="c1"># Find how many bins do we need</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
                 <span class="n">nb_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameters for `nb_bins.`&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span>
                                             <span class="n">bins</span><span class="o">=</span><span class="n">nb_bins</span><span class="p">,</span>
-                                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                            <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="ADCModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ADCModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.ADCModality.html#protoclass.data_management.ADCModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read T2W images which represent a single 3D volume.</span>
 
 <span class="sd">        Parameters</span>
@@ -303,14 +303,14 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check the consistency of the path data</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># We will overide the path and raise a warning</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
                           <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
                              <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
         <span class="c1"># Create a reader object</span>

@@ -137,17 +137,17 @@
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="kn">as</span> <span class="nn">sitk</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="k">as</span> <span class="nn">sitk</span>
 
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
 
-<span class="kn">from</span> <span class="nn">.temporal_modality</span> <span class="kn">import</span> <span class="n">TemporalModality</span>
+<span class="kn">from</span> <span class="nn">.temporal_modality</span> <span class="k">import</span> <span class="n">TemporalModality</span>
 
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_path_data</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">find_nearest</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_path_data</span>
 
 <div class="viewcode-block" id="DCEModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality">[docs]</a><span class="k">class</span> <span class="nc">DCEModality</span><span class="p">(</span><span class="n">TemporalModality</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to handle DCE-MRI modality.</span>
@@ -197,10 +197,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DCEModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DCEModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DCEModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DCEModality.get_pdf_list"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.get_pdf_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DCEModality.get_pdf_list"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.get_pdf_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdf_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Extract the a list of pdf related with the data.</span>
 
 <span class="sd">        Parameters</span>
@@ -225,17 +225,17 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check that the data have been read</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to load the data first. Refer to the&#39;</span>
                              <span class="s1">&#39; function read_data_from_path().&#39;</span><span class="p">)</span>
 
         <span class="c1"># Check if we have to auto compute the range of the histogram</span>
         <span class="c1"># Check that we have a proper list of bins</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
                 <span class="n">nb_bins</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">data_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">nb_bins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
                             <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data_serie</span><span class="p">)</span> <span class="o">-</span>
                             <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))))</span>
@@ -259,20 +259,20 @@
         <span class="n">bin_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Go through each serie to compute the pdfs</span>
         <span class="k">for</span> <span class="n">data_serie</span><span class="p">,</span> <span class="n">bins</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">nb_bins</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">roi_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">pdf_s</span><span class="p">,</span> <span class="n">bin_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data_serie</span><span class="p">,</span>
                                             <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
-                                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                            <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">pdf_s</span><span class="p">,</span> <span class="n">bin_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data_serie</span><span class="p">[</span><span class="n">roi_data</span><span class="p">],</span>
                                             <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
-                                            <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                            <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdf_s</span><span class="p">)</span>
             <span class="n">bin_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bin_s</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">pdf_list</span><span class="p">,</span> <span class="n">bin_list</span></div>
 
-<div class="viewcode-block" id="DCEModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DCEModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the histogram of each serie and first-order statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -291,7 +291,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if the data have been read</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to read the data first. Call the&#39;</span>
                              <span class="s1">&#39; function read_data_from_path()&#39;</span><span class="p">)</span>
 
@@ -306,7 +306,7 @@
         <span class="n">max_series_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Check that we have a proper list of bins</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nb_bins</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">nb_bins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
                 <span class="n">nb_bins</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">data_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">:</span>
@@ -320,7 +320,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Provide a list of integer of bins&#39;</span>
                                  <span class="s1">&#39; with the same size as the number&#39;</span>
                                  <span class="s1">&#39; of serie in the data.&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown arguments for `nb_bins`.&#39;</span><span class="p">)</span>
@@ -328,7 +328,7 @@
         <span class="k">for</span> <span class="n">data_serie</span><span class="p">,</span> <span class="n">bins</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">nb_bins</span><span class="p">):</span>
             <span class="n">pdf_s</span><span class="p">,</span> <span class="n">bin_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data_serie</span><span class="p">,</span>
                                         <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
-                                        <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                        <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">pdf_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdf_s</span><span class="p">)</span>
             <span class="n">bin_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bin_s</span><span class="p">)</span>
             <span class="n">min_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data_serie</span><span class="p">))</span>
@@ -342,7 +342,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="DCEModality.build_heatmap"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.build_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">build_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DCEModality.build_heatmap"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.build_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">build_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roi_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Function which return a heatmap using the pdf of each serie.</span>
 
 <span class="sd">        Parameters</span>
@@ -369,11 +369,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check that the data have been read</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to load the data first. Refer to the&#39;</span>
                              <span class="s1">&#39; function read_data_from_path().&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nb_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># We will used the value found during the data reading</span>
             <span class="n">nb_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_bins_</span>
 
@@ -418,7 +418,7 @@
 
             <span class="c1"># Interpolate the value using nearest neighbour</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">bin_serie</span><span class="p">,</span> <span class="n">pdf_serie</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-                         <span class="n">bounds_error</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                         <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
             <span class="n">nb_bin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">max_value</span> <span class="o">-</span> <span class="n">min_value</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ratio_bins</span><span class="p">))</span>
             <span class="n">bin_serie_interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">,</span> <span class="n">nb_bin</span><span class="p">)</span>
@@ -429,7 +429,7 @@
 
         <span class="k">return</span> <span class="n">heatmap</span><span class="p">,</span> <span class="n">bins_heatmap</span></div>
 
-    <span class="k">def</span> <span class="nf">_build_dict_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_build_dict_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the dictionary from the dicom header.</span>
 
 <span class="sd">        Parameters</span>
@@ -467,7 +467,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;acq-time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
                 <span class="n">im</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="s1">&#39;0008|0032&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
                 <span class="s1">&#39;%H%M%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)]</span>
-            <span class="n">refit</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">refit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">im</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;acq-time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
@@ -476,7 +476,7 @@
 
         <span class="k">return</span> <span class="n">refit</span>
 
-<div class="viewcode-block" id="DCEModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DCEModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Function to read temporal images which represent a 3D volume</span>
 <span class="sd">        over time.</span>
 
@@ -492,14 +492,14 @@
 <span class="sd">           Returns self.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check the consistency of the path data</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># We will overide the path and raise a warning</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
                           <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_path_data</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
                              <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
 
@@ -509,7 +509,7 @@
         <span class="c1"># several series and we can go through each of them.</span>
 
         <span class="c1"># Case that we have a single string</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
             <span class="c1"># Create a reader object</span>
             <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>
 
@@ -531,7 +531,7 @@
 
             <span class="c1"># Open the volume in the sorted order</span>
             <span class="n">list_volume</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">for</span> <span class="n">id_time</span> <span class="ow">in</span> <span class="n">series_time</span><span class="p">[</span><span class="n">idx_series_sorted</span><span class="p">]:</span>
                 <span class="c1"># Get the filenames corresponding to the current ID</span>
                 <span class="n">dicom_names_serie</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetGDCMSeriesFileNames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span>
@@ -592,7 +592,7 @@
                                  <span class="s1">&#39; 2 sequences.&#39;</span><span class="p">)</span>
 
             <span class="n">list_volume</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">is_dict_built</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">for</span> <span class="n">path_serie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">:</span>
 
                 <span class="n">reader</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader</span><span class="p">()</span>

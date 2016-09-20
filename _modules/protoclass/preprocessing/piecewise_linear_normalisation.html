@@ -137,11 +137,11 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="kn">import</span> <span class="n">StandaloneNormalization</span>
+<span class="kn">from</span> <span class="nn">.standalone_normalization</span> <span class="k">import</span> <span class="n">StandaloneNormalization</span>
 
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_npy_filename</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">check_npy_filename</span>
 
 
 <div class="viewcode-block" id="PiecewiseLinearNormalization"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization">[docs]</a><span class="k">class</span> <span class="nc">PiecewiseLinearNormalization</span><span class="p">(</span><span class="n">StandaloneNormalization</span><span class="p">):</span>
@@ -178,13 +178,13 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PiecewiseLinearNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span> <span class="o">=</span> <span class="n">nb_landmarks</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.partial_fit_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                          <span class="n">refit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.partial_fit_model"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.partial_fit_model">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">refit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Online fitting to update the landmarks used for the normalization.</span>
 
 <span class="sd">        Parameters</span>
@@ -222,7 +222,7 @@
 
         <span class="c1"># Compute which percentile we should compute for the current modality</span>
         <span class="n">landmarks_perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span><span class="p">,</span>
-                                     <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                     <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Find the value of the percentile</span>
         <span class="n">landmarks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">],</span>
@@ -249,7 +249,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span> <span class="o">=</span> <span class="n">landmarks</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">counter_partial_fit</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -274,7 +274,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
         <span class="c1"># Store that we loaded the model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_model_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -306,9 +306,9 @@
 
         <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_model</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="PiecewiseLinearNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PiecewiseLinearNormalization.fit"><a class="viewcode-back" href="../../../generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method to find the parameters needed to apply the normalization.</span>
 
 <span class="sd">        Parameters</span>
@@ -343,14 +343,14 @@
 
         <span class="c1"># Compute which percentile we should compute for the current modality</span>
         <span class="n">landmarks_perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_landmarks</span><span class="p">,</span>
-                                     <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                     <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Find the value of the percentile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span>
             <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">],</span>
             <span class="n">land</span><span class="p">)</span> <span class="k">for</span> <span class="n">land</span> <span class="ow">in</span> <span class="n">landmarks_perc</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 

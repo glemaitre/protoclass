@@ -98,6 +98,7 @@
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.GaborBankExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.DCTExtraction.html">protoclass.extraction.DCTExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#id2">Temporal related methods</a></li>
@@ -156,7 +157,7 @@
 <h1>protoclass.extraction.GaborBankExtraction<a class="headerlink" href="#protoclass-extraction-gaborbankextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="protoclass.extraction.GaborBankExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">GaborBankExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>betas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">GaborBankExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edge signal extraction from standalone modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -171,12 +172,12 @@ modality should inherate from StandaloneModality class.</p>
 <blockquote>
 <div><p>Vector containing the different frequencies of the Gabor filter bank.</p>
 </div></blockquote>
-<p><strong>thetas</strong> : ndarray, shape (n_theta, )</p>
+<p><strong>alphas</strong> : ndarray, shape (n_alpha, )</p>
 <blockquote>
 <div><p>Vector containing the different rotation angles of the filter bank
 in x-y plane.</p>
 </div></blockquote>
-<p><strong>phis</strong> : ndarray, shape (n_phi, )</p>
+<p><strong>gammas</strong> : ndarray, shape (n_gamma, )</p>
 <blockquote>
 <div><p>Vector containing the different rotations angles of the filer bank
 in the z plane.</p>
@@ -228,7 +229,7 @@ filter bank.</p>
 </table>
 <dl class="method">
 <dt id="protoclass.extraction.GaborBankExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>betas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>frequencies</em>, <em>alphas</em>, <em>gammas</em>, <em>scale_sigmas</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#GaborBankExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.GaborBankExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>

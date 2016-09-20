@@ -135,22 +135,22 @@
   <h1>Source code for protoclass.extraction.tofts_quantification_extraction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Toft quantification extraction from temporal modality.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
-<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="k">import</span> <span class="n">simps</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
 
-<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="kn">import</span> <span class="n">label</span>
-<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="kn">import</span> <span class="n">regionprops</span>
+<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="k">import</span> <span class="n">label</span>
+<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="k">import</span> <span class="n">regionprops</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
 
-<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
+<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="k">import</span> <span class="n">TemporalExtraction</span>
 
-<span class="kn">from</span> <span class="nn">..data_management</span> <span class="kn">import</span> <span class="n">DCEModality</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+<span class="kn">from</span> <span class="nn">..data_management</span> <span class="k">import</span> <span class="n">DCEModality</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_modality</span>
 
 
 <span class="k">def</span> <span class="nf">_regular_tofts</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cp_t</span><span class="p">,</span> <span class="n">Ktrans</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ve</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
@@ -390,24 +390,24 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ToftsQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">T10</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">hematocrit</span><span class="o">=</span><span class="mf">0.42</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ToftsQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">T10_</span> <span class="o">=</span> <span class="n">T10</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">r1_</span> <span class="o">=</span> <span class="n">r1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hematocrit_</span> <span class="o">=</span> <span class="n">hematocrit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flip_angle_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb_t_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span></div>
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="ToftsQuantificationExtraction.compute_aif"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.compute_aif">[docs]</a>    <span class="k">def</span> <span class="nf">compute_aif</span><span class="p">(</span><span class="n">dce_modality</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">eccentricity</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
                     <span class="n">diameter</span><span class="o">=</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span> <span class="n">area</span><span class="o">=</span><span class="p">(</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">400.</span><span class="p">),</span>
                     <span class="n">thres_sel</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determine the AIF by segmenting the aorta in the kinetic sequence.</span>
 
 <span class="sd">        Parameters</span>
@@ -479,7 +479,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Check the value of the parameters `thres_sel`.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Check that the data have been read</span>
-        <span class="k">if</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dce_modality</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Read the data first.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Check the type of estimator</span>
@@ -591,7 +591,7 @@
 
         <span class="k">return</span> <span class="n">aif</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_aif</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_aif</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">aif_params</span><span class="o">=</span><span class="p">[[</span><span class="mf">48.54</span><span class="p">,</span> <span class="mf">19.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.2276</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.378</span><span class="p">,</span> <span class="mf">7.92</span><span class="p">],</span> <span class="mf">1.050</span><span class="p">,</span>
                         <span class="mf">0.0028083</span><span class="p">,</span> <span class="mf">0.63463</span><span class="p">,</span> <span class="mf">28.98</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
@@ -701,7 +701,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check that the fitting was performed</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;You should fit the data before to try any&#39;</span>
                                <span class="s1">&#39; conversion.&#39;</span><span class="p">)</span>
 
@@ -751,7 +751,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check that the fitting was performed</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TR_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;You should fit the data before to try any&#39;</span>
                                <span class="s1">&#39; conversion.&#39;</span><span class="p">)</span>
 
@@ -849,7 +849,7 @@
 
         <span class="k">return</span> <span class="n">cb_t</span></div>
 
-<div class="viewcode-block" id="ToftsQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<div class="viewcode-block" id="ToftsQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.ToftsQuantificationExtraction.html#protoclass.extraction.ToftsQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;extended&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
@@ -893,7 +893,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown parameter for kind.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Check that the data have been fitted</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp_t_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data previous to transform them.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Organise that data such that we will compute the Toft&#39;s parameter</span>
@@ -920,7 +920,7 @@
                                                        <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                                                        <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
 
-        <span class="k">print</span> <span class="s1">&#39;DCE signal of interest extracted: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;DCE signal of interest extracted: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="c1"># Compute the concentration for each DCE signal</span>
         <span class="c1"># Let&#39;s do it in parallel</span>
@@ -932,7 +932,7 @@
         <span class="c1"># Convert the possible NaN of inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ct_t_</span><span class="p">)</span>
 
-        <span class="k">print</span> <span class="s1">&#39;Concentration computed from the signal&#39;</span>
+        <span class="nb">print</span> <span class="s1">&#39;Concentration computed from the signal&#39;</span>
 
         <span class="c1"># Fit the Tofts parameters</span>
         <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;extended&#39;</span><span class="p">:</span>

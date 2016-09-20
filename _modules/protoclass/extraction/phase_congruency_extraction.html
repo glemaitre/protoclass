@@ -135,12 +135,12 @@
   <h1>Source code for protoclass.extraction.phase_congruency_extraction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Phase congruency extraction from standalone modality.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">phasepack</span> <span class="kn">import</span> <span class="n">phasecong</span>
-<span class="kn">from</span> <span class="nn">phasepack</span> <span class="kn">import</span> <span class="n">phasecongmono</span>
+<span class="kn">from</span> <span class="nn">phasepack</span> <span class="k">import</span> <span class="n">phasecong</span>
+<span class="kn">from</span> <span class="nn">phasepack</span> <span class="k">import</span> <span class="n">phasecongmono</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
+<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="k">import</span> <span class="n">StandaloneExtraction</span>
 
 
 <span class="n">KNOWN_FILTER</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;regular&#39;</span><span class="p">,</span> <span class="s1">&#39;monogenic&#39;</span><span class="p">)</span>
@@ -178,9 +178,9 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PhaseCongruencyExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type_filter</span> <span class="o">=</span> <span class="n">type_filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict_params</span> <span class="o">=</span> <span class="n">dict_params</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="bp">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="PhaseCongruencyExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.PhaseCongruencyExtraction.html#protoclass.extraction.PhaseCongruencyExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PhaseCongruencyExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.PhaseCongruencyExtraction.html#protoclass.extraction.PhaseCongruencyExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the images images.</span>
 
 <span class="sd">        Parameters</span>
@@ -208,7 +208,7 @@
 
         <span class="c1"># Check that the filter provided is known</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_filter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">KNOWN_FILTER</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;{} filter is unknown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_filter</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> filter is unknown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_filter</span><span class="p">))</span>
 
         <span class="c1"># Regular filters</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_filter</span> <span class="o">==</span> <span class="s1">&#39;regular&#39;</span><span class="p">:</span>
@@ -296,7 +296,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PhaseCongruencyExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.PhaseCongruencyExtraction.html#protoclass.extraction.PhaseCongruencyExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PhaseCongruencyExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.PhaseCongruencyExtraction.html#protoclass.extraction.PhaseCongruencyExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>
@@ -325,7 +325,7 @@
             <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
 
         <span class="c1"># Check that we fitted the data</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fit the data before to extract anything.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Allocate the data</span>

@@ -135,7 +135,7 @@
   <h1>Source code for protoclass.extraction.intensity_signal_extraction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Intensity signal extraction from standalone modality.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="kn">import</span> <span class="n">StandaloneExtraction</span>
+<span class="kn">from</span> <span class="nn">.standalone_extraction</span> <span class="k">import</span> <span class="n">StandaloneExtraction</span>
 
 
 <div class="viewcode-block" id="IntensitySignalExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction">[docs]</a><span class="k">class</span> <span class="nc">IntensitySignalExtraction</span><span class="p">(</span><span class="n">StandaloneExtraction</span><span class="p">):</span>
@@ -161,7 +161,7 @@
 <div class="viewcode-block" id="IntensitySignalExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IntensitySignalExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="IntensitySignalExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensitySignalExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
 
 <span class="sd">        Parameters</span>
@@ -189,7 +189,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="IntensitySignalExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensitySignalExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.IntensitySignalExtraction.html#protoclass.extraction.IntensitySignalExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>

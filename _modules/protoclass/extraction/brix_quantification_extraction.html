@@ -134,18 +134,18 @@
             
   <h1>Source code for protoclass.extraction.brix_quantification_extraction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Brix quantification extraction from temporal modality.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
 
-<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="kn">import</span> <span class="n">TemporalExtraction</span>
+<span class="kn">from</span> <span class="nn">.temporal_extraction</span> <span class="k">import</span> <span class="n">TemporalExtraction</span>
 
-<span class="kn">from</span> <span class="nn">.tofts_quantification_extraction</span> <span class="kn">import</span> <span class="n">ToftsQuantificationExtraction</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_modality</span>
+<span class="kn">from</span> <span class="nn">.tofts_quantification_extraction</span> <span class="k">import</span> <span class="n">ToftsQuantificationExtraction</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_modality</span>
 
 
 <span class="n">KIND_BRIX</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;brix&#39;</span><span class="p">,</span> <span class="s1">&#39;hoffmann&#39;</span><span class="p">)</span>
@@ -378,11 +378,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BrixQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BrixQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BrixQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span></div>
 
-<div class="viewcode-block" id="BrixQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BrixQuantificationExtraction.fit"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the parameters needed to apply the extraction.</span>
 
 <span class="sd">        Parameters</span>
@@ -429,7 +429,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="BrixQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;brix&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="BrixQuantificationExtraction.transform"><a class="viewcode-back" href="../../../generated/protoclass.extraction.BrixQuantificationExtraction.html#protoclass.extraction.BrixQuantificationExtraction.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;brix&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the data from the given modality.</span>
 
 <span class="sd">        Parameters</span>
@@ -491,7 +491,7 @@
                                                        <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                                                        <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
 
-        <span class="k">print</span> <span class="s1">&#39;DCE signal of interest extracted: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;DCE signal of interest extracted: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signal_dce</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;brix&#39;</span><span class="p">:</span>
 
