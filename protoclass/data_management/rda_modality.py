@@ -19,6 +19,10 @@ class RDAModality(MRSIModlality):
 
     Parameters
     ----------
+
+    bandwidth : float,
+        The frequency bandwidth of the range.
+
     path_data : str, optional (default=None)
          The folder in which the data are stored.
 
@@ -27,9 +31,10 @@ class RDAModality(MRSIModlality):
     path_data_ : string
         Location of the data.
 
-    data_ : ndarray, shape (Y, X, Z)
-        The different volume of the T2W volume. The data are saved in
-        Y, X, Z ordered.
+    data_ : ndarray, shape (n_samples, Y, X, Z)
+        The different volume of the RDA volume. The data are saved in
+        n_samples, Y, X, Z ordered. n_samples corresponds to number of sample
+        in the MRSI spectra.
 
     metadata_ : dict
         Dictionnary which contain the MRI sequence information. Note that the
@@ -38,8 +43,9 @@ class RDAModality(MRSIModlality):
 
     """
 
-    def __init__(self, path_data=None):
+    def __init__(self, bandwidth, path_data=None):
         super(RDAModality, self).__init__(path_data=path_data)
+        self.bandwidth = bandwidth
 
     def update_histogram(self, nb_bins=None):
         """Method to compute some histogram."""
@@ -126,6 +132,8 @@ class RDAModality(MRSIModlality):
         self.metadata_['flip-angle'] = float(bin_dict['FlipAngle'])
         # Geth the size of each spectra
         self.metadata_['spectra-size'] = int(bin_dict['VectorSize'])
+        # Get the MR frequency
+        self.metadata_['MR-frequency'] = float(bin_dict['MRFrequency'])
         # Store the size of CSI scan
         self.metadata_['CSIMatrixSizeOfScan'] = (
             int(bin_dict['CSIMatrixSizeOfScan[0]']),
@@ -146,6 +154,8 @@ class RDAModality(MRSIModlality):
         # Store the information about the rotation in the plane
         self.metadata_['VOIRotationInPlane'] = float(
             bin_dict['VOIRotationInPlane'])
+        # Add the bandwidth information in the metadata
+        self.metadata_['bandwidth'] = self.bandwidth
 
         data = []
         while True:
@@ -181,5 +191,12 @@ class RDAModality(MRSIModlality):
                 for z in range(self.data_.shape[3]):
                     self.data_[:, y, x, z] = fftshift(fft(
                         self.data_[:, y, x, z]))
+
+        # We need to compute the ppm bandwidth assciated with the data
+        # Remember that the convention in ppm is inversely order
+        self.bandwidth_ppm = np.linspace((self.metadata_['bandwidth'] /
+                                          self.metadata_['MR-frequency']),
+                                         0.,
+                                         num=self.metadata_['spectra-size'])
 
         return self
