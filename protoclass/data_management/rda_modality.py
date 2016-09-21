@@ -6,6 +6,9 @@ import numpy as np
 
 import struct
 
+from scipy.fftpack import fft
+from scipy.fftpack import fftshift
+
 from .mrsi_modality import MRSIModlality
 
 from ..utils.validation import check_rda_filename
@@ -121,6 +124,8 @@ class RDAModality(MRSIModlality):
         self.metadata_['TR'] = float(bin_dict['TR'])
         self.metadata_['TE'] = float(bin_dict['TE'])
         self.metadata_['flip-angle'] = float(bin_dict['FlipAngle'])
+        # Geth the size of each spectra
+        self.metadata_['spectra-size'] = int(bin_dict['VectorSize'])
         # Store the size of CSI scan
         self.metadata_['CSIMatrixSizeOfScan'] = (
             int(bin_dict['CSIMatrixSizeOfScan[0]']),
@@ -142,7 +147,7 @@ class RDAModality(MRSIModlality):
         self.metadata_['VOIRotationInPlane'] = float(
             bin_dict['VOIRotationInPlane'])
 
-        self.data_ = []
+        data = []
         while True:
             # Read chunck of 8 bits
             db = f.read(8)
@@ -151,6 +156,30 @@ class RDAModality(MRSIModlality):
             if db == '':
                 break
 
-            self.data_.append(struct.unpack('d', db))
+            data.append(struct.unpack('d', db)[0])
+
+        data_org = np.zeros((2,
+                             self.metadata_['spectra-size'],
+                             self.metadata_['size'][1],
+                             self.metadata_['size'][0],
+                             self.metadata_['size'][2]))
+
+        total_idx = 0
+        for z in range(self.metadata_['size'][2]):
+            for x in range(self.metadata_['size'][0]):
+                for y in range(self.metadata_['size'][1]):
+                    for sp in range(self.metadata_['spectra-size']):
+                        for real_imag in range(2):
+                            data_org[real_imag, sp, y, x, z] = data[total_idx]
+                            total_idx += 1
+
+        self.data_ = (data_org[0, :, :, :, :] + 1j * data_org[1, :, :, :, :])
+
+        # Transform the signal in the frequency domain
+        for y in range(self.data_.shape[2]):
+            for x in range(self.data_.shape[1]):
+                for z in range(self.data_.shape[3]):
+                    self.data_[:, y, x, z] = fftshift(fft(
+                        self.data_[:, y, x, z]))
 
         return self
