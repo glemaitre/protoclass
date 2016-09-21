@@ -95,6 +95,33 @@ def check_img_filename(filename):
         raise ValueError('Wrong type for filename variable.')
 
 
+def check_rda_filename(filename):
+    """Method to check that the filename is an `rda` file.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to check.
+
+    Returns
+    -------
+        The filename checked.
+
+    """
+    # Check that filename is of type basetring
+    if isinstance(filename, basestring):
+        # Check that filename point to a file
+        if os.path.isfile(filename):
+            if filename.endswith('.rda'):
+                return filename
+            else:
+                raise ValueError('The file needs to be with an rda extension.')
+        else:
+            raise ValueError('The filename provided does not point to a file.')
+    else:
+        raise ValueError('Wrong type for filename variable.')
+
+
 def check_npy_filename(filename):
     """Method to check that the filename is an `npy` file.
 

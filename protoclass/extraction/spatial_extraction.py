@@ -142,7 +142,6 @@ class SpatialExtraction(StandaloneExtraction):
                 if np.unique(gt[:, :, sl]).size == 1:
                     continue
                 slice_idx = find_contours(gt[:, :, sl], 254.)
-                print len(slice_idx)
                 if len(slice_idx) != 1:
                     raise ValueError('There is a problem. More than one'
                                      ' contour have been found.')
@@ -153,8 +152,6 @@ class SpatialExtraction(StandaloneExtraction):
                                                 slice_idx[0].shape[0]).T),
                                            axis=1)
                 # Good to be concatenated
-                print contour_idx.shape
-                print slice_idx.shape
                 contour_idx = np.concatenate((contour_idx, slice_idx), axis=0)
             # We need to swap X and Y to be sure that everything will go fine
             contour_idx[:, 0], contour_idx[:, 1] = (contour_idx[:, 1],
@@ -182,29 +179,28 @@ class SpatialExtraction(StandaloneExtraction):
             # original size and we need to swap Y and X back
             self.data_ = np.swapaxes(np.reshape(dist, sz_mat), 0, 1)
 
-            print self.data_.shape
+        elif self.reference == 'centre':
 
-        elif self.reference == 'center':
             # Create a ground-truth volume
             gt = np.zeros(modality.data_.shape)
             gt[self.roi_data_] = 1.
             # Compute the center of mass of the ground-truth
-            barycenter = center_of_mass(gt)
+            centre = center_of_mass(gt)
 
             # We need to change X and Y and express in homogeneous coordinate
-            barycenter = np.atleast_2d((barycenter[1],
-                                        barycenter[0],
-                                        barycenter[2],
+            centre = np.atleast_2d((centre[1],
+                                        centre[0],
+                                        centre[2],
                                         1)).T
-            # Compute the coordinate of the barycenter in the real world
+            # Compute the coordinate of the centre in the real world
             # coordinate system
-            barycenter = affine_mat * barycenter
+            centre = affine_mat * centre
             # Remove the last row
-            self.barycenter = barycenter[:-1, :]
+            self.centre = centre[:-1, :]
 
             # Compute the relative position in the euclidean space which will
             # be used afterwards
-            coord_real -= self.barycenter
+            coord_real -= self.centre
 
             # Reshape the coordinate properly
             X = np.squeeze(np.array(coord_real[0, :]))
