@@ -277,7 +277,6 @@
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">gt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">])</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">slice_idx</span> <span class="o">=</span> <span class="n">find_contours</span><span class="p">(</span><span class="n">gt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">sl</span><span class="p">],</span> <span class="mf">254.</span><span class="p">)</span>
-                <span class="nb">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">slice_idx</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slice_idx</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;There is a problem. More than one&#39;</span>
                                      <span class="s1">&#39; contour have been found.&#39;</span><span class="p">)</span>
@@ -288,8 +287,6 @@
                                                 <span class="n">slice_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">),</span>
                                            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="c1"># Good to be concatenated</span>
-                <span class="nb">print</span> <span class="n">contour_idx</span><span class="o">.</span><span class="n">shape</span>
-                <span class="nb">print</span> <span class="n">slice_idx</span><span class="o">.</span><span class="n">shape</span>
                 <span class="n">contour_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">contour_idx</span><span class="p">,</span> <span class="n">slice_idx</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="c1"># We need to swap X and Y to be sure that everything will go fine</span>
             <span class="n">contour_idx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">contour_idx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">contour_idx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
@@ -317,29 +314,28 @@
             <span class="c1"># original size and we need to swap Y and X back</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">sz_mat</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-            <span class="nb">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">==</span> <span class="s1">&#39;centre&#39;</span><span class="p">:</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">==</span> <span class="s1">&#39;center&#39;</span><span class="p">:</span>
             <span class="c1"># Create a ground-truth volume</span>
             <span class="n">gt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">gt</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
             <span class="c1"># Compute the center of mass of the ground-truth</span>
-            <span class="n">barycenter</span> <span class="o">=</span> <span class="n">center_of_mass</span><span class="p">(</span><span class="n">gt</span><span class="p">)</span>
+            <span class="n">centre</span> <span class="o">=</span> <span class="n">center_of_mass</span><span class="p">(</span><span class="n">gt</span><span class="p">)</span>
 
             <span class="c1"># We need to change X and Y and express in homogeneous coordinate</span>
-            <span class="n">barycenter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">((</span><span class="n">barycenter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                        <span class="n">barycenter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                        <span class="n">barycenter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">centre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">((</span><span class="n">centre</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                        <span class="n">centre</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                        <span class="n">centre</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                                         <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
-            <span class="c1"># Compute the coordinate of the barycenter in the real world</span>
+            <span class="c1"># Compute the coordinate of the centre in the real world</span>
             <span class="c1"># coordinate system</span>
-            <span class="n">barycenter</span> <span class="o">=</span> <span class="n">affine_mat</span> <span class="o">*</span> <span class="n">barycenter</span>
+            <span class="n">centre</span> <span class="o">=</span> <span class="n">affine_mat</span> <span class="o">*</span> <span class="n">centre</span>
             <span class="c1"># Remove the last row</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">barycenter</span> <span class="o">=</span> <span class="n">barycenter</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
 
             <span class="c1"># Compute the relative position in the euclidean space which will</span>
             <span class="c1"># be used afterwards</span>
-            <span class="n">coord_real</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">barycenter</span>
+            <span class="n">coord_real</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre</span>
 
             <span class="c1"># Reshape the coordinate properly</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord_real</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]))</span>
