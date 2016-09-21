@@ -19,3 +19,6 @@
 [submodule "third-party/fdasrsf"]
 	path = third-party/fdasrsf
 	url = https://github.com/glemaitre/fdasrsf.git
+[submodule "third-party/nmrglue"]
+	path = third-party/nmrglue
+	url = https://github.com/glemaitre/nmrglue.git
