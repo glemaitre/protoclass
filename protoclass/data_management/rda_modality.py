@@ -105,8 +105,8 @@ class RDAModality(MRSIModlality):
         # Build the metadata dictionary from all the header that we read
         self.metadata_ = {}
         # Get the size of the CSI grid
-        self.metadata_['size'] = (int(bin_dict['NumberOfRows']),
-                                  int(bin_dict['NumberOfColumns']),
+        self.metadata_['size'] = (int(bin_dict['NumberOfColumns']),
+                                  int(bin_dict['NumberOfRows']),
                                   int(bin_dict['NumberOf3DParts']))
         # Get the origin of the CSI grid
         self.metadata_['origin'] = (float(bin_dict['PositionVector[0]']),
@@ -114,17 +114,17 @@ class RDAModality(MRSIModlality):
                                     float(bin_dict['PositionVector[2]']))
         # Get the direction of the CSI grid
         self.metadata_['direction'] = (float(bin_dict['RowVector[0]']),
-                                       float(bin_dict['RowVector[1]']),
-                                       float(bin_dict['RowVector[2]']),
                                        float(bin_dict['ColumnVector[0]']),
-                                       float(bin_dict['ColumnVector[1]']),
-                                       float(bin_dict['ColumnVector[2]']),
                                        float(bin_dict['VOINormalSag']),
+                                       float(bin_dict['RowVector[1]']),
+                                       float(bin_dict['ColumnVector[1]']),
                                        float(bin_dict['VOINormalCor']),
+                                       float(bin_dict['RowVector[2]']),
+                                       float(bin_dict['ColumnVector[2]']),
                                        float(bin_dict['VOINormalTra']))
-        # Get the spacing of the CSI grid
-        self.metadata_['spacing'] = (float(bin_dict['PixelSpacingRow']),
-                                     float(bin_dict['PixelSpacingCol']),
+        # Get the spacing of the CSI grid - Swapped Col and 3d
+        self.metadata_['spacing'] = (float(bin_dict['PixelSpacingCol']),
+                                     float(bin_dict['PixelSpacingRow']),
                                      float(bin_dict['PixelSpacing3D']))
         # Get the information about TE, TR, and flip-angle
         self.metadata_['TR'] = float(bin_dict['TR'])
@@ -144,13 +144,13 @@ class RDAModality(MRSIModlality):
                                        float(bin_dict['VOIPositionCor']),
                                        float(bin_dict['VOIPositionTra']))
         # Store the information about the FOV
-        self.metadata_['FOV'] = (float(bin_dict['FoVHeight']),
-                                 float(bin_dict['FoVWidth']),
+        self.metadata_['FOV'] = (float(bin_dict['FoVWidth']),
+                                 float(bin_dict['FoVHeight']),
                                  float(bin_dict['FoV3D']))
         # Store the information about the VOI FOV
-        self.metadata_['VOIFoV'] = (float(bin_dict['VOIThickness']),
-                                    float(bin_dict['VOIPhaseFOV']),
-                                    float(bin_dict['VOIReadoutFOV']))
+        self.metadata_['VOIFoV'] = (float(bin_dict['VOIPhaseFOV']),
+                                    float(bin_dict['VOIReadoutFOV']),
+                                    float(bin_dict['VOIThickness']))
         # Store the information about the rotation in the plane
         self.metadata_['VOIRotationInPlane'] = float(
             bin_dict['VOIRotationInPlane'])
@@ -170,27 +170,30 @@ class RDAModality(MRSIModlality):
 
         data_org = np.zeros((2,
                              self.metadata_['spectra-size'],
-                             self.metadata_['size'][1],
                              self.metadata_['size'][0],
+                             self.metadata_['size'][1],
                              self.metadata_['size'][2]))
 
         total_idx = 0
         for z in range(self.metadata_['size'][2]):
-            for x in range(self.metadata_['size'][0]):
-                for y in range(self.metadata_['size'][1]):
+            for y in range(self.metadata_['size'][1]):
+                for x in range(self.metadata_['size'][0]):
                     for sp in range(self.metadata_['spectra-size']):
                         for real_imag in range(2):
-                            data_org[real_imag, sp, y, x, z] = data[total_idx]
+                            data_org[real_imag, sp, x, y, z] = data[total_idx]
                             total_idx += 1
 
         self.data_ = (data_org[0, :, :, :, :] + 1j * data_org[1, :, :, :, :])
 
         # Transform the signal in the frequency domain
-        for y in range(self.data_.shape[2]):
-            for x in range(self.data_.shape[1]):
+        for x in range(self.data_.shape[1]):
+            for y in range(self.data_.shape[2]):
                 for z in range(self.data_.shape[3]):
-                    self.data_[:, y, x, z] = fftshift(fft(
-                        self.data_[:, y, x, z]))
+                    self.data_[:, x, y, z] = fftshift(fft(
+                        self.data_[:, x, y, z]))
+
+        # Swap x and y as in image convention
+        self.data_ = np.swapaxes(self.data_, 1, 2)
 
         # We need to compute the ppm bandwidth assciated with the data
         # Remember that the convention in ppm is inversely order
