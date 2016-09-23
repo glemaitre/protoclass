@@ -7,7 +7,7 @@ from .base_modality import BaseModality
 from .standalone_modality import StandaloneModality
 from .temporal_modality import TemporalModality
 from .multisequence_modality import MultisequenceModality
-from .mrsi_modality import MRSIModlality
+from .mrsi_modality import MRSIModality
 
 from .dce_modality import DCEModality
 from .t2w_modality import T2WModality
@@ -22,6 +22,7 @@ __all__ = ['BaseModality',
            'StandaloneModality',
            'TemporalModality',
            'MultisequenceModality',
+           'MRSIModality',
            'DCEModality',
            'T2WModality',
            'ADCModality',

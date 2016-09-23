@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 from .base_modality import BaseModality
 
 
-class MRSIModlality(BaseModality):
+class MRSIModality(BaseModality):
     """Basic class for MRSI.
 
     Warning: This class should not be used directly. Use the derive classes
@@ -16,7 +16,7 @@ class MRSIModlality(BaseModality):
     @abstractmethod
     def __init__(self, path_data=None):
         """Constructor."""
-        super(MRSIModlality, self).__init__(path_data=path_data)
+        super(MRSIModality, self).__init__(path_data=path_data)
 
     @abstractmethod
     def update_histogram(self):

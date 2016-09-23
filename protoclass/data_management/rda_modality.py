@@ -9,12 +9,12 @@ import struct
 from scipy.fftpack import fft
 from scipy.fftpack import fftshift
 
-from .mrsi_modality import MRSIModlality
+from .mrsi_modality import MRSIModality
 
 from ..utils.validation import check_rda_filename
 
 
-class RDAModality(MRSIModlality):
+class RDAModality(MRSIModality):
     """Class to handle RDA-MRSI modality.
 
     Parameters
