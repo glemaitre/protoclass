@@ -314,6 +314,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_volume</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_serie_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+        <span class="c1"># Store the DICOM metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Get the information that have been created by SimpleITK</span>
+        <span class="c1"># Information about data reconstruction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span>
+
         <span class="c1"># Check that we have the same number of category than the number</span>
         <span class="c1"># of serie</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_gt</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_serie_</span><span class="p">:</span>
