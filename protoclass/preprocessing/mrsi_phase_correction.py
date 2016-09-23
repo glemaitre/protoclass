@@ -6,6 +6,8 @@ import warnings
 import cPickle as pickle
 import numpy as np
 
+from joblib import Parallel, delayed
+
 from nmrglue.process.proc_autophase import autops
 
 from ..data_management import MRSIModality
@@ -18,6 +20,27 @@ from ..utils.validation import check_modality
 
 
 KNOWN_METHOD = ('acme')
+
+
+def _correct_phase(data, method='acme'):
+    """Private function to perform the phase correction in parallel.
+
+    Parameters
+    ----------
+    data : ndarray, shape (n_samples, )
+        Original MRSI signal.
+
+    method : string, optional (default='acme')
+        The method to use to perform the correction.
+
+    Returns
+    -------
+    data : ndarray, shape (n_samples, )
+        Phase corrected signal.
+
+    """
+
+    return autops(data, method)
 
 
 class MRSIPhaseCorrection(object):
@@ -99,12 +122,21 @@ class MRSIPhaseCorrection(object):
             raise ValueError('Unknown method requested for the phase'
                              ' correction.')
 
+        # Get the data from the modality
+        data = modality.data_.reshape((modality.data_.shape[0],
+                                       modality.data_.shape[1] *
+                                       modality.data_.shape[2] *
+                                       modality.data_.shape[3])).T
+
         # Apply the phase correction
-        for z in modality.metadata_['size'][2]:
-            for x in modality.metadata_['size'][0]:
-                for y in modality.metadata_['size'][1]:
-                    modality.data_[:, y, x, z] = autops(
-                        modality.data_[:, y, x, z], self.method)
+        data_ph_corr = Parallel(n_jobs=-1)(delayed(_correct_phase)(signal)
+                                           for signal in data)
+
+        modality.data_ = np.reshape(np.array(data_ph_corr).T, (
+            modality.data_.shape[0],
+            modality.data_.shape[1],
+            modality.data_.shape[2],
+            modality.data_.shape[3]))
 
         return modality
 
