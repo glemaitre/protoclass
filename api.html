@@ -101,15 +101,14 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-protoclass.preprocessing">Pre-processing module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#standalone-related-methods">Standalone related methods</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.preprocessing.GaussianNormalization.html">protoclass.preprocessing.GaussianNormalization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.preprocessing.RicianNormalization.html">protoclass.preprocessing.RicianNormalization</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.preprocessing.PiecewiseLinearNormalization.html">protoclass.preprocessing.PiecewiseLinearNormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pre-processing-module">Pre-processing module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#standalone-related-methods">Standalone related methods</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#temporal-related-methods">Temporal related methods</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.preprocessing.StandardTimeNormalization.html">protoclass.preprocessing.StandardTimeNormalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temporal-related-methods">Temporal related methods</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mrsi-related-methods">MRSI related methods</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -234,10 +233,8 @@ data format.</p>
 </table>
 </div>
 </div>
-<div class="section" id="module-protoclass.preprocessing">
-<span id="pre-processing-module"></span><span id="preprocessing-ref"></span><h2>Pre-processing module<a class="headerlink" href="#module-protoclass.preprocessing" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#module-protoclass.preprocessing" title="protoclass.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">protoclass.preprocessing</span></code></a> modules allows to apply some
-pre-processing on medical imaging data.</p>
+<div class="section" id="pre-processing-module">
+<span id="preprocessing-ref"></span><h2>Pre-processing module<a class="headerlink" href="#pre-processing-module" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="standalone-related-methods">
 <h3>Standalone related methods<a class="headerlink" href="#standalone-related-methods" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -246,14 +243,14 @@ pre-processing on medical imaging data.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.preprocessing.GaussianNormalization.html#protoclass.preprocessing.GaussianNormalization" title="protoclass.preprocessing.GaussianNormalization"><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.GaussianNormalization</span></code></a>(...[,&nbsp;...])</td>
-<td>Gaussian normalization to normalize standalone modality.</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.GaussianNormalization</span></code></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/protoclass.preprocessing.RicianNormalization.html#protoclass.preprocessing.RicianNormalization" title="protoclass.preprocessing.RicianNormalization"><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.RicianNormalization</span></code></a>(base_modality)</td>
-<td>Rician normalization to normalize standalone modality.</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.RicianNormalization</span></code></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.preprocessing.PiecewiseLinearNormalization.html#protoclass.preprocessing.PiecewiseLinearNormalization" title="protoclass.preprocessing.PiecewiseLinearNormalization"><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.PiecewiseLinearNormalization</span></code></a>(...)</td>
-<td>Piecewise-linear normalization to normalize standalone modality.</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.PiecewiseLinearNormalization</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -266,8 +263,22 @@ pre-processing on medical imaging data.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.preprocessing.StandardTimeNormalization.html#protoclass.preprocessing.StandardTimeNormalization" title="protoclass.preprocessing.StandardTimeNormalization"><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.StandardTimeNormalization</span></code></a>(...)</td>
-<td>Standard normalization to normalize temporal modality.</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.StandardTimeNormalization</span></code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mrsi-related-methods">
+<h3>MRSI related methods<a class="headerlink" href="#mrsi-related-methods" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.MRSIPhaseCorrection</span></code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
