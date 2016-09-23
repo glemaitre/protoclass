@@ -179,6 +179,15 @@ class GTModality(MultisequenceModality):
             self.data_ = np.array(list_volume)
             self.n_serie_ = self.data_.shape[0]
 
+        # Store the DICOM metadata
+        self.metadata_ = {}
+        # Get the information that have been created by SimpleITK
+        # Information about data reconstruction
+        self.metadata_['size'] = vol.GetSize()
+        self.metadata_['origin'] = vol.GetOrigin()
+        self.metadata_['direction'] = vol.GetDirection()
+        self.metadata_['spacing'] = vol.GetSpacing()
+
         # Check that we have the same number of category than the number
         # of serie
         if len(cat_gt) != self.n_serie_:
