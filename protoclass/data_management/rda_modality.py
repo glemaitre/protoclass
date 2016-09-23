@@ -46,6 +46,7 @@ class RDAModality(MRSIModlality):
     def __init__(self, bandwidth, path_data=None):
         super(RDAModality, self).__init__(path_data=path_data)
         self.bandwidth = bandwidth
+        self.data_ = None
 
     def update_histogram(self, nb_bins=None):
         """Method to compute some histogram."""

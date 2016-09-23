@@ -56,6 +56,15 @@ Temporal related methods
 
      preprocessing.StandardTimeNormalization
 
+MRSI related methods
+------------------------
+.. currentmodule:: protoclass
+
+.. autosummary::
+     :toctree: generated/
+
+     preprocessing.MRSIPhaseCorrection
+
 .. _extraction_ref:
 
 Extraction module
