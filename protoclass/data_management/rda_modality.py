@@ -198,9 +198,17 @@ class RDAModality(MRSIModality):
 
         # We need to compute the ppm bandwidth assciated with the data
         # Remember that the convention in ppm is inversely order
-        self.bandwidth_ppm = np.linspace((self.metadata_['bandwidth'] /
-                                          self.metadata_['MR-frequency']),
-                                         0.,
-                                         num=self.metadata_['spectra-size'])
+        # We will create an area of the same size than the spectra
+        bandwidth_ppm = np.linspace((self.metadata_['bandwidth'] /
+                                     self.metadata_['MR-frequency']),
+                                    0.,
+                                    num=self.metadata_['spectra-size'])
+        # Allocate the array
+        self.bandwidth_ppm = np.zeros(self.data_.shape)
+        # Copy the data
+        for x in range(self.data_.shape[1]):
+            for y in range(self.data_.shape[2]):
+                for z in range(self.data_.shape[3]):
+                    self.bandwidth_ppm[:, y, x, z] = bandwidth_ppm.copy()
 
         return self

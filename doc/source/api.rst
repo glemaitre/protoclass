@@ -64,6 +64,7 @@ MRSI related methods
      :toctree: generated/
 
      preprocessing.MRSIPhaseCorrection
+     preprocessing.MRSIFrequencyCorrection
 
 .. _extraction_ref:
 

@@ -46,6 +46,16 @@ def _correct_phase(data, method='acme'):
 class MRSIPhaseCorrection(object):
     """Phase correction for MRSI modality.
 
+    Parameters
+    ----------
+    base_modality : object
+        The base modality on which the normalization will be applied. The base
+        modality should inherate from StandaloneModality class.
+
+    method : string, optional (default='acme')
+        Method to use to correct the phase the MRSI signal. The default method
+        is 'acme'.
+
     """
 
     def __init__(self, base_modality, method='acme'):
