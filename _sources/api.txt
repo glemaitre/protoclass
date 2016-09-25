@@ -65,6 +65,7 @@ MRSI related methods
 
      preprocessing.MRSIPhaseCorrection
      preprocessing.MRSIFrequencyCorrection
+     preprocessing.MRSIBaselineCorrection
 
 .. _extraction_ref:
 
