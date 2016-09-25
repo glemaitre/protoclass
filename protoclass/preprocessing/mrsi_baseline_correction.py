@@ -22,9 +22,12 @@ from ..utils.validation import check_filename_pickle_save
 from ..utils.validation import check_modality
 
 
+KNOWN_CORRECTION = ('fine', 'coarse')
+
+
 def _find_nearest(array, value):
     idx = (np.abs(array - value)).argmin()
-    return array[idx]
+    return idx
 
 
 def _noise_estimate_spectrum(spectrum, nb_split=20):
@@ -109,6 +112,11 @@ def _find_baseline_bxr(spectrum, noise_std=None, A=None, B=None,
 
     """
 
+    # Check if the spectrum is complex or real
+    if np.any(np.iscomplex(spectrum)):
+        spectrum = np.real(spectrum)
+        print 'Keep only the real part of the spectrum'
+
     # Find the standard deviation of the noise in the spectrum if necessary
     if noise_std is None:
         noise_std = _noise_estimate_spectrum(spectrum)
@@ -184,6 +192,10 @@ class MRSIBaselineCorrection(object):
         The base modality on which the normalization will be applied. The base
         modality should inherate from StandaloneModality class.
 
+    correction : str, optional (default='fine')
+        Apply 'fine' or 'coarse' correction. 'fine' is taking a specific range
+        into account for the choline, spermine, creatine, and citrate.
+
     A_star_coarse : float, optional (default=5*10e-7)
         Smoothing constant while fitting a coarse baseline.
 
@@ -206,10 +218,12 @@ class MRSIBaselineCorrection(object):
 
     """
 
-    def __init__(self, base_modality, A_star_coarse=5*10e-7, B_star_coarse=10,
-                 A_star_fine=5*10e-6, B_star_fine=10e2, range_ppm=(2.2, 3.5)):
+    def __init__(self, base_modality, correction='fine', A_star_coarse=5*10e-7,
+                 B_star_coarse=10, A_star_fine=5*10e-6, B_star_fine=10e2,
+                 range_ppm=(2.2, 3.5)):
         self.base_modality_ = check_modality_inherit(base_modality,
                                                      MRSIModality)
+        self.correction = correction
         self.A_star_coarse = A_star_coarse
         self.B_star_coarse = B_star_coarse
         self.A_star_fine = A_star_fine
@@ -248,6 +262,10 @@ class MRSIBaselineCorrection(object):
             raise ValueError('No data have been read during the construction'
                              ' of the modality object.')
 
+        # Check if the correction is known
+        if self.correction not in KNOWN_CORRECTION:
+            raise ValueError('Unknown type of correction.')
+
         # Apply a coarse follow by a fine baseline detection
         # 1. Reshape all data for parallel processing
         spectra = np.reshape(modality.data_, (modality.data_.shape[0],
@@ -259,27 +277,52 @@ class MRSIBaselineCorrection(object):
             modality.bandwidth_ppm.shape[1] *
             modality.bandwidth_ppm.shape[2] *
             modality.bandwidth_ppm.shape[3])).T
-        # 2. Get the coarse baseline for each spectrum
-        coarse_baseline = Parallel(n_jobs=-1)(delayed(_find_baseline_bxr)(p, s)
-                                              for p, s in zip(ppm, spectra))
-        # 3. Get the list of index to consider for the fine baseline detection
-        idx_int = [np.flatnonzero(np.bitwise_and(p > self.range_ppm[0],
-                                                 p < self.range_ppm[1]))
-                   for p in ppm]
-        # 4. Extrac the sub spectra and ppm
-        sub_spectra = np.array([s[ii] for s, ii in zip(spectra, idx_int)])
-        sub_ppm = np.array([p[ii] for p, ii in zip(ppm, idx_int)])
-        print sub_spectra.shape
-        # 5. Get the fine baseline for each spectrum
-        fine_baseline = Parallel(n_jobs=-1)(delayed(_find_baseline_bxr)(p, s)
-                                            for p, s in zip(sub_ppm,
-                                                            sub_spectra))
-        # 6. Merge both baseline
-        baseline = coarse_baseline.copy()
-        for ii in range(fine_baseline.shape[0]):
-            baseline[ii, idx_int[ii]] = fine_baseline[ii]
 
-        self.fit_params_ = np.reshape(baseline,
+        # 2. Estimate the noise for the different spectra
+        noise_std = []
+        for s in spectra:
+            noise_std.append(_noise_estimate_spectrum(np.real(s)))
+        # Convert to a numpy array
+        noise_std = np.array(noise_std)
+        # Remove the NaN if the estimate failed
+        noise_std = noise_std[np.logical_not(np.isnan(noise_std))]
+        # Ge the mean of noise standard deviation
+        noise_std = np.mean(noise_std)
+        print ' The estimate noise standard deviation is: {}'.format(noise_std)
+
+        # 3. Get the coarse baseline for each spectrum
+        coarse_baseline = Parallel(n_jobs=-1)(delayed(_find_baseline_bxr)(
+            s, noise_std=noise_std,
+            A_star=self.A_star_coarse, B_star=self.B_star_coarse)
+                                              for s in spectra)
+        # Convert to a numpy array
+        coarse_baseline = np.array(coarse_baseline)
+
+        # 4. Get the list of index to consider for the fine baseline detection
+        if self.correction == 'fine':
+            idx_int = [np.flatnonzero(np.bitwise_and(p > self.range_ppm[0],
+                                                     p < self.range_ppm[1]))
+                       for p in ppm]
+
+            # 5. Extrac the sub spectra and ppm
+            sub_spectra = np.array([s[ii] for s, ii in zip(spectra, idx_int)])
+            sub_ppm = np.array([p[ii] for p, ii in zip(ppm, idx_int)])
+
+            # 6. Get the fine baseline for each spectrum
+            fine_baseline = Parallel(n_jobs=-1)(delayed(_find_baseline_bxr)(
+                s, noise_std=noise_std,
+                A_star=self.A_star_fine, B_star=self.B_star_fine)
+                                                for s in sub_spectra)
+            # Convert to a numpy array
+            fine_baseline = np.array(fine_baseline)
+
+        # 7. Merge both baseline
+        baseline = coarse_baseline
+        if self.correction == 'fine':
+            for ii in range(fine_baseline.shape[0]):
+                baseline[ii, idx_int[ii]] = fine_baseline[ii]
+
+        self.fit_params_ = np.reshape(baseline.T,
                                       (modality.bandwidth_ppm.shape[0],
                                        modality.bandwidth_ppm.shape[1],
                                        modality.bandwidth_ppm.shape[2],
@@ -326,7 +369,10 @@ class MRSIBaselineCorrection(object):
             for x in range(modality.bandwidth_ppm.shape[2]):
                 for z in range(modality.bandwidth_ppm.shape[3]):
                     # Subtract the baseline
-                    modality.data_[:, y, x, z] -= self.fit_params_[:, y, x, z]
+                    modality.data_[:, y, x, z] = ((
+                        np.real(modality.data_[:, y, x, z]) -
+                        self.fit_params_[:, y, x, z]) +(
+                            1j * np.imag(modality.data_[:, y, x, z])))
 
         return modality
 
