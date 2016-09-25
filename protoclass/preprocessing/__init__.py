@@ -16,6 +16,7 @@ from .piecewise_linear_normalisation import PiecewiseLinearNormalization
 
 from .mrsi_phase_correction import MRSIPhaseCorrection
 from .mrsi_frequency_correction import MRSIFrequencyCorrection
+from .mrsi_baseline_correction import MRSIBaselineCorrection
 
 __all__ = ['BaseNormalization',
            'StandaloneNormalization',
@@ -26,4 +27,5 @@ __all__ = ['BaseNormalization',
            'RicianNormalization',
            'PiecewiseLinearNormalization',
            'MRSIPhaseCorrection',
-           'MRSIFrequencyCorrection']
+           'MRSIFrequencyCorrection',
+           'MRSIBaselineCorrection']

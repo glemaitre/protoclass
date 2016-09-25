@@ -1,7 +1,6 @@
 """Frequency correction class for MRSI modality."""
 
 import os
-import warnings
 
 import cPickle as pickle
 import numpy as np
