@@ -65,6 +65,9 @@ python setup.py install
 # Install pyksvd
 cd $TRAVIS_BUILD_DIR/third-party/pyksvd
 python setup.py install
+# Install statsmodel
+cd $TRAVIS_BUILD_DIR/third-party/statsmodel
+python setup.py install
 
 cd $TRAVIS_BUILD_DIR
 python setup.py develop

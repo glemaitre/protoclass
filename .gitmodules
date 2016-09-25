@@ -22,3 +22,6 @@
 [submodule "third-party/nmrglue"]
 	path = third-party/nmrglue
 	url = https://github.com/glemaitre/nmrglue.git
+[submodule "third-party/statsmodels"]
+	path = third-party/statsmodels
+	url = https://github.com/glemaitre/statsmodels.git
