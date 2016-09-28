@@ -64,6 +64,7 @@ MRSI related methods
      :toctree: generated/
 
      preprocessing.WaterNormalization
+     preprocessing.LNormNormalization
 
 
 MRSI related methods
