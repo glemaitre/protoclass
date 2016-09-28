@@ -415,6 +415,48 @@
 
     <span class="c1"># Find the element which are not zero</span>
     <span class="k">return</span> <span class="n">ground_truth</span><span class="o">.</span><span class="n">extract_gt_data</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">check_modality_gt_mrsi</span><span class="p">(</span><span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">cat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check the consistency of the modality with the ground-truth.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    modality : object</span>
+<span class="sd">        The modality object of interest.</span>
+
+<span class="sd">    ground-truth : object of type GTModality</span>
+<span class="sd">        The ground-truth of GTModality.</span>
+
+<span class="sd">    cat : str</span>
+<span class="sd">        String corresponding at the ground-truth of interest.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    roi_data : ndarray, shape (non_zero_samples, 3)</span>
+<span class="sd">        Corresponds to the indexes of the data of insterest</span>
+<span class="sd">        extracted from the ground-truth.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">..data_management</span> <span class="k">import</span> <span class="n">GTModality</span>
+
+    <span class="c1"># Check that the ground-truth is from GTModality</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">,</span> <span class="n">GTModality</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The ground-truth should be an object of&#39;</span>
+                         <span class="s1">&#39; class GTModality.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the ground truth has been read</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ground_truth</span><span class="o">.</span><span class="n">is_read</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data have been read during the&#39;</span>
+                         <span class="s1">&#39;construction of the GT modality object.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the ground truth has been read</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">modality</span><span class="o">.</span><span class="n">is_read</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data have been read during the&#39;</span>
+                         <span class="s1">&#39;construction of the modality object.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Find the element which are not zero</span>
+    <span class="k">return</span> <span class="n">ground_truth</span><span class="o">.</span><span class="n">extract_gt_data</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>
