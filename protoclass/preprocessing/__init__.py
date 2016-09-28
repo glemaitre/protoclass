@@ -18,6 +18,7 @@ from .mrsi_phase_correction import MRSIPhaseCorrection
 from .mrsi_frequency_correction import MRSIFrequencyCorrection
 from .mrsi_baseline_correction import MRSIBaselineCorrection
 from .water_normalization import WaterNormalization
+from .l_norm_normalization import LNormNormalization
 
 __all__ = ['BaseNormalization',
            'StandaloneNormalization',
@@ -30,4 +31,5 @@ __all__ = ['BaseNormalization',
            'MRSIPhaseCorrection',
            'MRSIFrequencyCorrection',
            'MRSIBaselineCorrection',
-           'WaterNormalization']
+           'WaterNormalization',
+           'LNormNormalization']

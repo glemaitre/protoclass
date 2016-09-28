@@ -116,7 +116,7 @@ class WaterNormalization(MRSINormalization):
     ----------
     base_modality : object
         The base modality on which the normalization will be applied. The base
-        modality should inherate from StanaloneModality class.
+        modality should inherate from MRSIModality class.
 
     params : str or str: float, optional (default='auto')
         The initial estimation of the parameters:
@@ -129,7 +129,7 @@ class WaterNormalization(MRSINormalization):
     ----------
     base_modality_ : object
         The base modality on which the normalization will be applied. The base
-        modality should inherate from TemporalModality class.
+        modality should inherate from MRSIModality class.
 
     fit_params_ : ndarray, shape (size_x, size_y, size_z)
         The constant to apply to each spectrum.
