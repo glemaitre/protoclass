@@ -25,3 +25,6 @@
 [submodule "third-party/statsmodels"]
 	path = third-party/statsmodels
 	url = https://github.com/glemaitre/statsmodels.git
+[submodule "third-party/lmfit-py"]
+	path = third-party/lmfit-py
+	url = https://github.com/lmfit/lmfit-py.git

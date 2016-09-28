@@ -101,9 +101,6 @@ Standalone related methods
      extraction.GaborBankExtraction
      extraction.DCTExtraction
      extraction.SpatialExtraction
-
-Addtionally, the following functions are available:
-
      extraction.gabor_filter_3d
      
 Temporal related methods
@@ -120,6 +117,16 @@ Temporal related methods
      extraction.SemiQuantificationExtraction
      extraction.ToftsQuantificationExtraction
      extraction.WeibullQuantificationExtraction
+
+MRSI related methods
+------------------------
+
+.. currentmodule:: protoclass
+
+.. autosummary::
+     :toctree: generated/
+
+     extraction.RelativeQuantificationExtraction
 
 Utils module
 ============

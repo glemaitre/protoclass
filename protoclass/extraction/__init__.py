@@ -25,6 +25,8 @@ from .spatial_extraction import SpatialExtraction
 
 from .gabor_bank_extraction import gabor_filter_3d
 
+from .relative_quantification_extraction import RelativeQuantificationExtraction
+
 from .codebook import CodeBook
 
 from .texture_analysis import HaralickProcessing
@@ -59,4 +61,5 @@ __all__ = ['BaseExtraction',
            'LBPpdfExtraction',
            'EdgeMapExtraction',
            'SamplingHaralickFromGT',
-           'SamplingVolumeFromGT']
+           'SamplingVolumeFromGT',
+           'RelativeQuantificationExtraction']

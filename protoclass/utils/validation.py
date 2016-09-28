@@ -280,3 +280,45 @@ def check_modality_gt(modality, ground_truth, cat):
 
     # Find the element which are not zero
     return ground_truth.extract_gt_data(cat, 'index')
+
+def check_modality_gt_mrsi(modality, ground_truth, cat):
+    """Check the consistency of the modality with the ground-truth.
+
+    Parameters
+    ----------
+    modality : object
+        The modality object of interest.
+
+    ground-truth : object of type GTModality
+        The ground-truth of GTModality.
+
+    cat : str
+        String corresponding at the ground-truth of interest.
+
+    Returns
+    -------
+    roi_data : ndarray, shape (non_zero_samples, 3)
+        Corresponds to the indexes of the data of insterest
+        extracted from the ground-truth.
+
+    """
+
+    from ..data_management import GTModality
+
+    # Check that the ground-truth is from GTModality
+    if not isinstance(ground_truth, GTModality):
+        raise ValueError('The ground-truth should be an object of'
+                         ' class GTModality.')
+
+    # Check that the ground truth has been read
+    if not ground_truth.is_read():
+        raise ValueError('No data have been read during the'
+                         'construction of the GT modality object.')
+
+    # Check that the ground truth has been read
+    if not modality.is_read():
+        raise ValueError('No data have been read during the'
+                         'construction of the modality object.')
+
+    # Find the element which are not zero
+    return ground_truth.extract_gt_data(cat, 'index')
