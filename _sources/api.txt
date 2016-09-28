@@ -57,6 +57,16 @@ Temporal related methods
      preprocessing.StandardTimeNormalization
 
 MRSI related methods
+--------------------
+.. currentmodule:: protoclass
+
+.. autosummary::
+     :toctree: generated/
+
+     preprocessing.WaterNormalization
+
+
+MRSI related methods
 ------------------------
 .. currentmodule:: protoclass
 
