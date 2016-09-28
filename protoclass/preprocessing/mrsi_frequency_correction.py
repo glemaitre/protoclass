@@ -91,7 +91,8 @@ def _fit_voigt_water(ppm, spectra):
     mu_default = sub_ppm[np.argmax(sub_spectra)]
     popt_default = [amp_dft, mu_default, 1., 1.]
     # Define the bound
-    param_bounds = ([0., 4., 0., 0.], [np.inf, 6., np.inf, np.inf])
+    param_bounds = ([0., water_limits[0], 0., 0.],
+                    [np.inf, water_limits[1], np.inf, np.inf])
 
     try:
         popt, _ = curve_fit(_voigt_profile, sub_ppm, np.real(sub_spectra),
