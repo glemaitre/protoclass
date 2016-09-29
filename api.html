@@ -95,6 +95,7 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.T2WModality.html">protoclass.data_management.T2WModality</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.DWIModality.html">protoclass.data_management.DWIModality</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.DCEModality.html">protoclass.data_management.DCEModality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.RDAModality.html">protoclass.data_management.RDAModality</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.GTModality.html">protoclass.data_management.GTModality</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.data_management.OCTModality.html">protoclass.data_management.OCTModality</a></li>
 </ul>
@@ -125,6 +126,7 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.extraction.DCTExtraction.html">protoclass.extraction.DCTExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/protoclass.extraction.LBPExtraction.html">protoclass.extraction.LBPExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/protoclass.extraction.gabor_filter_3d.html">protoclass.extraction.gabor_filter_3d</a></li>
 </ul>
 </li>
@@ -232,10 +234,13 @@ data format.</p>
 <tr class="row-even"><td><a class="reference internal" href="generated/protoclass.data_management.DCEModality.html#protoclass.data_management.DCEModality" title="protoclass.data_management.DCEModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.DCEModality</span></code></a>([path_data])</td>
 <td>Class to handle DCE-MRI modality.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality" title="protoclass.data_management.GTModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.GTModality</span></code></a>([path_data])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.data_management.RDAModality.html#protoclass.data_management.RDAModality" title="protoclass.data_management.RDAModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.RDAModality</span></code></a>(bandwidth[,&nbsp;...])</td>
+<td>Class to handle RDA-MRSI modality.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/protoclass.data_management.GTModality.html#protoclass.data_management.GTModality" title="protoclass.data_management.GTModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.GTModality</span></code></a>([path_data])</td>
 <td>Class to handle GT modality.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/protoclass.data_management.OCTModality.html#protoclass.data_management.OCTModality" title="protoclass.data_management.OCTModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.OCTModality</span></code></a>([path_data])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.data_management.OCTModality.html#protoclass.data_management.OCTModality" title="protoclass.data_management.OCTModality"><code class="xref py py-obj docutils literal"><span class="pre">data_management.OCTModality</span></code></a>([path_data])</td>
 <td>Class to handle OCT modality.</td>
 </tr>
 </tbody>
@@ -349,7 +354,10 @@ will be used during classification.</p>
 <tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.extraction.SpatialExtraction.html#protoclass.extraction.SpatialExtraction" title="protoclass.extraction.SpatialExtraction"><code class="xref py py-obj docutils literal"><span class="pre">extraction.SpatialExtraction</span></code></a>(base_modality)</td>
 <td>Spatial extraction from standalone modality.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/protoclass.extraction.gabor_filter_3d.html#protoclass.extraction.gabor_filter_3d" title="protoclass.extraction.gabor_filter_3d"><code class="xref py py-obj docutils literal"><span class="pre">extraction.gabor_filter_3d</span></code></a>(frequency[,&nbsp;...])</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/protoclass.extraction.LBPExtraction.html#protoclass.extraction.LBPExtraction" title="protoclass.extraction.LBPExtraction"><code class="xref py py-obj docutils literal"><span class="pre">extraction.LBPExtraction</span></code></a>(base_modality[,&nbsp;p,&nbsp;...])</td>
+<td>LBP extraction from standalone modality.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/protoclass.extraction.gabor_filter_3d.html#protoclass.extraction.gabor_filter_3d" title="protoclass.extraction.gabor_filter_3d"><code class="xref py py-obj docutils literal"><span class="pre">extraction.gabor_filter_3d</span></code></a>(frequency[,&nbsp;...])</td>
 <td>Return complex 3D Gabor filter kernel.</td>
 </tr>
 </tbody>

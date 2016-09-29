@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.data_management.rda_modality &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html"><cite>protoclass</cite> API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>protoclass.data_management.rda_modality</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for protoclass.data_management.rda_modality</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;RDA modality class.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+
+<span class="kn">from</span> <span class="nn">scipy.fftpack</span> <span class="k">import</span> <span class="n">fft</span>
+<span class="kn">from</span> <span class="nn">scipy.fftpack</span> <span class="k">import</span> <span class="n">fftshift</span>
+
+<span class="kn">from</span> <span class="nn">.mrsi_modality</span> <span class="k">import</span> <span class="n">MRSIModality</span>
+
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_rda_filename</span>
+
+
+<div class="viewcode-block" id="RDAModality"><a class="viewcode-back" href="../../../generated/protoclass.data_management.RDAModality.html#protoclass.data_management.RDAModality">[docs]</a><span class="k">class</span> <span class="nc">RDAModality</span><span class="p">(</span><span class="n">MRSIModality</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class to handle RDA-MRSI modality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    bandwidth : float,</span>
+<span class="sd">        The frequency bandwidth of the range.</span>
+
+<span class="sd">    path_data : str, optional (default=None)</span>
+<span class="sd">         The folder in which the data are stored.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_data_ : string</span>
+<span class="sd">        Location of the data.</span>
+
+<span class="sd">    data_ : ndarray, shape (n_samples, Y, X, Z)</span>
+<span class="sd">        The different volume of the RDA volume. The data are saved in</span>
+<span class="sd">        n_samples, Y, X, Z ordered. n_samples corresponds to number of sample</span>
+<span class="sd">        in the MRSI spectra.</span>
+
+<span class="sd">    metadata_ : dict</span>
+<span class="sd">        Dictionnary which contain the MRI sequence information. Note that the</span>
+<span class="sd">        information are given in the original ordering (X, Y, Z), which is</span>
+<span class="sd">        different from the organisation of `data_` which is (Y, X, Z).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RDAModality.__init__"><a class="viewcode-back" href="../../../generated/protoclass.data_management.RDAModality.html#protoclass.data_management.RDAModality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RDAModality</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span> <span class="o">=</span> <span class="n">bandwidth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="RDAModality.update_histogram"><a class="viewcode-back" href="../../../generated/protoclass.data_management.RDAModality.html#protoclass.data_management.RDAModality.update_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">update_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to compute some histogram.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="RDAModality.read_data_from_path"><a class="viewcode-back" href="../../../generated/protoclass.data_management.RDAModality.html#protoclass.data_management.RDAModality.read_data_from_path">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read T2W images which represent a single 3D volume.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : str or None, optional (default=None)</span>
+<span class="sd">            Path to the standalone modality data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">           Returns self.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the consistency of the path data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># We will overide the path and raise a warning</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The data path will be overriden using the path&#39;</span>
+                          <span class="s1">&#39; given in the function.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_rda_filename</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="o">=</span> <span class="n">check_rda_filename</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You need to give a path_data from where to read&#39;</span>
+                             <span class="s1">&#39; the data.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Open the file</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_data_</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="c1"># Define what is the string for the end of the header</span>
+        <span class="n">str_end_header</span> <span class="o">=</span> <span class="s1">&#39;&gt;&gt;&gt; End of header &lt;&lt;&lt;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+
+        <span class="c1"># Read the different field</span>
+        <span class="n">bin_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Read one line and put it in a huge dictionnary</span>
+            <span class="c1"># We will be insterested only by numbers</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+            <span class="c1"># Make an early stop if this is the end of the header</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="n">str_end_header</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to find the split in the string</span>
+                <span class="n">idx_split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">idx_end_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">bin_dict</span><span class="p">[</span><span class="n">line</span><span class="p">[:</span><span class="n">idx_split</span><span class="p">]]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">idx_split</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span><span class="n">idx_end_line</span><span class="p">]</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="c1"># Build the metadata dictionary from all the header that we read</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Get the size of the CSI grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;NumberOfColumns&#39;</span><span class="p">]),</span>
+                                  <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;NumberOfRows&#39;</span><span class="p">]),</span>
+                                  <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;NumberOf3DParts&#39;</span><span class="p">]))</span>
+        <span class="c1"># Get the origin of the CSI grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PositionVector[0]&#39;</span><span class="p">]),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PositionVector[1]&#39;</span><span class="p">]),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PositionVector[2]&#39;</span><span class="p">]))</span>
+        <span class="c1"># Get the direction of the CSI grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;RowVector[0]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;ColumnVector[0]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOINormalSag&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;RowVector[1]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;ColumnVector[1]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOINormalCor&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;RowVector[2]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;ColumnVector[2]&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOINormalTra&#39;</span><span class="p">]))</span>
+        <span class="c1"># Get the spacing of the CSI grid - Swapped Col and 3d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PixelSpacingCol&#39;</span><span class="p">]),</span>
+                                     <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PixelSpacingRow&#39;</span><span class="p">]),</span>
+                                     <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;PixelSpacing3D&#39;</span><span class="p">]))</span>
+        <span class="c1"># Get the information about TE, TR, and flip-angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;TR&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;TE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;TE&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;flip-angle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;FlipAngle&#39;</span><span class="p">])</span>
+        <span class="c1"># Geth the size of each spectra</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spectra-size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VectorSize&#39;</span><span class="p">])</span>
+        <span class="c1"># Get the MR frequency</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;MR-frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;MRFrequency&#39;</span><span class="p">])</span>
+        <span class="c1"># Store the size of CSI scan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;CSIMatrixSizeOfScan&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;CSIMatrixSizeOfScan[0]&#39;</span><span class="p">]),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;CSIMatrixSizeOfScan[1]&#39;</span><span class="p">]),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;CSIMatrixSizeOfScan[2]&#39;</span><span class="p">]))</span>
+        <span class="c1"># Store the information about the VOI</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;VOIorigin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIPositionSag&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIPositionCor&#39;</span><span class="p">]),</span>
+                                       <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIPositionTra&#39;</span><span class="p">]))</span>
+        <span class="c1"># Store the information about the FOV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;FOV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;FoVWidth&#39;</span><span class="p">]),</span>
+                                 <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;FoVHeight&#39;</span><span class="p">]),</span>
+                                 <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;FoV3D&#39;</span><span class="p">]))</span>
+        <span class="c1"># Store the information about the VOI FOV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;VOIFoV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIPhaseFOV&#39;</span><span class="p">]),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIReadoutFOV&#39;</span><span class="p">]),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIThickness&#39;</span><span class="p">]))</span>
+        <span class="c1"># Store the information about the rotation in the plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;VOIRotationInPlane&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+            <span class="n">bin_dict</span><span class="p">[</span><span class="s1">&#39;VOIRotationInPlane&#39;</span><span class="p">])</span>
+        <span class="c1"># Add the bandwidth information in the metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Read chunck of 8 bits</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+            <span class="c1"># Early stop if we finished</span>
+            <span class="k">if</span> <span class="n">db</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">data_org</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spectra-size&#39;</span><span class="p">],</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="n">total_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spectra-size&#39;</span><span class="p">]):</span>
+                        <span class="k">for</span> <span class="n">real_imag</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                            <span class="n">data_org</span><span class="p">[</span><span class="n">real_imag</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">total_idx</span><span class="p">]</span>
+                            <span class="n">total_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_org</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">data_org</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:])</span>
+
+        <span class="c1"># Transform the signal in the frequency domain</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[:,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]))</span>
+
+        <span class="c1"># Swap x and y as in image convention</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># We need to compute the ppm bandwidth assciated with the data</span>
+        <span class="c1"># Remember that the convention in ppm is inversely order</span>
+        <span class="c1"># We will create an area of the same size than the spectra</span>
+        <span class="n">bandwidth_ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span> <span class="o">/</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;MR-frequency&#39;</span><span class="p">]),</span>
+                                    <span class="mf">0.</span><span class="p">,</span>
+                                    <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_</span><span class="p">[</span><span class="s1">&#39;spectra-size&#39;</span><span class="p">])</span>
+        <span class="c1"># Allocate the array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># Copy the data</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

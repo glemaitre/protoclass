@@ -1,0 +1,25 @@
+protoclass.data_management.RDAModality
+======================================
+
+.. currentmodule:: protoclass.data_management
+
+.. autoclass:: RDAModality
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RDAModality.__init__
+      ~RDAModality.is_read
+      ~RDAModality.read_data_from_path
+      ~RDAModality.update_histogram
+   
+   
+
+   
+   
+   

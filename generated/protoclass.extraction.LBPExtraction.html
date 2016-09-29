@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>protoclass.extraction.EdgeSignalExtraction &mdash; protoclass 0.1.dev0 documentation</title>
+  <title>protoclass.extraction.LBPExtraction &mdash; protoclass 0.1.dev0 documentation</title>
   
 
   
@@ -93,13 +93,13 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-protoclass.extraction">Extraction module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#id2">Standalone related methods</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.IntensitySignalExtraction.html">protoclass.extraction.IntensitySignalExtraction</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.EdgeSignalExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EdgeSignalExtraction.html">protoclass.extraction.EdgeSignalExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.HaralickExtraction.html">protoclass.extraction.HaralickExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.DCTExtraction.html">protoclass.extraction.DCTExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.LBPExtraction.html">protoclass.extraction.LBPExtraction</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.LBPExtraction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.gabor_filter_3d.html">protoclass.extraction.gabor_filter_3d</a></li>
 </ul>
 </li>
@@ -142,11 +142,11 @@
       
           <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
       
-    <li>protoclass.extraction.EdgeSignalExtraction</li>
+    <li>protoclass.extraction.LBPExtraction</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/generated/protoclass.extraction.EdgeSignalExtraction.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/protoclass.extraction.LBPExtraction.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -156,12 +156,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="protoclass-extraction-edgesignalextraction">
-<h1>protoclass.extraction.EdgeSignalExtraction<a class="headerlink" href="#protoclass-extraction-edgesignalextraction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="protoclass-extraction-lbpextraction">
+<h1>protoclass.extraction.LBPExtraction<a class="headerlink" href="#protoclass-extraction-lbpextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="protoclass.extraction.EdgeSignalExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">EdgeSignalExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>edge_detector='sobel'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edge signal extraction from standalone modality.</p>
+<dt id="protoclass.extraction.LBPExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">LBPExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>p=8</em>, <em>r=1.0</em>, <em>kind='uniform'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/lbp_extraction.html#LBPExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>LBP extraction from standalone modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -171,10 +171,19 @@
 <div><p>The base modality on which the normalization will be applied. The base
 modality should inherate from StandaloneModality class.</p>
 </div></blockquote>
-<p><strong>edge_detector</strong> : str, optional (default=&#8217;sobel&#8217;)</p>
+<p><strong>p</strong> : int, optional (default=8)</p>
+<blockquote>
+<div><p>Number of circularly symmetric neighbour set points (quantization of
+the angular space).</p>
+</div></blockquote>
+<p><strong>r</strong> : float, optional (default=1.)</p>
+<blockquote>
+<div><p>Radius of circle (spatial resolution of the operator).</p>
+</div></blockquote>
+<p><strong>kind</strong> : str, optional (default=&#8217;uniform&#8217;)</p>
 <blockquote class="last">
-<div><p>Name of the filter to apply. Can be &#8216;sobel&#8217;, &#8216;prewitt&#8217;, &#8216;kirsch&#8217;,
-&#8216;scharr&#8217;, or &#8216;laplacian&#8217;.</p>
+<div><p>Type of LBP to choose: &#8216;default&#8217;, &#8216;ror&#8217;, &#8216;uniform&#8217;, &#8216;nri_uniform&#8217;, and
+&#8216;var&#8217;</p>
 </div></blockquote>
 </td>
 </tr>
@@ -183,8 +192,8 @@ modality should inherate from StandaloneModality class.</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="4%" />
-<col width="96%" />
+<col width="9%" />
+<col width="91%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">base_modality_</span></a></td>
@@ -192,9 +201,6 @@ modality should inherate from StandaloneModality class.</p>
 </tr>
 <tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">roi_data_</span></a></td>
 <td>(ndarray, shape flexible) Corresponds to the index to consider in order to fit the data.</td>
-</tr>
-<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">data_</span></a></td>
-<td>(ndarray (1, 2, or 3, volume_size)) The computed gradient:  - &#8216;laplacian&#8217; will compute a single array containing the laplacian value. - &#8216;sobel&#8217;, &#8216;prewitt&#8217;, and &#8216;scharr&#8217; compute: (i) the gradient magnitude, (ii) the gradient azimuth, and (iii) the gradient elevation. - &#8216;kirsch&#8217; is computed in 2D and therefore the gradient magnitude and the gradient orientation are available</td>
 </tr>
 </tbody>
 </table>
@@ -205,23 +211,23 @@ modality should inherate from StandaloneModality class.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.fit" title="protoclass.extraction.EdgeSignalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
-<td>Compute the images images.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.fit" title="protoclass.extraction.LBPExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Compute the LBP images in the three-ortogonal planes.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.load_from_pickles" title="protoclass.extraction.EdgeSignalExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.load_from_pickles" title="protoclass.extraction.LBPExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.save_to_pickles" title="protoclass.extraction.EdgeSignalExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.save_to_pickles" title="protoclass.extraction.LBPExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.transform" title="protoclass.extraction.EdgeSignalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.transform" title="protoclass.extraction.LBPExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.EdgeSignalExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>edge_detector='sobel'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.LBPExtraction.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>p=8</em>, <em>r=1.0</em>, <em>kind='uniform'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/lbp_extraction.html#LBPExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -231,27 +237,27 @@ modality should inherate from StandaloneModality class.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.__init__" title="protoclass.extraction.EdgeSignalExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;edge_detector])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.__init__" title="protoclass.extraction.LBPExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;p,&nbsp;r,&nbsp;kind])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.fit" title="protoclass.extraction.EdgeSignalExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
-<td>Compute the images images.</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.fit" title="protoclass.extraction.LBPExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Compute the LBP images in the three-ortogonal planes.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.load_from_pickles" title="protoclass.extraction.EdgeSignalExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.load_from_pickles" title="protoclass.extraction.LBPExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.save_to_pickles" title="protoclass.extraction.EdgeSignalExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.save_to_pickles" title="protoclass.extraction.LBPExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.EdgeSignalExtraction.transform" title="protoclass.extraction.EdgeSignalExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.LBPExtraction.transform" title="protoclass.extraction.LBPExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.EdgeSignalExtraction.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the images images.</p>
+<dt id="protoclass.extraction.LBPExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/lbp_extraction.html#LBPExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the LBP images in the three-ortogonal planes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -277,8 +283,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.EdgeSignalExtraction.load_from_pickles">
-<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.LBPExtraction.load_from_pickles">
+<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.LBPExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to load a normalization object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -301,8 +307,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.EdgeSignalExtraction.save_to_pickles">
-<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.LBPExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.LBPExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to save a normalizatio object using pickles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -322,8 +328,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.EdgeSignalExtraction.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/edge_signal_extraction.html#EdgeSignalExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.EdgeSignalExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.LBPExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/lbp_extraction.html#LBPExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.LBPExtraction.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data from the given modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

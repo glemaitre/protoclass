@@ -1,0 +1,26 @@
+protoclass.extraction.LBPExtraction
+===================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: LBPExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LBPExtraction.__init__
+      ~LBPExtraction.fit
+      ~LBPExtraction.load_from_pickles
+      ~LBPExtraction.save_to_pickles
+      ~LBPExtraction.transform
+   
+   
+
+   
+   
+   

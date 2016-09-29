@@ -24,6 +24,7 @@ Classes
      data_management.T2WModality
      data_management.DWIModality
      data_management.DCEModality
+     data_management.RDAModality
      data_management.GTModality
      data_management.OCTModality
 
@@ -101,6 +102,7 @@ Standalone related methods
      extraction.GaborBankExtraction
      extraction.DCTExtraction
      extraction.SpatialExtraction
+     extraction.LBPExtraction
      extraction.gabor_filter_3d
      
 Temporal related methods
