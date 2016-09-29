@@ -403,9 +403,9 @@ class RelativeQuantificationExtraction(MRSIExtraction):
 
             for idx_s, s in enumerate(spectra):
                 if self.normalization == 'l1':
-                    self.fit_params_[idx_s] = lnorm(np.real(s), 1)
+                    self.fit_params_[idx_s] = lnorm(s, 1)
                 if self.normalization == 'l2':
-                    self.fit_params_[idx_s] = lnorm(np.real(s), 2)
+                    self.fit_params_[idx_s] = lnorm(s, 2)
 
         # 2. Make the fitting and get the parameters
         self.data_ = Parallel(n_jobs=-1)(delayed(
