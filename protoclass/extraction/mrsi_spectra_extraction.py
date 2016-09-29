@@ -133,11 +133,17 @@ class MRSISpectraExtraction(MRSIExtraction):
             for x in range(modality.bandwidth_ppm.shape[2]):
                 for z in range(modality.bandwidth_ppm.shape[3]):
                     # Get the range for the current data
-                    idx_mask = np.flatnonzero(np.bitwise_and(
+                    # Compute the delta
+                    delta_ppm = (modality.bandwidth_ppm[1, y, x, z] -
+                                 modality.bandwidth_ppm[0, y, x, z])
+                    # Compute the number of element to take
+                    nb_element = int(np.ceil((self.ppm_range[1] -
+                                              self.ppm_range[0]) / delta_ppm))
+                    # Find the first index
+                    first_idx = np.flatnonzero(
                         modality.bandwidth_ppm[:, y, x, z] >
-                        self.ppm_range[0],
-                        modality.bandwidth_ppm[:, y, x, z] <
-                        self.ppm_range[1]))
+                        self.ppm_range[0])[0]
+                    idx_mask = np.arange(first_idx, first_idx + nb_element)
                     idx_ppm_crop.append(idx_mask)
 
         # Convert the list into an array
