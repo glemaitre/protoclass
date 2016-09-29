@@ -26,6 +26,7 @@ from .spatial_extraction import SpatialExtraction
 from .gabor_bank_extraction import gabor_filter_3d
 
 from .relative_quantification_extraction import RelativeQuantificationExtraction
+from .mrsi_spectra_extraction import MRSISpectraExtraction
 
 from .codebook import CodeBook
 
@@ -62,4 +63,5 @@ __all__ = ['BaseExtraction',
            'EdgeMapExtraction',
            'SamplingHaralickFromGT',
            'SamplingVolumeFromGT',
-           'RelativeQuantificationExtraction']
+           'RelativeQuantificationExtraction',
+           'MRSISpectraExtraction']

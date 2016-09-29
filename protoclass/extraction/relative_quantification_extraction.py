@@ -1,4 +1,5 @@
 """Relative quantification extraction from MRSI modality."""
+from __future__ import division
 
 import numpy as np
 
@@ -11,51 +12,14 @@ from scipy.special import wofz
 from scipy.stats import norm
 from scipy.integrate import simps
 from scipy.interpolate import interp1d
+from scipy.linalg import norm as lnorm
 
 from .mrsi_extraction import MRSIExtraction
 
 
 PPM_REFERENCE = {'water' : 4.65, 'citrate' : 2.58}
 PPM_LIMITS = {'water': (4., 6.), 'citrate' : (2.30, 2.90)}
-
-
-#KNOWN_PROFILE = ('gaussian', 'voigt')
-
-
-# def _voigt_profile(x, alpha, mu, sigma, gamma):
-#     """Private function to fit a Voigt profile.
-
-#     Parameters
-#     ----------
-#     x : ndarray, shape (len(x))
-#         The input data.
-
-#     alpha : float,
-#         The amplitude factor.
-
-#     mu : float,
-#         The shift of the central value.
-
-#     sigma : float,
-#         sigma of the Gaussian.
-
-#     gamma : float,
-#         gamma of the Lorentzian.
-
-#     Returns
-#     -------
-#     y : ndarray, shape (len(x), )
-#         The Voigt profile.
-
-#     """
-
-#     # Define z
-#     z = ((x - mu) + 1j * gamma) / (sigma * np.sqrt(2))
-
-#     # Compute the Faddeva function
-#     w = wofz(z)
-
-#     return alpha * (np.real(w)) / (sigma * np.sqrt(2. * np.pi))
+KNOWN_NORMALIZATION = ('l2', 'l1')
 
 
 def _gaussian_profile(x, alpha, mu, sigma):
@@ -112,20 +76,10 @@ def _citrate_residual(params, ppm, data):
     sigma1 = np.abs(params['citsigma1'])
     sigma2 = np.abs(params['citsigma2'])
     sigma3 = np.abs(params['citsigma3'])
-    # if profile_type == 'voigt':
-    #     gamma1 = params['citgamma1']
-    #     gamma2 = params['citgamma2']
-    #     gamma3 = params['citgamma3']
 
-    # if profile_type == 'gaussian':
     cit_1 = _gaussian_profile(ppm, alpha1, mu1, sigma1)
     cit_2 = _gaussian_profile(ppm, alpha2, mu1 + delta2, sigma2)
     cit_3 = _gaussian_profile(ppm, alpha3, mu1 - delta3, sigma3)
-    # elif profile_type == 'voigt':
-    #     cit_1 = _voigt_profile(ppm, alpha1, mu1, sigma1, gamma1)
-    #     cit_2 = _voigt_profile(ppm, alpha2, mu1 + delta2, sigma2, gamma2)
-    #     cit_3 = _voigt_profile(ppm, alpha3, mu1 - delta3, sigma3, gamma3)
-
     # Compute the window
     mask = np.zeros(ppm.shape)
     idx_mask = np.flatnonzero(np.bitwise_and(ppm > (mu1 - 2 * sigma1),
@@ -265,7 +219,7 @@ def _metabolite_fitting(ppm, spectrum):
 
     # Detection of the choline
     # Redefine precisely the central value of the citrate
-    mu_dft = res_citrate.params['mu1'].value
+    mu_dft = res_citrate.params['citmu1'].value
     delta_4_bounds = (.55, .59)
     delta_4_dft = .57
 
@@ -321,8 +275,8 @@ class RelativeQuantificationExtraction(MRSIExtraction):
         The base modality on which the normalization will be applied. The base
         modality should inherate from StandaloneModality class.
 
-    params : None or Parameters()
-        Default or define a list of Parameters() for the citrate and choline.
+    normalization : None or str, optional (default='l2')
+        Apply a normalization or not. Choice are None, 'l2', or 'l1'.
 
     Attributes
     ----------
@@ -335,18 +289,11 @@ class RelativeQuantificationExtraction(MRSIExtraction):
 
     """
 
-    def __init__(self, base_modality):
+    def __init__(self, base_modality, normalization='l2'):
         super(RelativeQuantificationExtraction, self).__init__(base_modality)
+        self.normalization = normalization
+        self.is_fitted = False
         self.data_ = None
-
-    # def _validate_profile(self):
-    #     """Private function to check the type of profile given by
-    #     the user."""
-
-    #     if self.profile_type not in KNOWN_PROFILE:
-    #         raise ValueError('Unknown profile to work with.')
-
-    #     return None
 
     def _citrate_profile(self, params, ppm):
         """ Private function which will return the citrate profile
@@ -375,19 +322,10 @@ class RelativeQuantificationExtraction(MRSIExtraction):
         sigma1 = params['citsigma1']
         sigma2 = params['citsigma2']
         sigma3 = params['citsigma3']
-        # if self.profile_type == 'voigt':
-        #     gamma1 = params['citgamma1']
-        #     gamma2 = params['citgamma2']
-        #     gamma3 = params['citgamma3']
 
-        # if self.profile_type == 'gaussian':
         model = _gaussian_profile(ppm, alpha1, mu1, sigma1)
         model += _gaussian_profile(ppm, alpha2, mu1 + delta2, sigma2)
         model += _gaussian_profile(ppm, alpha3, mu1 - delta3, sigma3)
-        # elif self.profile_type == 'voigt':
-        #     model = _voigt_profile(ppm, alpha1, mu1, sigma1, gamma1)
-        #     model += _voigt_profile(ppm, alpha2, mu1 + delta2, sigma2, gamma2)
-        #     model += _voigt_profile(ppm, alpha3, mu1 - delta3, sigma3, gamma3)
 
         return model
 
@@ -406,14 +344,10 @@ class RelativeQuantificationExtraction(MRSIExtraction):
         # Define the list of parameters which are common to Gaussian and Voigt
         alpha1 = params['chalpha1']
         mu1 = params['chmu1']
+        delta1 = params['chdelta1']
         sigma1 = params['chsigma1']
-        # if self.profile_type == 'voigt':
-        #     gamma1 = params['chgamma1']
 
-        # if self.profile_type == 'gaussian':
-        model = _gaussian_profile(ppm, alpha1, mu1, sigma1)
-        # elif self.profile_type == 'voigt':
-        #     model = _voigt_profile(ppm, alpha1, mu1, sigma1, gamma1)
+        model = _gaussian_profile(ppm, alpha1, mu1 + delta1, sigma1)
 
         return model
 
@@ -447,24 +381,38 @@ class RelativeQuantificationExtraction(MRSIExtraction):
         # In the fitting we will find the parameters needed to transform
         # the data
         # 1. Reshape all data for parallel processing
-        spectra = np.reshape(modality.data_, (modality.data_.shape[0],
-                                              modality.data_.shape[1] *
-                                              modality.data_.shape[2] *
-                                              modality.data_.shape[3])).T
+        spectra = np.real(np.reshape(modality.data_,
+                                     (modality.data_.shape[0],
+                                      modality.data_.shape[1] *
+                                      modality.data_.shape[2] *
+                                      modality.data_.shape[3])).T)
+
         ppm = np.reshape(modality.bandwidth_ppm, (
             modality.bandwidth_ppm.shape[0],
             modality.bandwidth_ppm.shape[1] *
             modality.bandwidth_ppm.shape[2] *
             modality.bandwidth_ppm.shape[3])).T
+
+        if self.normalization is not None:
+            if self.normalization not in KNOWN_NORMALIZATION:
+                raise ValueError('Unknown normalization.')
+            # Allocate the parameters array
+            self.fit_params_ = np.zeros((modality.data_.shape[1] *
+                                         modality.data_.shape[2] *
+                                         modality.data_.shape[3]))
+
+            for idx_s, s in enumerate(spectra):
+                if self.normalization == 'l1':
+                    self.fit_params_[idx_s] = lnorm(np.real(s), 1)
+                if self.normalization == 'l2':
+                    self.fit_params_[idx_s] = lnorm(np.real(s), 2)
+
         # 2. Make the fitting and get the parameters
-        params_opt = Parallel(n_jobs=-1)(delayed(_metabolite_fitting)(p, s)
+        self.data_ = Parallel(n_jobs=-1)(delayed(
+            _metabolite_fitting)(p, s)
                                          for p, s in zip(ppm, spectra))
-        # 3. Reshape the parameters array
-        params_opt = np.array(params_opt)
-        self.data_ = np.reshape(params_opt, (
-            modality.bandwidth_ppm.shape[1],
-            modality.bandwidth_ppm.shape[2],
-            modality.bandwidth_ppm.shape[3]))
+
+        self.is_fitted = True
 
         return self
 
@@ -496,4 +444,39 @@ class RelativeQuantificationExtraction(MRSIExtraction):
             ground_truth=ground_truth,
             cat=cat)
 
-        return modality.data_[self.roi_data_]
+        # Check that the data have been fitted
+        if not self.is_fitted:
+            raise ValueError('Fit the data first.')
+
+        # Define a range of ppm
+        ppm = np.linspace(2., 4., num=5000)
+
+        # Compute the citrate and choline signal integral
+        citrate_array = []
+        choline_array = []
+        for idx_fit, fit_param in enumerate(self.data_):
+            # Compute the citrate signal using the previous model
+            citrate = self._citrate_profile(fit_param[0], ppm)
+            if self.normalization is not None:
+                citrate /= self.fit_params_[idx_fit]
+
+            citrate_array.append(simps(citrate, ppm))
+
+            # Compute the choline signal using the previous model
+            choline = self._choline_profile(fit_param[1], ppm)
+            if self.normalization is not None:
+                choline /= self.fit_params_[idx_fit]
+
+            choline_array.append(simps(choline, ppm))
+
+        # Compute the ratio citrate over choline
+        data = np.array(citrate_array) / np.array(choline_array)
+
+        # Resize the data properly according to the modality
+        data = np.reshape(data, (modality.data_.shape[1],
+                                 modality.data_.shape[2],
+                                 modality.data_.shape[3]))
+
+        data_res = self._resampling_as_gt(data, modality, ground_truth)
+
+        return data_res[self.roi_data_]

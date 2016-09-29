@@ -68,6 +68,10 @@ python setup.py install
 # Install statsmodel
 cd $TRAVIS_BUILD_DIR/third-party/statsmodel
 python setup.py install
+# Install lmfit
+cd $TRAVIS_BUILD_DIR/third-party/lmfit-py
+python setup.py install
+
 
 cd $TRAVIS_BUILD_DIR
 python setup.py develop
