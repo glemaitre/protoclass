@@ -141,9 +141,10 @@ class MRSIExtraction(BaseExtraction):
         resampler.SetInterpolator(sitk.sitkNearestNeighbor)
         resampler.SetDefaultPixelValue(0)
         resampler.SetTransform(transform)
-        resampler.SetDirection(ground_truth.metadata_['direction'])
-        resampler.SetOrigin(ground_truth.metadata_['origin'])
-        resampler.SetSpacing(ground_truth.metadata_['spacing'])
+        resampler.SetOutputDirection(ground_truth.metadata_['direction'])
+        resampler.SetOutputOrigin(ground_truth.metadata_['origin'])
+        resampler.SetOutputSpacing(ground_truth.metadata_['spacing'])
+        resampler.SetSize(ground_truth.metadata_['size'])
 
         # Get the image resampled and convert in Y, X, Z order
         res_img = resampler.Execute(mrsi_img)

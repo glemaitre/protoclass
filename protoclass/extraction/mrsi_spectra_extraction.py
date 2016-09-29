@@ -127,16 +127,71 @@ class MRSISpectraExtraction(MRSIExtraction):
         if not self.is_fitted:
             raise ValueError('Fit the data first.')
 
-        data = modality.data_[self.ppm_range[0]:self.ppm_range[1]]
+        # We need first to crop the data properly depending of the ppm range
+        idx_ppm_crop = []
+        for y in range(modality.bandwidth_ppm.shape[1]):
+            for x in range(modality.bandwidth_ppm.shape[2]):
+                for z in range(modality.bandwidth_ppm.shape[3]):
+                    # Get the range for the current data
+                    idx_mask = np.flatnonzero(np.bitwise_and(
+                        modality.bandwidth_ppm[:, y, x, z] >
+                        self.ppm_range[0],
+                        modality.bandwidth_ppm[:, y, x, z] <
+                        self.ppm_range[1]))
+                    idx_ppm_crop.append(idx_mask)
 
-        data_res = np.zeros((data.shape[0], modality.data_.shape[1],
-                             modality.data_.shape[2], modality.data_.shape[3]))
+        # Convert the list into an array
+        idx_ppm_crop = np.array(idx_ppm_crop)
+
+        # Reshape the array according to the data
+        idx_ppm_crop = np.reshape(idx_ppm_crop.T,
+                                  (idx_ppm_crop.shape[1],
+                                   modality.bandwidth_ppm.shape[1],
+                                   modality.bandwidth_ppm.shape[2],
+                                   modality.bandwidth_ppm.shape[3]))
+
+        # Extract the appropriate part of each signal
+        data_crop = np.zeros(idx_ppm_crop.shape)
+        for y in range(modality.data_.shape[1]):
+            for x in range(modality.data_.shape[2]):
+                for z in range(modality.data_.shape[3]):
+                    data_crop[:, y, x, z] = np.real(modality.data_[
+                        idx_ppm_crop[:, y, x, z], y, x, z])
+                    # Apply the normalization if necessary
+                    if self.normalization is not None:
+                        data_crop[:, y, x, z] /= self.fit_params_[y, x, z]
+
+        data_res = np.zeros((data_crop.shape[0],
+                             ground_truth.data_.shape[1],
+                             ground_truth.data_.shape[2],
+                             ground_truth.data_.shape[3]))
 
         # Resample each ppm of the spectum
-        for ii in range(data.shape[0]):
-            slice_data = data[ii]
-            # Resample this slice
-            data_res[ii] = self._resampling_as_gt(slice_data, modality,
+        for ii in range(data_crop.shape[0]):
+            # Resample each ppm slice
+            data_res[ii] = self._resampling_as_gt(data_crop[ii], modality,
                                                   ground_truth)
 
-        return data_res[self.roi_data_]
+        # Convert the roi to a numpy array
+        roi_data = np.array(self.roi_data_)
+
+        # Check the number of samples which will be extracted
+        n_sample = roi_data.shape[1]
+        # Check the number of dimension
+        n_dimension = data_res.shape[0]
+
+        # Allocate the array
+        data = np.empty((n_sample, n_dimension))
+
+        # Copy the data at the right place
+        for idx_sample in range(n_sample):
+            # Get the coordinate of the point to consider
+            coord = roi_data[:, idx_sample]
+
+            # Extract the data
+            data[idx_sample, :] = data_res[:,
+                                           coord[0],
+                                           coord[1],
+                                           coord[2]]
+
+        return data_res
