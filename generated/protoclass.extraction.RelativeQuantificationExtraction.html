@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>protoclass.extraction.DCTExtraction &mdash; protoclass 0.1.dev0 documentation</title>
+  <title>protoclass.extraction.RelativeQuantificationExtraction &mdash; protoclass 0.1.dev0 documentation</title>
   
 
   
@@ -91,19 +91,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.data_management">Data management module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pre-processing-module">Pre-processing module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-protoclass.extraction">Extraction module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id2">Standalone related methods</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.IntensitySignalExtraction.html">protoclass.extraction.IntensitySignalExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EdgeSignalExtraction.html">protoclass.extraction.EdgeSignalExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.HaralickExtraction.html">protoclass.extraction.HaralickExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.DCTExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.gabor_filter_3d.html">protoclass.extraction.gabor_filter_3d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id2">Standalone related methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id3">Temporal related methods</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id4">MRSI related methods</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.RelativeQuantificationExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.MRSISpectraExtraction.html">protoclass.extraction.MRSISpectraExtraction</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api.html#id3">Temporal related methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api.html#id4">MRSI related methods</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.utils">Utils module</a></li>
@@ -141,11 +135,11 @@
       
           <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
       
-    <li>protoclass.extraction.DCTExtraction</li>
+    <li>protoclass.extraction.RelativeQuantificationExtraction</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/generated/protoclass.extraction.DCTExtraction.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/protoclass.extraction.RelativeQuantificationExtraction.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -155,12 +149,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="protoclass-extraction-dctextraction">
-<h1>protoclass.extraction.DCTExtraction<a class="headerlink" href="#protoclass-extraction-dctextraction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="protoclass-extraction-relativequantificationextraction">
+<h1>protoclass.extraction.RelativeQuantificationExtraction<a class="headerlink" href="#protoclass-extraction-relativequantificationextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="protoclass.extraction.DCTExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">DCTExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/dct_extraction.html#DCTExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.DCTExtraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>DCT extraction from standalone modality.</p>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction">
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">RelativeQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relative quantification extraction from MRSI modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -170,10 +164,9 @@
 <div><p>The base modality on which the normalization will be applied. The base
 modality should inherate from StandaloneModality class.</p>
 </div></blockquote>
-<p><strong>patch_size</strong> : int or tuple, optional (default=(9, 9, 3))</p>
+<p><strong>normalization</strong> : None or str, optional (default=&#8217;l2&#8217;)</p>
 <blockquote class="last">
-<div><p>The size of the sliding used to extract patches later used to compute
-the cooccurence matrix.</p>
+<div><p>Apply a normalization or not. Choice are None, &#8216;l2&#8217;, or &#8216;l1&#8217;.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -201,23 +194,23 @@ the cooccurence matrix.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.fit" title="protoclass.extraction.DCTExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
-<td>Compute the images images.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.fit" title="protoclass.extraction.RelativeQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.load_from_pickles" title="protoclass.extraction.DCTExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles" title="protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.save_to_pickles" title="protoclass.extraction.DCTExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles" title="protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.transform" title="protoclass.extraction.DCTExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.transform" title="protoclass.extraction.RelativeQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.DCTExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>patch_size=(9</em>, <em>9</em>, <em>3)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/dct_extraction.html#DCTExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.DCTExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -227,27 +220,27 @@ the cooccurence matrix.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.__init__" title="protoclass.extraction.DCTExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;patch_size])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="protoclass.extraction.RelativeQuantificationExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;normalization])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.fit" title="protoclass.extraction.DCTExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
-<td>Compute the images images.</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.fit" title="protoclass.extraction.RelativeQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<td>Find the parameters needed to apply the extraction.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.load_from_pickles" title="protoclass.extraction.DCTExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles" title="protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles"><code class="xref py py-obj docutils literal"><span class="pre">load_from_pickles</span></code></a>(filename)</td>
 <td>Function to load a normalization object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.save_to_pickles" title="protoclass.extraction.DCTExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles" title="protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles"><code class="xref py py-obj docutils literal"><span class="pre">save_to_pickles</span></code></a>(filename)</td>
 <td>Function to save a normalizatio object using pickles.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.DCTExtraction.transform" title="protoclass.extraction.DCTExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.transform" title="protoclass.extraction.RelativeQuantificationExtraction.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>
 <td>Extract the data from the given modality.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="protoclass.extraction.DCTExtraction.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/dct_extraction.html#DCTExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.DCTExtraction.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the images images.</p>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the parameters needed to apply the extraction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -273,8 +266,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.DCTExtraction.load_from_pickles">
-<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.DCTExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles">
+<code class="descname">load_from_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.load_from_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to load a normalization object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -297,8 +290,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.DCTExtraction.save_to_pickles">
-<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.DCTExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles">
+<code class="descname">save_to_pickles</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.save_to_pickles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to save a normalizatio object using pickles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -318,8 +311,8 @@ None if ground-truth is not None.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="protoclass.extraction.DCTExtraction.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/dct_extraction.html#DCTExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.DCTExtraction.transform" title="Permalink to this definition">¶</a></dt>
+<dt id="protoclass.extraction.RelativeQuantificationExtraction.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>modality</em>, <em>ground_truth=None</em>, <em>cat=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data from the given modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

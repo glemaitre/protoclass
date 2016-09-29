@@ -1,0 +1,26 @@
+protoclass.extraction.RelativeQuantificationExtraction
+======================================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: RelativeQuantificationExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RelativeQuantificationExtraction.__init__
+      ~RelativeQuantificationExtraction.fit
+      ~RelativeQuantificationExtraction.load_from_pickles
+      ~RelativeQuantificationExtraction.save_to_pickles
+      ~RelativeQuantificationExtraction.transform
+   
+   
+
+   
+   
+   

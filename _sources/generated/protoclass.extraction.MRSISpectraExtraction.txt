@@ -1,0 +1,26 @@
+protoclass.extraction.MRSISpectraExtraction
+===========================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autoclass:: MRSISpectraExtraction
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MRSISpectraExtraction.__init__
+      ~MRSISpectraExtraction.fit
+      ~MRSISpectraExtraction.load_from_pickles
+      ~MRSISpectraExtraction.save_to_pickles
+      ~MRSISpectraExtraction.transform
+   
+   
+
+   
+   
+   

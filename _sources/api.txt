@@ -127,6 +127,7 @@ MRSI related methods
      :toctree: generated/
 
      extraction.RelativeQuantificationExtraction
+     extraction.MRSISpectraExtraction
 
 Utils module
 ============

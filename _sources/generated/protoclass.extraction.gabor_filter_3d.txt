@@ -1,0 +1,6 @@
+protoclass.extraction.gabor_filter_3d
+=====================================
+
+.. currentmodule:: protoclass.extraction
+
+.. autofunction:: gabor_filter_3d

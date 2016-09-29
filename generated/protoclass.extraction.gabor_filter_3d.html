@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>protoclass.extraction.gabor_filter_3d &mdash; protoclass 0.1.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="protoclass 0.1.dev0 documentation" href="../index.html"/>
+        <link rel="up" title="protoclass API" href="../api.html"/>
+        <link rel="next" title="protoclass.extraction.EnhancementSignalExtraction" href="protoclass.extraction.EnhancementSignalExtraction.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> protoclass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html"><cite>protoclass</cite> API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.data_management">Data management module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pre-processing-module">Pre-processing module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-protoclass.extraction">Extraction module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#id2">Standalone related methods</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.IntensitySignalExtraction.html">protoclass.extraction.IntensitySignalExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.EdgeSignalExtraction.html">protoclass.extraction.EdgeSignalExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.HaralickExtraction.html">protoclass.extraction.HaralickExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.PhaseCongruencyExtraction.html">protoclass.extraction.PhaseCongruencyExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.GaborBankExtraction.html">protoclass.extraction.GaborBankExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.DCTExtraction.html">protoclass.extraction.DCTExtraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protoclass.extraction.SpatialExtraction.html">protoclass.extraction.SpatialExtraction</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">protoclass.extraction.gabor_filter_3d</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id3">Temporal related methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id4">MRSI related methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-protoclass.utils">Utils module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">protoclass</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../api.html"><cite>protoclass</cite> API</a> &raquo;</li>
+      
+    <li>protoclass.extraction.gabor_filter_3d</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/protoclass.extraction.gabor_filter_3d.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="protoclass-extraction-gabor-filter-3d">
+<h1>protoclass.extraction.gabor_filter_3d<a class="headerlink" href="#protoclass-extraction-gabor-filter-3d" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="protoclass.extraction.gabor_filter_3d">
+<code class="descclassname">protoclass.extraction.</code><code class="descname">gabor_filter_3d</code><span class="sig-paren">(</span><em>frequency</em>, <em>alpha=0</em>, <em>gamma=0</em>, <em>bandwidth=1</em>, <em>sigma_x=None</em>, <em>sigma_y=None</em>, <em>sigma_z=None</em>, <em>n_stds=3</em>, <em>scale_x=None</em>, <em>scale_y=None</em>, <em>scale_z=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/gabor_bank_extraction.html#gabor_filter_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.gabor_filter_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return complex 3D Gabor filter kernel.</p>
+<p>Gabor kernel is a Gaussian kernel modulated by a complex harmonic function.
+Harmonic function consists of an imaginary sine function and a real
+cosine function. Spatial frequency is inversely proportional to the
+wavelength of the harmonic and to the standard deviation of a Gaussian
+kernel. The bandwidth is also inversely proportional to the standard
+deviation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>frequency</strong> : float</p>
+<blockquote>
+<div><p>Spatial frequency of the harmonic function. Specified in pixels.</p>
+</div></blockquote>
+<p><strong>alpha, gamma</strong> : float, optional</p>
+<blockquote>
+<div><p>Orientation in radians of the x-y, and z axis.</p>
+</div></blockquote>
+<p><strong>bandwidth</strong> : float, optional</p>
+<blockquote>
+<div><p>The bandwidth captured by the filter. For fixed bandwidth, <cite>sigma_x</cite>
+and <cite>sigma_y</cite> will decrease with increasing frequency. This value is
+ignored if <cite>sigma_x</cite> and <cite>sigma_y</cite> are set by the user.</p>
+</div></blockquote>
+<p><strong>sigma_x, sigma_y, sigma_z</strong> : float, optional</p>
+<blockquote>
+<div><p>Standard deviation in x-, y-, and z-directions. These directions apply
+to the kernel <em>before</em> rotation. If <cite>alpha = pi/2</cite>, then the kernel is
+rotated 90 degrees so that <cite>sigma_x</cite> controls the <em>vertical</em> direction.</p>
+</div></blockquote>
+<p><strong>scale_x, scale_y, scale_z</strong> : float, optional</p>
+<blockquote>
+<div><p>In case of using bandwidth but with a wish of different scale for
+the sigma</p>
+</div></blockquote>
+<p><strong>n_stds</strong> : scalar, optional</p>
+<blockquote>
+<div><p>The linear size of the kernel is n_stds (3 by default) standard
+deviations</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>g</strong> : complex array</p>
+<blockquote class="last">
+<div><p>Complex filter kernel.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="protoclass.extraction.EnhancementSignalExtraction.html" class="btn btn-neutral float-right" title="protoclass.extraction.EnhancementSignalExtraction" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Guillaume Lemaitre.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
