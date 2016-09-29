@@ -262,19 +262,74 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the data first.&#39;</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ppm_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="bp">self</span><span class="o">.</span><span class="n">ppm_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="c1"># We need first to crop the data properly depending of the ppm range</span>
+        <span class="n">idx_ppm_crop</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="c1"># Get the range for the current data</span>
+                    <span class="n">idx_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span>
+                        <span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">&gt;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ppm_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">&lt;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ppm_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="n">idx_ppm_crop</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx_mask</span><span class="p">)</span>
 
-        <span class="n">data_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="c1"># Convert the list into an array</span>
+        <span class="n">idx_ppm_crop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idx_ppm_crop</span><span class="p">)</span>
+
+        <span class="c1"># Reshape the array according to the data</span>
+        <span class="n">idx_ppm_crop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">idx_ppm_crop</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                  <span class="p">(</span><span class="n">idx_ppm_crop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                   <span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                   <span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                   <span class="n">modality</span><span class="o">.</span><span class="n">bandwidth_ppm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+        <span class="c1"># Extract the appropriate part of each signal</span>
+        <span class="n">data_crop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">idx_ppm_crop</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="n">data_crop</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span>
+                        <span class="n">idx_ppm_crop</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+                    <span class="c1"># Apply the normalization if necessary</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">data_crop</span><span class="p">[:,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+
+        <span class="n">data_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data_crop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">ground_truth</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                             <span class="n">ground_truth</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                             <span class="n">ground_truth</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
         <span class="c1"># Resample each ppm of the spectum</span>
-        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">slice_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
-            <span class="c1"># Resample this slice</span>
-            <span class="n">data_res</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">slice_data</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_crop</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># Resample each ppm slice</span>
+            <span class="n">data_res</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">data_crop</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="n">modality</span><span class="p">,</span>
                                                   <span class="n">ground_truth</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">data_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span></div></div>
+        <span class="c1"># Convert the roi to a numpy array</span>
+        <span class="n">roi_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">)</span>
+
+        <span class="c1"># Check the number of samples which will be extracted</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">roi_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Check the number of dimension</span>
+        <span class="n">n_dimension</span> <span class="o">=</span> <span class="n">data_res</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Allocate the array</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">n_dimension</span><span class="p">))</span>
+
+        <span class="c1"># Copy the data at the right place</span>
+        <span class="k">for</span> <span class="n">idx_sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">):</span>
+            <span class="c1"># Get the coordinate of the point to consider</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">roi_data</span><span class="p">[:,</span> <span class="n">idx_sample</span><span class="p">]</span>
+
+            <span class="c1"># Extract the data</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">idx_sample</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data_res</span><span class="p">[:,</span>
+                                           <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                           <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">data_res</span></div></div>
 </pre></div>
 
            </div>
