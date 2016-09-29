@@ -22,6 +22,7 @@ from .phase_congruency_extraction import PhaseCongruencyExtraction
 from .gabor_bank_extraction import GaborBankExtraction
 from .dct_extraction import DCTExtraction
 from .spatial_extraction import SpatialExtraction
+from .lbp_extraction import LBPExtraction
 
 from .gabor_bank_extraction import gabor_filter_3d
 
@@ -55,6 +56,7 @@ __all__ = ['BaseExtraction',
            'GaborBankExtraction',
            'DCTExtraction',
            'SpatialExtraction',
+           'LBPExtraction',
            'gabor_filter_3d',
            'CodeBook',
            'HaralickProcessing',

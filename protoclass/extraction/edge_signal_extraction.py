@@ -53,7 +53,7 @@ class EdgeSignalExtraction(StandaloneExtraction):
 
     Parameters
     ----------
-     base_modality : object
+    base_modality : object
         The base modality on which the normalization will be applied. The base
         modality should inherate from StandaloneModality class.
 
