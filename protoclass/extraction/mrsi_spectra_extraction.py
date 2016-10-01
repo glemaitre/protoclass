@@ -175,8 +175,10 @@ class MRSISpectraExtraction(MRSIExtraction):
         # Resample each ppm of the spectum
         for ii in range(data_crop.shape[0]):
             # Resample each ppm slice
-            data_res[ii] = self._resampling_as_gt(data_crop[ii], modality,
-                                                  ground_truth)
+            data_res[ii, :, :, :] = self._resampling_as_gt(
+                data_crop[ii, :, :, :],
+                modality,
+                ground_truth)
 
         # Convert the roi to a numpy array
         roi_data = np.array(self.roi_data_)
@@ -200,4 +202,4 @@ class MRSISpectraExtraction(MRSIExtraction):
                                            coord[1],
                                            coord[2]]
 
-        return data_res
+        return data
