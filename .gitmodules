@@ -28,3 +28,6 @@
 [submodule "third-party/lmfit-py"]
 	path = third-party/lmfit-py
 	url = https://github.com/lmfit/lmfit-py.git
+[submodule "third-party/mifs"]
+	path = third-party/mifs
+	url = https://github.com/glemaitre/mifs.git
