@@ -153,7 +153,7 @@
 <h1>protoclass.extraction.RelativeQuantificationExtraction<a class="headerlink" href="#protoclass-extraction-relativequantificationextraction" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="protoclass.extraction.RelativeQuantificationExtraction">
-<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">RelativeQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">protoclass.extraction.</code><code class="descname">RelativeQuantificationExtraction</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em>, <em>output='ratio'</em>, <em>fitting=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Relative quantification extraction from MRSI modality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -165,8 +165,17 @@
 modality should inherate from StandaloneModality class.</p>
 </div></blockquote>
 <p><strong>normalization</strong> : None or str, optional (default=&#8217;l2&#8217;)</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Apply a normalization or not. Choice are None, &#8216;l2&#8217;, or &#8216;l1&#8217;.</p>
+</div></blockquote>
+<p><strong>output</strong> : str, optional (default=&#8217;ratio&#8217;)</p>
+<blockquote>
+<div><p>The type of output. Either return the ratio citrate over choline using
+&#8216;ratio&#8217; or the integral citrate and choline using &#8216;integral&#8217;.</p>
+</div></blockquote>
+<p><strong>fitting</strong> : bool, optional (default=True)</p>
+<blockquote class="last">
+<div><p>Quantification by fitting or just on the original signal.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -210,7 +219,7 @@ modality should inherate from StandaloneModality class.</p>
 </table>
 <dl class="method">
 <dt id="protoclass.extraction.RelativeQuantificationExtraction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_modality</em>, <em>normalization='l2'</em>, <em>output='ratio'</em>, <em>fitting=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/protoclass/extraction/relative_quantification_extraction.html#RelativeQuantificationExtraction.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -220,7 +229,7 @@ modality should inherate from StandaloneModality class.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="protoclass.extraction.RelativeQuantificationExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;normalization])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.__init__" title="protoclass.extraction.RelativeQuantificationExtraction.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(base_modality[,&nbsp;normalization,&nbsp;...])</td>
 <td></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#protoclass.extraction.RelativeQuantificationExtraction.fit" title="protoclass.extraction.RelativeQuantificationExtraction.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(modality[,&nbsp;ground_truth,&nbsp;cat])</td>

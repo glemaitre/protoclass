@@ -155,6 +155,7 @@
 <span class="n">PPM_REFERENCE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;water&#39;</span> <span class="p">:</span> <span class="mf">4.65</span><span class="p">,</span> <span class="s1">&#39;citrate&#39;</span> <span class="p">:</span> <span class="mf">2.58</span><span class="p">}</span>
 <span class="n">PPM_LIMITS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;water&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">),</span> <span class="s1">&#39;citrate&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mf">2.30</span><span class="p">,</span> <span class="mf">2.90</span><span class="p">)}</span>
 <span class="n">KNOWN_NORMALIZATION</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;l2&#39;</span><span class="p">,</span> <span class="s1">&#39;l1&#39;</span><span class="p">)</span>
+<span class="n">KNOWN_OUTPUT</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;integral&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_gaussian_profile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
@@ -401,6 +402,77 @@
     <span class="k">return</span> <span class="n">res_citrate</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">res_choline</span><span class="o">.</span><span class="n">params</span>
 
 
+<span class="k">def</span> <span class="nf">_quantification_no_fitting</span><span class="p">(</span><span class="n">ppm</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Private function to qunatified citrate and choline without any fitting.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">     ppm : ndarray, shape (n_samples, )</span>
+<span class="sd">        The ppm associated to the spectrum.</span>
+
+<span class="sd">    spectrum : ndarray, (n_samples, )</span>
+<span class="sd">        The spectrum of the metabolites</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    parameters : tuple of Parameters,</span>
+<span class="sd">        A tuple containing the parameters for the citrate and choline model.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Citrate quantification</span>
+    <span class="c1"># Define the limits of the citrate</span>
+    <span class="n">ppm_limits</span> <span class="o">=</span> <span class="n">PPM_LIMITS</span><span class="p">[</span><span class="s1">&#39;citrate&#39;</span><span class="p">]</span>
+    <span class="c1"># Crop the spectrum</span>
+    <span class="n">idx_ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">ppm</span> <span class="o">&gt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">ppm</span> <span class="o">&lt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">sub_ppm</span> <span class="o">=</span> <span class="n">ppm</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+    <span class="n">sub_spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+
+    <span class="c1"># Reinterpolate with cubic spline</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">sub_ppm</span><span class="p">,</span> <span class="n">sub_spectrum</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Define the default parameters</span>
+    <span class="c1"># Define their bounds</span>
+    <span class="n">mu_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.54</span><span class="p">,</span> <span class="mf">2.68</span><span class="p">)</span>
+
+    <span class="c1"># Define the default shifts</span>
+    <span class="n">ppm_cit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mu_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">mu_dft</span> <span class="o">=</span> <span class="n">ppm_cit</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">ppm_cit</span><span class="p">))]</span>
+
+    <span class="c1"># Integrate the spectrum</span>
+    <span class="n">ppm_interval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mu_dft</span> <span class="o">+</span> <span class="o">.</span><span class="mi">18</span><span class="p">,</span> <span class="n">mu_dft</span> <span class="o">-</span> <span class="o">.</span><span class="mi">18</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">citrate_quant</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">ppm_interval</span><span class="p">),</span> <span class="n">ppm_interval</span><span class="p">)</span>
+
+    <span class="n">delta_4_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="o">.</span><span class="mi">55</span><span class="p">,</span> <span class="o">.</span><span class="mi">59</span><span class="p">)</span>
+
+    <span class="c1"># Crop and define the limits around the choline</span>
+    <span class="n">ppm_limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu_dft</span> <span class="o">+</span> <span class="n">delta_4_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="o">.</span><span class="mi">02</span><span class="p">,</span>
+                  <span class="n">mu_dft</span> <span class="o">+</span> <span class="n">delta_4_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="o">.</span><span class="mi">02</span><span class="p">)</span>
+    <span class="n">idx_ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">ppm</span> <span class="o">&gt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">ppm</span> <span class="o">&lt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">sub_ppm</span> <span class="o">=</span> <span class="n">ppm</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+    <span class="n">sub_spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+
+    <span class="c1"># Reinterpolate the data</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">sub_ppm</span><span class="p">,</span> <span class="n">sub_spectrum</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+    <span class="n">ppm_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sub_ppm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sub_ppm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+
+    <span class="c1"># Refine the maximum value</span>
+    <span class="n">delta_4_dft</span> <span class="o">=</span> <span class="n">ppm_interp</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">ppm_interp</span><span class="p">))]</span> <span class="o">-</span> <span class="n">mu_dft</span>
+    <span class="n">ppm_limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu_dft</span> <span class="o">+</span> <span class="n">delta_4_dft</span> <span class="o">-</span> <span class="o">.</span><span class="mi">04</span><span class="p">,</span>
+                  <span class="n">mu_dft</span> <span class="o">+</span> <span class="n">delta_4_dft</span> <span class="o">+</span> <span class="o">.</span><span class="mi">04</span><span class="p">)</span>
+    <span class="n">idx_ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">ppm</span> <span class="o">&gt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">ppm</span> <span class="o">&lt;</span> <span class="n">ppm_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">sub_ppm</span> <span class="o">=</span> <span class="n">ppm</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+    <span class="n">sub_spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">[</span><span class="n">idx_ppm</span><span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">sub_ppm</span><span class="p">,</span> <span class="n">sub_spectrum</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+    <span class="n">ppm_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sub_ppm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sub_ppm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">choline_quant</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">ppm_interp</span><span class="p">),</span> <span class="n">ppm_interp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">citrate_quant</span><span class="p">,</span> <span class="n">choline_quant</span>
+
 <div class="viewcode-block" id="RelativeQuantificationExtraction"><a class="viewcode-back" href="../../../generated/protoclass.extraction.RelativeQuantificationExtraction.html#protoclass.extraction.RelativeQuantificationExtraction">[docs]</a><span class="k">class</span> <span class="nc">RelativeQuantificationExtraction</span><span class="p">(</span><span class="n">MRSIExtraction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Relative quantification extraction from MRSI modality.</span>
 
@@ -413,6 +485,13 @@
 <span class="sd">    normalization : None or str, optional (default=&#39;l2&#39;)</span>
 <span class="sd">        Apply a normalization or not. Choice are None, &#39;l2&#39;, or &#39;l1&#39;.</span>
 
+<span class="sd">    output : str, optional (default=&#39;ratio&#39;)</span>
+<span class="sd">        The type of output. Either return the ratio citrate over choline using</span>
+<span class="sd">        &#39;ratio&#39; or the integral citrate and choline using &#39;integral&#39;.</span>
+
+<span class="sd">    fitting : bool, optional (default=True)</span>
+<span class="sd">        Quantification by fitting or just on the original signal.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    base_modality_ : object</span>
@@ -424,9 +503,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RelativeQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.RelativeQuantificationExtraction.html#protoclass.extraction.RelativeQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="RelativeQuantificationExtraction.__init__"><a class="viewcode-back" href="../../../generated/protoclass.extraction.RelativeQuantificationExtraction.html#protoclass.extraction.RelativeQuantificationExtraction.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_modality</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;ratio&#39;</span><span class="p">,</span>
+                 <span class="n">fitting</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RelativeQuantificationExtraction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">base_modality</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="o">=</span> <span class="n">normalization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitting</span> <span class="o">=</span> <span class="n">fitting</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -513,6 +595,9 @@
             <span class="n">ground_truth</span><span class="o">=</span><span class="n">ground_truth</span><span class="p">,</span>
             <span class="n">cat</span><span class="o">=</span><span class="n">cat</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">KNOWN_OUTPUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The output type is unknown.&#39;</span><span class="p">)</span>
+
         <span class="c1"># In the fitting we will find the parameters needed to transform</span>
         <span class="c1"># the data</span>
         <span class="c1"># 1. Reshape all data for parallel processing</span>
@@ -543,9 +628,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_s</span><span class="p">]</span> <span class="o">=</span> <span class="n">lnorm</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># 2. Make the fitting and get the parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span>
-            <span class="n">_metabolite_fitting</span><span class="p">)(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-                                         <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ppm</span><span class="p">,</span> <span class="n">spectra</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitting</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span>
+                <span class="n">_metabolite_fitting</span><span class="p">)(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                                             <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ppm</span><span class="p">,</span> <span class="n">spectra</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span>
+                            <span class="n">_quantification_no_fitting</span><span class="p">)(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                                             <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ppm</span><span class="p">,</span> <span class="n">spectra</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -583,38 +673,85 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Fit the data first.&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Define a range of ppm</span>
-        <span class="n">ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitting</span><span class="p">:</span>
+            <span class="c1"># Define a range of ppm</span>
+            <span class="n">ppm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 
-        <span class="c1"># Compute the citrate and choline signal integral</span>
-        <span class="n">citrate_array</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">choline_array</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">idx_fit</span><span class="p">,</span> <span class="n">fit_param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">):</span>
-            <span class="c1"># Compute the citrate signal using the previous model</span>
-            <span class="n">citrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_citrate_profile</span><span class="p">(</span><span class="n">fit_param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ppm</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">citrate</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
+            <span class="c1"># Compute the citrate and choline signal integral</span>
+            <span class="n">citrate_array</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">choline_array</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">idx_fit</span><span class="p">,</span> <span class="n">fit_param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">):</span>
+                <span class="c1"># Compute the citrate signal using the previous model</span>
+                <span class="n">citrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_citrate_profile</span><span class="p">(</span><span class="n">fit_param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ppm</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">citrate</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
 
-            <span class="n">citrate_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simps</span><span class="p">(</span><span class="n">citrate</span><span class="p">,</span> <span class="n">ppm</span><span class="p">))</span>
+                <span class="n">citrate_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simps</span><span class="p">(</span><span class="n">citrate</span><span class="p">,</span> <span class="n">ppm</span><span class="p">))</span>
 
-            <span class="c1"># Compute the choline signal using the previous model</span>
-            <span class="n">choline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choline_profile</span><span class="p">(</span><span class="n">fit_param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ppm</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">choline</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
+                <span class="c1"># Compute the choline signal using the previous model</span>
+                <span class="n">choline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choline_profile</span><span class="p">(</span><span class="n">fit_param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ppm</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">choline</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
 
-            <span class="n">choline_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simps</span><span class="p">(</span><span class="n">choline</span><span class="p">,</span> <span class="n">ppm</span><span class="p">))</span>
+                <span class="n">choline_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simps</span><span class="p">(</span><span class="n">choline</span><span class="p">,</span> <span class="n">ppm</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute the citrate and choline signal integral</span>
+            <span class="n">citrate_array</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">choline_array</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">idx_fit</span><span class="p">,</span> <span class="n">fit_param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">):</span>
+                <span class="c1"># Compute the citrate signal using the previous model</span>
+                <span class="n">citrate</span> <span class="o">=</span> <span class="n">fit_param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">citrate</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
 
-        <span class="c1"># Compute the ratio citrate over choline</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">citrate_array</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">choline_array</span><span class="p">)</span>
+                <span class="n">citrate_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">citrate</span><span class="p">)</span>
 
-        <span class="c1"># Resize the data properly according to the modality</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                 <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                                 <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+                <span class="c1"># Compute the choline signal using the previous model</span>
+                <span class="n">choline</span> <span class="o">=</span> <span class="n">fit_param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">choline</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params_</span><span class="p">[</span><span class="n">idx_fit</span><span class="p">]</span>
 
-        <span class="n">data_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+                <span class="n">choline_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choline</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">data_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span></div></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;ratio&#39;</span><span class="p">:</span>
+            <span class="c1"># Compute the ratio citrate over choline</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">citrate_array</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">choline_array</span><span class="p">)</span>
+
+            <span class="c1"># Resize the data properly according to the modality</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                     <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                     <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+            <span class="n">data_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+            <span class="n">data_res</span> <span class="o">=</span> <span class="n">data_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;integral&#39;</span><span class="p">:</span>
+            <span class="c1"># Reshape the choline and citrate signal</span>
+            <span class="n">citrate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">citrate_array</span><span class="p">),</span>
+                                 <span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+            <span class="n">choline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">choline_array</span><span class="p">),</span>
+                                 <span class="p">(</span><span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                  <span class="n">modality</span><span class="o">.</span><span class="n">data_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+            <span class="c1"># Resample both quantity</span>
+            <span class="n">citrate_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">citrate</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span>
+                                                 <span class="n">ground_truth</span><span class="p">)</span>
+
+            <span class="n">choline_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampling_as_gt</span><span class="p">(</span><span class="n">choline</span><span class="p">,</span> <span class="n">modality</span><span class="p">,</span>
+                                                 <span class="n">ground_truth</span><span class="p">)</span>
+
+            <span class="n">data_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+            <span class="n">data_res</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">citrate_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+            <span class="n">data_res</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">choline_res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_data_</span><span class="p">]</span>
+
+
+
+        <span class="k">return</span> <span class="n">data_res</span></div></div>
 </pre></div>
 
            </div>
