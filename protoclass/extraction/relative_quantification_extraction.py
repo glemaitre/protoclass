@@ -20,6 +20,7 @@ from .mrsi_extraction import MRSIExtraction
 PPM_REFERENCE = {'water' : 4.65, 'citrate' : 2.58}
 PPM_LIMITS = {'water': (4., 6.), 'citrate' : (2.30, 2.90)}
 KNOWN_NORMALIZATION = ('l2', 'l1')
+KNOWN_OUTPUT = ('ratio', 'integral')
 
 
 def _gaussian_profile(x, alpha, mu, sigma):
@@ -266,6 +267,77 @@ def _metabolite_fitting(ppm, spectrum):
     return res_citrate.params, res_choline.params
 
 
+def _quantification_no_fitting(ppm, spectrum):
+    """Private function to qunatified citrate and choline without any fitting.
+
+    Parameters
+    ----------
+
+     ppm : ndarray, shape (n_samples, )
+        The ppm associated to the spectrum.
+
+    spectrum : ndarray, (n_samples, )
+        The spectrum of the metabolites
+
+    Returns
+    -------
+    parameters : tuple of Parameters,
+        A tuple containing the parameters for the citrate and choline model.
+
+    """
+
+    # Citrate quantification
+    # Define the limits of the citrate
+    ppm_limits = PPM_LIMITS['citrate']
+    # Crop the spectrum
+    idx_ppm = np.flatnonzero(np.bitwise_and(ppm > ppm_limits[0],
+                                            ppm < ppm_limits[1]))
+    sub_ppm = ppm[idx_ppm]
+    sub_spectrum = spectrum[idx_ppm]
+
+    # Reinterpolate with cubic spline
+    f = interp1d(sub_ppm, sub_spectrum, kind='cubic')
+
+    # Define the default parameters
+    # Define their bounds
+    mu_bounds = (2.54, 2.68)
+
+    # Define the default shifts
+    ppm_cit = np.linspace(mu_bounds[0], mu_bounds[1], num=1000)
+    mu_dft = ppm_cit[np.argmax(f(ppm_cit))]
+
+    # Integrate the spectrum
+    ppm_interval = np.linspace(mu_dft + .18, mu_dft - .18, num=1000)
+    citrate_quant = simps(f(ppm_interval), ppm_interval)
+
+    delta_4_bounds = (.55, .59)
+
+    # Crop and define the limits around the choline
+    ppm_limits = (mu_dft + delta_4_bounds[0] - .02,
+                  mu_dft + delta_4_bounds[1] + .02)
+    idx_ppm = np.flatnonzero(np.bitwise_and(ppm > ppm_limits[0],
+                                            ppm < ppm_limits[1]))
+    sub_ppm = ppm[idx_ppm]
+    sub_spectrum = spectrum[idx_ppm]
+
+    # Reinterpolate the data
+    f = interp1d(sub_ppm, sub_spectrum, kind='cubic')
+    ppm_interp = np.linspace(sub_ppm[0], sub_ppm[-1], num=5000)
+
+    # Refine the maximum value
+    delta_4_dft = ppm_interp[np.argmax(f(ppm_interp))] - mu_dft
+    ppm_limits = (mu_dft + delta_4_dft - .04,
+                  mu_dft + delta_4_dft + .04)
+    idx_ppm = np.flatnonzero(np.bitwise_and(ppm > ppm_limits[0],
+                                            ppm < ppm_limits[1]))
+    sub_ppm = ppm[idx_ppm]
+    sub_spectrum = spectrum[idx_ppm]
+    f = interp1d(sub_ppm, sub_spectrum, kind='cubic')
+    ppm_interp = np.linspace(sub_ppm[0], sub_ppm[-1], num=1000)
+    choline_quant = simps(f(ppm_interp), ppm_interp)
+
+    return citrate_quant, choline_quant
+
 class RelativeQuantificationExtraction(MRSIExtraction):
     """Relative quantification extraction from MRSI modality.
 
@@ -278,6 +350,13 @@ class RelativeQuantificationExtraction(MRSIExtraction):
     normalization : None or str, optional (default='l2')
         Apply a normalization or not. Choice are None, 'l2', or 'l1'.
 
+    output : str, optional (default='ratio')
+        The type of output. Either return the ratio citrate over choline using
+        'ratio' or the integral citrate and choline using 'integral'.
+
+    fitting : bool, optional (default=True)
+        Quantification by fitting or just on the original signal.
+
     Attributes
     ----------
     base_modality_ : object
@@ -289,9 +368,12 @@ class RelativeQuantificationExtraction(MRSIExtraction):
 
     """
 
-    def __init__(self, base_modality, normalization='l2'):
+    def __init__(self, base_modality, normalization='l2', output='ratio',
+                 fitting=True):
         super(RelativeQuantificationExtraction, self).__init__(base_modality)
         self.normalization = normalization
+        self.output = output
+        self.fitting = fitting
         self.is_fitted = False
         self.data_ = None
 
@@ -378,6 +460,9 @@ class RelativeQuantificationExtraction(MRSIExtraction):
             ground_truth=ground_truth,
             cat=cat)
 
+        if self.output not in KNOWN_OUTPUT:
+            raise ValueError('The output type is unknown.')
+
         # In the fitting we will find the parameters needed to transform
         # the data
         # 1. Reshape all data for parallel processing
@@ -408,9 +493,14 @@ class RelativeQuantificationExtraction(MRSIExtraction):
                     self.fit_params_[idx_s] = lnorm(s, 2)
 
         # 2. Make the fitting and get the parameters
-        self.data_ = Parallel(n_jobs=-1)(delayed(
-            _metabolite_fitting)(p, s)
-                                         for p, s in zip(ppm, spectra))
+        if self.fitting:
+            self.data_ = Parallel(n_jobs=-1)(delayed(
+                _metabolite_fitting)(p, s)
+                                             for p, s in zip(ppm, spectra))
+        else:
+            self.data_ = Parallel(n_jobs=-1)(delayed(
+                            _quantification_no_fitting)(p, s)
+                                             for p, s in zip(ppm, spectra))
 
         self.is_fitted = True
 
@@ -448,35 +538,82 @@ class RelativeQuantificationExtraction(MRSIExtraction):
         if not self.is_fitted:
             raise ValueError('Fit the data first.')
 
-        # Define a range of ppm
-        ppm = np.linspace(2., 4., num=5000)
+        if self.fitting:
+            # Define a range of ppm
+            ppm = np.linspace(2., 4., num=5000)
 
-        # Compute the citrate and choline signal integral
-        citrate_array = []
-        choline_array = []
-        for idx_fit, fit_param in enumerate(self.data_):
-            # Compute the citrate signal using the previous model
-            citrate = self._citrate_profile(fit_param[0], ppm)
-            if self.normalization is not None:
-                citrate /= self.fit_params_[idx_fit]
+            # Compute the citrate and choline signal integral
+            citrate_array = []
+            choline_array = []
+            for idx_fit, fit_param in enumerate(self.data_):
+                # Compute the citrate signal using the previous model
+                citrate = self._citrate_profile(fit_param[0], ppm)
+                if self.normalization is not None:
+                    citrate /= self.fit_params_[idx_fit]
 
-            citrate_array.append(simps(citrate, ppm))
+                citrate_array.append(simps(citrate, ppm))
 
-            # Compute the choline signal using the previous model
-            choline = self._choline_profile(fit_param[1], ppm)
-            if self.normalization is not None:
-                choline /= self.fit_params_[idx_fit]
+                # Compute the choline signal using the previous model
+                choline = self._choline_profile(fit_param[1], ppm)
+                if self.normalization is not None:
+                    choline /= self.fit_params_[idx_fit]
 
-            choline_array.append(simps(choline, ppm))
+                choline_array.append(simps(choline, ppm))
+        else:
+            # Compute the citrate and choline signal integral
+            citrate_array = []
+            choline_array = []
+            for idx_fit, fit_param in enumerate(self.data_):
+                # Compute the citrate signal using the previous model
+                citrate = fit_param[0]
+                if self.normalization is not None:
+                    citrate /= self.fit_params_[idx_fit]
 
-        # Compute the ratio citrate over choline
-        data = np.array(citrate_array) / np.array(choline_array)
+                citrate_array.append(citrate)
 
-        # Resize the data properly according to the modality
-        data = np.reshape(data, (modality.data_.shape[1],
-                                 modality.data_.shape[2],
-                                 modality.data_.shape[3]))
+                # Compute the choline signal using the previous model
+                choline = fit_param[1]
+                if self.normalization is not None:
+                    choline /= self.fit_params_[idx_fit]
 
-        data_res = self._resampling_as_gt(data, modality, ground_truth)
+                choline_array.append(choline)
 
-        return data_res[self.roi_data_]
+        if self.output == 'ratio':
+            # Compute the ratio citrate over choline
+            data = np.array(citrate_array) / np.array(choline_array)
+
+            # Resize the data properly according to the modality
+            data = np.reshape(data, (modality.data_.shape[1],
+                                     modality.data_.shape[2],
+                                     modality.data_.shape[3]))
+
+            data_res = self._resampling_as_gt(data, modality, ground_truth)
+            data_res = data_res[self.roi_data_]
+
+        elif self.output == 'integral':
+            # Reshape the choline and citrate signal
+            citrate = np.reshape(np.array(citrate_array),
+                                 (modality.data_.shape[1],
+                                  modality.data_.shape[2],
+                                  modality.data_.shape[3]))
+
+            choline = np.reshape(np.array(choline_array),
+                                 (modality.data_.shape[1],
+                                  modality.data_.shape[2],
+                                  modality.data_.shape[3]))
+
+            # Resample both quantity
+            citrate_res = self._resampling_as_gt(citrate, modality,
+                                                 ground_truth)
+
+            choline_res = self._resampling_as_gt(choline, modality,
+                                                 ground_truth)
+
+            data_res = np.zeros((self.roi_data_[0].size, 2))
+
+            data_res[:, 0] = citrate_res[self.roi_data_]
+            data_res[:, 1] = choline_res[self.roi_data_]
+
+
+
+        return data_res

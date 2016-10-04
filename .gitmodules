@@ -31,3 +31,6 @@
 [submodule "third-party/mifs"]
 	path = third-party/mifs
 	url = https://github.com/glemaitre/mifs.git
+[submodule "third-party/mlxtend"]
+	path = third-party/mlxtend
+	url = https://github.com/glemaitre/mlxtend.git
