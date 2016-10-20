@@ -201,9 +201,9 @@ def _metabolite_fitting(ppm, spectrum):
 
     # Define the list of parameters
     params = Parameters()
-    params.add('citalpha1', value=alpha_1_dft, min=0.1, max=100)
-    params.add('citalpha2', value=alpha_2_dft, min=0.1, max=100)
-    params.add('citalpha3', value=alpha_3_dft, min=0.1, max=100)
+    params.add('citalpha1', value=alpha_1_dft, min=0, max=100)
+    params.add('citalpha2', value=alpha_2_dft, min=0, max=100)
+    params.add('citalpha3', value=alpha_3_dft, min=0, max=100)
     params.add('citmu1', value=mu_dft, min=mu_bounds[0], max=mu_bounds[1])
     params.add('citdelta2', value=delta_2_dft, min=delta_2_bounds[0],
                max=delta_2_bounds[1])

@@ -34,3 +34,6 @@
 [submodule "third-party/mlxtend"]
 	path = third-party/mlxtend
 	url = https://github.com/glemaitre/mlxtend.git
+[submodule "third-party/maskSLIC"]
+	path = third-party/maskSLIC
+	url = https://github.com/benjaminirving/maskSLIC.git
